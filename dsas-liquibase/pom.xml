@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>gov.usgs.cida.dsas</groupId>
+		<artifactId>dsas-web</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>dsas-liquibase</artifactId>
+	<packaging>jar</packaging>
+
+	<name>DSASWeb Liquibase Changesets</name>
+
+	<properties>
+		<cch.dsas.liquibase.version>3.4.1</cch.dsas.liquibase.version>
+		<cch.dsas.db.schema>dsas</cch.dsas.db.schema>
+		<!-- For goals to run these properties must be set in settings.xml
+		<cch.dsas.liquibase.driver></cch.dsas.liquibase.driver>
+		<cch.dsas.liquibase.url></cch.dsas.liquibase.url>
+		<cch.dsas.liquibase.username></cch.dsas.liquibase.username>
+		<cch.dsas.liquibase.password></cch.dsas.liquibase.password>
+		-->
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>${cch.dsas.liquibase.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.2-1003-jdbc4</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>${cch.dsas.liquibase.version}</version>
+				<configuration>
+					<password>${cch.dsas.liquibase.password}</password>
+					<username>${cch.dsas.liquibase.username}</username>
+					<driver>${cch.dsas.liquibase.driver}</driver>
+					<url>${cch.dsas.liquibase.url}</url>
+					<changeLogFile>src/main/liquibase/changeLog.xml</changeLogFile>
+					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+					<schemas>public</schemas>
+					<contexts>default</contexts>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,25 @@
+<div id="{{modalId}}" class="modal fade in" id="session-reset-modal" aria-hidden="false">
+	<div class="modal-header">
+		<h3>Invalid Sessions Found</h3>
+	</div>
+	<div class="modal-body">
+		One or more of your sessions are invalid and need to be removed.<br />
+		Invalid sessions:<br />
+		<ul>
+			{{#each sessionList}}
+			<li>
+				{{this}}
+			</li>
+			{{/each}}
+		</ul>
+		
+		{{#if includesCurrentId}}
+		<br />
+		Invalid sessions include the currently active session. This session will 
+		also be removed and the application will reload to create a new session.
+		{{/if}}
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" id="btn-session-remove">Remove Invalid Sessions</a>
+	</div>
+</div>

@@ -1,0 +1,63 @@
+<div class="container-fluid">
+	<div id="explanation-row" class="row-fluid">
+		<div id="explanation-well" class="well">
+			There is a possible attribute mismatch between the resource you are 
+			trying to view and what is considered a valid {{stage}} resource.
+			<br /><br />
+			Optional Attributes:
+			<ul>
+				{{#each defaultingColumns}}
+				<li>{{attr}}{{printDefaultValue}}</li>
+				{{/each}}
+			</ul>
+			<br /><br />
+			Optional attributes and their defaults. 
+			These can be left unmapped to accept the default values.
+			<br/>
+			Please drag attributes from the left to the right to properly 
+			map to the correct attributes. Attributes wrapped in blue are required, 
+			those wrapped in green are optional. The resource will be updated server-side once complete.
+		</div>
+	</div>
+	<div id="{{layerName}}-drag-drop-row" class="row-fluid">
+		{{!-- Left-side FROM column --}}
+		<div id="{{layerName}}-drag-container" class="well span5">
+			<ul id="{{layerName}}-drag-list" class="ui-helper-reset">
+				{{#each columnKeys}}
+				<li>
+					<div class="{{../layerName}}-drop-holder left-drop-holder">
+						<div id="{{this}}-drag-item" class="{{../layerName}}-drag-item ui-state-default ui-corner-all">
+							{{this}}<span style="float:left;" class="ui-icon ui-icon-link">&nbsp;</span>
+						</div>
+					</div>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+
+		{{!-- Right-side TO column --}}
+		<div id="{{layerName}}-drop-container" class="well span5 offset2">
+			<ul id="{{layerName}}-drop-list" class="ui-helper-reset">
+				{{!-- Mandatory Columns --}}
+				{{#each mandatoryColumns}}
+				<li>
+					<div id="{{this}}-drop-item" class="{{../layerName}}-drop-holder right-drop-holder">
+						{{this}}
+					</div>
+				</li>
+				{{/each}}
+
+				{{!-- Optional Columns --}}
+				{{#if defaultColumns}}
+				{{#each defaultColumns}}
+				<li>
+					<div id="{{this.attr}}-drop-item" class="{{../layerName}}-drop-holder right-drop-holder-optional">
+						{{this.attr}}
+					</div>
+				</li>
+				{{/each}}
+				{{/if }}
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+	<changeSet id="create-geoserver-metadata-table-tag" author="isuftin">
+		<tagDatabase tag="createGeoserverMetadataTableTag" />
+	</changeSet>
+	<changeSet author="isuftin" id="create-geoserver-metadata-table">
+		<sql>
+			CREATE TABLE gt_pk_metadata_table (
+				id BIGSERIAL,
+				table_schema VARCHAR(32) NOT NULL,
+				table_name VARCHAR(64) NOT NULL,
+				pk_column VARCHAR(32) NOT NULL,
+				pk_column_idx INTEGER,
+				pk_policy VARCHAR(32),
+				pk_sequence VARCHAR(64),
+				unique (table_schema, table_name, pk_column),
+				check (pk_policy in ('sequence', 'assigned', 'autoincrement'))
+			);
+		</sql>
+		<addPrimaryKey tableName="gt_pk_metadata_table" columnNames="id" />
+		<rollback>
+			<dropTable tableName="gt_pk_metadata_table" />
+		</rollback>
+	</changeSet>
+</databaseChangeLog>

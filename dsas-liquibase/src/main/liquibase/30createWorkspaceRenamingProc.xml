@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+	<changeSet id="create-workspace-rename-proc-tag-changeset" author="isuftin">
+		<tagDatabase tag="createPublishProcedureTag" />
+	</changeSet>
+	<changeSet author="isuftin" id="create_workspace_rename_procedure">
+		<createProcedure>
+			CREATE OR REPLACE FUNCTION publish_shoreline(
+				old_workspace TEXT,
+				new_workspace TEXT,
+				shoreline_name TEXT
+			) RETURNS BOOLEAN AS $$
+			BEGIN
+				IF NOT CHAR_LENGTH($1) > 0 THEN
+					RAISE EXCEPTION 'old_workspace must contain workspace name';
+				END IF;	
+				IF NOT CHAR_LENGTH($2) > 0 THEN
+					RAISE EXCEPTION 'new_workspace must contain workspace name';
+				END IF;	
+				IF NOT CHAR_LENGTH($3) > 0 THEN
+					RAISE EXCEPTION 'shoreline_name must contain shoreline name';
+				END IF;
+
+				UPDATE shorelines
+				SET 	workspace = $2
+				WHERE	shorelines.workspace = $1
+				AND	shorelines.shoreline_name = $3;
+				RETURN FOUND;
+
+			END;
+			$$ LANGUAGE plpgsql;
+		</createProcedure>
+		<rollback>DROP FUNCTION publish_shoreline(old_workspace VARCHAR, new_workspace TEXT, shoreline_name TEXT);</rollback>
+	</changeSet>
+</databaseChangeLog>

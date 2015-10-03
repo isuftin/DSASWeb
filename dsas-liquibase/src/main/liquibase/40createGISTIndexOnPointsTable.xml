@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+	<changeSet id="create-geospatial-index-on-points-table" author="isuftin">
+		<tagDatabase tag="createGeospatialIndexOnPtsTableTag" />
+	</changeSet>
+	<changeSet author="isuftin" id="create_workspace_rename_procedure">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				select count(*) from pg_indexes where tablename = 'shoreline_points' and indexname = 'shoreline_points_gix'
+			</sqlCheck>
+		</preConditions>
+		<sql>
+			CREATE INDEX shoreline_points_gix ON shoreline_points USING GIST (geom);
+		</sql>
+		<rollback>DROP INDEX IF EXISTS shoreline_points_gix;</rollback>
+	</changeSet>
+</databaseChangeLog>
