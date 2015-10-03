@@ -1,0 +1,132 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>gov.usgs.cida.dsas</groupId>
+	<artifactId>dsas-web</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>DSAS Web</name>
+	
+	<modules>
+		
+	</modules>
+	
+	<url>http://cida.usgs.gov</url>
+	
+	<inceptionYear>2012</inceptionYear>
+	
+	<organization>
+		<name>Center for Integrated Data Analytics</name>
+		<url>http://cida.usgs.gov</url>
+	</organization>
+	
+	<licenses>
+		<license>
+			<name>Public Domain</name>
+			<url>http://water.usgs.gov/software/help/notice/</url>
+			<comments>
+				U.S.Geological Survey Software User Rights Notice
+				Copied from http://water.usgs.gov/software/help/notice/ on December 6, 2013.  Please check webpage for updates.
+				Software and related material (data and (or) documentation), contained in or furnished in connection with a software distribution, are made available by the U.S. Geological Survey (USGS) to be used in the public interest and in the advancement of science. You may, without any fee or cost, use, copy, modify, or distribute this software, and any derivative works thereof, and its supporting documentation, subject to the following restrictions and understandings.
+				If you distribute copies or modifications of the software and related material, make sure the recipients receive a copy of this notice and receive or can get a copy of the original distribution. If the software and (or) related material are modified and distributed, it must be made clear that the recipients do not have the original and they must be informed of the extent of the modifications. For example, modified files must include a prominent notice stating the modifications made, the author of the modifications, and the date the modifications were made. This restriction is necessary to guard against problems introduced in the software by others, reflecting negatively on the reputation of the USGS.
+				The software is public property and you therefore have the right to the source code, if desired.
+				You may charge fees for distribution, warranties, and services provided in connection with the software or derivative works thereof. The name USGS can be used in any advertising or publicity to endorse or promote any products or commercial entity using this software if specific written permission is obtained from the USGS.
+				The user agrees to appropriately acknowledge the authors and the USGS in publications that result from the use of this software or in products that include this software in whole or in part.
+				Because the software and related material are free (other than nominal materials and handling fees) and provided "as is," the authors, the USGS, and the United States Government have made no warranty, express or implied, as to accuracy or completeness and are not obligated to provide the user with any support, consulting, training or assistance of any kind with regard to the use, operation, and performance of this software nor to provide the user with any updates, revisions, new versions or "bug fixes".
+				The user assumes all risk for any damages whatsoever resulting from loss of use, data, or profits arising in connection with the access, use, quality, or performance of this software.
+			</comments>
+		</license>
+	</licenses>
+	
+	<developers>
+		<developer>
+			<id>isuftin</id>
+			<name>Ivan Suftin</name>
+			<email>isuftin@usgs.gov</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+			<organization>Center for Integrated Data Analytics</organization>
+			<organizationUrl>http://cida.usgs.gov</organizationUrl>
+			<timezone>-6</timezone>
+		</developer>
+		<developer>
+			<id>jiwalker</id>
+			<name>Jordan Walker</name>
+			<email>jiwalker@usgs.gov</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+			<organization>Center for Integrated Data Analytics</organization>
+			<organizationUrl>http://cida.usgs.gov</organizationUrl>
+			<timezone>-6</timezone>
+		</developer>
+		<developer>
+			<id>mwernimont</id>
+			<name>Marty Wernimont</name>
+			<email>mwernimont@usgs.gov</email>
+			<roles>
+				<role>Graphic Designer</role>
+			</roles>
+			<organization>Center for Integrated Data Analytics</organization>
+			<organizationUrl>http://cida.usgs.gov</organizationUrl>
+			<timezone>-6</timezone>
+		</developer>
+	</developers>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<cida.maven.url.internal>https://internal.cida.usgs.gov/maven</cida.maven.url.internal>
+	</properties>
+	
+	<scm>
+		<connection>scm:git:https://github.com/USGS-CIDA/dsas-web.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/USGS-CIDA/dsas-web.git</developerConnection>
+		<url>https://github.com/USGS-CIDA/dsas-web</url>
+	</scm>
+	
+	<distributionManagement>
+		<repository>
+			<id>cida-releases</id>
+			<name>CIDA Releases</name>
+			<url>${cida.maven.url.internal}/content/repositories/cida-public-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>cida-snapshots</id>
+			<name>CIDA Snapshots</name>
+			<url>${cida.maven.url.internal}/content/repositories/cida-public-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
+	<repositories>
+		<repository>
+			<id>cida-public</id>
+			<name>CIDA Public Nexus</name>
+			<url>http://cida.usgs.gov/maven/cida-public/</url>
+		</repository>
+	</repositories>
+	
+	<pluginRepositories>
+		<pluginRepository>
+			<id>cida-public</id>
+			<name>CIDA Public Plugin repo</name>
+			<url>http://cida.usgs.gov/maven/cida-public/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<build>
+		<plugins>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
