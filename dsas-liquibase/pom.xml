@@ -43,7 +43,8 @@
 			<!--
 			This profile runs Liquibase on the associated Docker PostGIS instance 
 			that is created by running Docker Compose on the docker-compose.yml file
-			in this same directory.
+			in this same directory. The database will be connected to a persistent 
+			Docker volume container.
 			
 			Docker on Linux:
 			$ mvn liquibase:update -P docker -Ddsas.liquibase.hostname=127.0.0.1

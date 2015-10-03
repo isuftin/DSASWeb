@@ -27,11 +27,11 @@ should probably be left at default. -->
 <Environment name="coastal-hazards.files.directory.upload" type="java.lang.String" value="/upload" />
 
 <!-- gov.usgs.cida.n52.wps.config.location which is path to wps_config.xml file. Rserve connection won't work without -->
-<Environment name="gov.usgs.cida.n52.wps.config.location" type="java.lang.String" value="/Users/isuftin/Server/8080/7.0.35/data/coastal-hazards/n52/wps_config.xml" />
+<Environment name="gov.usgs.cida.n52.wps.config.location" type="java.lang.String" value="/your/tomcat/installation/data/coastal-hazards/n52/wps_config.xml" />
 
 <!--
 coastal-hazards.geocoding.endpoint: Data directory where GeoServer stores its files. -->
-<Environment name="coastal-hazards.geoserver.datadir" type="java.lang.String" value="/Users/isuftin/Source/CIDA/coastal-hazards/coastal-hazards-geoserver/target/geoserver/data" />
+<Environment name="coastal-hazards.geoserver.datadir" type="java.lang.String" value="/your/geoserver-data-dir/geoserver/data" />
 
 <!--
 coastal-hazards.geoserver.username: User name used for Geoserver -->
@@ -49,3 +49,19 @@ should send connections to for Geoserver-->
 <!--
 coastal-hazards.n52.endpoint: Specifies where the application should look for the web processing endpoint -->
 <Environment name="coastal-hazards.n52.endpoint" type="java.lang.String" value="http://localhost:8080/coastal-hazards-n52" />
+
+<Resource   name="jdbc/dsas" auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="org.postgresql.Driver"
+        url="jdbc:postgresql://hostname:5432/dsas"
+        username="dsas"
+        password="dsasdev"
+        maxTotal="200"
+        maxIdle="60"
+        maxWaitMillis="60000"
+        validationQuery="select version()"
+        removeAbandonedOnMaintenance="true"
+        removeAbandonedTimeout="60"
+        logAbandoned="true"
+        description="{usedBy: ['DSAS']}"
+        />
