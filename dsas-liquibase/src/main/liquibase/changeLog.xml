@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<include file="10addShorelineTables.xml" relativeToChangelogFile="true"/>
+	<include file="20updateWorkspaceShorelineView.xml" relativeToChangelogFile="true"/>
+	<include file="30createWorkspaceRenamingProc.xml" relativeToChangelogFile="true"/>
+	<include file="40createGISTIndexOnPointsTable.xml" relativeToChangelogFile="true"/>
+	<include file="50createGSMetadataTable.xml" relativeToChangelogFile="true"/>
+	<include file="60updateShorelineView.xml" relativeToChangelogFile="true"/>
+	
+</databaseChangeLog>

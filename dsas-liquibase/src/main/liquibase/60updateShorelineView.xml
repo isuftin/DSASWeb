@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+	<changeSet author="isuftin" id="update_workspace_view">
+		<createProcedure>
+			CREATE OR REPLACE FUNCTION create_workspace_view(workspace VARCHAR, OUT viewname varchar) AS $BODY$
+			BEGIN
+				viewname := CAST(lower(substring($1 for 52) || '_shorelines') AS VARCHAR(63));
+				EXECUTE 'CREATE OR REPLACE VIEW ' || viewname || ' AS (' ||
+					'SELECT p.id, p.shoreline_id, p.geom, p.uncy, p.segment_id, ' ||
+						's.date, s.mhw, s.workspace, s.source, s.shoreline_type, s.auxillary_name, ' ||
+						'a.value as auxillary_value ' ||
+					'FROM shorelines s ' ||
+					'JOIN shoreline_points p ON s.id = p.shoreline_id ' ||
+						'and s.workspace =' || quote_literal($1) ||
+					'LEFT JOIN shoreline_auxillary_attrs a ON s.id = a.shoreline_id ' ||
+						'and s.auxillary_name = a.attr_name);';
+				EXECUTE 'ALTER TABLE ' || viewname || ' OWNER TO dsas;';
+				EXECUTE 'GRANT ALL ON TABLE ' || viewname || ' TO dsas;';
+				EXECUTE 'GRANT ALL ON TABLE ' || viewname || ' TO public;';
+			END;
+			$BODY$ LANGUAGE plpgsql;
+		</createProcedure>
+		<rollback>DROP FUNCTION create_workspace_view(workspace VARCHAR, shoreline_name VARCHAR);</rollback>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,51 @@
+<!--
+development: Sets whether or not to load debug versions of scripts, levels 
+for logging and possibly other container-specific settings.  Typically, we keep 
+this set to true on localhost for developing as well as on the development tier 
+server. This variable may either be set to false on QA and production tiers or 
+not exist. The effect is the same. -->
+<Environment name="development" type="java.lang.String" value="true" />
+
+<!-- 
+coastal-hazards.files.upload.max-size: The maximum file size that is allowed to 
+the server - Set to 0 to disable size checking -->
+<Environment name="coastal-hazards.files.upload.max-size" type="java.lang.String" value="15728640" />
+
+<!-- 
+coastal-hazards.files.upload.filename-param: The parameter that the application 
+uses to get the name of the incoming file - “qqfile” is used by default. This 
+should probably be left at default. -->
+<Environment name="coastal-hazards.files.upload.filename-param" type="java.lang.String" value="qqfile" />
+
+<!-- The base directory for the project's file structure - the default will be a "coastal-hazards" directory in the system's temp dir-->
+<Environment name="coastal-hazards.files.directory.base" type="java.lang.String" value="/tmp/coastal-hazards" />
+
+<!-- Work Directory. Typically where files are temporarily stored after uploading, unzipping, etc. Default will be /work - sits in coastal-hazards.files.directory.base -->
+<Environment name="coastal-hazards.files.directory.work" type="java.lang.String" value="/work" />
+
+<!-- Directory in which uploads are held -->
+<Environment name="coastal-hazards.files.directory.upload" type="java.lang.String" value="/upload" />
+
+<!-- gov.usgs.cida.n52.wps.config.location which is path to wps_config.xml file. Rserve connection won't work without -->
+<Environment name="gov.usgs.cida.n52.wps.config.location" type="java.lang.String" value="/Users/isuftin/Server/8080/7.0.35/data/coastal-hazards/n52/wps_config.xml" />
+
+<!--
+coastal-hazards.geocoding.endpoint: Data directory where GeoServer stores its files. -->
+<Environment name="coastal-hazards.geoserver.datadir" type="java.lang.String" value="/Users/isuftin/Source/CIDA/coastal-hazards/coastal-hazards-geoserver/target/geoserver/data" />
+
+<!--
+coastal-hazards.geoserver.username: User name used for Geoserver -->
+<Environment name="coastal-hazards.geoserver.username" type="java.lang.String" value="supply.your.own" />
+
+<!--
+coastal-hazards.geoserver.password: Password used for Geoserver-->
+<Environment name="coastal-hazards.geoserver.password" type="java.lang.String" value="supply.your.own" />
+
+<!--
+coastal-hazards.geoserver.endpoint: Specifies where the back-end proxy server 
+should send connections to for Geoserver-->
+<Environment name="coastal-hazards.geoserver.endpoint" type="java.lang.String" value="http://localhost:8081/coastal-hazards-geoserver" />
+
+<!--
+coastal-hazards.n52.endpoint: Specifies where the application should look for the web processing endpoint -->
+<Environment name="coastal-hazards.n52.endpoint" type="java.lang.String" value="http://localhost:8080/coastal-hazards-n52" />
