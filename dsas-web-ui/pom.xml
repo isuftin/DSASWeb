@@ -15,9 +15,16 @@
 
 	<properties>
 		<slf4j.version>1.7.2</slf4j.version>
-		<version.dsasbootstrap>2.3.2</version.dsasbootstrap>
+		<version.bootstrap>2.3.2</version.bootstrap>
 		<version.bootstrap.switch>1.8</version.bootstrap.switch>
 		<version.handlebars>1.3.0</version.handlebars>
+		<version.jquery>2.1.4</version.jquery>
+		<version.jquery.ui>1.11.4</version.jquery.ui>
+		<version.log4js>1.4.3-3</version.log4js>
+		<version.openlayers>2.13.1</version.openlayers>
+		<version.fontawesome>4.4.0</version.fontawesome>
+		<version.sugarjs>1.4.1</version.sugarjs>
+		<version.handlebars>4.0.2</version.handlebars>
 	</properties>
 
 	<dependencies>
@@ -68,12 +75,12 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
-		</dependency>
+		</dependency><!--
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>javax.servlet.jsp-api</artifactId>
 			<version>2.3.1</version>
-		</dependency>
+		</dependency>-->
 		
 		<!-- JS Templates -->
 		<dependency>
@@ -85,33 +92,33 @@
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
-			<version>2.1.4</version>
+			<version>${version.jquery}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery-ui</artifactId>
-			<version>1.11.4</version>
+			<version>${version.jquery.ui}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>2.3.2</version>
+			<version>${version.bootstrap}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap-switch</artifactId>
-			<version>1.8</version>
+			<version>${version.bootstrap.switch}</version>
 		</dependency>
 		<dependency>
 			<groupId>gov.usgs.cida.jslibs</groupId>
 			<artifactId>log4js</artifactId>
-			<version>1.4.3-3</version>
+			<version>${version.log4js}</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>openlayers</artifactId>
-			<version>2.13.1</version>
+			<version>${version.openlayers}</version>
 		</dependency>
 		<dependency>
 			<groupId>gov.usgs.cida.jslibs</groupId>
@@ -134,7 +141,7 @@
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>sugar</artifactId>
-			<version>1.4.1</version>
+			<version>${version.sugarjs}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
@@ -242,7 +249,7 @@
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>font-awesome</artifactId>
-			<version>4.4.0</version>
+			<version>${version.fontawesome}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openid4java</groupId>
@@ -262,11 +269,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<goal>process-resources</goal>
-				</configuration>
 			</plugin>
 		</plugins>
 		<resources>
