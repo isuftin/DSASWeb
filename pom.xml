@@ -13,6 +13,7 @@
 		<module>dsas-commons</module>
 		<module>dsas-wps</module>
 		<module>dsas-geoserver</module>
+		<module>dsas-n52</module>
 		<module>dsas-web-ui</module>
 	</modules>
 	
@@ -124,6 +125,11 @@
 			<id>geosolutions</id>
 			<name>GeoSolutions</name>
 			<url>http://maven.geo-solutions.it/</url>
+		</repository>
+		<repository>
+			<id>n52-releases</id>
+			<name>52-north Releases</name>
+			<url>http://52north.org/maven/repo/releases/</url>
 		</repository>
 	</repositories>
 	

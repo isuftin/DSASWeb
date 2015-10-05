@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wfs:FeatureCollection xmlns="http://www.opengis.net/wfs" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:f75C2AEA9-16FD-430D-8683-C194F3C91C21="gov.usgs.cida.ch.f75C2AEA9-16FD-430D-8683-C194F3C91C21" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="gov.usgs.cida.ch.f75C2AEA9-16FD-430D-8683-C194F3C91C21 src/test/resources/featureType.xml http://www.opengis.net/wfs WFS-basic.xsd">
+    <gml:boundedBy>
+        <gml:Box srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+            <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587008.8108,4464177.4342 587274.5878,4464689.9289</gml:coordinates>
+        </gml:Box>
+    </gml:boundedBy>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.1">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587008.8108,4464197.2658</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-317.2099126893483</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>10/01/1934</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>10.8</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>T-5281</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>502.45519722</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1934</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.2">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587016.7097,4464196.4911</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-309.2731472980853</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>07/01/1977</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>3.2</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>NJ DEP</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>461.490503117</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1977</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.3">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587092.3099,4464189.0772</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-233.3102901614924</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>07/01/1866</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>10.8</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>NJ DEP</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>2278.29945785</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1866</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.4">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587133.6959,4464185.0186</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-191.7257137856658</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>78</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>09/22/2000</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>0.0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>lidar - USGS</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>22081.6207151</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>2000</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.5">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587211.0338,4464177.4342</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-114.01683824301459</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>07/01/1839</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>10.8</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>NJ DEP</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>1772.97770437</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1839</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.6">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587069.2511,4464191.3385</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-256.4796705367778</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>07/01/1899</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>10.8</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>NJ DEP</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>777.680472409</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1899</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.7">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587009.459,4464197.2022</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-316.5585678759164</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>07/01/1971</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>3.2</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>NJ DEP</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>290.595212797</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1971</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.8">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587108.5868,4464689.8795</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-265.9891665043873</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>10/01/1934</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>10.8</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>T-5281</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>733.392267554</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1934</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.9">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587125.256,4464688.2448</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-249.2399680781954</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>07/01/1977</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>3.2</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>NJ DEP</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>496.57817885</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1977</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.10">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587138.0002,4464686.995</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-236.4346758948039</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>07/01/1866</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>10.8</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>NJ DEP</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>2278.29945785</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1866</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.11">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587186.5614,4464682.2327</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-187.6405276057328</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>78</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>09/22/2000</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>0.0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>lidar - USGS</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>22081.6207151</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>2000</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.12">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587274.5878,4464673.6002</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-99.19182637657866</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>07/01/1839</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>10.8</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>NJ DEP</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>1772.97770437</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1839</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.13">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587108.0838,4464689.9289</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-266.49455518092964</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>07/01/1899</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>10.8</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>NJ DEP</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>1196.99985959</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1899</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+    <gml:featureMember>
+        <f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects fid="NewJerseyN2_intersects.14">
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+                <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#32618">
+                    <gml:coordinates xmlns:gml="http://www.opengis.net/gml" decimal="." cs="," ts=" ">587128.3899,4464687.9375</gml:coordinates>
+                </gml:Point>
+            </f75C2AEA9-16FD-430D-8683-C194F3C91C21:the_geom>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:TransectID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>-246.09102958004308</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Distance>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>0</f75C2AEA9-16FD-430D-8683-C194F3C91C21:RouteID>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>07/01/1971</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Date_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>3.2</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Uncy>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>NJ DEP</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Source>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>651.753977818</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Shape_Leng>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>1971</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Year_>
+            <f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>1</f75C2AEA9-16FD-430D-8683-C194F3C91C21:Default_D>
+        </f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersects>
+    </gml:featureMember>
+</wfs:FeatureCollection>
