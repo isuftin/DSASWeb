@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WPSConfiguration xsi:schemaLocation="http://n52.org/wps schema_v2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://n52.org/wps">
+    <Datahandlers>
+        <ParserList>
+            <!-- FEATURE COLLECTION R PARSER temporarily disabled -->
+            <!--Parser name="FeatureCollectionRParser" className="gov.usgs.cida.coastalhazards.parser.FeatureCollectionRParser" active="true">
+            <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/2.0.0/feature.xsd"/>
+            <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/2.1.1/feature.xsd"/>
+            <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
+            <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/2.1.2.1/feature.xsd"/>
+            <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/3.0.0/base/feature.xsd"/>
+            <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/3.0.1/base/feature.xsd"/>
+            <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/3.1.0/base/feature.xsd"/>
+            <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/3.1.1/base/feature.xsd"/>
+            <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/3.2.1/base/feature.xsd"/>
+            <Format mimetype="text/xml; subtype=gml/2.0.0" schema="http://schemas.opengis.net/gml/2.0.0/feature.xsd"/>
+            <Format mimetype="text/xml; subtype=gml/2.1.1" schema="http://schemas.opengis.net/gml/2.1.1/feature.xsd"/>
+            <Format mimetype="text/xml; subtype=gml/2.1.2" schema="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
+            <Format mimetype="text/xml; subtype=gml/2.1.2.1" schema="http://schemas.opengis.net/gml/2.1.2.1/feature.xsd"/>
+            <Format mimetype="text/xml; subtype=gml/3.0.0" schema="http://schemas.opengis.net/gml/3.0.0/base/feature.xsd"/>
+            <Format mimetype="text/xml; subtype=gml/3.0.1" schema="http://schemas.opengis.net/gml/3.0.1/base/feature.xsd"/>
+            <Format mimetype="text/xml; subtype=gml/3.1.0" schema="http://schemas.opengis.net/gml/3.1.0/base/feature.xsd"/>
+            <Format mimetype="text/xml; subtype=gml/3.1.1" schema="http://schemas.opengis.net/gml/3.1.1/base/feature.xsd"/>
+            <Format mimetype="text/xml; subtype=gml/3.2.1" schema="http://schemas.opengis.net/gml/3.2.1/base/feature.xsd"/>
+            </Parser-->
+            <!--Parser name="GenericFileParser" className="org.n52.wps.io.datahandler.parser.GenericFileParser" active="true">
+            <Format mimetype="text/xml" />
+            </Parser-->
+            <Parser name="CoastalChangeHazardsParser" className="gov.usgs.cida.dsas.parser.DSASParser" active="true">
+                <Format mimetype="text/xml"/>
+                <Format mimetype="application/xml"/>
+            </Parser>
+
+        </ParserList>
+        <GeneratorList>
+            <Generator name="GenericFileGenerator" className="org.n52.wps.io.datahandler.generator.GenericFileGenerator" active="true">
+                <Format mimetype="application/dbase"/>
+                <Format mimetype="application/shp" encoding="base64"/>
+                <Format mimetype="application/dgn"/>
+                <Format mimetype="image/tiff" encoding="base64"/>
+                <Format mimetype="image/geotiff"/>
+                <Format mimetype="text/plain" encoding="base64"/>
+                <Format mimetype="application/img"/>
+                <Format mimetype="application/shp"/>
+                <Format mimetype="application/x-zipped-shp"/>
+                <Format mimetype="image/geotiff" encoding="base64"/>
+                <Format mimetype="application/dgn" encoding="base64"/>
+                <Format mimetype="image/png"/>
+                <Format mimetype="image/png" encoding="base64"/>
+                <Format mimetype="application/x-zipped-shp" encoding="base64"/>
+                <Format mimetype="application/x-erdas-hfa"/>
+                <Format mimetype="application/remap"/>
+                <Format mimetype="text/plain"/>
+                <Format mimetype="application/x-netcdf"/>
+                <Format mimetype="image/tiff"/>
+                <Format mimetype="application/img" encoding="base64"/>
+                <Format mimetype="application/geotiff"/>
+                <Format mimetype="image/jpeg" encoding="base64"/>
+                <Format mimetype="application/x-erdas-hfa" encoding="base64"/>
+                <Format mimetype="application/geotiff" encoding="base64"/>
+                <Format mimetype="application/dbase" encoding="base64"/>
+                <Format mimetype="application/x-netcdf" encoding="base64"/>
+                <Format mimetype="image/jpeg"/>
+                <Format mimetype="application/x-geotiff" encoding="base64"/>
+                <Format mimetype="application/x-geotiff"/>
+                <Format mimetype="application/remap" encoding="base64"/>
+                <Format mimetype="application/zip"/>
+                <Format mimetype="application/zip" encoding="base64"/>
+            </Generator>
+        </GeneratorList>
+    </Datahandlers>
+    <AlgorithmRepositoryList>
+        <Repository name="LocalRAlgorithmRepository" className="org.n52.wps.server.r.LocalRAlgorithmRepository" active="true">
+            <Property active="true" name="Algorithm">org.n52.wps.server.r.test_wps</Property>
+            <Property name="Rserve_Host" active="true">cida-wiwsc-rserve.er.usgs.gov</Property>
+            <Property name="Rserve_Port" active="true">6311</Property>
+            <Property name="Rserve_User" active="true">need_a_username</Property>
+            <Property name="Rserve_Password" active="true">need_a_password</Property>
+            <Property active="true" name="Script_Dir">R/r_scripts</Property>
+            <Property active="true" name="Resource_Dir">R/resources</Property>
+            <Property name="R_Work_Dir" active="true">default</Property>
+            <Property name="Enable_Batch_Start" active="true">false</Property>
+        </Repository>
+    </AlgorithmRepositoryList>
+    <!--@hostname@, @hostport@ and @webappPath@ are filtered and replaced by values derived from
+    HttpServelRequest instance of getRequestURL() in response using a Filter-->
+    <Server hostname="cida-wiwsc-cchdev.er.usgs.gov" hostport="8080" webappPath="wps" includeDataInputsInResponse="true" computationTimeoutMilliSeconds="5" cacheCapabilites="false">
+        <Database>
+            <!-- NOTE: database wipe is only implemented for the FlatFileDatabase (the default) -->
+            <!-- enable database wiping base on values below -->
+            <Property name="wipe.enabled" active="true">true</Property>
+            <!-- scans database every 1 hour -->
+            <Property name="wipe.period" active="true">PT1H</Property>
+            <!-- deletes files older than 7 days -->
+            <Property name="wipe.threshold" active="true">P7D</Property>
+        </Database>
+    </Server>
+</WPSConfiguration>

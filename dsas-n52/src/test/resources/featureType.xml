@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:f75C2AEA9-16FD-430D-8683-C194F3C91C21="gov.usgs.cida.ch.f75C2AEA9-16FD-430D-8683-C194F3C91C21" xmlns:gml="http://www.opengis.net/gml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="gov.usgs.cida.ch.f75C2AEA9-16FD-430D-8683-C194F3C91C21">
+  <xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://localhost:9080/coastal-hazards-geoserver/schemas/gml/2.1.2/feature.xsd"/>
+  <xsd:complexType name="NewJerseyN2_intersectsType">
+    <xsd:complexContent>
+      <xsd:extension base="gml:AbstractFeatureType">
+        <xsd:sequence>
+          <xsd:element maxOccurs="1" minOccurs="0" name="the_geom" nillable="true" type="gml:PointPropertyType"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="TransectID" nillable="true" type="xsd:int"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="Distance" nillable="true" type="xsd:double"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="RouteID" nillable="true" type="xsd:int"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="Date_" nillable="true" type="xsd:string"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="Uncy" nillable="true" type="xsd:double"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="Source" nillable="true" type="xsd:string"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="Shape_Leng" nillable="true" type="xsd:double"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="Year_" nillable="true" type="xsd:int"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="Default_D" nillable="true" type="xsd:int"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="NewJerseyN2_intersects" substitutionGroup="gml:_Feature" type="f75C2AEA9-16FD-430D-8683-C194F3C91C21:NewJerseyN2_intersectsType"/>
+</xsd:schema>
