@@ -2,8 +2,8 @@ package gov.usgs.cida.dsas.dao.shoreline;
 
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
-import gov.usgs.cida.coastalhazards.service.util.Property;
-import gov.usgs.cida.coastalhazards.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.service.util.Property;
+import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
 import gov.usgs.cida.utilities.features.Constants;
 import java.io.File;

@@ -1,4 +1,4 @@
-package gov.usgs.cida.coastalhazards.service.util;
+package gov.usgs.cida.dsas.service.util;
 
 import gov.usgs.cida.config.DynamicReadOnlyProperties;
 import gov.usgs.cida.utilities.properties.JNDISingleton;

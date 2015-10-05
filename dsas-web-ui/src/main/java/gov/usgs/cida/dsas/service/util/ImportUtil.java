@@ -1,4 +1,4 @@
-package gov.usgs.cida.coastalhazards.service.util;
+package gov.usgs.cida.dsas.service.util;
 
 import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse;

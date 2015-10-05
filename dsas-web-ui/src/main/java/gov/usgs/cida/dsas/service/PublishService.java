@@ -1,11 +1,11 @@
 package gov.usgs.cida.dsas.service;
 
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
+import gov.usgs.cida.dsas.metadata.MetadataValidator;
+import gov.usgs.cida.dsas.service.util.Property;
+import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.utilities.communication.RequestResponseHelper;
 import gov.usgs.cida.utilities.file.FileHelper;
-import gov.usgs.cida.coastalhazards.metadata.MetadataValidator;
-import gov.usgs.cida.coastalhazards.service.util.Property;
-import gov.usgs.cida.coastalhazards.service.util.PropertyUtil;
 import gov.usgs.cida.utilities.communication.CSWHandler;
 import gov.usgs.cida.utilities.xml.XMLUtils;
 import java.io.File;
@@ -172,7 +172,7 @@ public class PublishService extends HttpServlet {
 				.append("<wps:Input>")
 				.append("<ows:Identifier>target-store</ows:Identifier>")
 				.append("<wps:Data>")
-				.append("<wps:LiteralData>").append(store.equals("ch-input") ? "Coastal Hazards Input" : "Coastal Hazards Output").append("</wps:LiteralData>")
+				.append("<wps:LiteralData>").append(store.equals("ch-input") ? "DSAS Input" : "DSAS Output").append("</wps:LiteralData>")
 				.append("</wps:Data>");
 		if (StringUtils.isNotBlank(declaredSRS)) {
 			response.append("</wps:Input>")
