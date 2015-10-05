@@ -35,12 +35,12 @@ import org.opengis.feature.type.FeatureType;
  *
  * @author jiwalker
  */
-public class CoastalChangeHazardsParser extends AbstractParser {
+public class DSASParser extends AbstractParser {
     
     private static List<String> rateColumns = Lists.newArrayList(BASELINE_DIST_ATTR, BASELINE_ID_ATTR, 
                         LRR_ATTR, LCI_ATTR, WLR_ATTR, WCI_ATTR, SCE_ATTR, NSM_ATTR, EPR_ATTR);
 
-    public CoastalChangeHazardsParser() {
+    public DSASParser() {
         supportedIDataTypes.add(GenericFileDataBinding.class);
     }
 
