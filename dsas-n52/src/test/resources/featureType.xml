@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:f75C2AEA9-16FD-430D-8683-C194F3C91C21="gov.usgs.cida.ch.f75C2AEA9-16FD-430D-8683-C194F3C91C21" xmlns:gml="http://www.opengis.net/gml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="gov.usgs.cida.ch.f75C2AEA9-16FD-430D-8683-C194F3C91C21">
-  <xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://localhost:9080/coastal-hazards-geoserver/schemas/gml/2.1.2/feature.xsd"/>
+  <xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://localhost:9080/dsas-geoserver/schemas/gml/2.1.2/feature.xsd"/>
   <xsd:complexType name="NewJerseyN2_intersectsType">
     <xsd:complexContent>
       <xsd:extension base="gml:AbstractFeatureType">

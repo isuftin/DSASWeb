@@ -26,7 +26,7 @@
             <!--Parser name="GenericFileParser" className="org.n52.wps.io.datahandler.parser.GenericFileParser" active="true">
             <Format mimetype="text/xml" />
             </Parser-->
-            <Parser name="CoastalChangeHazardsParser" className="gov.usgs.cida.dsas.parser.DSASParser" active="true">
+            <Parser name="DSASParser" className="gov.usgs.cida.dsas.parser.DSASParser" active="true">
                 <Format mimetype="text/xml"/>
                 <Format mimetype="application/xml"/>
             </Parser>
