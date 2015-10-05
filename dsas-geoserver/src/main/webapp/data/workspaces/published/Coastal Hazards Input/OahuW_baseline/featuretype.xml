@@ -1,0 +1,49 @@
+<featureType>
+  <id>FeatureTypeInfoImpl--1ce92bd:13b8a6bfee5:-7f86</id>
+  <name>OahuW_baseline</name>
+  <nativeName>OahuW_baseline</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl-378103b2:12a1edeecf1:-7fe8</id>
+  </namespace>
+  <title>OahuW_baseline</title>
+  <description>Contents of file</description>
+  <keywords>
+    <string>OahuW_baseline</string>
+    <string>features</string>
+  </keywords>
+  <nativeCRS>GEOGCS[&quot;GCS_WGS_1984&quot;, 
+  DATUM[&quot;D_WGS_1984&quot;, 
+    SPHEROID[&quot;WGS_1984&quot;, 6378137.0, 298.257223563]], 
+  PRIMEM[&quot;Greenwich&quot;, 0.0], 
+  UNIT[&quot;degree&quot;, 0.017453292519943295], 
+  AXIS[&quot;Longitude&quot;, EAST], 
+  AXIS[&quot;Latitude&quot;, NORTH]]</nativeCRS>
+  <srs>EPSG:900913</srs>
+  <nativeBoundingBox>
+    <minx>-1.761601688739026E7</minx>
+    <maxx>-1.7603175985630758E7</maxx>
+    <miny>2434412.488884801</miny>
+    <maxy>2457876.2953015477</maxy>
+    <crs class="projected">EPSG:900913</crs>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-158.2473721525027</minx>
+    <maxx>-158.13202036937832</maxx>
+    <miny>21.35628217551581</miny>
+    <maxy>21.5524559578377</maxy>
+    <crs>GEOGCS[&quot;WGS84(DD)&quot;, 
+  DATUM[&quot;WGS84&quot;, 
+    SPHEROID[&quot;WGS84&quot;, 6378137.0, 298.257223563]], 
+  PRIMEM[&quot;Greenwich&quot;, 0.0], 
+  UNIT[&quot;degree&quot;, 0.017453292519943295], 
+  AXIS[&quot;Geodetic longitude&quot;, EAST], 
+  AXIS[&quot;Geodetic latitude&quot;, NORTH]]</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>REPROJECT_TO_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl-2dbaa801:13b52754b9e:-7fde</id>
+  </store>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+</featureType>

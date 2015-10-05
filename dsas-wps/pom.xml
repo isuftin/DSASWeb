@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>gov.usgs.cida.dsas</groupId>
+		<artifactId>dsas-web</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+    
+	<artifactId>dsas-wps</artifactId>
+	<packaging>jar</packaging>
+    
+	<name>DSAS WPS Processes</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+		</dependency>
+		<dependency>
+			<groupId>gov.usgs.cida.dsas</groupId>
+			<artifactId>dsas-commons</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-api</artifactId>
+		</dependency>
+		<dependency> 
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-shapefile</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.geoserver.extension</groupId>
+			<artifactId>wps-core</artifactId>
+			<version>${gs.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>xmlunit</groupId>
+			<artifactId>xmlunit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymockclassextension</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.mockrunner</groupId>
+			<artifactId>mockrunner</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.geoserver</groupId>
+			<artifactId>main</artifactId>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.geoserver.extension</groupId>
+			<artifactId>wps-core</artifactId>
+			<version>${gs.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+
+		<!-- TESTING -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>gov.usgs.cida.owsutils</groupId>
+			<artifactId>cida-owsutils-commons</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

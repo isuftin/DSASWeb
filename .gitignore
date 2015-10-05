@@ -6,3 +6,6 @@
 /dsas-liquibase/build/
 /dsas-web-ui/catalina.base_IS_UNDEFINED/
 /dsas-uncy-reader/target/
+/dsas-geoserver/target/
+/dsas-wps/target/
+/dsas-commons/target/

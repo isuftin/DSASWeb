@@ -1,0 +1,52 @@
+<featureType>
+  <id>FeatureTypeInfoImpl--1ce92bd:13b8a6bfee5:-7fc1</id>
+  <name>KauaiE_shorelines</name>
+  <nativeName>KauaiE_shorelines</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl-378103b2:12a1edeecf1:-7fe8</id>
+  </namespace>
+  <title>KauaiE_shorelines</title>
+  <description>Contents of file</description>
+  <keywords>
+    <string>KauaiE_shorelines</string>
+    <string>features</string>
+  </keywords>
+  <nativeCRS>GEOGCS[&quot;GCS_WGS_1984&quot;, 
+  DATUM[&quot;D_WGS_1984&quot;, 
+    SPHEROID[&quot;WGS_1984&quot;, 6378137.0, 298.257223563]], 
+  PRIMEM[&quot;Greenwich&quot;, 0.0], 
+  UNIT[&quot;degree&quot;, 0.017453292519943295], 
+  AXIS[&quot;Longitude&quot;, EAST], 
+  AXIS[&quot;Latitude&quot;, NORTH]]</nativeCRS>
+  <srs>EPSG:900913</srs>
+  <nativeBoundingBox>
+    <minx>-1.773902672487876E7</minx>
+    <maxx>-1.773241743360871E7</maxx>
+    <miny>2506420.15386925</miny>
+    <maxy>2532537.4580667326</maxy>
+    <crs class="projected">EPSG:900913</crs>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-159.35238832363248</minx>
+    <maxx>-159.29301604998165</maxx>
+    <miny>21.95747323424624</miny>
+    <maxy>22.174903308472043</maxy>
+    <crs>GEOGCS[&quot;WGS84(DD)&quot;, 
+  DATUM[&quot;WGS84&quot;, 
+    SPHEROID[&quot;WGS84&quot;, 6378137.0, 298.257223563]], 
+  PRIMEM[&quot;Greenwich&quot;, 0.0], 
+  UNIT[&quot;degree&quot;, 0.017453292519943295], 
+  AXIS[&quot;Geodetic longitude&quot;, EAST], 
+  AXIS[&quot;Geodetic latitude&quot;, NORTH]]</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>REPROJECT_TO_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="cachingEnabled">false</entry>
+  </metadata>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl-2dbaa801:13b52754b9e:-7fde</id>
+  </store>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+</featureType>

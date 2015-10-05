@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="utmZoneCount" class="gov.usgs.cida.dsas.wps.UTMZoneCountProcess" />
+	<bean id="resultsRaster" class="gov.usgs.cida.dsas.wps.ResultsRasterProcess" />
+	<bean id="ribboning" class="gov.usgs.cida.dsas.wps.RibboningProcess" />
+	<bean id="nearestPointOnLine" class="gov.usgs.cida.dsas.wps.NearestPointOnLineProcess" />
+	<bean id="plainTextPPIO" class="gov.usgs.cida.dsas.wps.ppio.PlainTextPPIO" />
+	
+	<bean id="generateTransects" class="gov.usgs.cida.dsas.wps.CreateTransectsAndIntersectionsProcess">
+		<constructor-arg index="0" ref="importProcess"/>
+		<constructor-arg index="1" ref="catalog"/>
+	</bean>
+    
+	<bean id="updateTransects" class="gov.usgs.cida.dsas.wps.UpdateTransectsAndIntersectionsProcess">
+		<constructor-arg index="0" ref="catalog"/>
+	</bean>
+    
+	<bean id="appendColumnsToLayer" class="gov.usgs.cida.dsas.wps.AppendColumnsToLayerProcess">
+		<constructor-arg index="0" ref="importProcess"/>
+		<constructor-arg index="1" ref="catalog"/>
+	</bean>
+
+	<bean id="renameLayerColumns" class="gov.usgs.cida.dsas.wps.RenameLayerColumnsProcess">
+		<constructor-arg index="0" ref="importProcess"/>
+		<constructor-arg index="1" ref="catalog"/>
+	</bean>
+    	<bean id="normalizeLayerColumnNames" class="gov.usgs.cida.dsas.wps.NormalizeLayerColumnNamesProcess">
+		<constructor-arg index="0" ref="importProcess"/>
+		<constructor-arg index="1" ref="catalog"/>
+	</bean>
+
+	<bean id="addResults" class="gov.usgs.cida.dsas.wps.CreateResultsLayerProcess">
+		<constructor-arg index="0" ref="importProcess"/>
+		<constructor-arg index="1" ref="catalog"/>
+	</bean>
+	
+	<bean id="copyLater" class="gov.usgs.cida.dsas.wps.CopyLayer">
+		<constructor-arg index="0" ref="catalog"/>
+		<constructor-arg index="1" ref="importProcess"/>
+	</bean>
+	
+	<bean id="sweeper" class="gov.usgs.cida.dsas.util.GeoserverSweeperStartupListener">
+		<constructor-arg index="0" ref="catalog"/>
+	</bean>
+    
+</beans>

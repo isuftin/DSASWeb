@@ -1,0 +1,14 @@
+<!-- Defines the age that a layer can be before it is removed - Default is 30 days --> 
+<Environment name="dsas.geoserver.layer.age.maximum" type="java.lang.Long" value="2592000000" />
+
+<!-- Defines the period of time between runs of the layer sweeper - Default is 1 hour --> 
+<Environment name="dsas.geoserver.sweeper.run.period" type="java.lang.Long" value="3600000" />
+
+<!-- Defines whether or not to delete empty data stores - Default is false --> 
+<Environment name="dsas.geoserver.sweeper.stores.empty.delete" type="java.lang.Boolean" value="false" />
+
+<!-- Defines whether or not to delete empty data workspaces - Default is false --> 
+<Environment name="dsas.geoserver.sweeper.workspaces.empty.delete" type="java.lang.Boolean" value="false" />
+
+<!-- Defines a comma seperated list of workspace names that should be left untouched - Default is "published" --> 
+<Environment name="dsas.geoserver.sweeper.workspaces.read-only" type="java.lang.String" value="published" />

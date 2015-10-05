@@ -1,0 +1,16 @@
+<layer>
+  <name>MauiN_baseline</name>
+  <id>LayerInfoImpl--1ce92bd:13b8a6bfee5:-7f91</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--570ae188:124761b8d78:-7fe3</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--1ce92bd:13b8a6bfee5:-7f92</id>
+  </resource>
+  <enabled>true</enabled>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>

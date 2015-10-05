@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+	<idinfo>
+		<citation>
+			<citeinfo>
+				<origin>University of Hawaii Coastal Geology Group</origin>
+				<pubdate>2011</pubdate>
+				<title>KauaiN_baseline - Offshore baseline used to cast shore-perpendicular transects for measurement of historical shoreline positions along North Kauai, Hawaii (Haena to Moloaa)</title>
+				<geoform Sync="TRUE">vector digital data</geoform>
+				<serinfo>
+					<sername>Open-File Report</sername>
+					<issue>2011-1009</issue>
+				</serinfo>
+				<pubinfo>
+					<pubplace>Woods Hole Coastal and Marine Science Center, Woods Hole, MA</pubplace>
+					<publish>U.S. Geological Survey, Coastal and Marine Geology Program</publish>
+				</pubinfo>
+				<onlink>http://pubs.usgs.gov/of/2011/1009/</onlink>
+				<lworkcit>
+					<citeinfo>
+						<origin>Bradley M. Romine</origin>
+						<origin>Charles H. Fletcher</origin>
+						<origin>Ayesha S. Genz</origin>
+						<origin>Matthew M. Barbee</origin>
+						<origin>Matthew Dyer</origin>
+						<origin>Tiffany R. Anderson</origin>
+						<origin>S. Chyn Lim</origin>
+						<origin>Sean Vitousek</origin>
+						<origin>Christopher Bochicchio</origin>
+						<origin>Bruce M. Richmond</origin>
+						<pubdate>2011</pubdate>
+						<title>National Assessment of Shoreline Change: A GIS Compilation of Vector Shorelines and Associated Shoreline Change Data for the Sandy Shorelines of Kauai, Oahu, and Maui; Hawaii</title>
+						<serinfo>
+							<sername>Open-File Report</sername>
+							<issue>2011-1009</issue>
+						</serinfo>
+						<pubinfo>
+							<pubplace>Woods Hole Coastal and Marine Science Center, Woods Hole, MA</pubplace>
+							<publish>U.S. Geological Survey, Coastal and Marine Geology Program</publish>
+						</pubinfo>
+						<onlink>http://pubs.usgs.gov/of/2011/1009/</onlink>
+					</citeinfo>
+				</lworkcit>
+				<ftname Sync="TRUE">KauaiN_baseline</ftname></citeinfo>
+		</citation>
+		<descript>
+			<abstract>
+Sandy ocean beaches are a popular recreational destination, often surrounded by communities containing valuable real estate.  Development is on the rise despite the fact that coastal infrastructure is subjected to flooding and erosion.  As a result, there is an increased demand for accurate information regarding past and present shoreline changes.  To meet these national needs, the Coastal and Marine Geology Program of the U.S. Geological Survey (USGS) is compiling existing reliable historical shoreline data along open-ocean sandy shores of the conterminous United States and parts of Alaska and Hawaii under the National Assessment of Shoreline Change project.
+
+There is no widely accepted standard for analyzing shoreline change.  Existing shoreline data measurements and rate calculation methods vary from study to study and prevent combining results into state-wide or regional assessments.  The impetus behind the National Assessment project was to develop a standardized method of measuring changes in shoreline position that is consistent from coast to coast.  The goal was to facilitate the process of periodically and systematically updating the results in an internally consistent manner.
+</abstract>
+			<purpose>This dataset includes a reference baseline used by the Digital Shoreline Analysis System (DSAS) to calculate rate-of-change statistics for Kauai North region from Haena to Moloaa.  Transects were constructed manually outside of DSAS and later imported.  However, these baselines are required to calculate shoreline change rates in DSAS using the manually-constructed transects.  The transects intersect each shoreline and establish measurement points used to calculate shoreline-change rates.
+
+Rates of long-term and short-term shoreline change were generated in a GIS using the DSAS version 4.2 - An ArcGIS extension for calculating shoreline change: U.S. Geological Survey Open-File Report 2008-1278, Thieler, E.R., Himmelstoss, E.A., Zichichi, J.L., and Ergul, Ayhan.</purpose>
+			<langdata Sync="TRUE">en</langdata></descript>
+		<timeperd>
+			<timeinfo>
+				<sngdate>
+					<caldate>2011</caldate>
+				</sngdate>
+			</timeinfo>
+			<current>publication date</current>
+		</timeperd>
+		<status>
+			<progress>Complete</progress>
+			<update>None planned</update>
+		</status>
+		<spdom>
+			<bounding>
+				<westbc Sync="TRUE">-159.584345</westbc>
+				<eastbc Sync="TRUE">-159.327689</eastbc>
+				<northbc Sync="TRUE">22.229991</northbc>
+				<southbc Sync="TRUE">22.193336</southbc>
+			</bounding>
+			<lboundng><leftbc Sync="TRUE">-159.584345</leftbc><rightbc Sync="TRUE">-159.327689</rightbc><bottombc Sync="TRUE">22.193336</bottombc><topbc Sync="TRUE">22.229991</topbc></lboundng></spdom>
+		<keywords>
+			<theme>
+				<themekt>General</themekt>
+				<themekey>Baseline</themekey>
+				<themekey>Shoreline Change Rate</themekey>
+				<themekey>Weighted Linear Regression Rate</themekey>
+				<themekey>Digital Shoreline Analysis System</themekey>
+				<themekey>DSAS</themekey>
+				<themekey>U.S. Geological Survey</themekey>
+				<themekey>USGS</themekey>
+				<themekey>Coastal and Marine Geology Program</themekey>
+				<themekey>CMGP</themekey>
+				<themekey>Woods Hole Coastal and Marine Science Center</themekey>
+				<themekey>WHCMSC</themekey>
+				<themekey>National Assessment of Shoreline Change Project</themekey>
+				<themekey>University of Hawaii Coastal Geology Group</themekey>
+			</theme>
+			<theme>
+				<themekt>ISO 19115 Topic Category</themekt>
+				<themekey>oceans</themekey>
+				<themekey>oceans and estuaries</themekey>
+				<themekey>oceans and coastal</themekey>
+				<themekey>environment</themekey>
+				<themekey>geoscientificInformation</themekey>
+			</theme>
+			<place>
+				<placekt>General</placekt>
+				<placekey>Hawaii</placekey>
+				<placekey>United States</placekey>
+				<placekey>Kauai</placekey>
+				<placekey>North Kauai</placekey>
+				<placekey>Haena, Hawaii</placekey><placekey>Moloaa, Hawaii</placekey></place>
+		</keywords>
+		<accconst>None</accconst>
+		<useconst>Public domain data from the U.S. Government are freely redistributable with proper metadata and source attribution. Please recognize the University of Hawaii Coastal Geology Group as the originator of the dataset.</useconst>
+		<ptcontac>
+			<cntinfo>
+				<cntorgp>
+					<cntorg>U.S. Geological Survey</cntorg>
+				</cntorgp>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>384 Woods Hole Road</address>
+					<city>Woods Hole</city>
+					<state>MA</state>
+					<postal>02543-1598</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>508-548-8700</cntvoice>
+				<cntfax>508-547-2310</cntfax>
+			</cntinfo>
+		</ptcontac>
+		<native Sync="TRUE">Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 3; ESRI ArcCatalog 9.3.0.1770</native>
+		<crossref>
+			<citeinfo>
+				<origin>Charles H. Fletcher</origin>
+				<origin>Bradley M. Romine</origin>
+				<origin>Ayesha S. Genz</origin>
+				<origin>Matthew M. Barbee</origin>
+				<origin>Matthew Dyer</origin>
+				<origin>Tiffany R. Anderson</origin>
+				<origin>S. Chyn Lim</origin>
+				<origin>Sean Vitousek</origin>
+				<origin>Christopher Bochicchio</origin>
+				<origin>Bruce M. Richmond</origin>
+				<pubdate>2011</pubdate>
+				<title>National Assessment of Shoreline Change: Historical Shoreline Change in the Hawaiian Islands</title>
+				<serinfo>
+					<sername>Open-File Report</sername>
+					<issue>2011-1051</issue>
+				</serinfo>
+				<pubinfo>
+					<pubplace>Woods Hole Coastal and Marine Science Center, Woods Hole, MA</pubplace>
+					<publish>U.S. Geological Survey, Coastal and Marine Geology Program</publish>
+				</pubinfo>
+				<onlink>http://pubs.usgs.gov/of/2011/1051/</onlink>
+			</citeinfo>
+		</crossref>
+		<crossref>
+			<citeinfo>
+				<origin>E.R. Thieler</origin>
+				<origin>E.A. Himmelstoss</origin>
+				<origin>J.L. Zichichi</origin>
+				<origin>A. Ergul</origin>
+				<pubdate>2009</pubdate>
+				<title>Digital Shoreline Analysis System (DSAS) version 4.0 - An ArcGIS extension for calculating shoreline change</title>
+				<othercit>Current version of software at time of use was 4.2</othercit>
+				<onlink>http://pubs.usgs.gov/of/2008/1278/</onlink>
+				<onlink>http://woodshole.er.usgs.gov/project-pages/dsas/version4/index.html</onlink>
+				<onlink>http://woodshole.er.usgs.gov/project-pages/dsas/</onlink>
+			</citeinfo>
+		</crossref>
+		<natvform Sync="TRUE">Shapefile</natvform></idinfo>
+	<dataqual>
+		<attracc>
+			<attraccr>The attribute in this layer is based on the requirements for use within the Digital Shoreline Analysis System (DSAS) software (USGS Open-File Report 2008-1278).  The data have been quality checked and the attribute value (ID) increments sequentially alongshore. The attribute value (ID) may not always increment sequentially offshore. Transects may cross seaward of historical shorelines resulting in non-sequential numbering offshore.  This is done to maintain roughly equal spacing and perpendicular alignment of transects to shorelines on convex (embayed) coasts.</attraccr>
+		</attracc>
+		<logic>All polylines have a unique identification attribute (ID) used to designate the alongshore order of baselines.  Adjacent baseline segments may overlap and are not necessarily continuous. Baseline segments may overlap to maintain roughly equal spacing and perpendicular alignment of transects (cast from the baselines) to historical shorelines on convex (embayed) coasts. </logic>
+		<complete>This baseline file is complete and contains all baseline segments for the North Kauai coastal region where shoreline data were available to calculate either a short- or long-term rate. Transects were constructed manually outside of DSAS and later imported.  However, these baselines are required to calculate shoreline change rates in DSAS using the manually-constructed transects. </complete>
+		<posacc>
+			<horizpa>
+				<horizpar>The baseline serves as a reference point for transects cast by the Digital Shoreline Analysis System (DSAS) software.  It does not correspond to any real-world feature.</horizpar>
+			</horizpa>
+		</posacc>
+		<lineage>
+			<procstep>
+				<procdesc>A series of baseline segments were constructed offshore from the time series of shoreline positions using standard editing tools in ArcMap v.9.3. Baselines are provided to allow the user to replicate our rate calculations with DSAS v4.2 but transects cannot be re-cast in DSAS using our baselines. Transects were constructed outside of DSAS and later imported.  </procdesc>
+				<procdate>2009</procdate>
+				<proccont>
+					<cntinfo>
+						<cntperp>
+							<cntper>Ayesha Genz</cntper>
+							<cntorg>University of Hawaii Coastal Geology Group</cntorg>
+						</cntperp>
+						<cntpos>Research Assistant</cntpos>
+						<cntaddr>
+							<addrtype>mailing and physical address</addrtype>
+							<address>University of Hawaii</address>
+							<address>Department of Geology and Geophysics</address>
+							<address>1680 East-West Road</address>
+							<address>POST Room 721</address>
+							<city>Honolulu</city>
+							<state>HI</state>
+							<postal>96822</postal>
+							<country>USA</country>
+						</cntaddr>
+						<cntvoice>808-956-3605</cntvoice>
+						<cntfax>808-956-5512</cntfax>
+						<cntemail>agenz@hawaii.edu</cntemail>
+					</cntinfo>
+				</proccont>
+			</procstep>
+			<procstep>
+				<procdesc>The baseline feature class was exported from a personal geodatabase to a shapefile in ArcCatalog (v.9.3) by performing a right-mouse click on the data layer &gt; export &gt; to shapefile (single).  
+
+This process step and all subsequent process steps were performed by the same person: Bradley M. Romine </procdesc>
+				<procdate>20101026</procdate>
+				<proccont><cntinfo><cntaddr><address>1680 East-West Road</address><addrtype>mailing and physical address</addrtype><address>POST Room 721</address><city>Honolulu</city><state>HI</state><postal>96822</postal><country>USA</country></cntaddr><cntperp><cntper>Bradley Romine</cntper><cntorg>University of Hawaii Coastal Geology</cntorg></cntperp><cntpos>graduate research assistant</cntpos><cntvoice>808-956-3605</cntvoice><cntfax>808-956-5512</cntfax></cntinfo></proccont></procstep>
+			<procstep>
+				<procdesc>The baseline shapefile was projected in ESRI's ArcToolbox (v.9.3) &gt; Data Management Tools &gt; Projections and Transformations &gt; Feature &gt; Project.  Parameters: input projection - UTM zone 4N (NAD 83); output projection - geographic coordinates (WGS 84); transformation - NAD_1983_To_WGS_1984_3 (Hawaii).</procdesc>
+				<procdate>20110707</procdate>
+			</procstep>
+		</lineage>
+	</dataqual>
+	<spdoinfo>
+		<direct Sync="TRUE">Vector</direct>
+		<ptvctinf>
+			<sdtsterm Name="KauaiN_baseline">
+				<sdtstype Sync="TRUE">String</sdtstype>
+				<ptvctcnt Sync="TRUE">1104</ptvctcnt>
+			</sdtsterm>
+			<esriterm Name="KauaiN_baseline"><efeatyp Sync="TRUE">Simple</efeatyp><efeageom Sync="TRUE">Polyline</efeageom><esritopo Sync="TRUE">FALSE</esritopo><efeacnt Sync="TRUE">1104</efeacnt><spindex Sync="TRUE">FALSE</spindex><linrefer Sync="TRUE">FALSE</linrefer></esriterm></ptvctinf>
+	</spdoinfo>
+	<spref>
+		<horizsys>
+			<geograph>
+				<latres>0.000001</latres>
+				<longres>0.000001</longres>
+				<geogunit Sync="TRUE">Decimal degrees</geogunit>
+			</geograph>
+			<geodetic>
+				<horizdn Sync="TRUE">D_WGS_1984</horizdn>
+				<ellips Sync="TRUE">WGS_1984</ellips>
+				<semiaxis Sync="TRUE">6378137.000000</semiaxis>
+				<denflat Sync="TRUE">298.257224</denflat>
+			</geodetic>
+			<cordsysn><geogcsn Sync="TRUE">GCS_WGS_1984</geogcsn></cordsysn></horizsys>
+	</spref>
+	<eainfo>
+		<detailed Name="KauaiN_baseline">
+			<enttyp>
+				<enttypl Sync="TRUE">KauaiN_baseline</enttypl>
+				<enttypd>Reference baseline used by the Digital Shoreline Analysis System (DSAS) to calculate rate-of-change statistics</enttypd>
+				<enttypds>USGS</enttypds>
+				<enttypt Sync="TRUE">Feature Class</enttypt><enttypc Sync="TRUE">1104</enttypc></enttyp>
+			<attr>
+				<attrlabl>FID</attrlabl>
+				<attrdef>Internal feature number.</attrdef>
+				<attrdefs>ESRI</attrdefs>
+				<attrdomv>
+					<udom>Sequential unique whole numbers that are automatically generated.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">FID</attalias><attrtype Sync="TRUE">OID</attrtype><attwidth Sync="TRUE">4</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>Shape</attrlabl>
+				<attrdef>Feature geometry.</attrdef>
+				<attrdefs>ESRI</attrdefs>
+				<attrdomv>
+					<udom Sync="TRUE">Coordinates defining the features.</udom></attrdomv>
+				<attalias Sync="TRUE">Shape</attalias><attrtype Sync="TRUE">Geometry</attrtype><attwidth Sync="TRUE">0</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ID</attrlabl>
+				<attrdef>Field required by the Digital Shoreline Analysis System (DSAS) software.  DSAS uses this value to determine the ordering sequence of transects when the baseline feature contains multiple segments.  Individual segments are numbered sequentially alongshore.</attrdef>
+				<attrdefs>U.S. Geological Survey</attrdefs>
+				<attrdomv>
+					<rdom>
+						<rdommin>1</rdommin>
+						<rdommax>1104</rdommax>
+					</rdom>
+				</attrdomv>
+				<attalias Sync="TRUE">Id</attalias><attrtype Sync="TRUE">Integer</attrtype><attwidth Sync="TRUE">9</attwidth><atprecis Sync="TRUE">9</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>Shape_Leng</attrlabl>
+				<attrdef>Transect length measured in meters in UTM projection, zone 4N on NAD83 datum</attrdef>
+				<attrdefs>ESRI</attrdefs>
+				<attalias Sync="TRUE">Shape_Leng</attalias><attrtype Sync="TRUE">Float</attrtype><attwidth Sync="TRUE">19</attwidth><attrdomv><rdom><rdommin>0.59</rdommin><rdommax>15.98</rdommax></rdom></attrdomv><atnumdec Sync="TRUE">11</atnumdec></attr>
+		</detailed>
+	</eainfo>
+	<distinfo>
+		<distrib>
+			<cntinfo>
+				<cntorgp>
+					<cntorg>U.S. Geological Survey</cntorg>
+				</cntorgp>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>384 Woods Hole Road</address>
+					<city>Woods Hole</city>
+					<state>MA</state>
+					<postal>02543-1598</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>508-548-8700</cntvoice>
+				<cntfax>508-457-2310</cntfax>
+			</cntinfo>
+		</distrib>
+		<resdesc>Downloadable Data</resdesc>
+		<distliab>
+Neither the U.S. Government, the Department of the Interior, nor the USGS, nor any of their employees, contractors, or subcontractors, make any warranty, express or implied, nor assume any legal liability or responsibility for the accuracy, completeness, or usefulness of any information, apparatus, product, or process disclosed, nor represent that its use would not infringe on privately owned rights. The act of distribution shall not constitute any such warranty, and no responsibility is assumed by the USGS in the use of these data or related materials.
+
+Any use of trade, product, or firm names is for descriptive purposes only and does not imply endorsement by the U.S. Government.
+</distliab>
+		<stdorder>
+			<digform>
+				<digtinfo>
+					<formname>WinZip</formname>
+					<formvern>9.0</formvern>
+					<formspec>ESRI polyline shapefile</formspec>
+					<formcont>This WinZip file contains the baseline shapefile for use generating transects within the Digital Shoreline Analysis System for the Kauai North coastal region from Haena to Moloaa.</formcont>
+					<filedec>Use WinZip or pkUnzip</filedec>
+					<transize>64KB</transize>
+					<dssize Sync="TRUE">0.093</dssize></digtinfo>
+				<digtopt>
+					<onlinopt>
+						<computer>
+							<networka>
+								<networkr>http://pubs.usgs.gov/of/2011/1009/data/Kauai/KauaiN/KauaiN_baseline.zip</networkr>
+							</networka>
+						</computer>
+						<accinstr>Data are downloadable via the World Wide Web (WWW).</accinstr>
+					</onlinopt>
+				</digtopt>
+			</digform>
+			<fees>None</fees>
+		</stdorder>
+		<techpreq>This zip file contains data available in Environmental Systems Research Institute (ESRI) polyline shapefile format. The user must have ArcGIS or ArcView 3.0 or greater software to read and process the data file. In lieu of ArcView or ArcGIS, the user may utilize another GIS application package capable of importing the data. A free data viewer, ArcExplorer, capable of displaying the data is available from ESRI at www.esri.com.</techpreq>
+	</distinfo>
+	<metainfo>
+		<metd Sync="TRUE">20111102</metd>
+		<metc>
+			<cntinfo>
+				<cntperp>
+					<cntper>Bradley M. Romine</cntper>
+					<cntorg>University of Hawaii Coastal Geology Group</cntorg>
+				</cntperp>
+				<cntpos>graduate student, research assistant</cntpos>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>University of Hawaii Coastal Geology Group</address>
+					<address>1680 East-West Road</address>
+					<address>POST Room 721</address>
+					<city>Honolulu</city>
+					<state>HI</state>
+					<postal>96822</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>808-956-3605</cntvoice>
+				<cntfax>808-956-5512</cntfax>
+				<cntemail>romine@hawaii.edu</cntemail>
+			</cntinfo>
+		</metc>
+		<metstdn Sync="TRUE">FGDC Content Standards for Digital Geospatial Metadata</metstdn>
+		<metstdv Sync="TRUE">FGDC-STD-001-1998</metstdv>
+		<mettc Sync="TRUE">local time</mettc>
+		<metextns>
+			<onlink>http://www.esri.com/metadata/esriprof80.html</onlink>
+			<metprof>ESRI Metadata Profile</metprof>
+		</metextns>
+		<langmeta Sync="TRUE">en</langmeta><metextns><onlink Sync="TRUE">http://www.esri.com/metadata/esriprof80.html</onlink><metprof Sync="TRUE">ESRI Metadata Profile</metprof></metextns></metainfo>
+	<Esri><MetaID>{C3B4DD88-051F-481E-9E7A-22C351F6B415}</MetaID><CreaDate>20110712</CreaDate><CreaTime>12313000</CreaTime><SyncOnce>FALSE</SyncOnce><SyncDate>20111102</SyncDate><SyncTime>09001500</SyncTime><ModDate>20111102</ModDate><ModTime>09001500</ModTime></Esri><dataIdInfo><envirDesc Sync="TRUE">Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 3; ESRI ArcCatalog 9.3.0.1770</envirDesc><dataLang><languageCode Sync="TRUE" value="en"></languageCode></dataLang><idCitation><resTitle Sync="TRUE">KauaiN_baseline</resTitle><presForm><PresFormCd Sync="TRUE" value="005"></PresFormCd></presForm></idCitation><spatRpType><SpatRepTypCd Sync="TRUE" value="001"></SpatRepTypCd></spatRpType><dataExt><geoEle><GeoBndBox esriExtentType="native"><westBL Sync="TRUE">-159.584345</westBL><eastBL Sync="TRUE">-159.327689</eastBL><northBL Sync="TRUE">22.229991</northBL><southBL Sync="TRUE">22.193336</southBL><exTypeCode Sync="TRUE">1</exTypeCode></GeoBndBox></geoEle></dataExt><geoBox esriExtentType="decdegrees"><westBL Sync="TRUE">-159.584345</westBL><eastBL Sync="TRUE">-159.327689</eastBL><northBL Sync="TRUE">22.229991</northBL><southBL Sync="TRUE">22.193336</southBL><exTypeCode Sync="TRUE">1</exTypeCode></geoBox></dataIdInfo><mdLang><languageCode Sync="TRUE" value="en"></languageCode></mdLang><mdStanName Sync="TRUE">ISO 19115 Geographic Information - Metadata</mdStanName><mdStanVer Sync="TRUE">DIS_ESRI1.0</mdStanVer><mdChar><CharSetCd Sync="TRUE" value="004"></CharSetCd></mdChar><mdHrLv><ScopeCd Sync="TRUE" value="005"></ScopeCd></mdHrLv><mdHrLvName Sync="TRUE">dataset</mdHrLvName><distInfo><distributor><distorTran><onLineSrc><orDesc Sync="TRUE">002</orDesc><linkage Sync="TRUE">file://\\Coastal2\Working\Projects\USGS_National_Assessment_HI\analysis\Kauai\north\shapefiles_for_usgs\GCS_WGS84_reprojected\KauaiN_baseline.shp</linkage><protocol Sync="TRUE">Local Area Network</protocol></onLineSrc><transSize Sync="TRUE">0.093</transSize></distorTran><distorFormat><formatName Sync="TRUE">Shapefile</formatName></distorFormat></distributor></distInfo><refSysInfo><RefSystem><refSysID><identCode Sync="TRUE">GCS_WGS_1984</identCode></refSysID></RefSystem></refSysInfo><spatRepInfo><VectSpatRep><topLvl><TopoLevCd Sync="TRUE" value="001"></TopoLevCd></topLvl><geometObjs Name="KauaiN_baseline"><geoObjTyp><GeoObjTypCd Sync="TRUE" value="001"></GeoObjTypCd></geoObjTyp><geoObjCnt Sync="TRUE">1104</geoObjCnt></geometObjs></VectSpatRep></spatRepInfo><mdDateSt Sync="TRUE">20111102</mdDateSt></metadata>
