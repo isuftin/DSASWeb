@@ -7,48 +7,48 @@ not exist. The effect is the same. -->
 <Environment name="development" type="java.lang.String" value="true" />
 
 <!-- 
-coastal-hazards.files.upload.max-size: The maximum file size that is allowed to 
+dsas.files.upload.max-size: The maximum file size that is allowed to 
 the server - Set to 0 to disable size checking -->
-<Environment name="coastal-hazards.files.upload.max-size" type="java.lang.String" value="15728640" />
+<Environment name="dsas.files.upload.max-size" type="java.lang.String" value="15728640" />
 
 <!-- 
-coastal-hazards.files.upload.filename-param: The parameter that the application 
+dsas.files.upload.filename-param: The parameter that the application 
 uses to get the name of the incoming file - “qqfile” is used by default. This 
 should probably be left at default. -->
-<Environment name="coastal-hazards.files.upload.filename-param" type="java.lang.String" value="qqfile" />
+<Environment name="dsas.files.upload.filename-param" type="java.lang.String" value="qqfile" />
 
-<!-- The base directory for the project's file structure - the default will be a "coastal-hazards" directory in the system's temp dir-->
-<Environment name="coastal-hazards.files.directory.base" type="java.lang.String" value="/tmp/coastal-hazards" />
+<!-- The base directory for the project's file structure - the default will be a "dsas" directory in the system's temp dir-->
+<Environment name="dsas.files.directory.base" type="java.lang.String" value="/tmp/dsas" />
 
-<!-- Work Directory. Typically where files are temporarily stored after uploading, unzipping, etc. Default will be /work - sits in coastal-hazards.files.directory.base -->
-<Environment name="coastal-hazards.files.directory.work" type="java.lang.String" value="/work" />
+<!-- Work Directory. Typically where files are temporarily stored after uploading, unzipping, etc. Default will be /work - sits in dsas.files.directory.base -->
+<Environment name="dsas.files.directory.work" type="java.lang.String" value="/work" />
 
 <!-- Directory in which uploads are held -->
-<Environment name="coastal-hazards.files.directory.upload" type="java.lang.String" value="/upload" />
+<Environment name="dsas.files.directory.upload" type="java.lang.String" value="/upload" />
 
 <!-- gov.usgs.cida.n52.wps.config.location which is path to wps_config.xml file. Rserve connection won't work without -->
-<Environment name="gov.usgs.cida.n52.wps.config.location" type="java.lang.String" value="/your/tomcat/installation/data/coastal-hazards/n52/wps_config.xml" />
+<Environment name="gov.usgs.cida.n52.wps.config.location" type="java.lang.String" value="/your/tomcat/installation/data/dsas/n52/wps_config.xml" />
 
 <!--
-coastal-hazards.geocoding.endpoint: Data directory where GeoServer stores its files. -->
-<Environment name="coastal-hazards.geoserver.datadir" type="java.lang.String" value="/your/geoserver-data-dir/geoserver/data" />
+dsas.geocoding.endpoint: Data directory where GeoServer stores its files. -->
+<Environment name="dsas.geoserver.datadir" type="java.lang.String" value="/your/geoserver-data-dir/geoserver/data" />
 
 <!--
-coastal-hazards.geoserver.username: User name used for Geoserver -->
-<Environment name="coastal-hazards.geoserver.username" type="java.lang.String" value="supply.your.own" />
+dsas.geoserver.username: User name used for Geoserver -->
+<Environment name="dsas.geoserver.username" type="java.lang.String" value="supply.your.own" />
 
 <!--
-coastal-hazards.geoserver.password: Password used for Geoserver-->
-<Environment name="coastal-hazards.geoserver.password" type="java.lang.String" value="supply.your.own" />
+dsas.geoserver.password: Password used for Geoserver-->
+<Environment name="dsas.geoserver.password" type="java.lang.String" value="supply.your.own" />
 
 <!--
-coastal-hazards.geoserver.endpoint: Specifies where the back-end proxy server 
+dsas.geoserver.endpoint: Specifies where the back-end proxy server 
 should send connections to for Geoserver-->
-<Environment name="coastal-hazards.geoserver.endpoint" type="java.lang.String" value="http://localhost:8081/coastal-hazards-geoserver" />
+<Environment name="dsas.geoserver.endpoint" type="java.lang.String" value="http://localhost:8081/dsas-geoserver" />
 
 <!--
-coastal-hazards.n52.endpoint: Specifies where the application should look for the web processing endpoint -->
-<Environment name="coastal-hazards.n52.endpoint" type="java.lang.String" value="http://localhost:8080/coastal-hazards-n52" />
+dsas.n52.endpoint: Specifies where the application should look for the web processing endpoint -->
+<Environment name="dsas.n52.endpoint" type="java.lang.String" value="http://localhost:8080/dsas-n52" />
 
 <Resource   name="jdbc/dsas" auth="Container"
         type="javax.sql.DataSource"

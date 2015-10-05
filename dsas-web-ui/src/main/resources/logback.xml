@@ -6,12 +6,12 @@
         </encoder>
     </appender>
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${catalina.base}/logs/coastal-hazards/coastal-hazards.log</File>
+        <File>${catalina.base}/logs/dsas/dsas.log</File>
         <encoder>
             <pattern>%d{HH:mm:ss} %p %c{1}: %m%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${catalina.base}/logs/coastal-hazards/coastal-hazards.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${catalina.base}/logs/dsas/dsas.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <timeBasedFileNamingAndTriggeringPolicy

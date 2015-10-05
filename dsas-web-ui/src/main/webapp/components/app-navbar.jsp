@@ -70,7 +70,7 @@
                     <span class="icon-bar"></span>
                 </a>
 
-                <span id="app-navbar-brand"><h4>USGS Coastal Change Hazards</h4></span>
+                <span id="app-navbar-brand"><h4>USGS DSAS</h4></span>
 
                 <div class="nav-collapse">
                     <ul class="nav">

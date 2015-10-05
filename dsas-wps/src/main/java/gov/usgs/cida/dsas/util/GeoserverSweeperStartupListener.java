@@ -32,7 +32,7 @@ import org.springframework.jndi.JndiTemplate;
  */
 public class GeoserverSweeperStartupListener implements InitializingBean {
 
-	protected static final Logger LOGGER = org.geotools.util.logging.Logging.getLogger("gov.usgs.cida.coastalhazards.util");
+	protected static final Logger LOGGER = org.geotools.util.logging.Logging.getLogger("gov.usgs.cida.dsas.util");
 	private static final Long DEFAULT_MAX_LAYER_AGE = 2592000000l; // 30d
 	private static final Long DEFAULT_RUN_EVER_MS = 3600000l; // 1h
 	private static final Boolean DEFAULT_DELETE_EMPTY_STORES = Boolean.FALSE;
@@ -62,39 +62,39 @@ public class GeoserverSweeperStartupListener implements InitializingBean {
 		JndiTemplate template = new JndiTemplate();
 
 		try {
-			this.maxAge = template.lookup("java:comp/env/coastal-hazards.geoserver.layer.age.maximum", Long.class);
+			this.maxAge = template.lookup("java:comp/env/dsas.geoserver.layer.age.maximum", Long.class);
 		} catch (NamingException ex) {
 			this.maxAge = DEFAULT_MAX_LAYER_AGE;
-			LOGGER.log(Level.INFO, "Init parameter 'coastal-hazards.geoserver.layer.age.maximum' was not set. Maximum layer age set to {0}ms", this.maxAge);
+			LOGGER.log(Level.INFO, "Init parameter 'dsas.geoserver.layer.age.maximum' was not set. Maximum layer age set to {0}ms", this.maxAge);
 		}
 
 		try {
-			this.runEveryMs = template.lookup("java:comp/env/coastal-hazards.geoserver.sweeper.run.period", Long.class);
+			this.runEveryMs = template.lookup("java:comp/env/dsas.geoserver.sweeper.run.period", Long.class);
 		} catch (NamingException ex) {
 			this.runEveryMs = DEFAULT_RUN_EVER_MS;
-			LOGGER.log(Level.INFO, "Init parameter 'coastal-hazards.geoserver.sweeper.run.period' was not set. Sweeper will run every {0}ms", this.runEveryMs);
+			LOGGER.log(Level.INFO, "Init parameter 'dsas.geoserver.sweeper.run.period' was not set. Sweeper will run every {0}ms", this.runEveryMs);
 		}
 
 		try {
-			this.deleteEmptyStores = template.lookup("java:comp/env/coastal-hazards.geoserver.sweeper.stores.empty.delete", Boolean.class);
+			this.deleteEmptyStores = template.lookup("java:comp/env/dsas.geoserver.sweeper.stores.empty.delete", Boolean.class);
 		} catch (NamingException ex) {
 			this.deleteEmptyStores = DEFAULT_DELETE_EMPTY_STORES;
-			LOGGER.log(Level.INFO, "Init parameter coastal-hazards.geoserver.sweeper.stores.empty.delete was not set. Empty stores set to be deleted: {0}", this.deleteEmptyStores);
+			LOGGER.log(Level.INFO, "Init parameter dsas.geoserver.sweeper.stores.empty.delete was not set. Empty stores set to be deleted: {0}", this.deleteEmptyStores);
 		}
 
 		try {
-			this.deleteEmptyWorkspaces = template.lookup("java:comp/env/coastal-hazards.geoserver.sweeper.workspaces.empty.delete", Boolean.class);
+			this.deleteEmptyWorkspaces = template.lookup("java:comp/env/dsas.geoserver.sweeper.workspaces.empty.delete", Boolean.class);
 		} catch (NamingException ex) {
 			this.deleteEmptyWorkspaces = DEFAULT_DELETE_EMPTY_WORKSPACES;
-			LOGGER.log(Level.INFO, "Init parameter coastal-hazards.geoserver.sweeper.workspaces.empty.delete was not set. Empty stores set to be deleted: {0}", this.deleteEmptyStores);
+			LOGGER.log(Level.INFO, "Init parameter dsas.geoserver.sweeper.workspaces.empty.delete was not set. Empty stores set to be deleted: {0}", this.deleteEmptyStores);
 		}
 
 		String roWorkspaces;
 		try {
-			roWorkspaces = template.lookup("java:comp/env/coastal-hazards.geoserver.sweeper.workspaces.read-only", String.class);
+			roWorkspaces = template.lookup("java:comp/env/dsas.geoserver.sweeper.workspaces.read-only", String.class);
 		} catch (NamingException ex) {
 			roWorkspaces = DEFAULT_READ_ONLY_WORKSPACES;
-			LOGGER.log(Level.INFO, "Init parameter coastal-hazards.geoserver.sweeper.workspaces.read-only was not set. Read only workspaces set to: {0}", roWorkspaces);
+			LOGGER.log(Level.INFO, "Init parameter dsas.geoserver.sweeper.workspaces.read-only was not set. Read only workspaces set to: {0}", roWorkspaces);
 		}
 
 		if (StringUtils.isNotBlank(roWorkspaces)) {
@@ -106,7 +106,7 @@ public class GeoserverSweeperStartupListener implements InitializingBean {
 			this.sweeperThread.start();
 		} else {
 			// Failsafe
-			LOGGER.log(Level.INFO, "Because there were no workspaces set to read-only, sweeper will not run. If this is a mistake, set the parameter 'coastal-hazards.geoserver.sweeper.workspaces.read-only' to any workspace. The workspace does not need to actually exist.");
+			LOGGER.log(Level.INFO, "Because there were no workspaces set to read-only, sweeper will not run. If this is a mistake, set the parameter 'dsas.geoserver.sweeper.workspaces.read-only' to any workspace. The workspace does not need to actually exist.");
 		}
 	}
 

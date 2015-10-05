@@ -164,7 +164,7 @@ CCH.Session = function (name, isPerm) {
 									permSession.currentSession = '';
 								}
 								me.sessionObject.setItem(me.SESSION_OBJECT_NAME, JSON.stringify(permSession));
-								localStorage.removeItem('coastal-hazards');
+								localStorage.removeItem('dsas');
 								location.reload(true);
 							});
 

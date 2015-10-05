@@ -1,7 +1,7 @@
 <%@page import="gov.usgs.cida.utilities.features.Constants"%>
-<%@page import="gov.usgs.cida.coastalhazards.shoreline.file.ShorelineFile"%>
-<%@page import="gov.usgs.cida.coastalhazards.service.util.Property"%>
-<%@page import="gov.usgs.cida.coastalhazards.service.util.PropertyUtil"%>
+<%@page import="gov.usgs.cida.dsas.shoreline.file.ShorelineFile"%>
+<%@page import="gov.usgs.cida.dsas.service.util.Property"%>
+<%@page import="gov.usgs.cida.dsas.service.util.PropertyUtil"%>
 <%!
 	boolean development = Boolean.parseBoolean(PropertyUtil.getProperty(Property.DEVELOPMENT));
 	String geoserverEndpoint = PropertyUtil.getProperty(Property.GEOSERVER_ENDPOINT);
