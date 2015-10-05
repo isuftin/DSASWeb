@@ -1009,7 +1009,7 @@ var UI = function () {
 			this.bindIntroMenuItems();
 
 			$('#app-navbar-container').addClass('bootstro').attr({
-				'data-bootstro-title': 'Welcome to USGS Coastal Change Hazards',
+				'data-bootstro-title': 'Welcome to USGS DSAS',
 				'data-bootstro-content': 'This web-based Digital Shoreline Analysis System (DSASweb) is a software application that enables a user to calculate shoreline rate-of-change statistics from multiple historical shoreline positions.' +
 					'<br /><br />A user-friendly interface of simple buttons and menus guides the user through the major steps of shoreline change analysis.' +
 					'<br /><br />You can use our current database of shorelines, or upload your own.' +

@@ -36,10 +36,10 @@ $(document).ready(function () {
 	try {
 		LOG.info('OnReady.js:: Initializing session objects');
 		// Contains the pemanent session object which holds one or more sessions
-		CONFIG.permSession = new CCH.Session('coastal-hazards', true);
+		CONFIG.permSession = new CCH.Session('dsas', true);
 
 		// Contains the non-permanent single-session object
-		CONFIG.tempSession = new CCH.Session('coastal-hazards', false);
+		CONFIG.tempSession = new CCH.Session('dsas', false);
 
 		var currentSessionKey = CONFIG.permSession.getCurrentSessionKey();
 		LOG.info('OnReady.js:: Sessions created. User session list has ' + Object.keys(CONFIG.permSession.session.sessions).length + ' sessions.');

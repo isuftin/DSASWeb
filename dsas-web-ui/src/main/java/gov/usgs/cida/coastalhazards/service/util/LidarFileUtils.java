@@ -1,6 +1,6 @@
 package gov.usgs.cida.coastalhazards.service.util;
 
-import gov.usgs.cida.coastalhazards.shoreline.exception.LidarFileFormatException;
+import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -36,7 +36,7 @@ public class LidarFileUtils {
 	 *
 	 * @param lidarZipFile
 	 * @throws
-	 * gov.usgs.cida.coastalhazards.shoreline.exception.LidarFileFormatException
+	 * gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException
 	 * @throws IOException
 	 */
 	public static void validateLidarFileZip(File lidarZipFile) throws LidarFileFormatException, IOException {

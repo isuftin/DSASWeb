@@ -1,5 +1,5 @@
-<%@page import="gov.usgs.cida.coastalhazards.service.util.Property"%>
-<%@page import="gov.usgs.cida.coastalhazards.service.util.PropertyUtil"%>
+<%@page import="gov.usgs.cida.dsas.service.util.Property"%>
+<%@page import="gov.usgs.cida.dsas.service.util.PropertyUtil"%>
 <%@page import="java.io.File"%>
 <%@page import="java.net.URL"%>
 <%@page import="org.slf4j.Logger"%>
@@ -38,8 +38,8 @@
         <![endif]-->
         <jsp:include page="template/USGSHead.jsp">
             <jsp:param name="relPath" value="" />
-            <jsp:param name="shortName" value="USGS Coastal Change Hazards" />
-            <jsp:param name="title" value="USGS Coastal Change Hazards" />
+            <jsp:param name="shortName" value="USGS DSAS" />
+            <jsp:param name="title" value="USGS DSAS" />
             <jsp:param name="description" value="" />
             <jsp:param name="author" value="Ivan Suftin, Tom Kunicki, Jordan Walker, Jordan Read, Carl Schroedl" />
             <jsp:param name="keywords" value="" />
@@ -77,7 +77,7 @@
                 <jsp:include page="template/USGSHeader.jsp">
                     <jsp:param name="relPath" value="" />
                     <jsp:param name="header-class" value="" />
-                    <jsp:param name="site-title" value="USGS Coastal Change Hazards" />
+                    <jsp:param name="site-title" value="USGS DSAS" />
                 </jsp:include>
 				<jsp:include page="components/app-navbar.jsp"></jsp:include>
 				</div>

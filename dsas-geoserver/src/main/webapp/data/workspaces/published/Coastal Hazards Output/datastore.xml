@@ -1,6 +1,6 @@
 <dataStore>
   <id>DataStoreInfoImpl-2dbaa801:13b52754b9e:-7fd7</id>
-  <name>Coastal Hazards Output</name>
+  <name>DSAS Output</name>
   <type>Directory of spatial files (shapefiles)</type>
   <enabled>true</enabled>
   <workspace>

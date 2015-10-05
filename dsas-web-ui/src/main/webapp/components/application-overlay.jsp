@@ -1,6 +1,6 @@
 <div id="application-overlay" style="height:100%;width:100%;position:fixed;top:0;left:0;background-color:#FFFFFF;z-index:9999;">
     <div id="application-overlay-content" style='height: 50%;padding-left: 25%;position: relative;top: 15%;width: 50%;color: #333333;font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 14px;line-height: 20px;'>
-        <div style="text-align: center"><h1 style="letter-spacing: 0.5em;font-size: 38.5px; line-height: 40px;color: inherit; font-family: inherit; font-weight: bold;text-rendering: optimizelegibility;">Coastal Hazards</h1></div>
+        <div style="text-align: center"><h1 style="letter-spacing: 0.5em;font-size: 38.5px; line-height: 40px;color: inherit; font-family: inherit; font-weight: bold;text-rendering: optimizelegibility;">DSAS</h1></div>
         <div style="width: 100%;max-width: none;border: 0 none;height: auto;vertical-align: middle;">
             <img id="application-overlay-banner" src="images/splash/splash.png" style="height:45%;width:75%" />
         </div>
