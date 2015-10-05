@@ -29,14 +29,14 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>gov.usgs.cida.coastalhazards</groupId>
-			<artifactId>coastal-hazards-commons</artifactId>
-			<version>1.1.38-SNAPSHOT</version>
+			<groupId>gov.usgs.cida.dsas</groupId>
+			<artifactId>dsas-commons</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>gov.usgs.cida.coastalhazards</groupId>
-			<artifactId>coastal-hazards-uncy-reader</artifactId>
-			<version>1.1.38-SNAPSHOT</version>
+			<groupId>gov.usgs.cida.dsas</groupId>
+			<artifactId>dsas-uncy-reader</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>it.geosolutions</groupId>
@@ -67,21 +67,13 @@
 		<dependency>
 			<groupId>gov.usgs.cida</groupId>
 			<artifactId>dynamicProperties</artifactId>
-			<version>1.0.2</version>
 		</dependency>
 		
 		<!-- Normal Servlet dependencies -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-		</dependency><!--
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>javax.servlet.jsp-api</artifactId>
-			<version>2.3.1</version>
-		</dependency>-->
-		
+		</dependency>
 		<!-- JS Templates -->
 		<dependency>
 			<groupId>gov.usgs.cida.jslibs</groupId>

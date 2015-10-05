@@ -1,7 +1,7 @@
 package gov.usgs.cida.dsas.service;
 
-import gov.usgs.cida.coastalhazards.service.util.Property;
-import gov.usgs.cida.coastalhazards.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.service.util.Property;
+import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO.DBaseColumn.ColumnType;
 import gov.usgs.cida.utilities.communication.RequestResponseHelper;
@@ -47,7 +47,7 @@ public class ShapefileImportService extends HttpServlet {
 
 	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ShapefileImportService.class);
 	private static final long serialVersionUID = -4228098450640162920L;
-	private static final String PTS_SUFFIX = gov.usgs.cida.coastalhazards.uncy.Xploder.PTS_SUFFIX;
+	private static final String PTS_SUFFIX = gov.usgs.cida.dsas.uncy.Xploder.PTS_SUFFIX;
 	private String uploadDirectory = null;
 	private String geoserverEndpoint = null;
 	private String geoserverUsername = null;

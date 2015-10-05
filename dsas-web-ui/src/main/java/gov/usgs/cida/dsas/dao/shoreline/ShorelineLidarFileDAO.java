@@ -4,9 +4,9 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
 
-import gov.usgs.cida.coastalhazards.service.util.LidarFileUtils;
-import gov.usgs.cida.coastalhazards.service.util.Property;
-import gov.usgs.cida.coastalhazards.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.service.util.LidarFileUtils;
+import gov.usgs.cida.dsas.service.util.Property;
+import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
 import gov.usgs.cida.utilities.features.Constants;

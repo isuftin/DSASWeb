@@ -1,6 +1,6 @@
 package gov.usgs.cida.dsas.service;
 
-import gov.usgs.cida.coastalhazards.uncy.Xploder;
+import gov.usgs.cida.dsas.uncy.Xploder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

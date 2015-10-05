@@ -2,8 +2,8 @@ package gov.usgs.cida.dsas.dao.postgres;
 
 import gov.usgs.cida.dsas.dao.shoreline.Shoreline;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
-import gov.usgs.cida.coastalhazards.service.util.Property;
-import gov.usgs.cida.coastalhazards.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.service.util.Property;
+import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.Date;

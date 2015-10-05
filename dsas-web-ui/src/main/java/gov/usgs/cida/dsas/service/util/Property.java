@@ -1,4 +1,4 @@
-package gov.usgs.cida.coastalhazards.service.util;
+package gov.usgs.cida.dsas.service.util;
 
 /**
  * An enum of all application properties used throughout the application.

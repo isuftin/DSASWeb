@@ -1,7 +1,7 @@
 package gov.usgs.cida.geoutils.geoserver.servlet;
 
-import gov.usgs.cida.coastalhazards.service.util.Property;
-import gov.usgs.cida.coastalhazards.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.service.util.Property;
+import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse.ResponseType;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;

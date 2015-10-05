@@ -1,7 +1,7 @@
 package gov.usgs.cida.dsas.shoreline.file;
 
-import gov.usgs.cida.coastalhazards.service.util.Property;
-import gov.usgs.cida.coastalhazards.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.service.util.Property;
+import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;

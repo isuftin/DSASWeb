@@ -1,7 +1,7 @@
 package gov.usgs.cida.dsas;
 
-import gov.usgs.cida.coastalhazards.service.util.Property;
-import gov.usgs.cida.coastalhazards.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.service.util.Property;
+import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineShapefileDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import java.io.File;
