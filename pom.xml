@@ -114,6 +114,11 @@
 			<name>CIDA Public Nexus</name>
 			<url>http://cida.usgs.gov/maven/cida-public/</url>
 		</repository>
+		<repository>
+			<id>geosolutions</id>
+			<name>GeoSolutions</name>
+			<url>http://maven.geo-solutions.it/</url>
+		</repository>
 	</repositories>
 	
 	<pluginRepositories>
