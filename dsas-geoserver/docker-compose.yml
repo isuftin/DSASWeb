@@ -1,0 +1,14 @@
+cch_geoserver_data:
+    image: alpine
+    volumes:
+        - /heapdumps
+        - /data
+    command: /bin/echo 
+    
+cch_geoserver:
+  build: ./src/main/resources/docker
+  volumes_from:
+    - cch_geoserver_data
+  hostname: cch_geoserver
+  ports:
+    - "8081:8080"

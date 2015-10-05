@@ -1,0 +1,23 @@
+<settings>
+  <id>SettingsInfoImpl--a30f787:148d22a095e:-7ffe</id>
+  <workspace>
+    <id>WorkspaceInfoImpl-e13955e:148d1d118f6:-161a</id>
+    <name>proxydatumbias</name>
+  </workspace>
+  <contact>
+    <id>contact</id>
+    <addressCity>Madison</addressCity>
+    <addressCountry>WI</addressCountry>
+    <addressType>Work</addressType>
+    <contactEmail>isuftin@usgs.gov</contactEmail>
+    <contactOrganization>CIDA</contactOrganization>
+    <contactPerson>Phethala Thongsavanh</contactPerson>
+    <contactPosition>Softare Engineer</contactPosition>
+  </contact>
+  <charset>UTF-8</charset>
+  <numDecimals>8</numDecimals>
+  <onlineResource>http://geoserver.org</onlineResource>
+  <verbose>false</verbose>
+  <verboseExceptions>false</verboseExceptions>
+  <localWorkspaceIncludesPrefix>false</localWorkspaceIncludesPrefix>
+</settings>

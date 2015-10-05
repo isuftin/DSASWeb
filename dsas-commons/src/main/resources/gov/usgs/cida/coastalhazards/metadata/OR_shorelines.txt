@@ -1,0 +1,429 @@
+Identification_Information:
+  Citation:
+    Citation_Information:
+      Originator: U.S. Geological Survey
+      Publication_Date: 2012
+      Title: OR_shorelines.shp - Shorelines of the Oregon coastal region used in shoreline change analysis
+      Geospatial_Data_Presentation_Form: vector digital data
+      Series_Information:
+        Series_Name: Open-File Report
+        Issue_Identification: 2012-1008
+      Publication_Information:
+        Publication_Place: Woods Hole Coastal and Marine Science Center, Woods Hole, MA
+        Publisher: U.S. Geological Survey, Coastal and Marine Geology Program
+      Online_Linkage: http://pubs.usgs.gov/of/2012/1008/data/OR_shorelines.zip
+      Larger_Work_Citation:
+        Citation_Information:
+          Originator: Meredith Kratzmann
+          Originator: Emily Himmelstoss
+          Originator: Peter Ruggiero
+          Originator: E. Robert Thieler
+          Originator: David Reid
+          Publication_Date: 2012
+          Title: National Assessment of Shoreline Change: A GIS Compilation of Vector Shorelines and Associated Shoreline Change Data for the Pacific Northwest Coast
+          Series_Information:
+            Series_Name: Open-File Report
+            Issue_Identification: 2012-1008
+          Publication_Information:
+            Publication_Place: Woods Hole Coastal and Marine Science Center, Woods Hole, MA
+            Publisher: U.S. Geological Survey, Coastal and Marine Geology Program
+          Online_Linkage: http://pubs.usgs.gov/of/2012/1008/
+  Description:
+    Abstract:
+      Sandy ocean beaches are a popular recreational destination, often surrounded by communities containing valuable real estate.  Development is on the rise despite the fact that coastal infrastructure is subjected to flooding and erosion.  As a result, there is an increased demand for accurate information regarding past and present shoreline changes.  To meet these national needs, the Coastal and Marine Geology Program of the U.S. Geological Survey (USGS) is compiling existing reliable historical shoreline data along open-ocean sandy shores of the conterminous United States and parts of Alaska and Hawaii under the National Assessment of Shoreline Change project.  
+
+      There is no widely accepted standard for analyzing shoreline change.  Existing shoreline data measurements and rate calculation methods vary from study to study and prevent combining results into state-wide or regional assessments.  The impetus behind the National Assessment project was to develop a standardized method of measuring changes in shoreline position that is consistent from coast to coast.  The goal was to facilitate the process of periodically and systematically updating the results in an internally consistent manner.
+    Purpose:
+      This dataset includes shorelines from 37 years ranging from 1868 to 2002 in Oregon's coastal region.  Shorelines were compiled from T-sheets (NOAA), digital raster graphics (DRG) (USGS), air photos (Washington Department of Ecology), and lidar (USGS/NASA). 
+      Historical shoreline positions serve as easily understood features that can be used to describe the movement of beaches through time.  These data are used to calculate rates of shoreline change for the U.S. Geological Survey's (USGS) National Assessment Project.  
+
+      Rates of long-term and short-term shoreline change were generated in a GIS using the Digital Shoreline Analysis System (DSAS) version 4.2.  DSAS uses a measurement baseline method to calculate rate-of-change statistics.  Transects are cast from the reference baseline to intersect each shoreline, establishing measurement points used to calculate shoreline change rates.
+    Supplemental_Information: Cross-referenced citations are applicable to the dataset as a whole.  Additional citations are located within individual process steps that pertain specifically to the method described in that step.
+  Time_Period_of_Content:
+    Time_Period_Information:
+      Range_of_Dates/Times:
+        Beginning_Date: 1868
+        Ending_Date: 2002
+    Currentness_Reference: ground condition
+  Status:
+    Progress: Complete
+    Maintenance_and_Update_Frequency: None planned
+  Spatial_Domain:
+    Bounding_Coordinates:
+      West_Bounding_Coordinate: -124.564644
+      East_Bounding_Coordinate: -123.919545
+      North_Bounding_Coordinate: 46.227854
+      South_Bounding_Coordinate: 41.999769
+  Keywords:
+    Theme:
+      Theme_Keyword_Thesaurus: General
+      Theme_Keyword: Shoreline
+      Theme_Keyword: Shoreline Change
+      Theme_Keyword: Digital Shoreline Analysis System
+      Theme_Keyword: DSAS
+      Theme_Keyword: U.S. Geological Survey
+      Theme_Keyword: USGS
+      Theme_Keyword: Coastal and Marine Geology Program
+      Theme_Keyword: CMGP
+      Theme_Keyword: Woods Hole Coastal and Marine Science Center
+      Theme_Keyword: WHCMSC
+      Theme_Keyword: National Assessment of Shoreline Change Project
+      Theme_Keyword: MHW
+      Theme_Keyword: Mean High Water
+      Theme_Keyword: HWL
+      Theme_Keyword: High Water Line
+    Theme:
+      Theme_Keyword_Thesaurus: ISO 19115 Topic Category
+      Theme_Keyword: oceans
+      Theme_Keyword: oceans and estuaries
+      Theme_Keyword: oceans and coastal
+      Theme_Keyword: environment
+      Theme_Keyword: geoscientificInformation
+    Place:
+      Place_Keyword_Thesaurus: General
+      Place_Keyword: Oregon
+      Place_Keyword: Cascade Longview
+      Place_Keyword: Umpqua Siletz
+      Place_Keyword: Seb Arago
+      Place_Keyword: Tillamook Bay
+      Place_Keyword: Pacific Coast
+      Place_Keyword: Pacific Northwest
+      Place_Keyword: Columbia River
+      Place_Keyword: United States
+      Place_Keyword: North America
+  Access_Constraints: None
+  Use_Constraints: Public domain data from the U.S. Government are freely redistributable with proper metadata and source attribution. Please recognize the U.S. Geological Survey as the originator of the dataset.
+  Point_of_Contact:
+    Contact_Information:
+      Contact_Organization_Primary:
+        Contact_Organization: U.S. Geological Survey
+      Contact_Address:
+        Address_Type: mailing and physical address
+        Address: 384 Woods Hole Road
+        City: Woods Hole
+        State_or_Province: MA
+        Postal_Code: 02543-1598
+        Country: USA
+      Contact_Voice_Telephone: 508-548-8700
+      Contact_Facsimile_Telephone: 508-547-2310
+  Native_Data_Set_Environment: Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 3; ESRI ArcCatalog 9.3.1.1850
+  Cross_Reference:
+    Citation_Information:
+      Originator: Peter Ruggiero
+      Originator: Meredith Kratzmann
+      Originator: Emily Himmelstoss
+      Originator: E. Robert Thieler
+      Originator: David Reid
+      Publication_Date: 2012
+      Title: National Assessment of Shoreline Change: Historical Shoreline Change along the Pacific Northwest Coast
+      Series_Information:
+        Series_Name: Open-File Report
+        Issue_Identification: 2012-1007
+      Publication_Information:
+        Publication_Place: Woods Hole Coastal and Marine Science Center, Woods Hole, MA
+        Publisher: U.S. Geological Survey, Coastal and Marine Geology Program
+      Online_Linkage: http://pubs.usgs.gov/of/2012/1007/
+  Cross_Reference:
+    Citation_Information:
+      Originator: E.R. Thieler
+      Originator: E.A. Himmelstoss
+      Originator: J.L. Zichichi
+      Originator: A. Ergul
+      Publication_Date: 2009
+      Title: Digital Shoreline Analysis System (DSAS) version 4.0 - An ArcGIS extension for calculating shoreline change
+      Series_Information:
+        Series_Name: Open-File Report
+        Issue_Identification: 2008-1278
+      Publication_Information:
+        Publication_Place: Woods Hole Coastal and Marine Science Center, Woods Hole, MA
+        Publisher: U.S. Geological Survey, Coastal and Marine Geology Program
+      Other_Citation_Details: Current version of software at time of use was 4.2
+      Online_Linkage: http://woodshole.er.usgs.gov/project-pages/dsas/
+      Online_Linkage: http://woodshole.er.usgs.gov/project-pages/dsas/version4/index.html
+      Online_Linkage: http://pubs.usgs.gov/of/2008/1278/
+  Cross_Reference:
+    Citation_Information:
+      Originator: Department of Commerce (DOC), National Oceanic and Atmospheric Administration (NOAA), National Ocean Service (NOS), Coastal Services Center (CSC)
+      Publication_Date: Unknown
+      Title: 2002 NASA/USGS Airborne LiDAR Assessment of Coastal Erosion (ALACE) Project for California, Oregon, and Washington Coastlines
+      Publication_Information:
+        Publication_Place: Charleston, SC
+        Publisher: NOAA's Ocean Service, Coastal Services Center (CSC)
+      Other_Citation_Details: http://www.csc.noaa.gov/ldart/
+  Cross_Reference:
+    Citation_Information:
+      Originator: National Oceanic and Atmospheric Administration (NOAA), National Ocean Service (NOS)
+      Publication_Date: Unknown
+      Title: Scanned National Ocean Service (NOS) Coastal Survey Maps (also known as Topographic Survey sheets, or T-sheets)
+      Series_Information:
+        Series_Name: NOAA shoreline manuscripts (T-sheets)
+      Publication_Information:
+        Publication_Place: Washington, D.C.
+        Publisher: National Oceanic and Atmospheric Administration
+Data_Quality_Information:
+  Attribute_Accuracy:
+    Attribute_Accuracy_Report: The data provided here are a compilation of shorelines from multiple sources, spanning 134 years.  The attributes are based on the requirements of the Digital Shoreline Analysis System (DSAS) software and have gone through a series of quality assurance procedures.
+  Logical_Consistency_Report: Adjacent shoreline segments do not overlap and are not necessarily continuous.  Shorelines were quality checked for accuracy. Any slight offsets between adjacent segments due to georeferencing and digitizing error are taken into account in the uncertainty calculations included in the corresponding report (U.S. Geological Survey Open-File Report 2012-1007).  These data contain some short line segments (less than 30 meters) that were part of how the data were originally compiled and are in fact continuous with other segments of a given shoreline.
+  Completeness_Report: This shoreline file is complete and contains all shoreline segments used to calculate shoreline change rates along sections of the Oregon coastal region where shoreline position data were available.  These data adequately represented the shoreline position at the time of the survey.  Remaining gaps in these data, if applicable, are a consequence of non-existing data or existing data that did not meet quality assurance standards.
+  Positional_Accuracy:
+    Horizontal_Positional_Accuracy:
+      Horizontal_Positional_Accuracy_Report:
+        Shoreline data have been acquired from 1868 to 2002, the horizontal accuracy of which varies with respect to data source from which the shorelines were digitized, the lidar data from which the shorelines were extracted, and the time period.  Shorelines prior to 1960 have an estimated positional uncertainty of plus or minus 10.8 meters (see note below).  The air photo derived shoreline from 1967 has an uncertainty of plus or minus 10 meters.  DRG shorelines (1940s-1990s) have an estimated positional uncertainty of plus or minus 15 meters.  Shorelines from the 1970s have an estimated positional uncertainty of plus or minus 5.1 meters.  The lidar shoreline from 2002 has an estimated positional uncertainty of plus or minus 3.6 meters (the average for the Pacific Northwest region is 4.1). Please visit the 'Uncertainties and Errors' section in the corresponding USGS Open-File Report (http://pubs.usgs.gov/of/2012/1007/) for a complete explanation of the measurement uncertainties associated with these shorelines.
+
+        The uncertainty values above do not exactly match those outlined in the average uncertainy table of the corresponding report.  In the table, the uncertainty of the high water line (HWL) is incorporated, whereas the uncertainty values above are for individual shoreline positions within each time period.  For example, an individual shoreline from 1926 has an uncertainty of 10.8 meters but when the HWL uncertainty from the shorelines_uncertainty.dbf is taken into account, the value increases to 11.7 meters.
+
+        Note:  Some shorelines were assigned higher uncertainty values than 10.8 meters for the time period 1800s-1950s in Oregon.  Four shorelines from 1887 have values of 13.25 and one shoreline from 1888 has a value of 17.34.  These differences are for T-sheets that warranted higher values in the uncertainty component involving 'inaccurate location of control points due to distortion or cartographic error.'  For more information on the breakdown of T-sheet uncertainty components please refer to Crowell et al. (1991).
+
+        Crowell, M., Leatherman, S.P., and Buckley, M.K., 1991. Historical Shoreline Change: Error Analysis and Mapping Accuracy. Journal of Coastal Research: v.7, n.3, pp.839-852.
+    Vertical_Positional_Accuracy:
+      Vertical_Positional_Accuracy_Report: The historic shorelines are proxy-based and estimate the HWL.  The lidar shoreline is tidal-based and estimates MHW.  While the proxy-based HWL shorelines are not shifted to the MHW datum, the distance measurements established by the transects and used by DSAS to compute rate-of-change statistics are adjusted to account for the offset between HWL and MHW.  Therefore, all distance measurements along DSAS transects are referenced to the MHW datum before rates are calculated.
+  Lineage:
+    Process_Step:
+      Process_Description: Shoreline data were sought in an effort to compile as many quality shorelines as possible for the region.  Digital shorelines, if available from another agency, were acquired.  If no digital shorelines were available or if a data set was incomplete, T-sheets were requested from NOAA and received as scanned raster images.
+      Process_Date: 2010
+      Process_Contact:
+        Contact_Information:
+          Contact_Person_Primary:
+            Contact_Person: Meredith Kratzmann
+            Contact_Organization: U.S. Geological Survey
+          Contact_Address:
+            Address_Type: mailing address
+            Address: 384 Woods Hole Road
+            City: Woods Hole
+            State_or_Province: MA
+            Postal_Code: 02543
+            Country: USA
+          Contact_Voice_Telephone: 508-548-8700
+          Contact_Facsimile_Telephone: 508-457-2310
+          Contact_Electronic_Mail_Address: mkratzmann@usgs.gov
+    Process_Step:
+      Process_Description:
+        An operational Mean High Water (MHW) shoreline was extracted from the lidar surveys within MATLAB using a method similar to the one developed by Stockdon et al. (2002). Shorelines were extracted from cross-shore profiles which consist of bands of lidar data 2 m wide in the alongshore direction and spaced every 40 m along the coast. For each profile, the seaward sloping foreshore points were identified and a linear regression was fit through them. The regression was evaluated at the operational MHW elevation to yield the cross-shore position of the MHW shoreline. If the MHW elevation was obscured by water points, or if a data gap was present at MHW, the linear regression was simply extrapolated to the operational MHW elevation. A lidar positional uncertainty associated with this point was also computed.  The horizontal offset between the datum-based lidar MHW shoreline and the proxy-based historical shorelines nearly always acts in one direction and the "bias" value was computed at each profile (Ruggiero and List, 2009).  In addition an uncertainty associated with the bias was also computed, which can also be thought of as the uncertainty of the HWL shorelines due to water level fluctuations.
+
+        Repeating this procedure at successive profiles generated a series of X,Y points that contain a lidar positional uncertainty, a bias, and a bias uncertainty value.
+
+        Ruggiero, P. and List, J.H., 2009. Improving Accuracy and Statistical Reliability of Shoreline Position and Change Rate Estimates. Journal of Coastal Research: v.25, n.5, pp.1069-1081.
+
+        Stockdon, H.F., Sallenger, A.H., List, J.H., and Holman, R.A., 2002.  Estimation of Shoreline Position and Change using Airborne Topographic Lidar Data:  Journal of Coastal Research, v.18, n.3, pp.502-513.
+      Process_Date: 2010
+      Process_Contact:
+        Contact_Information:
+          Contact_Person_Primary:
+            Contact_Person: Kathryn Weber
+            Contact_Organization: U.S. Geological Survey
+          Contact_Position: Geologist
+          Contact_Address:
+            Address_Type: mailing and physical address
+            Address: 384 Woods Hole Road
+            City: Woods Hole
+            State_or_Province: MA
+            Postal_Code: 02543-1598
+            Country: USA
+          Contact_Voice_Telephone: 508-548-8700
+          Contact_Facsimile_Telephone: 508-457-2310
+          Contact_Electronic_Mail_Address: kweber@usgs.gov
+    Process_Step:
+      Process_Description:
+        T-sheets were geo-registered using ERDAS Imagine geographic imaging software (v.9.3) by placing 10-20 well-spaced ground control points at gridline intersections.  Some T-sheets may have required additional coordinate transformation information from NOAA to account for datum offsets between historical datums (USSD) and modern datums (NAD27 or NAD83).  Datum transformations were applied to GCP coordinates prior to registration.  T-sheets that were already geo-registered were quality checked.  Total RMS error for the rectification process was maintained below 1 pixel, which translates to approximately 4 meters at a scale of 1:20,000 and 1.5 meters at a scale of 1:10,000.
+
+        This process step and all subsequent process steps were performed by the same person - Meredith Kratzmann.
+      Process_Date: 2011
+      Process_Contact:
+        Contact_Information:
+          Contact_Person_Primary:
+            Contact_Person: Meredith Kratzmann
+            Contact_Organization: U.S. Geological Survey
+          Contact_Address:
+            Address_Type: mailing address
+            Address: 384 Woods Hole Road
+            City: Woods Hole
+            State_or_Province: MA
+            Postal_Code: 02543
+            Country: USA
+          Contact_Voice_Telephone: 508-548-8700
+          Contact_Facsimile_Telephone: 508-457-2310
+          Contact_Electronic_Mail_Address: mkratzmann@usgs.gov
+    Process_Step:
+      Process_Description: Vector shorelines were digitized from the georegistered T-sheets using standard editing tools in ArcMap v9.3.  Quality assessments were performed and shorelines were edited to remove any overlap between adjacent shorelines.  No edgematching between adjacent shorelines was attempted.
+      Process_Date: 2011
+    Process_Step:
+      Process_Description: Historical shorelines were merged in ESRI's ArcToolbox (v.9.3), Data Management Tools > General > Merge.  Then the merged file was projected in ESRI's ArcToolbox (v.9.3) > Data Management Tools > Projections and Transformations > Feature > Project. Parameters: input projection = geographic (NAD 83); output projection = UTM zone 10N (WGS 84); transformation = NAD_1983_To_WGS_1984_1.
+      Process_Date: 2011
+    Process_Step:
+      Process_Description:
+        The lidar data were collected in projected coordinates (WGS 84 UTM zone 10N).  The series of operational MHW points extracted from the cross-shore lidar profiles were converted to a point feature class within a geodatabase in ArcCatalog by right-mouse clicking the point data file > Create Feature Class > From XY table. 
+
+        The point feature class was converted to a polyline-M file by connecting adjacent profile points to form a vector shoreline feature using ET GeoWizards (v.9.8) > Convert > Point to Polyline Z (M). The lidar profile ID value was stored as the M-value. The lidar vector shoreline was then converted to a route using ArcToolbox v9.3 Linear Referencing Tools > Create Routes. Parameters: Input Line Features = polyline M file; Route Identifier Field = ET_ID (created by ET GeoWizards when constructing polyline-M field), Measure Source = Length, default values for rest.  The unique cross-shore profile ID is stored as the M-value at each vertex.  
+
+        The route was calibrated using ETGeoWizards (v.9.8) > LinRef tab > Calibrate routes with points. Parameters: Attribute Field selected, Point layer = original point shapefile, Route ID field = RouteID, Measure Field = ID (lidar profile ID), Input search tolerance = 40, Interpolation between points checked, Recalculate measures using calibration points and shortest path distance between vertices checked, every other option unchecked.  The calibration assigns interpolated measure values from the start to the end of the route based on the known profile IDs stored at each vertex.  This profile ID is used as the common attribute field between the route file and an uncertainty table (OR_shorelines_uncertainty.dbf) storing the lidar positional  uncertainty, the bias correction value, and the uncertainty of the bias correction for each point of the original lidar data.  
+
+        During the rate calculation process DSAS uses linear referencing to retrieve the uncertainty and bias values stored in the associated table.  The calculation of these values is explained in detail in the full report, National Assessment of Shoreline Change for the Pacific Northwest Coast, cross-referenced in this metadata file.  Please refer specifically to the methods section titled "The Proxy-Datum Bias Correction between HWL and MHW shorelines."
+
+        For a detailed explanation of the method used to convert the lidar shoreline to a route, please refer to "Appendix 2- A case study of complex shoreline data" in the DSAS user guide:
+
+        Himmelstoss, E.A. 2009. "DSAS 4.0 Installation Instructions and User Guide" in: Thieler, E.R., Himmelstoss, E.A., Zichichi, J.L., and Ergul, Ayhan. 2009. Digital Shoreline Analysis System (DSAS) version 4.0 - An ArcGIS extension for calculating shoreline change: U.S. Geological Survey Open-File Report 2008-1278.  http://woodshole.er.usgs.gov/project-pages/dsas/version4/images/pdf/DSASv4_2.pdf
+      Process_Date: 2011
+    Process_Step:
+      Process_Description: Historic shorelines were appended to the lidar route data in ArcToolbox > Data Management Tools > General > Append to produce a single shoreline file for the region.  The final shoreline dataset was coded with attribute fields (ID, Date, Uncertainty (Uncy), Source, and Year).  These fields are required for the Digital Shoreline Analysis System (DSAS), which was used to calculate shoreline change rates.
+      Process_Date: 2011
+    Process_Step:
+      Process_Description: The appended shoreline file and the shoreline uncertainty table (.dbf) were imported into a personal geodatabase in ArcCatalog v9.3 by right-clicking on the geodatabase > Import (feature class for shoreline file and table for uncertainty table) for use with the Digital Shoreline Analysis System (DSAS) v4.2 software to perform rate calculations.
+      Process_Date: 2011
+    Process_Step:
+      Process_Description: The shoreline feature class was exported from the personal geodatabase back to a shapefile in ArcCatalog v9.3 by right-clicking on the shoreline file > Export > To Shapefile (single) for publication purposes.
+      Process_Date: 2011
+    Process_Step:
+      Process_Description: The data were projected in ArcToolbox v9.3 > Data Management Tools > Projections and Transformations > Feature > Project. Parameters: input projection = UTM zone 10N (WGS84); output projection = geographic coordinates (WGS84); transformation = none.
+      Process_Date: 2011
+Spatial_Data_Organization_Information:
+  Direct_Spatial_Reference_Method: Vector
+  Point_and_Vector_Object_Information:
+    SDTS_Terms_Description:
+      SDTS_Point_and_Vector_Object_Type: String
+      Point_and_Vector_Object_Count: 1162
+Spatial_Reference_Information:
+  Horizontal_Coordinate_System_Definition:
+    Geographic:
+      Latitude_Resolution: 0.000001
+      Longitude_Resolution: 0.000001
+      Geographic_Coordinate_Units: Decimal degrees
+    Geodetic_Model:
+      Horizontal_Datum_Name: D_WGS_1984
+      Ellipsoid_Name: WGS_1984
+      Semi-major_Axis: 6378137.000000
+      Denominator_of_Flattening_Ratio: 298.257224
+Entity_and_Attribute_Information:
+  Detailed_Description:
+    Entity_Type:
+      Entity_Type_Label: OR_shorelines
+      Entity_Type_Definition: Vector shorelines
+      Entity_Type_Definition_Source: U.S. Geological Survey
+    Attribute:
+      Attribute_Label: FID
+      Attribute_Definition: Internal feature number.
+      Attribute_Definition_Source: ESRI
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Sequential unique whole numbers that are automatically generated.
+    Attribute:
+      Attribute_Label: Shape
+      Attribute_Definition: Feature geometry.
+      Attribute_Definition_Source: ESRI
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Coordinates defining the features.
+    Attribute:
+      Attribute_Label: RouteID
+      Attribute_Definition: Route identification value assigned to individual lidar shoreline line segments.  A unique cross-shore profile identification value is stored at each vertex of the lidar route and serves as a common attribute to the shoreline uncertainty table (OR_shorelines_uncertainty.dbf).
+      Attribute_Definition_Source: U.S. Geological Survey
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: 0
+          Enumerated_Domain_Value_Definition: Short integer field where zeros are "no data" and automatically filled in for the remaining shoreline polylines not derived from lidar.
+          Enumerated_Domain_Value_Definition_Source: U.S. Geological Survey
+    Attribute:
+      Attribute_Label: Date_
+      Attribute_Definition: Date of shoreline position; date of survey as indicated on source material.  A default date of 07/01 was assigned to shorelines where only the year was known (month and day unknown).  Using July, the mid-point month of the calendar year, minimizes the potential offset to the actual shoreline date by a maximum of six months.
+      Attribute_Definition_Source: U.S. Geological Survey
+      Attribute_Domain_Values:
+        Unrepresentable_Domain: Character string of length 10
+    Attribute:
+      Attribute_Label: Source
+      Attribute_Definition: Agency that provided shoreline feature or the data source used (e.g. T-sheet) to digitize shoreline feature.
+      Attribute_Definition_Source: U.S. Geological Survey
+    Attribute:
+      Attribute_Label: Uncy
+      Attribute_Definition: Estimate of shoreline position uncertainty. Actual shoreline position is within the range of this value (plus or minus, meters).  The uncertainty was determined by the equation presented in USGS Open-File Report (OFR) 2012-1007 (cross-referenced in this metadata file).  The historic shoreline uncertainty values contain all of the measurement errors listed in the average uncertainty table of OFR 2012-1007, except for the uncertainty of the High Water Line (HWL).  The HWL uncertainty in the table was averaged for the entire study region.  However, the uncertainty of the HWL at an individual transect can be determined with more precision along the shoreline route.  The HWL uncertainty was added to the historic shoreline uncertainty stored in the shoreline attribute table during the DSAS rate calculation process to better account for uncertainty at individual transects alongshore as opposed to using a regionally averaged value.  This was done using linear referencing that interpolates a value based on data stored in the shoreline_uncertainty dBase file (.dbf) at a specific transect/shoreline intersect alongshore.  The lidar shoreline position uncertainty is also stored in the associated shoreline_uncertainty.dbf file and values are interpolated at specific transect/shoreline intersections using the same linear referencing method.  The lidar uncertainty attribute field was filled with null values while residing in the geodatabase.  Upon exporting the shoreline feature class to a shapefile for publication, the null values in the lidar uncertainty field were automatically converted to zero values.
+      Attribute_Definition_Source: U.S. Geological Survey
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: 0
+          Enumerated_Domain_Value_Definition: Zeros are "no data" and serve as place fillers for the lidar shorelines. Actual uncertainty values for lidar are stored in shoreline uncertainty dBase (.dbf) file.
+          Enumerated_Domain_Value_Definition_Source: U.S. Geological Survey
+    Attribute:
+      Attribute_Label: Default_D
+      Attribute_Definition: Differentiates between shorelines that have known month and day attributes and those that use the default value of 07/01 when only the year is known.
+      Attribute_Definition_Source: U.S. Geological Survey
+      Attribute_Domain_Values:
+        Enumerated_Domain:
+          Enumerated_Domain_Value: 0
+          Enumerated_Domain_Value_Definition: Shoreline month and day are known.
+          Enumerated_Domain_Value_Definition_Source: U.S. Geological Survey
+        Enumerated_Domain:
+          Enumerated_Domain_Value: 1
+          Enumerated_Domain_Value_Definition: Shoreline month and day are unknown and default value of 07/01 was used.
+          Enumerated_Domain_Value_Definition_Source: U.S. Geological Survey
+    Attribute:
+      Attribute_Label: Shape_Leng
+      Attribute_Definition: Length of feature in meter units (UTM zone 10N, WGS 84)
+      Attribute_Definition_Source: ESRI
+      Attribute_Domain_Values:
+        Range_Domain:
+          Range_Domain_Minimum: 12.985909
+          Range_Domain_Maximum: 25219.165873
+    Attribute:
+      Attribute_Label: Year_
+      Attribute_Definition: Four digit year of shoreline
+      Attribute_Definition_Source: U.S. Geological Survey
+      Attribute_Domain_Values:
+        Range_Domain:
+          Range_Domain_Minimum: 1868
+          Range_Domain_Maximum: 2002
+Distribution_Information:
+  Distributor:
+    Contact_Information:
+      Contact_Organization_Primary:
+        Contact_Organization: U.S. Geological Survey
+      Contact_Address:
+        Address_Type: mailing and physical address
+        Address: Woods Hole Coastal and Marine Science Center
+        Address: 384 Woods Hole Road
+        City: Woods Hole
+        State_or_Province: MA
+        Postal_Code: 02543-1598
+        Country: USA
+      Contact_Voice_Telephone: 508-548-8700
+      Contact_Facsimile_Telephone: 508-547-2310
+  Resource_Description: Downloadable Data: USGS Open-File Report 2012-1008
+  Distribution_Liability:
+    Neither the U.S. Government, the Department of the Interior, nor the USGS, nor any of their employees, contractors, or subcontractors, make any warranty, express or implied, nor assume any legal liability or responsibility for the accuracy, completeness, or usefulness of any information, apparatus, product, or process disclosed, nor represent that its use would not infringe on privately owned rights. The act of distribution shall not constitute any such warranty, and no responsibility is assumed by the USGS in the use of these data or related materials. 
+
+    Any use of trade, product, or firm names is for descriptive purposes only and does not imply endorsement by the U.S. Government.
+  Standard_Order_Process:
+    Digital_Form:
+      Digital_Transfer_Information:
+        Format_Name: WinZip
+        Format_Version_Number: 9.0
+        Format_Specification: ESRI polyline shapefile
+        Format_Information_Content: This WinZip file contains a shapefile of historic shorelines from 1868 to 2002 for the sandy shorelines of Oregon and associated metadata.
+        File_Decompression_Technique: Use WinZip or pkUnzip
+        Transfer_Size: 1 MB
+      Digital_Transfer_Option:
+        Online_Option:
+          Computer_Contact_Information:
+            Network_Address:
+              Network_Resource_Name: http://pubs.usgs.gov/of/2012/1008/data/OR_shorelines.zip
+          Access_Instructions: Data are downloadable via the World Wide Web (WWW).
+    Fees: None
+  Technical_Prerequisites: This zip file contains data available in Environmental Systems Research Institute (ESRI) polyline shapefile format. The user must have ArcGIS or ArcView 3.0 or greater software to read and process the data file. In lieu of ArcView or ArcGIS, the user may utilize another GIS application package capable of importing the data. A free data viewer, ArcExplorer, capable of displaying the data is available from ESRI at www.esri.com.
+Metadata_Reference_Information:
+  Metadata_Date: 20120228
+  Metadata_Contact:
+    Contact_Information:
+      Contact_Person_Primary:
+        Contact_Person: Meredith Kratzmann
+        Contact_Organization: U.S. Geological Survey
+      Contact_Address:
+        Address_Type: mailing address
+        Address: 384 Woods Hole Road
+        City: Woods Hole
+        State_or_Province: MA
+        Postal_Code: 02543-1598
+        Country: USA
+      Contact_Voice_Telephone: 508-548-8700
+      Contact_Facsimile_Telephone: 508-547-2310
+      Contact_Electronic_Mail_Address: mkratzmann@usgs.gov
+  Metadata_Standard_Name: FGDC Content Standards for Digital Geospatial Metadata
+  Metadata_Standard_Version: FGDC-STD-001-1998
+  Metadata_Time_Convention: local time
+  Metadata_Extensions:
+    Online_Linkage: http://www.esri.com/metadata/esriprof80.html
+    Profile_Name: ESRI Metadata Profile

@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+	<idinfo>
+		<citation>
+			<citeinfo>
+				<origin>University of Hawaii Coastal Geology Group</origin>
+				<pubdate>2011</pubdate>
+				<title>MauiW_shorelines - Shorelines of the western coastal region of Maui, Hawaii, from Ukumehame to Honolua, used in shoreline change analysis.</title>
+				<geoform Sync="TRUE">vector digital data</geoform>
+				<serinfo>
+					<sername>Open-File Report</sername>
+					<issue>2011-1009</issue>
+				</serinfo>
+				<pubinfo>
+					<pubplace>Woods Hole Coastal and Marine Science Center, Woods Hole, MA</pubplace>
+					<publish>U.S. Geological Survey, Coastal and Marine Geology Program</publish>
+				</pubinfo>
+				<onlink>http://pubs.usgs.gov/of/2011/1009/</onlink>
+				<lworkcit>
+					<citeinfo>
+						<origin>Bradley M. Romine</origin>
+						<origin>Charles H. Fletcher</origin>
+						<origin>Ayesha S. Genz</origin>
+						<origin>Matthew M. Barbee</origin>
+						<origin>Matthew Dyer</origin>
+						<origin>Tiffany R. Anderson</origin>
+						<origin>S. Chyn Lim</origin>
+						<origin>Sean Vitousek</origin>
+						<origin>Christopher Bochicchio</origin>
+						<origin>Bruce M. Richmond</origin>
+						<pubdate>2011</pubdate>
+						<title>National Assessment of Shoreline Change: A GIS Compilation of Vector Shorelines and Associated Change Data for the Sandy Shorelines of Kauai, Oahu, and Maui; Hawaii</title>
+						<serinfo>
+							<sername>Open-File Report</sername>
+							<issue>2011-1009</issue>
+						</serinfo>
+						<pubinfo>
+							<pubplace>Woods Hole Coastal and Marine Science Center, Woods Hole, MA</pubplace>
+							<publish>U.S. Geological Survey, Coastal and Marine Geology Program</publish>
+						</pubinfo>
+						<onlink>http://pubs.usgs.gov/of/2011/1009/</onlink>
+					</citeinfo>
+				</lworkcit>
+				<ftname Sync="TRUE">MauiW_shorelines</ftname></citeinfo>
+		</citation>
+		<descript>
+			<abstract>
+Sandy ocean beaches are a popular recreational destination, often surrounded by communities containing valuable real estate.  Development is on the rise despite the fact that coastal infrastructure is subjected to flooding and erosion.  As a result, there is an increased demand for accurate information regarding past and present shoreline changes.  To meet these national needs, the Coastal and Marine Geology Program of the U.S. Geological Survey (USGS) is compiling existing reliable historical shoreline data along open-ocean sandy shores of the conterminous United States and parts of Alaska and Hawaii under the National Assessment of Shoreline Change project.  Shoreline vectors derived from historic and modern sources represent the low water mark (beach toe).
+
+There is no widely accepted standard for analyzing shoreline change.  Existing shoreline data measurements and rate calculation methods vary from study to study and prevent combining results into state-wide or regional assessments.  The impetus behind the National Assessment project was to develop a standardized method of measuring changes in shoreline position that is consistent from coast to coast.  The goal was to facilitate the process of periodically and systematically updating the results in an internally consistent manner.
+</abstract>
+			<purpose>This dataset includes shorelines ranging from 1912 to 1997 in the Maui West coastal region from Ukumehame to Honolua.  Shorelines were compiled from T-sheets (National Oceanic and Atmospheric Administration) and aerial photos.
+Historical shoreline positions serve as easily understood features that can be used to describe the movement of beaches through time.  These data are used to calculate rates of shoreline change for the U.S. Geological Survey's (USGS) National Assessment of Shoreline Change Project.
+
+Rates of long-term and short-term shoreline change were generated in a GIS using the Digital Shoreline Analysis System (DSAS) version 4.2.  DSAS uses a measurement baseline method to calculate rate-of-change statistics.  Transects are cast from the reference baseline to intersect each shoreline, establishing measurement points used to calculate shoreline change rates.</purpose>
+			<supplinf>Cross-referenced citations are applicable to the dataset as a whole.  Additional citations are located within individual process steps that pertain specifically to the method described in that step.</supplinf>
+			<langdata Sync="TRUE">en</langdata></descript>
+		<timeperd>
+			<timeinfo>
+				<rngdates>
+					<begdate>1912</begdate>
+					<enddate>1997</enddate>
+				</rngdates>
+			</timeinfo>
+			<current>ground condition</current>
+		</timeperd>
+		<status>
+			<progress>Complete</progress>
+			<update>None planned</update>
+		</status>
+		<spdom>
+			<bounding>
+				<westbc Sync="TRUE">-156.697426</westbc>
+				<eastbc Sync="TRUE">-156.556339</eastbc>
+				<northbc Sync="TRUE">21.018520</northbc>
+				<southbc Sync="TRUE">20.787082</southbc>
+			</bounding>
+			<lboundng><leftbc Sync="TRUE">-156.697426</leftbc><rightbc Sync="TRUE">-156.556339</rightbc><bottombc Sync="TRUE">20.787082</bottombc><topbc Sync="TRUE">21.018520</topbc></lboundng></spdom>
+		<keywords>
+			<theme>
+				<themekt>General</themekt>
+				<themekey>Shoreline Change Rate</themekey>
+				<themekey>Weighted Linear Regression Rate</themekey>
+				<themekey>Digital Shoreline Analysis System</themekey>
+				<themekey>DSAS</themekey>
+				<themekey>U.S. Geological Survey</themekey>
+				<themekey>USGS</themekey>
+				<themekey>Coastal and Marine Geology Program</themekey>
+				<themekey>CMGP</themekey>
+				<themekey>Woods Hole Coastal and Marine Science Center</themekey>
+				<themekey>WHCMSC</themekey>
+				<themekey>National Assessment of Shoreline Change Project</themekey>
+				<themekey>National Oceanic and Atmospheric Administration</themekey>
+				<themekey>NOAA</themekey>
+				<themekey>U.S. Army Corps of Engineers</themekey>
+				<themekey>USACE</themekey>
+				<themekey>University of Hawaii</themekey>
+			</theme>
+			<theme>
+				<themekt>ISO 19115 Topic Category</themekt>
+				<themekey>oceans</themekey>
+				<themekey>oceans and estuaries</themekey>
+				<themekey>oceans and coastal</themekey>
+				<themekey>environment</themekey>
+				<themekey>geoscientificInformation</themekey>
+			</theme>
+			<place>
+				<placekt>General</placekt>
+				<placekey>Hawaii Coast</placekey>
+				<placekey>United States</placekey>
+				<placekey>Maui</placekey>
+				<placekey>West Maui coast</placekey>
+				<placekey>Ukumehame, Hawaii</placekey><placekey>Honolua, Hawaii</placekey></place>
+		</keywords>
+		<accconst>None</accconst>
+		<useconst>Public domain data from the U.S. Government are freely redistributable with proper metadata and source attribution. Please recognize the University of Hawaii Coastal Geology Group as the originator of the dataset.</useconst>
+		<ptcontac>
+			<cntinfo>
+				<cntorgp>
+					<cntorg>U.S. Geological Survey</cntorg>
+				</cntorgp>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>384 Woods Hole Road</address>
+					<city>Woods Hole</city>
+					<state>MA</state>
+					<postal>02543-1598</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>508-548-8700</cntvoice>
+				<cntfax>508-547-2310</cntfax>
+			</cntinfo>
+		</ptcontac>
+		<native Sync="TRUE">Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 3; ESRI ArcCatalog 9.3.0.1770</native>
+		<crossref>
+			<citeinfo>
+				<origin>Charles H. Fletcher</origin>
+				<origin>Bradley M. Romine</origin>
+				<origin>Ayesha S. Genz</origin>
+				<origin>Matthew M. Barbee</origin>
+				<origin>Matthew Dyer</origin>
+				<origin>Tiffany R. Anderson</origin>
+				<origin>S. Chyn Lim</origin>
+				<origin>Sean Vitousek</origin>
+				<origin>Christopher Bochicchio</origin>
+				<origin>Bruce M. Richmond</origin>
+				<pubdate>2011</pubdate>
+				<title>National Assessment of Shoreline Change: Historical Shoreline Change in the Hawaiian Islands</title>
+				<serinfo>
+					<sername>Open-File Report</sername>
+					<issue>2011-1051</issue>
+				</serinfo>
+				<pubinfo>
+					<pubplace>Woods Hole Coastal and Marine Science Center, Woods Hole, MA</pubplace>
+					<publish>U.S. Geological Survey, Coastal and Marine Geology Program</publish>
+				</pubinfo>
+				<onlink>http://pubs.usgs.gov/of/2011/1051/</onlink>
+			</citeinfo>
+		</crossref>
+		<crossref>
+			<citeinfo>
+				<origin>E.R. Thieler</origin>
+				<origin>E.A. Himmelstoss</origin>
+				<origin>J.L. Zichichi</origin>
+				<origin>A. Ergul</origin>
+				<pubdate>2009</pubdate>
+				<title>Digital Shoreline Analysis System (DSAS) version 4.0 - An ArcGIS extension for calculating shoreline change</title>
+				<serinfo>
+					<sername>Open-File Report</sername>
+					<issue>2008-1278</issue>
+				</serinfo>
+				<pubinfo>
+					<pubplace>Woods Hole Coastal and Marine Science Center, Woods Hole, MA</pubplace>
+					<publish>U.S. Geological Survey, Coastal and Marine Geology Program</publish>
+				</pubinfo>
+				<othercit>Current version of software at time of use was 4.2</othercit>
+				<onlink>http://woodshole.er.usgs.gov/project-pages/dsas/</onlink>
+				<onlink>http://woodshole.er.usgs.gov/project-pages/dsas/version4/index.html</onlink>
+				<onlink>http://pubs.usgs.gov/of/2008/1278/</onlink>
+			</citeinfo>
+		</crossref>
+		<crossref>
+			<citeinfo>
+				<origin>National Oceanic and Atmospheric Administration (NOAA), National Ocean Service (NOS)</origin>
+				<pubdate>Unknown</pubdate>
+				<title>Scanned National Ocean Service (NOS) Coastal Survey Maps (also known as Topographic Survey sheets, or T-sheets)</title>
+				<serinfo>
+					<sername>NOAA shoreline manuscripts (T-sheets)</sername>
+				</serinfo>
+				<pubinfo>
+					<pubplace>Washington, D.C.</pubplace>
+					<publish>National Oceanic and Atmospheric Administration</publish>
+				</pubinfo>
+			</citeinfo>
+		</crossref>
+		<crossref>
+			<citeinfo>
+				<origin>R.M. Towill Corporation</origin>
+				<pubdate>2005-2008</pubdate>
+				<title>digital scans of aerial photograph negatives</title>
+				<pubinfo>
+					<pubplace>Honolulu, HI</pubplace>
+				</pubinfo>
+				<othercit>Selected aerial photograph negatives from R.M. Towill archives scanned by UH Coastal Geology Group.</othercit>
+				<onlink>http://www.rmtowill.com/index.htm</onlink>
+			</citeinfo>
+		</crossref>
+		<crossref>
+			<citeinfo>
+				<origin>Air Flight Service</origin>
+				<pubdate>2005-2009</pubdate>
+				<title>digital scans of aerial photograph negatives 2006-2009</title>
+				<pubinfo>
+					<pubplace>Santa Clara, CA</pubplace>
+				</pubinfo>
+				<othercit>Aerial photographs of Kauai, Oahu, and Maui, Hawaii, shoreline 2005-2009.</othercit>
+				<onlink>http://www.airphoto.com/</onlink>
+			</citeinfo>
+		</crossref>
+		<crossref>
+			<citeinfo>
+				<origin>Hawaii Aviation</origin>
+				<pubdate>2005-2009</pubdate>
+				<title>digital scans of aerial photograph negatives</title>
+				<pubinfo>
+					<pubplace>Honolulu, HI</pubplace>
+				</pubinfo>
+				<othercit>Digital scans of selected aerial photographs of Hawaii shoreline by UH Coastal Geology Group from Hawaii Aviation archives.</othercit>
+				<onlink>http://www.hawaiiaviation.com/</onlink>
+			</citeinfo>
+		</crossref>
+		<natvform Sync="TRUE">Shapefile</natvform></idinfo>
+	<dataqual>
+		<attracc>
+			<attraccr>The data provided here are a compilation of shorelines from multiple sources, spanning 85 years.  The attributes are based on the requirements of the Digital Shoreline Analysis System (DSAS) software and have gone through a series of quality assurance procedures.</attraccr>
+		</attracc>
+		<logic>Adjacent shoreline segments of a given time period do not overlap and are not necessarily continuous.  Shoreline segments of different time periods may overlap where a beach has been completely lost to erosion (hard shoreline, either permanently or intermittently).  In this special case, historical shorelines from time periods with no beach are aligned to a high water mark position mapped from the most recent aerial photo mosaic showing no beach. Shorelines were quality checked for accuracy. Any slight offsets between adjacent segments due to georeferencing and digitizing error are taken into account in the uncertainty calculations included in the corresponding report (U.S. Geological Survey Open-file Report 2011-1051, available online at http://pubs.usgs.gov/of/2011/1051/).</logic>
+		<complete>This shoreline file is complete and contains all shoreline segments used to calculate shoreline change rates along sections of the West Maui coastal region where shoreline position data were available.  These data adequately represented the shoreline position at the time of the survey.  Remaining gaps in these data, if applicable, are a consequence of non-existing data or existing data that did not meet quality assurance standards.</complete>
+		<posacc>
+			<horizpa>
+				<horizpar>Shoreline data have been acquired from 1912 to 1997, the horizontal accuracy of which varies with respect to data source from which the shorelines were digitized and the time period.  Positional uncertainties for each shoreline segment are listed under the "ACCURACY" heading in the attribute table.  Please visit the 'Uncertainties and Errors' section in the corresponding USGS Open-File Report (http://pubs.usgs.gov/of/2011/1051) for a complete explanation of the measurement uncertainties associated with these shorelines.</horizpar>
+			</horizpa>
+		</posacc>
+		<lineage>
+			<procstep>
+				<procdesc>Shoreline data were sought from local and national archives, libraries, and vendors in an effort to compile as many quality historical shorelines as possible for the region.  T-sheets were requested from NOAA and received as scanned raster images.</procdesc>
+				<procdate>1998-2008</procdate>
+				<proccont>
+					<cntinfo>
+						<cntorgp>
+							<cntorg>University of Hawaii Coastal Geology Group</cntorg>
+							<cntper>Matthew Barbee</cntper></cntorgp>
+						<cntaddr>
+							<addrtype>mailing and physical address</addrtype>
+							<address>University of Hawaii Coastal Geology Group</address>
+							<address>1680 East-West Road</address>
+							<address>POST Room 721</address>
+							<city>Honolulu</city>
+							<state>HI</state>
+							<postal>96822</postal>
+							<country>USA</country>
+						</cntaddr>
+						<cntvoice>808-956-6754</cntvoice>
+						<cntfax>808-956-5512</cntfax>
+						<cntemail>mbarbee@hawaii.edu</cntemail>
+						<cntemail>fletcher@soest.hawaii.edu</cntemail>
+						<cntpos>technician</cntpos></cntinfo>
+				</proccont>
+			</procstep>
+			<procstep>
+				<procdesc>Georeferenced T-sheets were obtained from the United States Department of Commerce, National Oceanic and Atmospheric Administration (NOAA), National Ocean Service (NOS), National Geodetic Survey (NGS). T-sheets were rectified by NOAA on a Sun Microsystems(r) workstation using Environmental Systems Research Institute, Inc. (ESRI)(r) ArcInfo(r) version 7.2.1 software by placing at least 6 well-spaced ground control points (GCPs) on selected T-sheet graticules in geographic coordinates.  Some T-sheets produced before 1930 required additional coordinate transformation information from NOAA to convert from the United States Standard Datum (USSD) to the North American Datum of 1927 (NAD27).   In the Hawaiian Islands, the adoption of the NAD27 datum for mapping and the emergence of several unsupported local and island-specific datums have led to significant confusion among cartographers and surveyors.  The datum transformation was applied to T-sheet graticule coordinates prior to rectification.  Total Root Mean Square (RMS) error for the rectification process was maintained below 1 pixel, which is approximately 4 m at a scale of 1:20,000 and approximately 1.5 m at a scale of 1:10,000.  Typically the resulting RMS was much lower than one pixel.
+
+        Geo-referenced T-sheets were loaded in ArcMap version 9.3.  ArcMap was used to transform received Geographic Projected data into the Universal Transverse Mercator (UTM) projection with the North American Datum of 1983 (NAD83) datum for digitizing and vector analysis.  A verification of the T-sheet shoreline was carried out where possible using control marks or physical shoreline features present on the T-sheet and a reliable current image database. Where verification failed, T-sheets were re-rectified in PCI Geomatics Orthoengine version 10.1 software using ground control points on existent control stations and identifiable shoreline features.  In all cases, shoreline feature verification produced a higher quality data product.
+
+        Many T-sheet products used in this study were re-rectified in PCI to correct significant errors associated with incorrect projection datum definitions.  Such errors would have otherwise rendered the sheets unusable.  T-sheets are georeferenced using polynomial mathematical models in PCI with RMS errors &lt; 4 m. Rectification of T-sheets is also verified by overlaying them on aerial photomosaics to compare their fit to rocky shoreline and other unchanged geological features.
+</procdesc>
+				<procdate>1998-2008</procdate>
+				<proccont>
+					<cntinfo>
+						<cntorgp>
+							<cntorg>University of Hawaii Coastal Geology Group</cntorg>
+							<cntper>Matthew Barbee</cntper></cntorgp>
+						<cntaddr>
+							<addrtype>mailing and physical address</addrtype>
+							<address>University of Hawaii Coastal Geology Group</address>
+							<address>1680 East-West Road</address>
+							<address>POST Room 721</address>
+							<city>Honolulu</city>
+							<state>HI</state>
+							<postal>96822</postal>
+							<country>USA</country>
+						</cntaddr>
+						<cntvoice>808-956-6754</cntvoice>
+						<cntfax>808-956-5512</cntfax>
+						<cntemail>mbarbee@hawaii.edu</cntemail>
+						<cntpos>technician</cntpos></cntinfo>
+				</proccont>
+			</procstep>
+			<procstep>
+				<procdesc>Modern (1997-2002) aerial photographs of the West and North Maui coastline were orthorectified in PCI Geomatics Orthoengine Software using ground control points collected in a differential global positioning system (DGPS) survey of the west and north Maui coast.</procdesc>
+				<procdate>1998-2002</procdate>
+				<proccont>
+					<cntinfo>
+						<cntorgp>
+							<cntorg>University of Hawaii Coastal Geology Group</cntorg>
+							<cntper>Matthew Barbee</cntper></cntorgp>
+						<cntaddr>
+							<addrtype>mailing and physical address</addrtype>
+							<address>University of Hawaii Coastal Geology Group</address>
+							<address>1680 East-West Road</address>
+							<address>POST Room 721</address>
+							<city>Honolulu</city>
+							<state>HI</state>
+							<postal>96822</postal>
+							<country>USA</country>
+						</cntaddr>
+						<cntvoice>808-956-6754</cntvoice>
+						<cntfax>808-956-5512</cntfax>
+						<cntemail>mbarbee@hawaii.edu</cntemail>
+						<cntpos>technician</cntpos></cntinfo>
+				</proccont>
+			</procstep>
+			<procstep>
+				<procdesc>Historical shorelines are digitized from NOAA NOS topographic maps (T-sheets) and 0.5 m orthorectified aerial photo mosaics in PCI Geomatica Focus Software.  Quality assessments were performed and shorelines were edited to remove any overlap between adjacent shorelines. No edge matching between adjacent shorelines was attempted.
+
+Shoreline layers were saved from .pix (PCI Geomatics geographic data format) to shapefile (.shp) to allow for analysis in ESRI ArcGIS software using Digital Shoreline Analysis System (DSAS).  Shoreline layers from all sources were merged to produce a single shoreline shapefile for the coastal region. The final shoreline shapefile was coded with 4 attribute fields (ID, Shape, Date, and Accuracy) required for the DSAS, which was used to calculate shoreline change rates. The attributes reflect the source of the data and the original survey date.</procdesc>
+				<procdate>2008-2010</procdate>
+				<proccont>
+					<cntinfo>
+						<cntperp>
+							<cntper>Matthew Barbee</cntper>
+							<cntorg>University of Hawaii Coastal Geology Group</cntorg>
+						</cntperp>
+						<cntpos>technician</cntpos>
+						<cntaddr>
+							<addrtype>mailing and physical address</addrtype>
+							<address>University of Hawaii Coastal Geology Group</address>
+							<address>1680 East-West Road</address>
+							<address>POST Room 721</address>
+							<city>Honolulu</city>
+							<state>HI</state>
+							<postal>96822</postal>
+							<country>USA</country>
+						</cntaddr>
+						<cntvoice>808-956-6754</cntvoice>
+						<cntfax>808-956-5512</cntfax>
+						<cntemail>mbarbee@hawaii.edu</cntemail>
+					</cntinfo>
+				</proccont>
+			</procstep>
+			<procstep>
+				<procdesc>
+The appended shoreline files were imported into a personal geodatabase in ArcCatalog v9.3 by right-clicking on the geodatabase &gt; Import feature class for shoreline file for use with the Digital Shoreline Analysis System (DSAS) v4.2 software to perform rate calculations.
+
+This and all following process steps performed by Bradley M. Romine, University of Hawaii Coastal Geology Group.
+</procdesc>
+				<procdate>2010</procdate>
+				<proccont>
+					<cntinfo>
+						<cntperp>
+							<cntper>Bradley M. Romine</cntper>
+							<cntorg>University of Hawaii Coastal Geology Group</cntorg>
+						</cntperp>
+						<cntpos>graduate student, research assistant</cntpos>
+						<cntaddr>
+							<addrtype>mailing and physical address</addrtype>
+							<address>University of Hawaii Coastal Geology Group</address>
+							<address>1680 East West Road</address>
+							<address>POST Room 721</address>
+							<city>Honolulu</city>
+							<state>HI</state>
+							<postal>96822</postal>
+							<country>USA</country>
+						</cntaddr>
+						<cntvoice>808-956-3605</cntvoice>
+						<cntfax>808-956-5512</cntfax>
+						<cntemail>romine@hawaii.edu</cntemail>
+					</cntinfo>
+				</proccont>
+			</procstep>
+			<procstep>
+				<procdesc>The shoreline feature class was exported from the personal geodatabase back to a shapefile in ArcCatalog v9.3 by right-clicking on the shoreline file &gt; Export &gt; To Shapefile (single) for publication purposes.</procdesc>
+				<procdate>2010</procdate>
+			</procstep>
+			<procstep>
+				<procdesc>The data were projected in ArcToolbox v9.3 &gt; Data Management Tools &gt; Projections and Transformations &gt; Feature &gt; Project. Parameters: input projection = UTM zone 4N (WGS84); output projection = geographic coordinates (WGS84).</procdesc>
+				<procdate>20110713</procdate>
+				<proccont>
+					<cntinfo>
+						<cntperp>
+							<cntper>Bradley M. Romine</cntper>
+							<cntorg>University of Hawaii Coastal Geology Group</cntorg>
+						</cntperp>
+						<cntpos>graduate student, research assistant</cntpos>
+						<cntaddr>
+							<addrtype>mailing and physical address</addrtype>
+							<address>University of Hawaii Coastal Geology Group</address>
+							<address>1680 East-West Road</address>
+							<address>POST Room 721</address>
+							<city>Honolulu</city>
+							<state>HI</state>
+							<postal>96822</postal>
+							<country>USA</country>
+						</cntaddr>
+						<cntvoice>808-956-3605</cntvoice>
+						<cntfax>808-956-5512</cntfax>
+						<cntemail>romine@hawaii.edu</cntemail>
+					</cntinfo>
+				</proccont>
+			</procstep>
+		</lineage>
+	</dataqual>
+	<spdoinfo>
+		<direct Sync="TRUE">Vector</direct>
+		<ptvctinf>
+			<sdtsterm Name="MauiW_shorelines">
+				<sdtstype Sync="TRUE">String</sdtstype>
+				<ptvctcnt Sync="TRUE">97</ptvctcnt>
+			</sdtsterm>
+			<esriterm Name="MauiW_shorelines"><efeatyp Sync="TRUE">Simple</efeatyp><efeageom Sync="TRUE">Polyline</efeageom><esritopo Sync="TRUE">FALSE</esritopo><efeacnt Sync="TRUE">97</efeacnt><spindex Sync="TRUE">FALSE</spindex><linrefer Sync="TRUE">FALSE</linrefer></esriterm></ptvctinf>
+	</spdoinfo>
+	<spref>
+		<horizsys>
+			<geograph>
+				<latres>0.000001</latres>
+				<longres>0.000001</longres>
+				<geogunit Sync="TRUE">Decimal degrees</geogunit>
+			</geograph>
+			<geodetic>
+				<horizdn Sync="TRUE">D_WGS_1984</horizdn>
+				<ellips Sync="TRUE">WGS_1984</ellips>
+				<semiaxis Sync="TRUE">6378137.000000</semiaxis>
+				<denflat Sync="TRUE">298.257224</denflat>
+			</geodetic>
+			<cordsysn><geogcsn Sync="TRUE">GCS_WGS_1984</geogcsn></cordsysn></horizsys>
+	</spref>
+	<eainfo>
+		<detailed Name="MauiW_shorelines">
+			<enttyp>
+				<enttypl Sync="TRUE">MauiW_shorelines</enttypl>
+				<enttypd>Vector shorelines</enttypd>
+				<enttypds>U.S. Geological Survey</enttypds>
+				<enttypt Sync="TRUE">Feature Class</enttypt><enttypc Sync="TRUE">97</enttypc></enttyp>
+			<attr>
+				<attrlabl>FID</attrlabl>
+				<attrdef>Internal feature number.</attrdef>
+				<attrdefs>ESRI</attrdefs>
+				<attrdomv>
+					<udom>Sequential unique whole numbers that are automatically generated.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">FID</attalias><attrtype Sync="TRUE">OID</attrtype><attwidth Sync="TRUE">4</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>Shape</attrlabl>
+				<attrdef>Feature geometry.</attrdef>
+				<attrdefs>ESRI</attrdefs>
+				<attrdomv>
+					<udom>Coordinates defining the features.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">Shape</attalias><attrtype Sync="TRUE">Geometry</attrtype><attwidth Sync="TRUE">0</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>Date_</attrlabl>
+				<attrdef>Date of shoreline position; date of survey as indicated on source material.  A default date of 01/01/YYYY was assigned to shorelines where only the year was known.</attrdef>
+				<attrdefs>USGS</attrdefs>
+				<attrdomv>
+					<udom>Character string of length 10</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">DATE_</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">10</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ACCURACY</attrlabl>
+				<attrdef>Total horizontal positional accuracy for historical shoreline segment (meters). See:  'Uncertainty and Error' section in accompanying report (National Assessment of Shoreline Change: Historical Shoreline Changes in the Hawaiian Islands, available online at http://pubs.usgs.gov/of/2011/2051/)</attrdef>
+				<attalias Sync="TRUE">ACCURACY</attalias><attrtype Sync="TRUE">Float</attrtype><attwidth Sync="TRUE">13</attwidth><atnumdec Sync="TRUE">11</atnumdec></attr>
+		</detailed>
+	</eainfo>
+	<distinfo>
+		<distrib>
+			<cntinfo>
+				<cntorgp>
+					<cntorg>U.S. Geological Survey</cntorg>
+				</cntorgp>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>Woods Hole Coastal and Marine Science Center</address>
+					<address>384 Woods Hole Road</address>
+					<city>Woods Hole</city>
+					<state>MA</state>
+					<postal>02543-1598</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>508-548-8700</cntvoice>
+				<cntfax>508-547-2310</cntfax>
+			</cntinfo>
+		</distrib>
+		<resdesc>Downloadable Data: USGS Open-File Report 2011-1009</resdesc>
+		<distliab>
+Neither the U.S. Government, the Department of the Interior, nor the USGS, nor any of their employees, contractors, or subcontractors, make any warranty, express or implied, nor assume any legal liability or responsibility for the accuracy, completeness, or usefulness of any information, apparatus, product, or process disclosed, nor represent that its use would not infringe on privately owned rights. The act of distribution shall not constitute any such warranty, and no responsibility is assumed by the USGS in the use of these data or related materials.
+
+Any use of trade, product, or firm names is for descriptive purposes only and does not imply endorsement by the U.S. Government.
+</distliab>
+		<stdorder>
+			<digform>
+				<digtinfo>
+					<formname>WinZip</formname>
+					<formvern>9.0</formvern>
+					<formspec>ESRI polyline shapefile</formspec>
+					<formcont>This WinZip file contains a shapefile of historic shorelines from 1912 to 1997 for the sandy shorelines of the West coast of Maui from Ukumehame to Honolua.</formcont>
+					<filedec>Use WinZip or pkUnzip</filedec>
+					<transize>271 KB</transize>
+					<dssize Sync="TRUE">0.364</dssize></digtinfo>
+				<digtopt>
+					<onlinopt>
+						<computer>
+							<networka>
+								<networkr>http://pubs.usgs.gov/of/2011/1009/data/Maui/MauiW/MauiW_shorelines.zip</networkr>
+							</networka>
+						</computer>
+						<accinstr>Data are downloadable via the World Wide Web (WWW).</accinstr>
+					</onlinopt>
+				</digtopt>
+			</digform>
+			<fees>None</fees>
+		</stdorder>
+		<techpreq>This zip file contains data available in Environmental Systems Research Institute (ESRI) polyline shapefile format. The user must have ArcGIS or ArcView 3.0 or greater software to read and process the data file. In lieu of ArcView or ArcGIS, the user may utilize another GIS application package capable of importing the data. A free data viewer, ArcExplorer, capable of displaying the data is available from ESRI at www.esri.com.</techpreq>
+	</distinfo>
+	<metainfo>
+		<metd Sync="TRUE">20111104</metd>
+		<metc>
+			<cntinfo>
+				<cntperp>
+					<cntper>Bradley M. Romine</cntper>
+					<cntorg>University of Hawaii Coastal Geology Group</cntorg>
+				</cntperp>
+				<cntpos>graduate student, research assistant</cntpos>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>University of Hawaii Coastal Geology Group</address>
+					<address>1680 East-West Road</address>
+					<address>POST Room 721</address>
+					<city>Honolulu</city>
+					<state>HI</state>
+					<postal>96822</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>808-956-3605</cntvoice>
+				<cntfax>808-956-5512</cntfax>
+				<cntemail>romine@hawaii.edu</cntemail>
+			</cntinfo>
+		</metc>
+		<metstdn Sync="TRUE">FGDC Content Standards for Digital Geospatial Metadata</metstdn>
+		<metstdv Sync="TRUE">FGDC-STD-001-1998</metstdv>
+		<mettc Sync="TRUE">local time</mettc>
+		<metextns>
+			<onlink>http://www.esri.com/metadata/esriprof80.html</onlink>
+			<metprof>ESRI Metadata Profile</metprof>
+		</metextns>
+		<langmeta Sync="TRUE">en</langmeta><metextns><onlink Sync="TRUE">http://www.esri.com/metadata/esriprof80.html</onlink><metprof Sync="TRUE">ESRI Metadata Profile</metprof></metextns></metainfo>
+	<Esri><MetaID>{0D44D476-5585-48AC-9528-D4864A2F52E4}</MetaID><CreaDate>20110713</CreaDate><CreaTime>15302500</CreaTime><SyncOnce>FALSE</SyncOnce><SyncDate>20111104</SyncDate><SyncTime>12114700</SyncTime><ModDate>20111104</ModDate><ModTime>12114700</ModTime></Esri><dataIdInfo><envirDesc Sync="TRUE">Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 3; ESRI ArcCatalog 9.3.0.1770</envirDesc><dataLang><languageCode Sync="TRUE" value="en"></languageCode></dataLang><idCitation><resTitle Sync="TRUE">MauiW_shorelines</resTitle><presForm><PresFormCd Sync="TRUE" value="005"></PresFormCd></presForm></idCitation><spatRpType><SpatRepTypCd Sync="TRUE" value="001"></SpatRepTypCd></spatRpType><dataExt><geoEle><GeoBndBox esriExtentType="native"><westBL Sync="TRUE">-156.697426</westBL><eastBL Sync="TRUE">-156.556339</eastBL><northBL Sync="TRUE">21.01852</northBL><southBL Sync="TRUE">20.787082</southBL><exTypeCode Sync="TRUE">1</exTypeCode></GeoBndBox></geoEle></dataExt><geoBox esriExtentType="decdegrees"><westBL Sync="TRUE">-156.697426</westBL><eastBL Sync="TRUE">-156.556339</eastBL><northBL Sync="TRUE">21.01852</northBL><southBL Sync="TRUE">20.787082</southBL><exTypeCode Sync="TRUE">1</exTypeCode></geoBox></dataIdInfo><mdLang><languageCode Sync="TRUE" value="en"></languageCode></mdLang><mdStanName Sync="TRUE">ISO 19115 Geographic Information - Metadata</mdStanName><mdStanVer Sync="TRUE">DIS_ESRI1.0</mdStanVer><mdChar><CharSetCd Sync="TRUE" value="004"></CharSetCd></mdChar><mdHrLv><ScopeCd Sync="TRUE" value="005"></ScopeCd></mdHrLv><mdHrLvName Sync="TRUE">dataset</mdHrLvName><distInfo><distributor><distorTran><onLineSrc><orDesc Sync="TRUE">002</orDesc><linkage Sync="TRUE">file://\\Coastal2\Working\Projects\USGS_National_Assessment_HI\analysis\Maui\West Maui\shapefiles_For_usgs\GCS_WGS84_reprojected\MauiW_shorelines.shp</linkage><protocol Sync="TRUE">Local Area Network</protocol></onLineSrc><transSize Sync="TRUE">0.364</transSize></distorTran><distorFormat><formatName Sync="TRUE">Shapefile</formatName></distorFormat></distributor></distInfo><refSysInfo><RefSystem><refSysID><identCode Sync="TRUE">GCS_WGS_1984</identCode></refSysID></RefSystem></refSysInfo><spatRepInfo><VectSpatRep><topLvl><TopoLevCd Sync="TRUE" value="001"></TopoLevCd></topLvl><geometObjs Name="MauiW_shorelines"><geoObjTyp><GeoObjTypCd Sync="TRUE" value="001"></GeoObjTypCd></geoObjTyp><geoObjCnt Sync="TRUE">97</geoObjCnt></geometObjs></VectSpatRep></spatRepInfo><mdDateSt Sync="TRUE">20111104</mdDateSt></metadata>

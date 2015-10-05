@@ -1,0 +1,21 @@
+<dataStore>
+  <id>DataStoreInfoImpl-2dbaa801:13b52754b9e:-7fde</id>
+  <name>Coastal Hazards Input</name>
+  <type>Directory of spatial files (shapefiles)</type>
+  <enabled>true</enabled>
+  <workspace>
+    <id>WorkspaceInfoImpl-378103b2:12a1edeecf1:-7fe9</id>
+  </workspace>
+  <connectionParameters>
+    <entry key="memory mapped buffer">true</entry>
+    <entry key="timezone">America/Chicago</entry>
+    <entry key="fstype">shape</entry>
+    <entry key="create spatial index">true</entry>
+    <entry key="charset">ISO-8859-1</entry>
+    <entry key="filetype">shapefile</entry>
+    <entry key="cache and reuse memory maps">true</entry>
+    <entry key="url">file:workspaces/published/Input_Data</entry>
+    <entry key="namespace">gov.usgs.cida.ch.published</entry>
+  </connectionParameters>
+  <__default>false</__default>
+</dataStore>

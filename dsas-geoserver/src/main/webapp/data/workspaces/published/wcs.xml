@@ -1,0 +1,41 @@
+<wcs>
+  <id>WCSInfoImpl--1ce92bd:13b8a6bfee5:-7f47</id>
+  <workspace>
+    <id>WorkspaceInfoImpl-378103b2:12a1edeecf1:-7fe9</id>
+  </workspace>
+  <enabled>true</enabled>
+  <name>WCS</name>
+  <title>Web Coverage Service</title>
+  <maintainer>http://jira.codehaus.org/secure/BrowseProject.jspa?id=10311</maintainer>
+  <abstrct>This server implements the WCS specification 1.0 and 1.1.1, it&apos;s reference implementation of WCS 1.1.1. All layers published by this service are available on WMS also.
+     </abstrct>
+  <accessConstraints>NONE</accessConstraints>
+  <fees>NONE</fees>
+  <versions>
+    <org.geotools.util.Version>
+      <version>1.0.0</version>
+    </org.geotools.util.Version>
+    <org.geotools.util.Version>
+      <version>1.1.1</version>
+    </org.geotools.util.Version>
+  </versions>
+  <keywords>
+    <string>WCS</string>
+    <string>WMS</string>
+    <string>GEOSERVER</string>
+  </keywords>
+  <metadataLink>
+    <type>undef</type>
+    <about>http://geoserver.sourceforge.net/html/index.php</about>
+    <metadataType>other</metadataType>
+  </metadataLink>
+  <citeCompliant>false</citeCompliant>
+  <onlineResource>http://geoserver.sourceforge.net/html/index.php</onlineResource>
+  <schemaBaseURL>http://schemas.opengis.net</schemaBaseURL>
+  <verbose>false</verbose>
+  <gmlPrefixing>false</gmlPrefixing>
+  <maxInputMemory>0</maxInputMemory>
+  <maxOutputMemory>0</maxOutputMemory>
+  <subsamplingEnabled>true</subsamplingEnabled>
+  <overviewPolicy>IGNORE</overviewPolicy>
+</wcs>

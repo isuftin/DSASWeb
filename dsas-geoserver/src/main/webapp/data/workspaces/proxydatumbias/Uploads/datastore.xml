@@ -1,0 +1,23 @@
+<dataStore>
+  <id>DataStoreInfoImpl-80d8379:148d2346501:-7ffe</id>
+  <name>Uploads</name>
+  <description>Place to hold PDB shapefile uploads</description>
+  <type>Directory of spatial files (shapefiles)</type>
+  <enabled>true</enabled>
+  <workspace>
+    <id>WorkspaceInfoImpl-e13955e:148d1d118f6:-161a</id>
+  </workspace>
+  <connectionParameters>
+    <entry key="memory mapped buffer">true</entry>
+    <entry key="timezone">America/Chicago</entry>
+    <entry key="fstype">shape</entry>
+    <entry key="create spatial index">true</entry>
+    <entry key="charset">ISO-8859-1</entry>
+    <entry key="filetype">shapefile</entry>
+    <entry key="enable spatial index">true</entry>
+    <entry key="cache and reuse memory maps">true</entry>
+    <entry key="url">file:workspaces/proxydatumbias/Uploads</entry>
+    <entry key="namespace">gov.usgs.cida.ch.bias</entry>
+  </connectionParameters>
+  <__default>false</__default>
+</dataStore>
