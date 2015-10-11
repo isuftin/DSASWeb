@@ -1,13 +1,22 @@
 package gov.usgs.cida.dsas.parser;
 
 import com.google.common.collect.Lists;
-
-import static gov.usgs.cida.utilities.features.Constants.*;
-
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
 import gov.usgs.cida.dsas.wps.geom.Intersection;
 import gov.usgs.cida.utilities.features.AttributeGetter;
-
+import static gov.usgs.cida.utilities.features.Constants.BASELINE_DIST_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.BASELINE_ID_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.DATE_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.DISTANCE_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.EPR_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.LCI_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.LRR_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.NSM_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.SCE_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.TRANSECT_ID_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.UNCY_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.WCI_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.WLR_ATTR;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.feature.FeatureCollection;

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WPSConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://n52.org/wps" xsi:schemaLocation="http://n52.org/wps schema_v2.xsd">
   <Datahandlers>
+    <ParserList>
+      <Parser name="CoastalChangeHazardsParser" className="gov.usgs.cida.dsas.parser.DSASParser" active="true">
+        <Format mimetype="text/xml"/>
+        <Format mimetype="application/xml"/>
+      </Parser>
+    </ParserList>
     <GeneratorList>
       <Generator name="GenericFileGenerator" className="org.n52.wps.io.datahandler.generator.GenericFileGenerator" active="true">
         <Format mimetype="application/dbase"/>

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+	<WatchedResource>WEB-INF/web.xml</WatchedResource>
+	<Manager pathname="" />
+	<Environment name="dsas.geoserver.layer.age.maximum" type="java.lang.Long" value="2592000000" />
+	<Environment name="dsas.geoserver.sweeper.run.period" type="java.lang.Long" value="3600000" />
+	<Environment name="dsas.geoserver.sweeper.stores.empty.delete" type="java.lang.Boolean" value="false" />
+	<Environment name="dsas.geoserver.sweeper.workspaces.empty.delete" type="java.lang.Boolean" value="false" />
+	<Environment name="dsas.geoserver.sweeper.workspaces.read-only" type="java.lang.String" value="published" />
+</Context>
