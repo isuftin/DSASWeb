@@ -1,0 +1,11 @@
+dsasrserve:
+  build: ./src/main/resources/docker/rserve
+  hostname: cch_rserve
+  environment:
+      - PASSWORD=rserve
+      
+dsasn52:
+  build: ./src/main/resources/docker/n52-wps
+  hostname: cch_n52
+  links:
+      - dsasrserve

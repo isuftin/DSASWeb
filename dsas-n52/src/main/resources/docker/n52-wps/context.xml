@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <Manager pathname="" />
+    <Environment name="gov.usgs.cida.n52.wps.config.location" type="java.lang.String" value="/wps_config.xml" override="false" />
+</Context>
