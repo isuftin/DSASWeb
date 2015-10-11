@@ -6,7 +6,6 @@ dsas_db_vol_container:
    command: /bin/echo "Data only container for DSAS PostGRES"
    labels:
      - "gov.usgs.cidsa.dsas.container.volume=true"
-
 dsas_db:
   extends:
     file: ./dsas-liquibase/docker-compose.yml
@@ -23,7 +22,6 @@ dsas_geoserver_vol_container:
     command: /bin/echo "Data only container for Geoserver"
     labels:
       - "gov.usgs.cidsa.dsas.container.volume=true"
-
 dsas_geoserver:
   extends:
     file: ./dsas-geoserver/docker-compose.yml
@@ -36,7 +34,7 @@ dsas_rserve:
   extends:
     file: ./dsas-n52/docker-compose.yml
     service: dsas_rserve
-    
+
 # N52
 dsas_52n:
   extends:
