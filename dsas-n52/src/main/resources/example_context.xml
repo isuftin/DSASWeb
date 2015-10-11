@@ -1,0 +1,3 @@
+<!-- gov.usgs.cida.n52.wps.config.location which is path to wps_config.xml file. Rserve connection won't work without this.
+-->
+<Environment name="gov.usgs.cida.n52.wps.config.location" type="java.lang.String" value="/your/tomcat/installation/data/dsas/n52/wps_config.xml" />

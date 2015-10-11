@@ -26,11 +26,8 @@ should probably be left at default. -->
 <!-- Directory in which uploads are held -->
 <Environment name="dsas.files.directory.upload" type="java.lang.String" value="/upload" />
 
-<!-- gov.usgs.cida.n52.wps.config.location which is path to wps_config.xml file. Rserve connection won't work without -->
-<Environment name="gov.usgs.cida.n52.wps.config.location" type="java.lang.String" value="/your/tomcat/installation/data/dsas/n52/wps_config.xml" />
-
 <!--
-dsas.geocoding.endpoint: Data directory where GeoServer stores its files. -->
+dsas.geoserver.datadir: Data directory where GeoServer stores its files. -->
 <Environment name="dsas.geoserver.datadir" type="java.lang.String" value="/your/geoserver-data-dir/geoserver/data" />
 
 <!--
@@ -45,6 +42,9 @@ dsas.geoserver.password: Password used for Geoserver-->
 dsas.geoserver.endpoint: Specifies where the back-end proxy server 
 should send connections to for Geoserver-->
 <Environment name="dsas.geoserver.endpoint" type="java.lang.String" value="http://localhost:8081/dsas-geoserver" />
+
+<!-- JDBC name of the DB connection -->
+<Environment name="jndi.jdbc.name" type="java.lang.String" value="jdbc/dsas" />
 
 <!--
 dsas.n52.endpoint: Specifies where the application should look for the web processing endpoint -->
