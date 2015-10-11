@@ -7,6 +7,8 @@ dsas_rserve:
 dsas_n52:
   build: ./src/main/resources/docker/n52-wps
   hostname: dsas_n52
+  ports:
+      - "8082:8080"
   # links:
   #     - dsasrserve
   #
