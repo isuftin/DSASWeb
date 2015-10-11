@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Pull down the latest snapshot
-group="gov.usgs.cida.coastalhazards"
-artifact="coastal-hazards-n52"
+group="gov.usgs.cida.dsas"
+artifact="dsas-n52"
 nexusUrl="http://cida.usgs.gov/maven/service/local/artifact/maven/"
 wpsArtifact="?r=cida-public-snapshots&g=${group}&a=${artifact}&v=LATEST&e=war"
 wpsFileLocation="/wps.war"

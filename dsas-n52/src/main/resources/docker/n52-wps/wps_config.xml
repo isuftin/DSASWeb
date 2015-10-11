@@ -1,36 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WPSConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://n52.org/wps" xsi:schemaLocation="http://n52.org/wps schema_v2.xsd">
   <Datahandlers>
-    <ParserList>
-      <!-- FEATURE COLLECTION R PARSER temporarily disabled -->
-      <!--Parser name="FeatureCollectionRParser" className="gov.usgs.cida.coastalhazards.parser.FeatureCollectionRParser" active="true">
-        <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/2.0.0/feature.xsd"/>
-        <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/2.1.1/feature.xsd"/>
-        <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
-        <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/2.1.2.1/feature.xsd"/>
-        <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/3.0.0/base/feature.xsd"/>
-        <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/3.0.1/base/feature.xsd"/>
-        <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/3.1.0/base/feature.xsd"/>
-        <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/3.1.1/base/feature.xsd"/>
-        <Format mimetype="text/xml" schema="http://schemas.opengis.net/gml/3.2.1/base/feature.xsd"/>
-        <Format mimetype="text/xml; subtype=gml/2.0.0" schema="http://schemas.opengis.net/gml/2.0.0/feature.xsd"/>
-        <Format mimetype="text/xml; subtype=gml/2.1.1" schema="http://schemas.opengis.net/gml/2.1.1/feature.xsd"/>
-        <Format mimetype="text/xml; subtype=gml/2.1.2" schema="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
-        <Format mimetype="text/xml; subtype=gml/2.1.2.1" schema="http://schemas.opengis.net/gml/2.1.2.1/feature.xsd"/>
-        <Format mimetype="text/xml; subtype=gml/3.0.0" schema="http://schemas.opengis.net/gml/3.0.0/base/feature.xsd"/>
-        <Format mimetype="text/xml; subtype=gml/3.0.1" schema="http://schemas.opengis.net/gml/3.0.1/base/feature.xsd"/>
-        <Format mimetype="text/xml; subtype=gml/3.1.0" schema="http://schemas.opengis.net/gml/3.1.0/base/feature.xsd"/>
-        <Format mimetype="text/xml; subtype=gml/3.1.1" schema="http://schemas.opengis.net/gml/3.1.1/base/feature.xsd"/>
-        <Format mimetype="text/xml; subtype=gml/3.2.1" schema="http://schemas.opengis.net/gml/3.2.1/base/feature.xsd"/>
-      </Parser-->
-      <!--Parser name="GenericFileParser" className="org.n52.wps.io.datahandler.parser.GenericFileParser" active="true">
-        <Format mimetype="text/xml" />
-      </Parser-->
-      <Parser name="CoastalChangeHazardsParser" className="gov.usgs.cida.coastalhazards.parser.CoastalChangeHazardsParser" active="true">
-        <Format mimetype="text/xml"/>
-        <Format mimetype="application/xml"/>
-      </Parser>
-    </ParserList>
     <GeneratorList>
       <Generator name="GenericFileGenerator" className="org.n52.wps.io.datahandler.generator.GenericFileGenerator" active="true">
         <Format mimetype="application/dbase"/>
