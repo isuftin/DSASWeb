@@ -142,12 +142,12 @@
 	</servlet>
 	<servlet>
 		<servlet-name>ShapefileImportService</servlet-name>
-		<servlet-class>gov.usgs.cida.dsas.ShapefileImportService</servlet-class>
+		<servlet-class>gov.usgs.cida.dsas.service.ShapefileImportService</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
 		<servlet-name>SessionService</servlet-name>
-		<servlet-class>gov.usgs.cida.dsas.SessionService</servlet-class>
+		<servlet-class>gov.usgs.cida.dsas.service.SessionService</servlet-class>
 		<!-- 
 		Used for reading JNDI variables. All JNDI variables used for this application 
 		will be prefixed with this parameter. Example: 
@@ -160,19 +160,19 @@
 	</servlet>
 	<servlet>
 		<servlet-name>ExportService</servlet-name>
-		<servlet-class>gov.usgs.cida.dsas.ExportService</servlet-class>
+		<servlet-class>gov.usgs.cida.dsas.service.ExportService</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>ConsumerServlet</servlet-name>
-		<servlet-class>gov.usgs.cida.dsas.ConsumerServlet</servlet-class>
+		<servlet-class>gov.usgs.cida.dsas.service.ConsumerServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>PublishService</servlet-name>
-		<servlet-class>gov.usgs.cida.dsas.PublishService</servlet-class>
+		<servlet-class>gov.usgs.cida.dsas.service.PublishService</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>ShorelineStagingService</servlet-name>
-		<servlet-class>gov.usgs.cida.dsas.ShorelineStagingService</servlet-class>
+		<servlet-class>gov.usgs.cida.dsas.service.ShorelineStagingService</servlet-class>
 		<init-param>
 			<param-name>application.name</param-name>
 			<param-value>dsas</param-value>
@@ -180,7 +180,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>ShorelineService</servlet-name>
-		<servlet-class>gov.usgs.cida.dsas.ShorelineService</servlet-class>
+		<servlet-class>gov.usgs.cida.dsas.service.ShorelineService</servlet-class>
 	</servlet>
 	<!-- MAPPING -->
 	<servlet-mapping>
