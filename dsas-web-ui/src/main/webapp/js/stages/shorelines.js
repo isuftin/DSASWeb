@@ -840,7 +840,7 @@ var Shorelines = {
 			if (Shorelines.aoiBoundsSelected) {
 				var filterFunc = function (l) {
 					if (l.name.endsWith(Shorelines.stage)) {
-						var layerBounds = OpenLayers.Bounds.fromArray(l.bbox[CONFIG.strings.epsg4326].bbox, true)
+						var layerBounds = OpenLayers.Bounds.fromArray(l.bbox[CONFIG.strings.crs84].bbox, false)
 							.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913));
 						return Shorelines.aoiBoundsSelected.intersectsBounds(layerBounds);
 					}
