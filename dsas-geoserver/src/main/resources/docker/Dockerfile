@@ -4,6 +4,8 @@ MAINTAINER Ivan Suftin <isuftin@usgs.gov>
 
 VOLUME ["/heapdumps", "/data"]
 
+EXPOSE 8080
+
 COPY setenv.sh /usr/local/tomcat/bin/setenv.sh
 
 COPY download-geoserver.sh /download-geoserver.sh

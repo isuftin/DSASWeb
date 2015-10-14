@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='utf-8'?> 
+
+<Context> 
+    
+    <WatchedResource>WEB-INF/web.xml</WatchedResource> 
+    <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+
+ <Environment name="development" type="java.lang.String" value="true" />
+
+ <Environment name="dsas.files.upload.max-size" type="java.lang.String" value="15728640" />
+
+ <Environment name="dsas.files.upload.filename-param" type="java.lang.String" value="qqfile" />
+
+ <Environment name="dsas.files.directory.base" type="java.lang.String" value="/tmp/dsas" />
+
+ <Environment name="dsas.files.directory.work" type="java.lang.String" value="/work" />
+
+ <Environment name="dsas.files.directory.upload" type="java.lang.String" value="/upload" />
+
+ <Environment name="dsas.geoserver.datadir" type="java.lang.String" value="/data" />
+
+ <Environment name="dsas.geoserver.username" type="java.lang.String" value="admin" />
+
+ <Environment name="dsas.geoserver.password" type="java.lang.String" value="geoserver" />
+
+ <Environment name="dsas.geoserver.endpoint" type="java.lang.String" value="http://DSAS_GEOSERVER_HOSTNAME:8080/dsas-geoserver" />
+
+ <Environment name="dsas.n52.endpoint" type="java.lang.String" value="http://DSAS_N52_HOSTNAME:8080/dsas-n52" />
+
+ <Environment name="jndi.jdbc.name" type="java.lang.String" value="jdbc/dsas" />
+
+ <Resource 
+     name="jdbc/dsas" 
+     auth="Container" 
+     type="javax.sql.DataSource" 
+     driverClassName="org.postgresql.Driver" 
+     url="jdbc:postgresql://DB_HOSTNAME:5432/gis" 
+     username="dsas" 
+     password="dsas" 
+     maxActive="200" 
+     maxIdle="60" 
+     maxWait="60"
+     validationQuery="select version()" 
+     removeAbandoned="true" 
+     removeAbandonedTimeout="60" 
+     logAbandoned="true" 
+     description="{usedBy: ['coastalhazards']}" 
+     /> 
+
+</Context>

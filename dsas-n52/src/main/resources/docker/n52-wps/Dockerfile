@@ -2,6 +2,8 @@ FROM tomcat:8-jre8
 
 MAINTAINER Ivan Suftin <isuftin@usgs.gov>
 
+EXPOSE 8080
+
 COPY tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
 
 COPY context.xml /usr/local/tomcat/conf/context.xml
