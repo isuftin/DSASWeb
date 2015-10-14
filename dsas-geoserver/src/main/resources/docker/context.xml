@@ -7,4 +7,9 @@
 	<Environment name="dsas.geoserver.sweeper.stores.empty.delete" type="java.lang.Boolean" value="false" />
 	<Environment name="dsas.geoserver.sweeper.workspaces.empty.delete" type="java.lang.Boolean" value="false" />
 	<Environment name="dsas.geoserver.sweeper.workspaces.read-only" type="java.lang.String" value="published" />
+    
+    <Resource name="jdbc/dsas" auth="Container" type="javax.sql.DataSource" driverClassName="org.postgresql.Driver"
+     url="jdbc:postgresql://DB_HOSTNAME:5432/gis" username="dsas" password="dsas" maxActive="200"
+     maxIdle="60" maxWait="60" validationQuery="select version()" removeAbandoned="true" removeAbandonedTimeout="60"
+     logAbandoned="true" description="{usedBy: ['coastalhazards']}" />
 </Context>
