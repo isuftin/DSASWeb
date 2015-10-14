@@ -33,6 +33,7 @@
 		epsg4326: 'EPSG:4326',
 		epsg900913: 'EPSG:900913',
 		epsg3857: 'EPSG:3857',
+		crs84: 'CRS:84',
 		columnAttrNames: {
 			'LRR': '<%= Constants.LRR_ATTR%>',
 			'WLR': '<%= Constants.WLR_ATTR%>',
