@@ -91,7 +91,7 @@ public class ShorelineService extends HttpServlet {
 				if (bboxCorners.length != 4) {
 					throw new IllegalArgumentException("bbox requires 4 coordinates: minLon, minLat, maxLon, maxLat");
 				}
-				for (int cornerInd = 0;cornerInd < bboxCorners.length;cornerInd++) {
+				for (int cornerInd = 0;cornerInd < 4;cornerInd++) {
 					bbox[cornerInd] = Double.parseDouble(bboxCorners[cornerInd]);
 				}
 				

@@ -1,4 +1,9 @@
+/* global LOG */
+/* global CONFIG */
+/* global OpenLayers */
+/* global Shorelines */
 var OWS = function (endpoint) {
+	"use strict";
 	LOG.info('OWS.js::constructor: OWS class is initializing.');
 	var me = (this === window) ? {} : this;
 
@@ -213,14 +218,14 @@ var OWS = function (endpoint) {
 		getFeatureByName: function (name) {
 			return me.wfsCapabilities.featureTypeList.featureTypes.find(function (featureType) {
 				return featureType.name === name;
-			})
+			});
 		},
 		getLayerByName: function (args) {
 			var ns = args.layerNS;
 			var name = args.layerName;
 			return me.wmsCapabilities[ns].capability.layers.find(function (layer) {
 				return layer.name === name;
-			})
+			});
 		},
 		getLayerPropertiesFromWFSDescribeFeatureType: function (args) {
 			LOG.info('OWS.js::getLayerPropertiesFromWFSDescribeFeatureType');
@@ -248,8 +253,8 @@ var OWS = function (endpoint) {
 					} else {
 						result[featureType.typeName].push(property.name);
 					}
-				})
-			})
+				});
+			});
 			return result;
 		},
 		getDescribeFeatureType: function (args) {
@@ -639,8 +644,8 @@ var OWS = function (endpoint) {
 									'<ogc:PropertyName>' + property + '</ogc:PropertyName>' +
 									'<ogc:Literal>' + date + '</ogc:Literal>' +
 									'</ogc:PropertyIsLike>' +
-									'</ogc:Not>'
-							})
+									'</ogc:Not>';
+							});
 
 							filter += '</ogc:And>' +
 								'</ogc:Filter>' +
@@ -656,7 +661,7 @@ var OWS = function (endpoint) {
 					'</wps:Body>' +
 					'</wps:Reference>' +
 					'</wps:Input>';
-			})
+			});
 
 			transectId.each(function (tid) {
 				wps += '<wps:Input>' +
@@ -665,7 +670,7 @@ var OWS = function (endpoint) {
 					'<wps:LiteralData>' + tid + '</wps:LiteralData>' +
 					'</wps:Data>' +
 					'</wps:Input>';
-			})
+			});
 
 			wps += '<wps:Input>' +
 				'<ows:Identifier>farthest</ows:Identifier>' +

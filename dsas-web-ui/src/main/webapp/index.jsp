@@ -1,3 +1,4 @@
+
 <%@page import="gov.usgs.cida.dsas.service.util.Property"%>
 <%@page import="gov.usgs.cida.dsas.service.util.PropertyUtil"%>
 <%@page import="java.io.File"%>
@@ -24,10 +25,6 @@
 <html lang="en">
 
     <head>
-        <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE" />
-        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE" />
-        <META HTTP-EQUIV="EXPIRES" CONTENT="0" />
-        <META HTTP-EQUIV="CONTENT-LANGUAGE" CONTENT="en-US" />
         <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
@@ -107,22 +104,22 @@
 						<jsp:include page="stages/pdb.jsp"></jsp:include>
 						<jsp:include page="stages/intersects.jsp"></jsp:include>
 						<jsp:include page="stages/results.jsp"></jsp:include>
-                    </div>
-                </div>
+						</div>
+					</div>
 
-                <!-- MAP -->
-                <div class="span7" id="map-span">
-                    <div id="map-well" class="well well-small tab-content">
-                        <div id="map"></div>
-                    </div>
-                </div>
+					<!-- MAP -->
+					<div class="span7" id="map-span">
+						<div id="map-well" class="well well-small tab-content">
+							<div id="map"></div>
+						</div>
+					</div>
 
-            </div>
-            <div class="row-fluid" id="alert-row">
-                <div id="application-alert-container" class="span11 offset1"></div>
-            </div>
+				</div>
+				<div class="row-fluid" id="alert-row">
+					<div id="application-alert-container" class="span11 offset1"></div>
+				</div>
 
-            <div class="row-fluid" id="footer-row">
+				<div class="row-fluid" id="footer-row">
                 <jsp:include page="template/USGSFooter.jsp">
                     <jsp:param name="relPath" value="" />
                     <jsp:param name="header-class" value="" />
@@ -162,7 +159,7 @@
 			<jsp:param name="debug-qualifier" value="<%= development%>" />
 		</jsp:include>
 		<script type="text/javascript" src="webjars/jquery-ui/<%= versionJqueryUi%>/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="webjars/sugar/<%= versionSugar %>/sugar-full<%= development ? ".development" : ".min"%>.js"></script>
+		<script type="text/javascript" src="webjars/sugar/<%= versionSugar%>/sugar-full<%= development ? ".development" : ".min"%>.js"></script>
 		<script type="text/javascript" src="webjars/bootstrap/<%=versionBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? ".debug" : ""%>.js"></script>
 		<script type="text/javascript" src="webjars/handlebars/<%= versionHandlebars%>/handlebars.min.js"></script>
@@ -170,31 +167,31 @@
 			<jsp:param name="debug-qualifier" value="true" />
 		</jsp:include>
 		<jsp:include page="components/config.jsp"></jsp:include>
-			<script type="text/javascript">splashUpdate("Loading UI module...");</script>
-			<script type="text/javascript" src="js/ui/ui.js"></script>
-			<script type="text/javascript">splashUpdate("Loading Utilities module...");</script>
-			<script type="text/javascript" src="js/util/util.js"></script>
-			<script type="text/javascript">splashUpdate("Loading Mapping module...");</script>
-			<script type="text/javascript" src="js/map/map.js"></script>
-			<script type="text/javascript">splashUpdate("Loading Session Management module...");</script>
-			<script type="text/javascript" src="js/session/session.js"></script>
-			<script type="text/javascript">splashUpdate("Loading OWS module...");</script>
-			<script type="text/javascript" src="js/ows/ows.js"></script>
-			<script type="text/javascript">splashUpdate("Loading Shorelines module...");</script>
-			<script type="text/javascript" src="js/stages/shorelines.js"></script>
-			<script type="text/javascript">splashUpdate("Loading Baseline module...");</script>
-			<script type="text/javascript" src="js/stages/baseline.js"></script>
-			<script type="text/javascript">splashUpdate("Loading Transects module...");</script>
-			<script type="text/javascript" src="js/stages/transects.js"></script>
-			<script type="text/javascript">splashUpdate("Loading Proxy Datum Bias module...");</script>
-			<script type="text/javascript" src="js/stages/bias.js"></script>
-			<script type="text/javascript">splashUpdate("Loading Calculation module...");</script>
-			<script type="text/javascript" src="js/stages/calculation.js"></script>
-			<script type="text/javascript">splashUpdate("Loading Results module...");</script>
-			<script type="text/javascript" src="js/stages/results.js"></script>
-			<script type="text/javascript">splashUpdate("Loading Toggle plugin...");</script>
-			<script type="text/javascript" src="webjars/bootstrap-switch/<%=versionBootstrapSwitch%>/js/bootstrap-switch.js"></script>
-			<script type="text/javascript">splashUpdate("Loading Intro Module...");</script>
+		<script type="text/javascript">splashUpdate("Loading UI module...");</script>
+		<script type="text/javascript" src="js/ui/ui.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Utilities module...");</script>
+		<script type="text/javascript" src="js/util/util.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Mapping module...");</script>
+		<script type="text/javascript" src="js/map/map.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Session Management module...");</script>
+		<script type="text/javascript" src="js/session/session.js"></script>
+		<script type="text/javascript">splashUpdate("Loading OWS module...");</script>
+		<script type="text/javascript" src="js/ows/ows.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Shorelines module...");</script>
+		<script type="text/javascript" src="js/stages/shorelines.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Baseline module...");</script>
+		<script type="text/javascript" src="js/stages/baseline.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Transects module...");</script>
+		<script type="text/javascript" src="js/stages/transects.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Proxy Datum Bias module...");</script>
+		<script type="text/javascript" src="js/stages/bias.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Calculation module...");</script>
+		<script type="text/javascript" src="js/stages/calculation.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Results module...");</script>
+		<script type="text/javascript" src="js/stages/results.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Toggle plugin...");</script>
+		<script type="text/javascript" src="webjars/bootstrap-switch/<%=versionBootstrapSwitch%>/js/bootstrap-switch.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Intro Module...");</script>
 		<jsp:include page="js/bootstro/bootstro.jsp">
 			<jsp:param name="debug-qualifier" value="true" />
 		</jsp:include>
