@@ -1,4 +1,17 @@
-/* global CONFIG, Map */
+/* global CONFIG */
+/* global Map */
+/* global LOG */
+/* global ProxyDatumBias */
+/* global Shorelines */
+/* global Baseline */
+/* global Transects */
+/* global Calculation */
+/* global Results */
+/* global qq */
+/* global OpenLayers */
+/* global bootstro */
+/* global Util */
+
 var UI = function () {
 	"use strict";
 	LOG.info('UI.js::constructor: UI class is initializing.');

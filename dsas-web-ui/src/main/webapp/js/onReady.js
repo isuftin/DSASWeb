@@ -1,4 +1,14 @@
-/*global $, document, splashUpdate, initializeLogging, CONFIG, LOG, Session, UI, OWS, CCH */
+/* global $ */
+/* global document */
+/* global splashUpdate */
+/* global initializeLogging */
+/* global CONFIG */
+/* global LOG */
+/* global Session */
+/* global UI */
+/* global OWS */
+/* global CCH */
+/* global e */
 $(document).ready(function () {
 	"use strict";
 
