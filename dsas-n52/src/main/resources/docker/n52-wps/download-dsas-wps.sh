@@ -5,8 +5,8 @@ group="gov.usgs.cida.dsas"
 artifact="dsas-n52"
 nexusUrl="http://cida.usgs.gov/maven/service/local/artifact/maven/"
 wpsArtifact="?r=cida-public-snapshots&g=${group}&a=${artifact}&v=LATEST&e=war"
-wpsFileLocation="/wps.war"
-finalWarLocation="/usr/local/tomcat/webapps/wps.war"
+wpsFileLocation="/dsas-n52.war"
+finalWarLocation="/usr/local/tomcat/webapps/dsas-n52.war"
 remoteSHA1=$(curl "${nexusUrl}resolve${wpsArtifact}" | xmllint --xpath "string(//sha1)" -)
 
 # Check to see if we already have the N52 artifact and if so, verify that it's the same
