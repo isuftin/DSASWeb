@@ -1,0 +1,5 @@
+dsas_ui:
+  build: ./src/main/resources/docker
+  hostname: dsas_ui
+  ports:
+    - "8080:8080"
