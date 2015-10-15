@@ -57,7 +57,7 @@
 			--> 
 			<id>docker</id>
 			<properties>
-				<dsas.db.name>gis</dsas.db.name>
+				<dsas.db.name>dsas</dsas.db.name>
 			</properties>
 			<build>
 				<plugins>
