@@ -6,7 +6,7 @@ artifact="dsas-geoserver"
 nexusUrl="http://cida.usgs.gov/maven/service/local/artifact/maven/"
 gsArtifact="?r=cida-public-snapshots&g=${group}&a=${artifact}&v=LATEST&e=war"
 gsFileLocation="/dsas-geoserver.war"
-finalWarLocation="/usr/local/tomcat/webapps/geoserver.war"
+finalWarLocation="/usr/local/tomcat/webapps/dsas-geoserver.war"
 remoteSHA1=$(curl "${nexusUrl}resolve${gsArtifact}" | xmllint --xpath "string(//sha1)" -)
 
 # Check to see if we already have a Geoserver artifact and if so, verify that it's the same
@@ -32,3 +32,6 @@ else
     echo "Remote file SHA1 differs from downloaded version."
     exit 1
 fi
+
+# Unzip the data directory contained within the WAR to its final resting place 
+unzip $finalWarLocation "data/*" -d /tmp/

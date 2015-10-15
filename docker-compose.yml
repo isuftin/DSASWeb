@@ -51,9 +51,8 @@ dsas_ui:
   extends:
     file: ./dsas-web-ui/docker-compose.yml
     service: dsas_ui
-  links:
-    volumes_from:
-      - dsas_geoserver_vol_container
+  volumes_from:
+    - dsas_geoserver_vol_container
   links:
     - dsas_db
     - dsas_geoserver
