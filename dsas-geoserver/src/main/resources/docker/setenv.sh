@@ -13,3 +13,7 @@ export CATALINA_OPTS="$CATALINA_OPTS -XX:+UseParallelGC"
 export CATALINA_OPTS="$CATALINA_OPTS -Djava.awt.headless=true"
 
 sed -i -e "s/DB_HOSTNAME/${DSAS_DB_PORT_5432_TCP_ADDR:-localhost}/" $CONFIG_FILE
+
+sleep 1
+
+cp -R /tmp/data /

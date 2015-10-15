@@ -32,3 +32,6 @@ else
     echo "Remote file SHA1 differs from downloaded version."
     exit 1
 fi
+
+# Unzip the data directory contained within the WAR to its final resting place 
+unzip $finalWarLocation "data/*" -d /tmp/
