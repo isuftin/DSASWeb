@@ -1,0 +1,2 @@
+
+su - postgres -c "createdb dsas -e -O $POSTGRES_USER"
