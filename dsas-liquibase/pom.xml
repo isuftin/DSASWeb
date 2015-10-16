@@ -100,7 +100,7 @@
 					<username>${cch.dsas.liquibase.username}</username>
 					<driver>${dsas.db.driver}</driver>
 					<url>${cch.dsas.liquibase.url}</url>
-					<changeLogFile>src/main/liquibase/changeLog.xml</changeLogFile>
+					<changeLogFile>src/main/resources/liquibase/changeLog.xml</changeLogFile>
 					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
 					<schemas>${dsas.db.schema}</schemas>
 					<contexts>default</contexts>
