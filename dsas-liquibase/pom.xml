@@ -70,7 +70,7 @@
 							<username>dsas</username>
 							<driver>${dsas.db.driver}</driver>
 							<url>jdbc:postgresql://${dsas.liquibase.hostname}:5432/${dsas.db.name}</url>
-							<changeLogFile>src/main/liquibase/changeLog.xml</changeLogFile>
+							<changeLogFile>src/main/resources/liquibase/changeLog.xml</changeLogFile>
 							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
 							<schemas>${dsas.db.schema}</schemas>
 							<contexts>default</contexts>
