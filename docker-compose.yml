@@ -1,4 +1,6 @@
 # Database Component 
+# Set the environment SKIP_LIQUIBASE to a non-empty value to skip running 
+# liquibase when container starts. 
 dsas_db_vol_container:
    image: alpine
    volumes:
@@ -12,6 +14,8 @@ dsas_db:
     service: db
   volumes_from: 
     - dsas_db_vol_container
+#  environment:
+#   - SKIP_LIQUIBASE=true
 
 # Geoserver
 dsas_geoserver_vol_container:

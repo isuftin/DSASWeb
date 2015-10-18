@@ -6,10 +6,10 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
 	logicalFilePath="path-independent">
 	
-	<changeSet id="update-proc-tag-changeset" author="isuftin" logicalFilePath="path-independent">
-		<tagDatabase tag="updateProcedureTag" />
-	</changeSet>
-	<changeSet author="isuftin" id="drop_workspace_view_with_shoreline_name" logicalFilePath="path-independent">
+	<changeSet author="isuftin" id="70_drop_workspace_function" logicalFilePath="path-independent">
+		<comment>
+			Drop create_workspace_view function in order to recreate it with added columns
+		</comment>
 		<sql>
 			<comment>
 				Liquibase dropProcedure tag doesn't work here. 
@@ -18,14 +18,18 @@
 			DROP FUNCTION IF EXISTS create_workspace_view(workspace VARCHAR, shoreline_name VARCHAR);
 		</sql>
 	</changeSet>
-	<changeSet author="isuftin" id="create_workspace_view" logicalFilePath="path-independent">
+	
+	<changeSet author="isuftin" id="70_add_shoreline_name_to_create_workspace_view" logicalFilePath="path-independent">
+		<comment>
+			Add the shoreline_name column to the returning value from the view
+		</comment>
 		<createProcedure>
 			CREATE OR REPLACE FUNCTION create_workspace_view(workspace VARCHAR, OUT viewname varchar) AS $BODY$
 			BEGIN
 				viewname := CAST(lower(substring($1 for 52) || '_shorelines') AS VARCHAR(63));
 				EXECUTE 'CREATE OR REPLACE VIEW ' || viewname || ' AS (' ||
-					'SELECT s.id, p.shoreline_id, p.geom, p.uncy, p.segment_id, ' ||
-						's.date, s.mhw, s.workspace, s.source, s.shoreline_type, s.auxillary_name, ' ||
+					'SELECT p.id, p.shoreline_id, p.geom, p.uncy, p.segment_id, ' ||
+						's.date, s.mhw, s.workspace, s.source, s.shoreline_type, s.auxillary_name, s.shoreline_name, ' ||
 						'a.value as auxillary_value ' ||
 					'FROM shorelines s ' ||
 					'JOIN shoreline_points p ON s.id = p.shoreline_id ' ||
@@ -38,6 +42,6 @@
 			END;
 			$BODY$ LANGUAGE plpgsql;
 		</createProcedure>
-		<rollback>DROP FUNCTION create_workspace_view(workspace VARCHAR);</rollback>
+		<rollback>DROP FUNCTION create_workspace_view(workspace VARCHAR, shoreline_name VARCHAR);</rollback>
 	</changeSet>
 </databaseChangeLog>

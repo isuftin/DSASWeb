@@ -38,7 +38,7 @@ public class ShorelineStagingService extends HttpServlet {
 
 	private static final long serialVersionUID = 2377995353146379768L;
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShorelineStagingService.class);
-	private static Map<String, String> tokenMap = new HashMap<>();
+	private static final Map<String, String> tokenMap = new HashMap<>();
 	private final static String TOKEN_STRING = "token";
 	private final static String ACTION_STRING = "action";
 	private final static String STAGE_ACTION_STRING = "stage";

@@ -1,3 +1,13 @@
+/* global CONFIG */
+/* global OpenLayers */
+/* global LOG*/
+/* global Handlebars */
+/* global Baseline */
+/* global Calculation */
+/* global Results */
+/* global Shorelines */
+/* global ProxyDatumBias */
+"use strict";
 var Transects = {
 	stage: 'transects',
 	suffixes: ['_lt', '_st', '_transects'],
@@ -306,7 +316,7 @@ var Transects = {
 				// Set up a strategy-object scope array of transects that need to
 				// be updated via WFS. Do this the first time save() is called. I
 				// will be picking off from the top of the array in every iteration
-				// of this function call. until there's nothing left.
+				// of this function call until there's nothing left.
 				if (!this.updateFeatures) {
 					this.updateFeatures = this.layer.features.filter(function (f) {
 						return f.state === 'Update';
