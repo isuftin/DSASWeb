@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
-	<changeSet id="" author="">
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+	logicalFilePath="path-independent">
+	
+	<changeSet id="" author="" logicalFilePath="path-independent">
 		<tagDatabase tag="initialTag" />
 	</changeSet>
-	<changeSet author="jiwalker" id="add_shoreline_tables">
+	<changeSet author="jiwalker" id="add_shoreline_tables" logicalFilePath="path-independent">
 		<createTable tableName="shorelines">
 			<column name="id" type="BIGSERIAL" />
 			<column name="date" type="DATE" />
@@ -54,7 +59,7 @@
 			<dropTable tableName="shorelines" />
 		</rollback>
 	</changeSet>
-	<changeSet author="jiwalker" id="add_workspace_view">
+	<changeSet author="jiwalker" id="add_workspace_view" logicalFilePath="path-independent">
 		<createProcedure>
 			CREATE OR REPLACE FUNCTION create_workspace_view(workspace VARCHAR, shoreline_name VARCHAR, OUT viewname varchar) AS $BODY$
 			BEGIN
