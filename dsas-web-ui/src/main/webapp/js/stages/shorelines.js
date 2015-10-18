@@ -1005,7 +1005,8 @@ var Shorelines = {
 			}
 			return null;
 		});
-		return activeShorelines;
+		
+		return activeShorelines.toArray().unique();
 	},
 	uploadCallbacks: {
 		onComplete: function (id, fileName, responseJSON) {
