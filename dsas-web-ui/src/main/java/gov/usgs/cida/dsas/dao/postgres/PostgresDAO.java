@@ -456,7 +456,7 @@ public class PostgresDAO {
 	}
 
 	public List<Shoreline> getShorelinesFromBoundingBox(String workspace, double[] bbox) throws SQLException {
-		String sql = "select distinct shoreline_id, uncy, segment_id, to_char(date, 'YYYY-MM-dd') as date, mhw, workspace, source, auxillary_name, auxillary_value from " + workspace
+		String sql = "select distinct shoreline_id, uncy, segment_id, to_char(date, 'YYYY-MM-dd') as date, mhw, workspace, source, auxillary_name, auxillary_value, shoreline_name from " + workspace
 				+ " where geom && ST_MakeEnvelope(" + bbox[0] + "," + bbox[1] + "," + bbox[2] + "," + bbox[3] + ",4326)"
 				+ " order by date desc, shoreline_id";
 		List<Shoreline> shorelines = new ArrayList<>();
@@ -473,6 +473,7 @@ public class PostgresDAO {
 					shoreline.setSource(rs.getString(7));
 					shoreline.setAuxName(rs.getString(8));
 					shoreline.setAuxValue(rs.getString(9));
+					shoreline.setName(rs.getString(10));
 					shorelines.add(shoreline);
 				}
 		}

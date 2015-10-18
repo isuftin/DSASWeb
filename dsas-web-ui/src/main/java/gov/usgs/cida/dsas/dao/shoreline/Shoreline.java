@@ -20,6 +20,7 @@ public class Shoreline implements Serializable {
 	private String source;
 	private String auxName;
 	private String auxValue;
+	private String name;
 
 	public Shoreline() {
 		this.id = BigInteger.ZERO;
@@ -31,9 +32,10 @@ public class Shoreline implements Serializable {
 		this.source = "";
 		this.auxName = "";
 		this.auxValue = "";
+		this.name = "";
 	}
 	
-	public Shoreline(BigInteger id, double uncertainty, BigInteger segmentId, String date, boolean mhw, String workspace, String source, char type, String auxName, String auxValue) {
+	public Shoreline(BigInteger id, double uncertainty, BigInteger segmentId, String date, boolean mhw, String workspace, String source, char type, String auxName, String auxValue, String name) {
 		this.id = id;
 		this.uncertainty = uncertainty;
 		this.segmentId = segmentId;
@@ -43,6 +45,7 @@ public class Shoreline implements Serializable {
 		this.source = source;
 		this.auxName = auxName;
 		this.auxValue = auxValue;
+		this.name = name;
 	}
 
 	/**
@@ -169,6 +172,14 @@ public class Shoreline implements Serializable {
 	 */
 	public void setAuxValue(String auxValue) {
 		this.auxValue = auxValue;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

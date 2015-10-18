@@ -300,7 +300,6 @@ var Shorelines = {
 			title = args.title,
 			bounds = args.bounds,
 			cqlFilter = 'BBOX(geom, ' + bounds + ')',
-			source = args.source,
 			shorelines = args.shorelines,
 			dates = shorelines.map(function (s) {
 				return s.date;
@@ -526,20 +525,24 @@ var Shorelines = {
 			$switchCandidates,
 			$tbody = Shorelines.$shorelineFeatureTableContainer.find('table > tbody');
 		event.object.events.unregister('loadend', null, Shorelines.updateFeatureTable);
+		
 		for (var slIdx = 0; slIdx < shorelines.length; slIdx++) {
 			var shoreline = shorelines[slIdx],
 				id = shoreline.id,
 				date = shoreline.date,
 				source = shoreline.source,
 				workspace = shoreline.workspace,
+				name = shoreline.name,
 				color = colorMap[date],
 				isEnabled = !CONFIG.tempSession.isShorelineDisabled(layer.prefix, id),
+				
 				row = Shorelines.featureTableRowTemplate({
 					id: id,
 					color: color,
 					date: date,
 					source: source,
 					workspace: workspace,
+					name: name,
 					checked: isEnabled
 				});
 			$tbody.append($(row));
@@ -995,9 +998,14 @@ var Shorelines = {
 	},
 	getActive: function () {
 		"use strict";
-		return $('#shorelines-list').children(':selected').map(function (i, v) {
-			return v.value;
-		}).toArray();
+		var activeShorelines = $('#shorelines-feature-table-container tbody tr').map(function (i, ele) {
+			var $ele = $(ele);
+			if ($ele.find('.switch-on').length === 1) {
+				return $ele.attr('data-shoreline-workspace') + ":" + $ele.attr('data-shoreline-workspace') + "_shorelines"
+			}
+			return null;
+		});
+		return activeShorelines;
 	},
 	uploadCallbacks: {
 		onComplete: function (id, fileName, responseJSON) {

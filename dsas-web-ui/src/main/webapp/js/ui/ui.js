@@ -447,6 +447,7 @@ var UI = function () {
 
 					var date = Date.create(Shorelines.groupingColumn).format(Shorelines.dateFormat);
 					var isVisible = !CONFIG.tempSession.isDateDisabled(date);
+					
 					var $button = $('<button />')
 						.addClass('btn btn-shoreline-id-toggle')
 						.attr({
