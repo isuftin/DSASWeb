@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
-				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-	<changeSet id="create-geoserver-metadata-table-tag" author="isuftin">
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+	logicalFilePath="path-independent">
+	<changeSet id="create-geoserver-metadata-table-tag" author="isuftin" logicalFilePath="path-independent">
 		<tagDatabase tag="createGeoserverMetadataTableTag" />
 	</changeSet>
-	<changeSet author="isuftin" id="create-geoserver-metadata-table">
+	<changeSet author="isuftin" id="create-geoserver-metadata-table" logicalFilePath="path-independent">
 		<sql>
 			CREATE TABLE gt_pk_metadata_table (
 				id BIGSERIAL,

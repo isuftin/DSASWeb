@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
-				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-	<changeSet id="create-workspace-rename-proc-tag-changeset" author="isuftin">
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+	logicalFilePath="path-independent">
+	<changeSet id="create-workspace-rename-proc-tag-changeset" author="isuftin" logicalFilePath="path-independent">
 		<tagDatabase tag="createPublishProcedureTag" />
 	</changeSet>
-	<changeSet author="isuftin" id="create_workspace_rename_procedure">
+	<changeSet author="isuftin" id="create_workspace_rename_procedure" logicalFilePath="path-independent">
 		<createProcedure>
 			CREATE OR REPLACE FUNCTION publish_shoreline(
 				old_workspace TEXT,

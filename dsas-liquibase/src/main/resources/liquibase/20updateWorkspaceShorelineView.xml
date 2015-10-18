@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
-				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-	<changeSet id="update-proc-tag-changeset" author="isuftin">
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+	logicalFilePath="path-independent">
+	<changeSet id="update-proc-tag-changeset" author="isuftin" logicalFilePath="path-independent">
 		<tagDatabase tag="updateProcedureTag" />
 	</changeSet>
-	<changeSet author="isuftin" id="drop_workspace_view_with_shoreline_name">
+	<changeSet author="isuftin" id="drop_workspace_view_with_shoreline_name" logicalFilePath="path-independent">
 		<sql>
 			<comment>
 				Liquibase dropProcedure tag doesn't work here. 
@@ -14,7 +16,7 @@
 			DROP FUNCTION IF EXISTS create_workspace_view(workspace VARCHAR, shoreline_name VARCHAR);
 		</sql>
 	</changeSet>
-	<changeSet author="isuftin" id="update_workspace_view">
+	<changeSet author="isuftin" id="create_workspace_view" logicalFilePath="path-independent">
 		<createProcedure>
 			CREATE OR REPLACE FUNCTION create_workspace_view(workspace VARCHAR, OUT viewname varchar) AS $BODY$
 			BEGIN
