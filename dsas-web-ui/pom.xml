@@ -15,9 +15,8 @@
 
 	<properties>
 		<slf4j.version>1.7.2</slf4j.version>
-		<version.bootstrap>2.3.2</version.bootstrap>
+		<version.bootstrap>3.3.5</version.bootstrap>
 		<version.bootstrap.switch>1.8</version.bootstrap.switch>
-		<version.handlebars>1.3.0</version.handlebars>
 		<version.jquery>2.1.4</version.jquery>
 		<version.jquery.ui>1.11.4</version.jquery.ui>
 		<version.log4js>1.4.3-3</version.log4js>
@@ -25,6 +24,11 @@
 		<version.fontawesome>4.4.0</version.fontawesome>
 		<version.sugarjs>1.4.1</version.sugarjs>
 		<version.handlebars>4.0.2</version.handlebars>
+		<version.underscore>1.8.3</version.underscore>
+		<version.backbone>1.2.1</version.backbone>
+		<version.require>2.1.18</version.require>
+		<version.require.text>2.0.14</version.require.text>
+		<version.loglevel>1.3.1</version.loglevel>
 	</properties>
 
 	<dependencies>
@@ -142,11 +146,6 @@
 			<artifactId>sugar</artifactId>
 			<version>${version.sugarjs}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>handlebars</artifactId>
-			<version>${version.handlebars}</version>
-		</dependency>
         
 		<!-- Commons -->
 		<dependency>
@@ -220,7 +219,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
@@ -249,6 +247,41 @@
 			<type>war</type>
 			<version>2013.20.4-3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>handlebars</artifactId>
+			<version>${version.handlebars}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>underscorejs</artifactId>
+			<version>${version.underscore}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>backbonejs</artifactId>
+			<version>${version.backbone}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>requirejs</artifactId>
+			<version>${version.require}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>requirejs-text</artifactId>
+			<version>${version.require.text}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>loglevel</artifactId>
+			<version>${version.loglevel}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator</artifactId>
+			<version>0.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -260,7 +293,7 @@
 		</plugins>
 		<resources>
 			<resource>
-				<directory>src/main/resources</directory>
+				<directory>${project.basedir}/src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
