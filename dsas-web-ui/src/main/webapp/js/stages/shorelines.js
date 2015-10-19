@@ -1,4 +1,8 @@
-/* global LOG, CONFIG, OpenLayers, Handlebars */
+/*global CONFIG*/
+/*global LOG*/
+/*global OpenLayers*/
+/*global Handlebars*/
+/*global Util*/
 var Shorelines = {
 	stage: 'shorelines',
 	suffixes: ['_shorelines'],
@@ -323,30 +327,30 @@ var Shorelines = {
 					bbox: bounds,
 					cql_filter: cqlFilter
 				}, {
-				prefix: prefix,
-				zoomToWhenAdded: false,
-				isBaseLayer: false,
-				unsupportedBrowsers: [],
-				colorGroups: colorDatePairings,
-				tileOptions: {
-					// http://www.faqs.org/rfcs/rfc2616.html
-					// This will cause any request larger than this many characters to be a POST
-					maxGetUrlLength: 2048
-				},
-				title: title,
-				singleTile: true,
-				ratio: 1,
-				groupByAttribute: Shorelines.groupingColumn,
-				shorelines: shorelines,
-				layerType: Shorelines.stage,
-				displayInLayerSwitcher: false
-			}),
-			loadEnd = function (e) {
-				e.object.events.unregister('loadend', null, loadEnd);
-				Shorelines.updateFeatureTable(e);
-				Shorelines.showFeatureTable();
-				Shorelines.updateSortingSelectionControl();
-			};
+					prefix: prefix,
+					zoomToWhenAdded: false,
+					isBaseLayer: false,
+					unsupportedBrowsers: [],
+					colorGroups: colorDatePairings,
+					tileOptions: {
+						// http://www.faqs.org/rfcs/rfc2616.html
+						// This will cause any request larger than this many characters to be a POST
+						maxGetUrlLength: 2048
+					},
+					title: title,
+					singleTile: true,
+					ratio: 1,
+					groupByAttribute: Shorelines.groupingColumn,
+					shorelines: shorelines,
+					layerType: Shorelines.stage,
+					displayInLayerSwitcher: false
+				}),
+				loadEnd = function (e) {
+					e.object.events.unregister('loadend', null, loadEnd);
+					Shorelines.updateFeatureTable(e);
+					Shorelines.showFeatureTable();
+					Shorelines.updateSortingSelectionControl();
+				};
 
 		if (CONFIG.tempSession.getDisabledShorelines(prefix).length) {
 			wmsLayer.mergeNewParams({cql_filter: cqlFilter + " AND NOT(shoreline_id IN (" + CONFIG.tempSession.getDisabledShorelines(prefix) + "))"});
@@ -428,7 +432,7 @@ var Shorelines = {
 			LOG.debug('Shorelines.js::?: Grouping will be done by year');
 			var createRuleSets;
 			LOG.debug('Shorelines.js::?: Geoserver date column is actually a string');
-			createRuleSets = function (colorLimitPairs, workspace) {
+			createRuleSets = function (colorLimitPairs) {
 				var html = '';
 
 				for (var lpIndex = 0; lpIndex < colorLimitPairs.length; lpIndex++) {
@@ -726,10 +730,10 @@ var Shorelines = {
 		$("table.tablesorter").trigger('destroy');
 		$.tablesorter.addParser({
 			id: 'visibility',
-			is: function (s) {
+			is: function () {
 				return false;
 			},
-			format: function (s, table, cell, cellIndex) {
+			format: function (s, table, cell) {
 				var toggleButton = $(cell).find('.switch')[0];
 				return $(toggleButton).bootstrapSwitch('status') ? 1 : 0;
 			},
@@ -1001,7 +1005,7 @@ var Shorelines = {
 		var activeShorelines = $('#shorelines-feature-table-container tbody tr').map(function (i, ele) {
 			var $ele = $(ele);
 			if ($ele.find('.switch-on').length === 1) {
-				return $ele.attr('data-shoreline-workspace') + ":" + $ele.attr('data-shoreline-workspace') + "_shorelines"
+				return $ele.attr('data-shoreline-workspace') + ":" + $ele.attr('data-shoreline-workspace') + "_shorelines";
 			}
 			return null;
 		});

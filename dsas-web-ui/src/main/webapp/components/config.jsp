@@ -26,9 +26,6 @@
 	CONFIG.name = {};
 	CONFIG.name.published = 'published';
 	CONFIG.name.proxydatumbias = 'proxydatumbias';
-	// TODO- Very obviously a bad way of doing security :D Remove me when we
-	// implement something that makes sense.
-	CONFIG.isAdmin = window.location.search.toLowerCase().indexOf('u=admin') !== -1;
 	CONFIG.strings = {
 		epsg4326: 'EPSG:4326',
 		epsg900913: 'EPSG:900913',
