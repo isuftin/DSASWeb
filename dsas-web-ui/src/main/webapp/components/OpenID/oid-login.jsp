@@ -1,4 +1,12 @@
+<%@page import="gov.usgs.cida.dsas.service.util.PropertyUtil"%>
+<%@page import="gov.usgs.cida.dsas.service.util.Property"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%!
+	boolean development = Boolean.parseBoolean(PropertyUtil.getProperty(Property.DEVELOPMENT));
+	String versionJquery = PropertyUtil.getProperty("version.jquery");
+%>
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -31,7 +39,7 @@
 				<button type="submit" name="login"></button>
 			</form>
 		</div>
-		<script type="text/javascript" src="../../webjars/jquery/1.8.3/jquery.min.js"></script>
+		<script type="text/javascript" src="../../webjars/jquery/<%= versionJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
 		<script>
 			$(document).ready(function() {
 				$('#form').submit();

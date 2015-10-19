@@ -1,5 +1,4 @@
 
-<?xml version="1.0" encoding="UTF-8"?>
 <%@page contentType="text/html; charset=UTF-8" import="java.util.Map" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>

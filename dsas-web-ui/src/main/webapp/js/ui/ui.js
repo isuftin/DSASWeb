@@ -56,7 +56,9 @@ var UI = function () {
 	return $.extend(me, {
 		appInit: function () {
 			// bias stage not shown when not admin
-			if (!CONFIG.isAdmin) {
+			// TODO - I've disabled the login requirement to show the BIAS stage
+			// This should be re-enabled when we've landed on a login solution
+			if (false) {
 				me.work_stages.shift();
 				me.work_stages_objects.shift();
 			}
@@ -315,7 +317,7 @@ var UI = function () {
 					}
 				}, caller.uploadCallbacks);
 
-//			request.params.workspace = CONFIG.tempSession.getCurrentSessionKey();
+			request.params.workspace = CONFIG.tempSession.getCurrentSessionKey();
 
 			LOG.info('UI.js::initializeUploader: Initializing uploader for the ' + context + ' context');
 
@@ -1364,43 +1366,15 @@ var UI = function () {
 				CONFIG.window.login = null;
 			}
 
-			$.get('service/session?action=get-oid-info', function (data) {
-				var loggedIn = data.success;
-				var loginListItem = $('#login-list-item');
-				var country = '',
-					email = '',
+			var loginListItem = $('#login-list-item');
+
+			$.get('service/session', {
+				action : 'get-oid-info'
+			}).done(function (data) {
+				
+				var email = '',
 					firstname = '',
-					lastname = '',
-					language = '';
-
-				var createLoginLink = function () {
-					loginListItem.empty();
-					loginListItem.append($('<div />').attr({
-						'id': 'session-login-link'
-					}).html('<img id="sign-in-img" src="images/OpenID/White-signin_Medium_base_44dp.png"></img>'));
-
-					$('#session-login-link').on('click', function () {
-						if (CONFIG.window.login) {
-							CONFIG.window.login.close();
-						}
-						CONFIG.window.login = window.open('components/OpenID/oid-login.jsp', 'login', 'width=1000,height=550,fullscreen=no', true);
-					});
-
-					$('#sign-in-img').on({
-						'mouseenter': function () {
-							$(this).attr('src', 'images/OpenID/White-signin_Medium_hover_44dp.png');
-						},
-						'mouseleave': function () {
-							$(this).attr('src', 'images/OpenID/White-signin_Medium_base_44dp.png');
-						},
-						'mousedown': function () {
-							$(this).attr('src', 'images/OpenID/White-signin_Medium_press_44dp.png');
-						},
-						'mouseup': function () {
-							$(this).attr('src', 'images/OpenID/White-signin_Medium_base_44dp.png');
-						}
-					});
-				};
+					lastname = '';
 
 				var createLoggedInMenu = function () {
 					loginListItem.empty();
@@ -1447,16 +1421,37 @@ var UI = function () {
 					});
 				};
 
-				if (loggedIn === 'true') {
-					country = data.country;
-					email = data.email;
-					firstname = data.firstname;
-					lastname = data.lastname;
-					language = data.language;
-					createLoggedInMenu();
-				} else {
-					createLoginLink();
-				}
+				email = data.email;
+				firstname = data.firstname;
+				lastname = data.lastname;
+				createLoggedInMenu();
+			}).fail(function () {
+				loginListItem.empty();
+				loginListItem.append($('<div />').attr({
+					'id': 'session-login-link'
+				}).html('<img id="sign-in-img" src="images/OpenID/White-signin_Medium_base_44dp.png"></img>'));
+
+				$('#session-login-link').on('click', function () {
+					if (CONFIG.window.login) {
+						CONFIG.window.login.close();
+					}
+					CONFIG.window.login = window.open('components/OpenID/oid-login.jsp', 'login', 'width=1000,height=550,fullscreen=no', true);
+				});
+
+				$('#sign-in-img').on({
+					'mouseenter': function () {
+						$(this).attr('src', 'images/OpenID/White-signin_Medium_hover_44dp.png');
+					},
+					'mouseleave': function () {
+						$(this).attr('src', 'images/OpenID/White-signin_Medium_base_44dp.png');
+					},
+					'mousedown': function () {
+						$(this).attr('src', 'images/OpenID/White-signin_Medium_press_44dp.png');
+					},
+					'mouseup': function () {
+						$(this).attr('src', 'images/OpenID/White-signin_Medium_base_44dp.png');
+					}
+				});
 			});
 		}
 	});
