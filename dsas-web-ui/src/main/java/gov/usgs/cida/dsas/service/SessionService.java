@@ -57,6 +57,7 @@ public class SessionService extends HttpServlet {
 		if (!StringUtils.isEmpty(action)) {
 			action = action.trim().toLowerCase(Locale.US);
 			if ("prepare".equals(action)) {
+				responseMap.put("workspace", workspace);
 				try {
 					geoserverHandler.prepareWorkspace(geoserverDataDir, workspace);
 				} catch (IOException | IllegalArgumentException | URISyntaxException ex) {
