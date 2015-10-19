@@ -136,9 +136,23 @@ select option.session-layer{
 }
 
 /* ---------------------------------------------------------------------- Shorelines */
+.has-switch span, .has-switch label {
+	padding-bottom: 0px;
+	padding-top: 0px;
+	font-size: 12px;
+}
+
+.shoreline-table {
+	border-collapse: collapse;
+}
+
 #shorelines-feature-table-container {
     height: 16.25em;
     overflow : scroll;
+}
+
+#shorelines-feature-table-container tbody td {
+	padding: 1px;
 }
 .shoreline-table-selected-head-column {
     width: 30%;
@@ -156,8 +170,8 @@ select option.session-layer{
     width: 100%;
 }
 
-.selected-feature-row td:nth-child(2) {
-	background-color: #DDDDDD !important;
+.selected-feature-row {
+	border-left: 4px solid #000000;
 }
 
 .shoreline-table ::selection {
