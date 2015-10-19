@@ -31,6 +31,10 @@
 				</p>
 			</div>
 			<div id="shorelines-feature-table-container" class="hidden">
+				<div id="shorelines-feature-table-button-sort" class="hidden">
+					Select Wildcard:
+					<select id="ctrl-shorelines-sort-select"></select>
+				</div>
 				<table class="table table-bordered table-condensed tablesorter shoreline-table">
 					<thead>
 					<th class="shoreline-table-selected-head-column" data-column="0">Visibility</th>
@@ -42,9 +46,6 @@
 
 					</tbody>
 				</table>
-				<div id="shorelines-feature-table-button-sort" class="hidden">
-					<select id="ctrl-shorelines-sort-select"></select>
-				</div>
 			</div>
 
 		</div>

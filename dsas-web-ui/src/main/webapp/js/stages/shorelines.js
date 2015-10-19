@@ -552,9 +552,10 @@ var Shorelines = {
 			$tbody.append($(row));
 		}
 
-		// Allows user to click on the date field in a row and select the row
-		$tbody.find('tr td:nth-child(2)').off('click', Shorelines.featureTableRowClickCallback);
-		$tbody.find('tr td:nth-child(2)').on('click', Shorelines.featureTableRowClickCallback);
+		// Allows user to click on any field in the row (except the switch)
+		var $clickableCells = $('#shorelines-feature-table-container tbody tr td:not(:first-child)');
+		$clickableCells.off('click', Shorelines.featureTableRowClickCallback);
+		$clickableCells.on('click', Shorelines.featureTableRowClickCallback);
 		$switchCandidates = $('.switch>:not(.switch-animate)').parent();
 		$switchCandidates.off('switch-change', Shorelines.featureTableSwitchChangeCallback);
 		$switchCandidates.on('switch-change', Shorelines.featureTableSwitchChangeCallback);
