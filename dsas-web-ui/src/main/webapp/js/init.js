@@ -1,8 +1,7 @@
 /*jslint browser: true*/
-/*global $*/
-/*global log4javascript*/
+/*global define*/
 define([
-	'controller/AppRouter',
+	'controller/appRouter',
 	'utils/logger',
 	'backbone',
 	'module'
@@ -11,7 +10,7 @@ define([
 	var router = new Router();
 
 	Backbone.history.start({root: module.config().contextPath});
-	
+
 	log.info("DSASweb inititialized");
 
 	return router;

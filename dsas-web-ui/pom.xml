@@ -29,6 +29,7 @@
 		<version.require>2.1.18</version.require>
 		<version.require.text>2.0.14</version.require.text>
 		<version.loglevel>1.3.1</version.loglevel>
+		<version.backbone-localstorage>1.1.0</version.backbone-localstorage>
 	</properties>
 
 	<dependencies>
@@ -281,6 +282,11 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>webjars-locator</artifactId>
 			<version>0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>backbone-localstorage</artifactId>
+			<version>${version.backbone-localstorage}</version>
 		</dependency>
 	</dependencies>
 
