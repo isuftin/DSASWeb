@@ -15,6 +15,7 @@ var Shorelines = {
 		{attr: CONFIG.strings.columnAttrNames.defaultDirection, defaultValue: ''},
 		{attr: CONFIG.strings.columnAttrNames.biasUncertainty, defaultValue: ''}
 	],
+	aoiSquareKmLimit: 20000000,
 	groupingColumn: 'date',
 	dateFormat: '{yyyy}-{MM}-{dd}',
 	selectedFeatureClass: 'selected-feature-row',
@@ -946,13 +947,47 @@ var Shorelines = {
 					title: Shorelines.CONTROL_IDENTIFY_AOI_ID,
 					handlerOptions: {
 						sides: 4,
-						irregular: true
+						irregular: true,
+						aoiSquareKmLimit: this.aoiSquareKmLimit,
+						move : function (evt) {
+							var maploc = this.layer.getLonLatFromViewPortPx(evt.xy); 
+							var point = new OpenLayers.Geometry.Point(maploc.lon, maploc.lat);
+							var ry = Math.sqrt(2) * Math.abs(point.y - this.origin.y) / 2;
+							
+							this.radius = Math.max(this.map.getResolution() / 2, ry);
+							this.modifyGeometry();
+							
+							var dx = point.x - this.origin.x;
+							var dy = point.y - this.origin.y;
+							var ratio;
+							
+							if (dy === 0) {
+								ratio = dx / (this.radius * Math.sqrt(2));
+							} else {
+								ratio = dx / dy;
+							}
+							
+							this.feature.geometry.resize(1, this.origin, ratio);
+							this.feature.geometry.move(dx / 2, dy / 2);
+							var featureStyle = this.style;
+							var sqM = this.feature.geometry.getArea();
+							if (sqM / 1000 > this.aoiSquareKmLimit) {
+								featureStyle = $.extend({}, this.layer.styleMap.styles.default.defaultStyle);
+								featureStyle.fillColor = "#EE0000";
+							}
+							this.layer.drawFeature(this.feature, featureStyle);
+						}
 					}
 				});
 				
 		// I really only want one box on a layer at any given time
 		drawBoxLayer.events.register('beforefeatureadded', null, function (e) {
 			e.object.removeAllFeatures();
+		});
+		drawBoxLayer.events.register('sketchcomplete', null, function (e) {
+			// TODO: I probably want to call the server to get a feature count
+			// for the area selected before actuallly allowing the selection 
+			// process to continue
 		});
 		
 		Shorelines.hideFeatureTable(true);
