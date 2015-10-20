@@ -15,6 +15,8 @@ var Shorelines = {
 		{attr: CONFIG.strings.columnAttrNames.defaultDirection, defaultValue: ''},
 		{attr: CONFIG.strings.columnAttrNames.biasUncertainty, defaultValue: ''}
 	],
+	MAX_ALLOWED_FEATURES: 800,
+	AOI_SQ_KM_LIMIT: 20000000,
 	groupingColumn: 'date',
 	dateFormat: '{yyyy}-{MM}-{dd}',
 	selectedFeatureClass: 'selected-feature-row',
@@ -946,13 +948,72 @@ var Shorelines = {
 					title: Shorelines.CONTROL_IDENTIFY_AOI_ID,
 					handlerOptions: {
 						sides: 4,
-						irregular: true
+						irregular: true,
+						aoiSquareKmLimit: this.AOI_SQ_KM_LIMIT,
+						move : function (evt) {
+							// Most of this is copied from the actual move function
+							// in the Regular Polygon handler but adding my own stuff 
+							// here. 
+							var maploc = this.layer.getLonLatFromViewPortPx(evt.xy); 
+							var point = new OpenLayers.Geometry.Point(maploc.lon, maploc.lat);
+							var ry = Math.sqrt(2) * Math.abs(point.y - this.origin.y) / 2;
+							
+							this.radius = Math.max(this.map.getResolution() / 2, ry);
+							this.modifyGeometry();
+							
+							var dx = point.x - this.origin.x;
+							var dy = point.y - this.origin.y;
+							var ratio;
+							
+							if (dy === 0) {
+								ratio = dx / (this.radius * Math.sqrt(2));
+							} else {
+								ratio = dx / dy;
+							}
+							
+							this.feature.geometry.resize(1, this.origin, ratio);
+							this.feature.geometry.move(dx / 2, dy / 2);
+							var featureStyle = this.style;
+							// If the user is defining a bounding box that's too large,
+							// I want to warn them visually 
+							var sqM = this.feature.geometry.getArea();
+							if (sqM / 1000 > this.aoiSquareKmLimit) {
+								featureStyle = $.extend({}, this.layer.styleMap.styles.default.defaultStyle);
+								featureStyle.fillColor = "#EE0000";
+							}
+							this.layer.drawFeature(this.feature, featureStyle);
+						}
 					}
 				});
 				
 		// I really only want one box on a layer at any given time
 		drawBoxLayer.events.register('beforefeatureadded', null, function (e) {
 			e.object.removeAllFeatures();
+		});
+		// When sketching is complete, I want to check against Geoserver to make 
+		// sure that there won't be too many features returned
+		drawBoxLayer.events.register('sketchcomplete', {
+			shorelinesObj: this,
+			aoiIdControl: aoiIdControl
+		}, function () {
+			var selectedBounds = this.aoiIdControl.handler.feature.geometry.bounds;
+			CONFIG.ows.requestShorelineLayerFeatureCountForBBox({
+				bbox: selectedBounds,
+				context: this
+			}).done(function (responseDocument) {
+				var features = Number.parseInt(responseDocument.getElementsByTagName('FeatureCollection')[0].getAttribute('numberMatched'));
+
+				if (features > this.shorelinesObj.MAX_ALLOWED_FEATURES) {
+					CONFIG.ui.showAlert({
+						message: 'You\'ve selected too large of an area. Please try again.',
+						displayTime : 2000,
+						style: {
+							classes: ['alert-info']
+						}
+					});
+					aoiIdControl.layer.removeAllFeatures();
+				}
+			});
 		});
 		
 		Shorelines.hideFeatureTable(true);
