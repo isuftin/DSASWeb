@@ -15,7 +15,8 @@ var Shorelines = {
 		{attr: CONFIG.strings.columnAttrNames.defaultDirection, defaultValue: ''},
 		{attr: CONFIG.strings.columnAttrNames.biasUncertainty, defaultValue: ''}
 	],
-	aoiSquareKmLimit: 20000000,
+	MAX_ALLOWED_FEATURES: 800,
+	AOI_SQ_KM_LIMIT: 20000000,
 	groupingColumn: 'date',
 	dateFormat: '{yyyy}-{MM}-{dd}',
 	selectedFeatureClass: 'selected-feature-row',
@@ -948,8 +949,11 @@ var Shorelines = {
 					handlerOptions: {
 						sides: 4,
 						irregular: true,
-						aoiSquareKmLimit: this.aoiSquareKmLimit,
+						aoiSquareKmLimit: this.AOI_SQ_KM_LIMIT,
 						move : function (evt) {
+							// Most of this is copied from the actual move function
+							// in the Regular Polygon handler but adding my own stuff 
+							// here. 
 							var maploc = this.layer.getLonLatFromViewPortPx(evt.xy); 
 							var point = new OpenLayers.Geometry.Point(maploc.lon, maploc.lat);
 							var ry = Math.sqrt(2) * Math.abs(point.y - this.origin.y) / 2;
@@ -970,6 +974,8 @@ var Shorelines = {
 							this.feature.geometry.resize(1, this.origin, ratio);
 							this.feature.geometry.move(dx / 2, dy / 2);
 							var featureStyle = this.style;
+							// If the user is defining a bounding box that's too large,
+							// I want to warn them visually 
 							var sqM = this.feature.geometry.getArea();
 							if (sqM / 1000 > this.aoiSquareKmLimit) {
 								featureStyle = $.extend({}, this.layer.styleMap.styles.default.defaultStyle);
@@ -984,10 +990,30 @@ var Shorelines = {
 		drawBoxLayer.events.register('beforefeatureadded', null, function (e) {
 			e.object.removeAllFeatures();
 		});
-		drawBoxLayer.events.register('sketchcomplete', null, function (e) {
-			// TODO: I probably want to call the server to get a feature count
-			// for the area selected before actuallly allowing the selection 
-			// process to continue
+		// When sketching is complete, I want to check against Geoserver to make 
+		// sure that there won't be too many features returned
+		drawBoxLayer.events.register('sketchcomplete', {
+			shorelinesObj: this,
+			aoiIdControl: aoiIdControl
+		}, function () {
+			var selectedBounds = this.aoiIdControl.handler.feature.geometry.bounds;
+			CONFIG.ows.requestShorelineLayerFeatureCountForBBox({
+				bbox: selectedBounds,
+				context: this
+			}).done(function (responseDocument) {
+				var features = Number.parseInt(responseDocument.getElementsByTagName('FeatureCollection')[0].getAttribute('numberMatched'));
+
+				if (features > this.shorelinesObj.MAX_ALLOWED_FEATURES) {
+					CONFIG.ui.showAlert({
+						message: 'You\'ve selected too large of an area. Please try again.',
+						displayTime : 2000,
+						style: {
+							classes: ['alert-info']
+						}
+					});
+					aoiIdControl.layer.removeAllFeatures();
+				}
+			});
 		});
 		
 		Shorelines.hideFeatureTable(true);

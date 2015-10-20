@@ -730,6 +730,32 @@ var OWS = function (endpoint) {
 				'</wps:RawDataOutput>' +
 				'</wps:ResponseForm>' +
 				'</wps:Execute>';
+		},
+		/**
+		 * Requests the hit count of features from all published shorelines as well
+		 * as session shorelines
+		 * 
+		 * @param {Object} opts
+		 * @param {Object} opts.context - The context to use when resolving the AJAX request.
+		 * @param {OpenLayers.Bounds} opts.bbox - An OpenLayers Bounds object to specify the bounding box for this request
+		 * @returns {jqXHR}
+		 */
+		requestShorelineLayerFeatureCountForBBox: function (opts) {
+			opts = opts || {};
+			return $.ajax({
+				url: me.geoserverProxyEndpoint + 'ows/',
+				context : opts.context || this,
+				data: {
+					service : "wfs",
+					version : "2.0.0",
+					request : "GetFeature",
+					typeName : CONFIG.tempSession.getStage('shorelines').layers.join(','),
+					resultType : "hits",
+					srsName : "EPSG:900913",
+					bbox : opts.bbox.toString()
+				}
+			});
+
 		}
 	});
 };
