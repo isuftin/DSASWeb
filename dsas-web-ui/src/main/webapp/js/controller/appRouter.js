@@ -5,43 +5,36 @@ define([
 	'underscore',
 	'utils/logger',
 	'views/HomeView',
-	'views/ShorelineView',
-	'collections/sessionCollection',
-	'models/sessionModel'
-], function (Backbone, _, log, HomeView, ShorelineView, SessionCollection, SessionModel) {
+	'views/ShorelineView'
+], function (Backbone, _, log, HomeView, ShorelineView) {
 	"use strict";
+	var test = this;
 	var applicationRouter = Backbone.Router.extend({
 		routes: {
 			'shorelines': 'displayShorelineToolset'
 		},
-
 		initialize: function () {
 			log.trace("Initializing router");
-			this.displayHomeView();
 			this.toolsetView = null;
-			this.sessionCollection = new SessionCollection();
-			this.sessionCollection.fetch();
-			if (this.sessionCollection.models.length === 0) {
-				this.sessionCollection.create(new SessionModel());
-			}
+			this.displayHomeView();
 		},
-		
-		displayHomeView : function () {
+		displayHomeView: function () {
 			log.trace("Routing to home view");
-			var homeView = new HomeView();
-			homeView.render();
-			return homeView;
+			this.homeView = new HomeView();
+			this.homeView.render();
+			return this.homeView;
 		},
-		
-		displayShorelineToolset : function () {
+		displayShorelineToolset: function () {
 			log.trace("Routing to home view with shorelines set");
-			
+
 			var shorelineView = new ShorelineView({
-				el : '#toolset-span'
+				el: '#toolset-span',
+				parent : this.homeView
 			}).render();
-			
+
+			this.homeView.subViews['shorelineView'] = shorelineView;
 			this.toolsetView = shorelineView;
-			
+
 			return shorelineView;
 		}
 	});

@@ -33,7 +33,7 @@ define([
 	};
 
 	return {
-		prepareSession: function () {
+		prepareSession: function (context) {
 			// - A session has not yet been created for perm storage. Probably the first
 			// run of the application or a new browser with no imported session. Because 
 			// the session is used in the namespace for WFS-T, it needs to 

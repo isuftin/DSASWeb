@@ -46,6 +46,8 @@ define([
 			}
 
 			this.router = options.router || null;
+			
+			this.parent = options.parent || null;
 
 			if (_.has(options, 'template')) {
 				this.template = options.template;
