@@ -7,7 +7,7 @@ define([
 ], function (Backbone, SessionModel) {
 	"use strict";
 	var coll = Backbone.Collection.extend({
-		model: new SessionModel(),
+		model: SessionModel,
 		localStorage: new Backbone.LocalStorage("dsas")
 	});
 	return coll;

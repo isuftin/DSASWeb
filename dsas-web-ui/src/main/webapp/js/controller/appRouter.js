@@ -5,8 +5,10 @@ define([
 	'underscore',
 	'utils/logger',
 	'views/HomeView',
-	'views/ShorelineView'
-], function (Backbone, _, log, HomeView, ShorelineView) {
+	'views/ShorelineView',
+	'collections/sessionCollection',
+	'models/sessionModel'
+], function (Backbone, _, log, HomeView, ShorelineView, SessionCollection, SessionModel) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		routes: {
@@ -17,6 +19,11 @@ define([
 			log.trace("Initializing router");
 			this.displayHomeView();
 			this.toolsetView = null;
+			this.sessionCollection = new SessionCollection();
+			this.sessionCollection.fetch();
+			if (this.sessionCollection.models.length === 0) {
+				this.sessionCollection.create(new SessionModel());
+			}
 		},
 		
 		displayHomeView : function () {
