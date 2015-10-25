@@ -39,6 +39,7 @@ define([
 			});
 			log.debug("DSASweb Shoreline view initializing");
 			BaseView.prototype.initialize.apply(this, [options]);
+			return this;
 		},
 		remove: function () {
 			BaseView.prototype.remove.apply(this);

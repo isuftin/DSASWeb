@@ -1,0 +1,24 @@
+config: {
+},
+paths: {
+	"sinon": ['/webjars/sinonjs/${version.sinon}/sinon'],
+	"squire" : ['/webjars/squirejs/${version.squire}/Squire'],
+	"jquery": ["/webjars/jquery/${version.jquery}/jquery"],
+	"backbone": ['/webjars/backbonejs/${version.backbone}/backbone'],
+	"underscore": ['/webjars/underscorejs/${version.underscore}/underscore'],
+	"handlebars" : ['/webjars/handlebars/${version.handlebars}/handlebars'],
+	"text": ['/webjars/requirejs-text/${version.require.text}/text'],
+	"bootstrap" : ['/webjars/bootstrap/${version.bootstrap}/js/bootstrap'],
+	"loglevel": ['/webjars/loglevel/${version.loglevel}/loglevel'],
+	"openlayers": ['/webjars/openlayers/${version.openlayers}/OpenLayers.debug'],
+	"localstorage": ['/webjars/backbone-localstorage/${version.backbone-localstorage}/backbone.localStorage']
+},
+shim: {
+	"openlayers" : {
+		exports: 'OpenLayers'
+	},
+	"bootstrap": [ "jquery" ],
+	'sinon' : {
+		'exports' : 'sinon'
+	}
+}

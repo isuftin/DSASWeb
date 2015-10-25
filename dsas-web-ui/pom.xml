@@ -29,6 +29,8 @@
 		<version.require>2.1.18</version.require>
 		<version.require.text>2.0.14</version.require.text>
 		<version.loglevel>1.3.1</version.loglevel>
+		<version.sinon>1.7.3</version.sinon>
+		<version.squire>0.2.0</version.squire>
 		<version.backbone-localstorage>1.1.16</version.backbone-localstorage>
 	</properties>
 
@@ -287,21 +289,90 @@
 			<artifactId>backbone-localstorage</artifactId>
 			<version>${version.backbone-localstorage}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>sinonjs</artifactId>
+			<version>${version.sinon}-1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>squirejs</artifactId>
+			<version>${version.squire}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
+			
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>1.5.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<suffix>-${project.version}-min</suffix>
+				</configuration>  
+			</plugin>
+			
+			<plugin>
+				<groupId>com.github.searls</groupId>
+				<artifactId>jasmine-maven-plugin</artifactId>
+				<version>2.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<phantomjs>
+						<version>2.0.0</version>
+					</phantomjs>
+					<debug>true</debug>
+					<specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
+					<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
+					<jsTestSrcDir>${project.basedir}/src/test/js/specs</jsTestSrcDir>
+					<customRunnerConfiguration>file://${project.build.testOutputDirectory}/customJasmineConfig.txt</customRunnerConfiguration>
+					<srcDirectoryName>js</srcDirectoryName>
+					<preloadSources>
+						<source>/webjars/requirejs/${version.require}/require.js</source>
+					</preloadSources>
+				</configuration>
+			</plugin>
 		</plugins>
+		
 		<resources>
 			<resource>
 				<directory>${project.basedir}/src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/src/test/resources/jasmine/</directory>
+				<filtering>true</filtering>
+			</testResource>
+			<testResource>
+				<directory>${project.basedir}/src/test/resources/shapefiles/</directory>
+				<filtering>false</filtering>
+				<targetPath>${project.build.testOutputDirectory}/shapefiles</targetPath>
+			</testResource>
+		</testResources>
+		
 		<finalName>${project.artifactId}</finalName>
 	</build>
 </project>

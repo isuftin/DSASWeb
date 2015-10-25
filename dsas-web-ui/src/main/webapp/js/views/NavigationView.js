@@ -36,6 +36,7 @@ define([
 			var clickedTab = $target.attr('data-target');
 			this.router.navigate(clickedTab, {trigger: true});
 			
+			// Set the active tab 
 			this.$('#tabs-navigation li').removeClass('active');
 			$target.parent().addClass('active');
 		}

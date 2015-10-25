@@ -11,11 +11,10 @@ define([
 		routes: {
 			'': 'displayShorelineToolset', // Effectively make Shorelines the default
 			'shorelines': 'displayShorelineToolset',
-			'shorelines/:activeTab': 'displayShorelineToolset',
+			'shorelines/:activeTab': 'displayShorelineToolset'
 		},
 		initialize: function () {
 			log.trace("Initializing router");
-			this.toolsetView = null;
 			this.displayHomeView();
 		},
 		displayHomeView: function () {
@@ -27,7 +26,7 @@ define([
 			return this.homeView;
 		},
 		displayShorelineToolset: function (activeTab) {
-			log.trace("Routing to home view with shorelines set");
+			log.trace("Routing to Shorelines toolset");
 
 			var shorelineView = new ShorelineView({
 				el: '#toolset-span',
@@ -38,7 +37,6 @@ define([
 			});
 
 			this.homeView.subViews.shorelineView = shorelineView;
-			this.toolsetView = shorelineView;
 			
 			return shorelineView;
 		}

@@ -43,7 +43,7 @@ public class ShorelineShapefileTest {
 
 	@Before
 	public void setUp() throws URISyntaxException, IOException {
-		String packagePath = "/";
+		String packagePath = "/shapefiles";
 		FileUtils.copyDirectory(new File(getClass().getResource(packagePath).toURI()), workDir);
 		validShapeZip = new File(workDir, "valid_shapezip.zip");
 		noPRJShapeZip = new File(workDir, "no_prj_shapefile.zip");

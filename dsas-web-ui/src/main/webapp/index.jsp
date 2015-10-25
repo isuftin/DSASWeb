@@ -49,7 +49,7 @@
 					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%=  PropertyUtil.getProperty("version.require.text")%>/text'],
 					"loglevel": ['<%=baseUrl%>/webjars/loglevel/<%=  PropertyUtil.getProperty("version.loglevel")%>/loglevel<%= development ? "" : ".min"%>'],
 					"openlayers": ['<%=baseUrl%>/webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? ".debug" : ""%>'],
-					"localstorage": ['<%=baseUrl%>/webjars/backbone-localstorage/<%=  PropertyUtil.getProperty("version.backbone-localstorage")%>/backbone.localStorage<%= development ? "" : "min"%>']
+					"localstorage": ['<%=baseUrl%>/webjars/backbone-localstorage/<%=  PropertyUtil.getProperty("version.backbone-localstorage")%>/backbone.localStorage<%= development ? "" : "-min"%>']
 				},
 				shim: {
 					openlayers: {
