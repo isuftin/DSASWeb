@@ -42,6 +42,12 @@ define([
 			expect(this.routeSpy.notCalled).toBeTruthy();
 		});
 		
+		it("does fire for known paths", function () {
+			this.router.navigate("", {trigger : true});
+			this.server.respond();
+			expect(this.routeSpy.called).toBeTruthy();
+		});
+		
 
 		afterEach(function () {
 			this.$div.remove();
