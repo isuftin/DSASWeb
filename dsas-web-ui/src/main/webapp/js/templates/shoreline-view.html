@@ -1,3 +1,20 @@
-<div class="well well-sm">
-	I am a shoreline toolset
+<div class="well well-sm" id="well-shorelines">
+	<div class="container-fluid" id="container-shorelines">
+		<ul class="nav nav-tabs nav-justified" id="tabs-shorelines">
+			<li role="presentation" {{#ifIsActiveTab this.activeTab "tabpanel-shorelines-view" "class='active'"}}{{/ifIsActiveTab}}>
+				<a data-toggle="tab" role="tab" data-target="tabpanel-shorelines-view">
+					View
+				</a>
+			</li>
+			<li role="presentation" {{#ifIsActiveTab this.activeTab "tabpanel-shorelines-manager" "class='active'"}}{{/ifIsActiveTab}}>
+				<a data-toggle="tab" role="tab" data-target="tabpanel-shorelines-manager">
+					Manage
+				</a>
+			</li>
+		</ul>
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane {{#ifIsActiveTab this.activeTab "tabpanel-shorelines-view" "active"}}{{/ifIsActiveTab}}" id="tabpanel-shorelines-view">VIEW PANEL</div>
+			<div role="tabpanel" class="tab-pane {{#ifIsActiveTab this.activeTab "tabpanel-shorelines-manager" "active"}}{{/ifIsActiveTab}}" id="tabpanel-shorelines-manage">MANAGE PANEL</div>
+		</div>
+	</div>
 </div>

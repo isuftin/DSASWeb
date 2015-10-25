@@ -10,7 +10,7 @@ define([
 	'utils/sessionUtil',
 	'collections/sessionCollection',
 	'models/sessionModel',
-	'text!templates/home.html'
+	'text!templates/home-view.html'
 ], function (Handlebars, BaseView, NavigationView, MapView, NotificationView, log, SessionUtil, SessionCollection, SessionModel, template) {
 	"use strict";
 
@@ -42,19 +42,22 @@ define([
 		 *		@prop collection {ModelCollection instance}
 		 *      @prop el {Jquery element} - render view in $el.
 		 */
-		initialize: function () {
+		initialize: function (options) {
 			log.debug("DSASweb Home view initializing");
 
 			this.subViews.navView = new NavigationView({
-				parent: this
+				parent: this,
+				router: options.router
 			});
 
 			this.subViews.mapView = new MapView({
-				parent: this
+				parent: this,
+				router: options.router
 			});
 
 			this.subViews.notificationView = new NotificationView({
-				parent: this
+				parent: this,
+				router: options.router
 			});
 
 			this.subViews.notificationView.setElement(this.$('#notification-span'));

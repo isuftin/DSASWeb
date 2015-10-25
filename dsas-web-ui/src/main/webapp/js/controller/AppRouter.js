@@ -2,16 +2,16 @@
 /*global define*/
 define([
 	'backbone',
-	'underscore',
 	'utils/logger',
 	'views/HomeView',
 	'views/ShorelineView'
-], function (Backbone, _, log, HomeView, ShorelineView) {
+], function (Backbone, log, HomeView, ShorelineView) {
 	"use strict";
-	var test = this;
 	var applicationRouter = Backbone.Router.extend({
 		routes: {
-			'shorelines': 'displayShorelineToolset'
+			'': 'displayShorelineToolset', // Effectively make Shorelines the default
+			'shorelines': 'displayShorelineToolset',
+			'shorelines/:activeTab': 'displayShorelineToolset',
 		},
 		initialize: function () {
 			log.trace("Initializing router");
@@ -20,21 +20,26 @@ define([
 		},
 		displayHomeView: function () {
 			log.trace("Routing to home view");
-			this.homeView = new HomeView();
+			this.homeView = new HomeView({
+				router : this
+			});
 			this.homeView.render();
 			return this.homeView;
 		},
-		displayShorelineToolset: function () {
+		displayShorelineToolset: function (activeTab) {
 			log.trace("Routing to home view with shorelines set");
 
 			var shorelineView = new ShorelineView({
 				el: '#toolset-span',
-				parent : this.homeView
-			}).render();
+				parent : this.homeView,
+				router : this
+			}).render({
+				activeTab : activeTab
+			});
 
-			this.homeView.subViews['shorelineView'] = shorelineView;
+			this.homeView.subViews.shorelineView = shorelineView;
 			this.toolsetView = shorelineView;
-
+			
 			return shorelineView;
 		}
 	});
