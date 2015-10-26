@@ -1,3 +1,4 @@
+/*global CONFIG*/
 var Results = {
     stage : 'results',
     
@@ -883,7 +884,7 @@ var Results = {
                 caller : Results
             });
         } else {
-			var geoserverEndpoint = CONFIG.ows.geoserverProxyEndpoint.endsWith('/') ? CONFIG.ows.geoserverProxyEndpoint : CONFIG.ows.geoserverProxyEndpoint + '/';
+			var geoserverEndpoint = 'geoserver/';
 			var url = geoserverEndpoint + 'wfs?' +
 			'service=wfs&'+
 			'version=2.0.0&'+
