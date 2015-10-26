@@ -493,13 +493,6 @@ CCH.Session = function (name, isPerm) {
 				.append($('<b />').addClass('caret'));
 			container.append(menuNavBar.append(innerNavBar.append(navBarItem.append(sessionDropDown.append(sessionDropDownLink)))));
 
-			CONFIG.ui.createLoginMenuItem();
-
-			var loginLink = $('<ul />').addClass('pull-right nav').append($('<li />').attr('id', 'login-list-item').append($('<div />').attr({
-				'id': 'session-login-link'
-			}).html('<img id="sign-in-img" src="images/OpenID/White-signin_Medium_base_44dp.png"></img>')));
-			container.append(menuNavBar.append(innerNavBar.append(loginLink)));
-
 			var fileDropDownList = $('<ul />')
 				.addClass('dropdown-menu')
 				.attr({
