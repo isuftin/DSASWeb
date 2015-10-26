@@ -25,7 +25,7 @@ define([
 		 */
 		initialize: function (options) {
 			log.debug("DSASweb Notification view initializing");
-			BaseView.prototype.initialize.apply(this);
+			BaseView.prototype.initialize.apply(this, [options]);
 			return this;
 		},
 		/**

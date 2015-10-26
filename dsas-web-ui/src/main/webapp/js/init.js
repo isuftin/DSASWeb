@@ -4,8 +4,10 @@ define([
 	'controller/AppRouter',
 	'utils/logger',
 	'backbone',
-	'module'
-], function (Router, log, Backbone, module) {
+	'module',
+	'underscore',
+	'bootstrap' // Load up bootstrap to get it worked into jquery
+], function (Router, log, Backbone, module, _) {
 	"use strict";
 	var router = new Router();
 	

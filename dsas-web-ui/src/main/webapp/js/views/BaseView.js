@@ -40,14 +40,22 @@ define([
 			if (!this.context) {
 				this.context = {};
 			}
+			
+			if (_.has(options, 'appEvents')) {
+				this.appEvents = options.appEvents;
+			}
 
 			if (_.has(options, 'template')) {
 				$.extend(this.context, options.context);
 			}
 
-			this.router = options.router || null;
+			if (_.has(options, 'router')) {
+				this.router = options.router;
+			}
 			
-			this.parent = options.parent || null;
+			if (_.has(options, 'parent')) {
+				this.parent = options.parent;
+			}
 
 			if (_.has(options, 'template')) {
 				this.template = options.template;

@@ -47,17 +47,20 @@ define([
 
 			this.subViews.navView = new NavigationView({
 				parent: this,
-				router: options.router
+				router: options.router,
+				appEvents : options.appEvents
 			});
 
 			this.subViews.mapView = new MapView({
 				parent: this,
-				router: options.router
+				router: options.router,
+				appEvents : options.appEvents
 			});
 
 			this.subViews.notificationView = new NotificationView({
 				parent: this,
-				router: options.router
+				router: options.router,
+				appEvents : options.appEvents
 			});
 
 			this.subViews.notificationView.setElement(this.$('#notification-span'));

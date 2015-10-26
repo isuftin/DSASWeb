@@ -55,7 +55,7 @@
 					openlayers: {
 						exports: "OpenLayers"
 					},
-					"bootstrap": ["jquery"]
+					"bootstrap": { "deps" :['jquery'] }
 				}
 			};
 		</script>

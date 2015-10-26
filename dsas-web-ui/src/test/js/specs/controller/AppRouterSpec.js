@@ -43,7 +43,7 @@ define([
 		});
 		
 		it("does fire for known paths", function () {
-			this.router.navigate("", {trigger : true});
+			this.router.navigate("shorelines", {trigger : true});
 			this.server.respond();
 			expect(this.routeSpy.called).toBeTruthy();
 		});
@@ -52,6 +52,7 @@ define([
 		afterEach(function () {
 			this.$div.remove();
 			this.server.restore();
+			Backbone.history.stop();
 		});
 	});
 });

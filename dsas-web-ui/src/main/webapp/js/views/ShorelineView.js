@@ -7,10 +7,12 @@ define([
 ], function (Handlebars, BaseView, log, template) {
 	"use strict";
 	var view = BaseView.extend({
+		// Defines what the default tab in the shorelines toolbox is
 		DEFAULT_TAB : "tabpanel-shorelines-view",
 		template: Handlebars.compile(template),
 		events: {
-			'click #tabs-shorelines a': 'tabToggled'
+			'click #tabs-shorelines a': 'tabToggled',
+			'click #shorelines-aoi-select-toggle' : 'toggleAoiSelection'
 		},
 		/*
 		 * Renders the object's template using it's context into the view's element.
@@ -25,6 +27,11 @@ define([
 		tabToggled: function (e) {
 			var clickedTab = $(e.target).attr('data-target');
 			this.router.navigate('shorelines/' + clickedTab, {trigger: true});
+		},
+		toggleAoiSelection : function (e) {
+			var activated = !$(e.target).hasClass('active');
+			log.debug("AOI Selection Toggled " + (activated ? "on" : "off"));
+			this.appEvents
 		},
 		/*
 		 * @constructs

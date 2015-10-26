@@ -148,7 +148,7 @@ define([
 				new OpenLayers.Control.LayerSwitcher({roundedCorner: true})
 			]);
 
-			BaseView.prototype.initialize.apply(this);
+			BaseView.prototype.initialize.apply(this, [options]);
 		},
 		remove: function () {
 			BaseView.prototype.remove.apply(this);
