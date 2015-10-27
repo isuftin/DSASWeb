@@ -1,7 +1,7 @@
-/* global LOG */
-/* global CONFIG */
-/* global OpenLayers */
-/* global Shorelines */
+/*global LOG */
+/*global CONFIG */
+/*global OpenLayers */
+/*global Shorelines */
 var OWS = function (endpoint) {
 	"use strict";
 	LOG.info('OWS.js::constructor: OWS class is initializing.');
@@ -36,9 +36,9 @@ var OWS = function (endpoint) {
 					'store': args.store || 'ch-input',
 					'extra-column': args.extraColumn
 				},
-				success: function (data, textStatus, jqXHR) {
+				success: function (data) {
 					var scope = this;
-					$(args.callbacks).each(function (index, callback, allCallbacks) {
+					$(args.callbacks).each(function (index, callback) {
 						callback(data, scope);
 					});
 				}
@@ -46,14 +46,12 @@ var OWS = function (endpoint) {
 		},
 		downloadLayerAsShapefile: function (layer) {
 			var workspace = layer.split(':')[0];
-			;
 
-			window.location = me.geoserverEndpoint
-				+ '/'
-				+ workspace
-				+ '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName='
-				+ layer
-				+ '&outputFormat=shape-zip';
+			window.location = 'geoserver/' +
+					workspace +
+					'/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=' +
+					layer +
+					'&outputFormat=shape-zip';
 		},
 		getUTMZoneCount: function (args) {
 			var layerPrefix = args.layerPrefix;
@@ -117,7 +115,7 @@ var OWS = function (endpoint) {
 					var getCapsResponse = new OpenLayers.Format.WMSCapabilities.v1_3_0().read(data);
 
 					// Fixes an issue with prefixes not being parsed correctly from response
-					getCapsResponse.capability.layers.each(function (n, i) {
+					getCapsResponse.capability.layers.each(function (n) {
 						n.prefix = namespace;
 					});
 					me.wmsCapabilities[namespace] = getCapsResponse;
@@ -155,7 +153,7 @@ var OWS = function (endpoint) {
 											classes: ['alert-info']
 										}
 									});
-									$(errorCallbacks).each(function (index, callback, allCallbacks) {
+									$(errorCallbacks).each(function (index, callback) {
 										callback({
 											data: data,
 											textStatus: textStatus,
@@ -163,7 +161,7 @@ var OWS = function (endpoint) {
 										});
 									});
 								},
-								error: function (data, textStatus, jqXHR) {
+								error: function () {
 									LOG.error('Session.js::init: A workspace could not be created on the OWS server');
 									CONFIG.ui.showAlert({
 										message: 'No session could be found. A new session could not be created on server. This application may not function correctly.',
@@ -264,7 +262,7 @@ var OWS = function (endpoint) {
 			var url = me.geoserverProxyEndpoint + layerNS + '/wfs?service=wfs&version=2.0.0&request=DescribeFeatureType&typeName=' + layerNS + ':' + layerName;
 			$.ajax(url, {
 				context: args.scope || this,
-				success: function (data, textStatus, jqXHR) {
+				success: function (data) {
 					LOG.info('OWS.js::getDescribeFeatureType: WFS featureType response received.');
 					var gmlReader = new OpenLayers.Format.WFSDescribeFeatureType();
 					var describeFeaturetypeRespone = gmlReader.read(data);
@@ -297,7 +295,7 @@ var OWS = function (endpoint) {
 
 			$.ajax(url, {
 				context: scope || this,
-				success: function (data, textStatus, jqXHR) {
+				success: function (data) {
 					LOG.trace('OWS.js::getFilteredFeature: Successfully received WFS GetFeature response.');
 					var gmlReader = new OpenLayers.Format.GML.v3();
 					var getFeatureResponse = gmlReader.read(data);
@@ -308,13 +306,13 @@ var OWS = function (endpoint) {
 					me.featureTypeDescription[layerPrefix][layerName] = getFeatureResponse;
 
 					LOG.trace('OWS.js::getFilteredFeature: Executing ' + callbacks.success + 'callbacks');
-					$(callbacks.success || []).each(function (index, callback, allCallbacks) {
+					$(callbacks.success || []).each(function (index, callback) {
 						LOG.trace('OWS.js::getFilteredFeature: Executing callback ' + index);
 						callback(getFeatureResponse, this);
 					});
 				},
-				error: function (data, textStatus, jqXHR) {
-					$(callbacks.error || []).each(function (index, callback, allCallbacks) {
+				error: function (data) {
+					$(callbacks.error || []).each(function (index, callback) {
 						callback(data, this);
 					});
 				}
@@ -343,7 +341,7 @@ var OWS = function (endpoint) {
 				type: 'POST',
 				contentType: 'application/xml',
 				data: updateTransaction,
-				success: function (data, textStatus, jqXHR) {
+				success: function (data) {
 					callback(data);
 				}
 			});
@@ -527,10 +525,9 @@ var OWS = function (endpoint) {
 			return wps;
 		},
 		createResultsRasterSLD: function (args) {
-			var argss = args || {};
-			var attribute = argss.attribute || 'LRR';
-			var layerName = argss.layerName || 'ResultsRaster';
-			var colorMapEntries = argss.colorMapEntries || [];
+			args = args || {};
+			var attribute = args.attribute || 'LRR';
+			var layerName = args.layerName || 'ResultsRaster';
 
 			var sld = '<?xml version="1.0" encoding="ISO-8859-1"?>' +
 				'<StyledLayerDescriptor version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
