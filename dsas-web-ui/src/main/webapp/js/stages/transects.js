@@ -420,7 +420,7 @@ var Transects = {
 			cropTransectsControl.activate();
 		} else {
 			Transects.removeCropControl();
-			}
+		}
 	},
 	addTransectButtonToggled: function () {
 		if (!$(this).hasClass('active')) {
