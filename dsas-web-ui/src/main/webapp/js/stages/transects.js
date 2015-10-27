@@ -310,8 +310,14 @@ var Transects = {
 			// if there are more transects left in the array
 			saveStrategy.updating = true;
 			// Memoize the original save function because I'll be updating the 
-			// actual save function 
-			saveStrategy.innerSave = saveStrategy.save;
+			// actual save function. Only do this if innerSave is not already defined.
+			// This may already be defined if the user clicks on "Crop" a second
+			// time without having performed an update on the transects. This causes
+			// a recursion issue.
+			if (!saveStrategy.hasOwnProperty('innerSave')) {
+				saveStrategy.innerSave = saveStrategy.save;
+			}
+			
 			saveStrategy.save = function () {
 				// Set up a strategy-object scope array of transects that need to
 				// be updated via WFS. Do this the first time save() is called. I
@@ -514,7 +520,7 @@ var Transects = {
 			Transects.removeDrawControl();
 		}
 	},
-	saveEditedLayer: function (args) {
+	saveEditedLayer: function () {
 		LOG.debug('Baseline.js::saveEditedLayer: Edit layer save button clicked');
 		var layer = Transects.getEditLayer(),
 			intersectsLayer = layer.cloneOf.replace('transects', 'intersects'),
