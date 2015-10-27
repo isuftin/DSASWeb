@@ -1,12 +1,12 @@
-/* global CONFIG */
-/* global OpenLayers */
-/* global LOG*/
-/* global Handlebars */
-/* global Baseline */
-/* global Calculation */
-/* global Results */
-/* global Shorelines */
-/* global ProxyDatumBias */
+/*global CONFIG */
+/*global OpenLayers */
+/*global LOG*/
+/*global Handlebars */
+/*global Baseline */
+/*global Calculation */
+/*global Results */
+/*global Shorelines */
+/*global ProxyDatumBias */
 "use strict";
 var Transects = {
 	stage: 'transects',
@@ -135,51 +135,56 @@ var Transects = {
 		Transects.deactivateHighlightControl();
 		Transects.removeAngleLayer();
 	},
+	activateEditing : function () {
+		LOG.debug('Transects.js::editButtonToggled: Edit form was toggled on');
+		Transects.disableUpdateTransectsButton();
+		if (Transects.$buttonTransectsCreateToggle.hasClass('active')) {
+			Transects.$buttonTransectsCreateToggle.trigger('click');
+		}
+
+		LOG.debug('Transects.js::editButtonToggled: Adding cloned layer to map');
+		var clonedLayer = Transects.cloneActiveLayer();
+		CONFIG.map.getMap().addLayer(clonedLayer);
+		LOG.debug('Transects.js::editButtonToggled: Create baseline snap control');
+		var baselineSnapControl = Transects.createBaselineSnapControl(clonedLayer);
+		CONFIG.map.getMap().addControl(baselineSnapControl);
+		LOG.debug('Transects.js::editButtonToggled: Adding highlight control to map');
+		var highlightControl = Transects.getHighlightControl();
+		highlightControl.setLayer([clonedLayer]);
+		highlightControl.activate();
+		LOG.debug('Transects.js::editButtonToggled: Adding select control to map');
+		var selectControl = Transects.getSelectControl();
+		selectControl.setLayer([clonedLayer]);
+		selectControl.activate();
+		LOG.debug('Transects.js::editButtonToggled: Adding modify control to map');
+		var modifyFeatureControl = Transects.createModifyFeatureControl(clonedLayer);
+		CONFIG.map.getMap().addControl(modifyFeatureControl);
+		modifyFeatureControl.activate();
+		modifyFeatureControl.handlers.keyboard.activate();
+		Transects.$containerTransectsEdit.removeClass('hidden');
+		Transects.$buttonTransectsSave.unbind('click', Transects.saveEditedLayer);
+		Transects.$buttonTransectsSave.on('click', Transects.saveEditedLayer);
+	},
+	deactivateEditing : function () {
+		LOG.debug('Transects.js::editButtonToggled: Edit form was toggled off');
+		Transects.$containerTransectsEdit.addClass('hidden');
+		Transects.removeEditControl();
+		Transects.removeSnapControl();
+		Transects.removeDrawControl();
+		Transects.removeAngleLayer();
+		Transects.deactivateSelectControl();
+		Transects.deactivateHighlightControl();
+		if (Transects.getActiveLayer()) {
+			Transects.getActiveLayer().refresh({force: true});
+		}
+	},
 	editButtonToggled: function (event) {
 		LOG.info('Transects.js::editButtonToggled');
 		var toggledOn = $(event.currentTarget).hasClass('active') ? false : true;
 		if (toggledOn) {
-			LOG.debug('Transects.js::editButtonToggled: Edit form was toggled on');
-			Transects.disableUpdateTransectsButton();
-			if (Transects.$buttonTransectsCreateToggle.hasClass('active')) {
-				Transects.$buttonTransectsCreateToggle.trigger('click');
-			}
-
-			LOG.debug('Transects.js::editButtonToggled: Adding cloned layer to map');
-			var clonedLayer = Transects.cloneActiveLayer();
-			CONFIG.map.getMap().addLayer(clonedLayer);
-			LOG.debug('Transects.js::editButtonToggled: Create baseline snap control');
-			var baselineSnapControl = Transects.createBaselineSnapControl(clonedLayer);
-			CONFIG.map.getMap().addControl(baselineSnapControl);
-			LOG.debug('Transects.js::editButtonToggled: Adding highlight control to map');
-			var highlightControl = Transects.getHighlightControl();
-			highlightControl.setLayer([clonedLayer]);
-			highlightControl.activate();
-			LOG.debug('Transects.js::editButtonToggled: Adding select control to map');
-			var selectControl = Transects.getSelectControl();
-			selectControl.setLayer([clonedLayer]);
-			selectControl.activate();
-			LOG.debug('Transects.js::editButtonToggled: Adding modify control to map');
-			var modifyFeatureControl = Transects.createModifyFeatureControl(clonedLayer);
-			CONFIG.map.getMap().addControl(modifyFeatureControl);
-			modifyFeatureControl.activate();
-			modifyFeatureControl.handlers.keyboard.activate();
-			Transects.$containerTransectsEdit.removeClass('hidden');
-			Transects.$buttonTransectsSave.unbind('click', Transects.saveEditedLayer);
-			Transects.$buttonTransectsSave.on('click', Transects.saveEditedLayer);
+			Transects.activateEditing();
 		} else {
-			LOG.debug('Transects.js::editButtonToggled: Edit form was toggled off');
-			Transects.$containerTransectsEdit.addClass('hidden');
-			Transects.removeEditControl();
-			Transects.removeSnapControl();
-			Transects.removeDrawControl();
-			Transects.removeAngleLayer();
-			Transects.deactivateSelectControl();
-			Transects.deactivateHighlightControl();
-			if (Transects.getActiveLayer()) {
-				Transects.getActiveLayer().refresh({force: true});
-			}
-
+			Transects.deactivateEditing();
 		}
 	},
 	cloneActiveLayer: function () {
@@ -224,8 +229,7 @@ var Transects = {
 					baseLayerFeatures.each(function (f) {
 						var g = f.geometry;
 						vertices.each(function (vertex) {
-							LOG.debug(parseInt(g.distanceTo(vertex)));
-							if (parseInt(g.distanceTo(vertex)) <= 5) {
+							if (parseInt(g.distanceTo(vertex), 10) <= 5) {
 								connectedToBaseline = true;
 							}
 						});
@@ -435,7 +439,7 @@ var Transects = {
 					multi: true,
 					handlerOptions: {
 						maxVertices: 2,
-						dblclick: function (evt) {
+						dblclick: function () {
 							// We do not want to begin drawing another transect
 							// on click. Therefore, when a double click does occur,
 							// destroy the point the first click made and get out
@@ -650,7 +654,7 @@ var Transects = {
 			callbacks: {
 				success: [
 					CONFIG.tempSession.updateLayersFromWMS,
-					function (caps, context) {
+					function (caps) {
 						LOG.info('Transects.js::refreshFeatureList: WMS GetCapabilities response parsed');
 						Transects.populateFeaturesList(caps);
 						if (selectLayer) {
@@ -786,11 +790,9 @@ var Transects = {
 		}
 	},
 	disableDownloadButton: function () {
-		"use strict";
 		this.$buttonDownload.attr('disabled', 'disabled');
 	},
 	enableDownloadButton: function () {
-		"use strict";
 		this.$buttonDownload.removeAttr('disabled');
 	},
 	enableEditButton: function () {
@@ -911,17 +913,14 @@ var Transects = {
 	createTransectsButtonToggled: function (event) {
 		LOG.info('Transects.js::createTransectsButtonToggled: Transect creation Button Clicked');
 		var toggledOn = $(event.currentTarget).hasClass('active') ? false : true;
-		if (toggledOn) {
-			if ($('#transect-edit-form-toggle').hasClass('active')) {
-				$('#transect-edit-form-toggle').trigger('click');
-			}
-		} else {
+		if (toggledOn && $('#transect-edit-form-toggle').hasClass('active')) {
+			$('#transect-edit-form-toggle').trigger('click');
 		}
 		$('#create-transects-panel-well').toggleClass('hidden');
 		$('#intersection-calculation-panel-well').toggleClass('hidden');
 		$('#create-transects-input-button').toggleClass('hidden');
 	},
-	createTransectSubmit: function (event) {
+	createTransectSubmit: function () {
 		Transects.clearSubsequentStages();
 		var shorelines = CONFIG.tempSession.getStage(Shorelines.stage).layers,
 			selectedBounds = Shorelines.aoiBoundsSelected,
@@ -968,7 +967,7 @@ var Transects = {
 				context: this,
 				callbacks: [
 					// TODO- Error Checking for WPS process response!
-					function (data, textStatus, jqXHR, context) {
+					function (data) {
 						if (typeof data === 'string') {
 							var transectLayer = data.split(',')[0];
 							var intersectionLayer = data.split(',')[1];
@@ -1039,7 +1038,7 @@ var Transects = {
 				buttons: [
 					{
 						text: 'Overwrite',
-						callback: function (event) {
+						callback: function () {
 							$.get('service/session', {
 								action: 'remove-layer',
 								workspace: CONFIG.tempSession.getCurrentSessionKey(),
