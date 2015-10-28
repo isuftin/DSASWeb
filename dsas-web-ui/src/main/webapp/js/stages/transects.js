@@ -587,7 +587,9 @@ var Transects = {
 										selectLayer: layer.cloneOf
 									});
 									CONFIG.map.removeLayerByName(layer.cloneOf);
-									Transects.$buttonToggleEdit.trigger('click');
+									if (Transects.$buttonToggleEdit.hasClass('active')) {
+										Transects.$buttonToggleEdit.trigger('click');
+									}
 									CONFIG.map.removeLayerByName(layer.cloneOf);
 									intersectionsList.val(intersectsLayer);
 									resultsList.val(resultsLayer);
