@@ -4,13 +4,10 @@ import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import gov.usgs.cida.owsutils.commons.io.exception.ShapefileFormatException;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;

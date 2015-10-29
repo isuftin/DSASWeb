@@ -1,11 +1,12 @@
 package gov.usgs.cida.dsas.service;
 
-import gov.usgs.cida.dsas.service.util.Property;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO.DBaseColumn.ColumnType;
+import gov.usgs.cida.dsas.service.util.Property;
+import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.utilities.communication.RequestResponseHelper;
 import gov.usgs.cida.utilities.file.FileHelper;
+import gov.usgs.cida.utilities.file.ShapefileHelper;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -34,6 +35,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
+import org.opengis.geometry.BoundingBox;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -80,7 +84,6 @@ public class ShapefileImportService extends HttpServlet {
 		File shapeFile;
 		String name;
 		Map<String, String> responseMap = new HashMap<>();
-
 		List<GeoserverDAO.DBaseColumn> dbcList = new ArrayList<>();
 
 		if (extraColumns != null) {
@@ -194,7 +197,21 @@ public class ShapefileImportService extends HttpServlet {
 			RequestResponseHelper.sendErrorResponse(response, responseMap);
 			return;
 		}
-
+		
+		BoundingBox bbox;
+		try {
+			bbox = ShapefileHelper.getBoundingBoxFromShapefile(shapeFile);
+			responseMap.put("maxX", Double.toString(bbox.getMaxX()));
+			responseMap.put("maxY", Double.toString(bbox.getMaxY()));
+			responseMap.put("minX", Double.toString(bbox.getMinX()));
+			responseMap.put("minY", Double.toString(bbox.getMinY()));
+		} catch (FactoryException | IOException | TransformException ex) {
+			responseMap.put("maxX", "");
+			responseMap.put("maxY", "");
+			responseMap.put("minX", "");
+			responseMap.put("minY", "");
+		}
+		
 		responseMap.put("file-token", fileToken);
 		responseMap.put("endpoint", geoserverEndpoint);
 
