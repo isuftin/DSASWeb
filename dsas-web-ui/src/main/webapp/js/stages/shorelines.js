@@ -83,6 +83,11 @@ var Shorelines = {
 				}
 			});
 		});
+		
+		if (Shorelines.SHOW_SHORELINES_IMMEDIATELY) {
+			Shorelines.displayLayersForBounds(CONFIG.map.getMap().getExtent());
+		}
+		
 		Shorelines.enterStage();
 	},
 	initSession: function () {
@@ -327,7 +332,7 @@ var Shorelines = {
 					transparent: true,
 					sld_body: sldBody,
 					format: "image/png",
-					bbox: bounds,
+					bbox: bounds,	
 					cql_filter: cqlFilter
 				}, {
 					prefix: prefix,
@@ -834,6 +839,92 @@ var Shorelines = {
 			Shorelines.$buttonSelectAOI.trigger('click');
 		}
 	},
+	displayLayersForBounds: function (bounds) {
+		var _bounds = bounds.clone();
+		var filterFunc = function (l) {
+			if (l.name.endsWith(Shorelines.stage)) {
+				var layerBounds = OpenLayers.Bounds.fromArray(l.bbox[CONFIG.strings.crs84].bbox, false)
+					.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913));
+				return _bounds.intersectsBounds(layerBounds);
+			}
+			return false;
+		},
+			validPublishedLayers = CONFIG.ows.wmsCapabilities.published.capability.layers.filter(filterFunc),
+			validSessionLayers = CONFIG.ows.wmsCapabilities[CONFIG.tempSession.getCurrentSessionKey()].capability.layers.filter(filterFunc),
+			validLayers = validPublishedLayers.concat(validSessionLayers),
+			boundsString = _bounds.transform(new OpenLayers.Projection(CONFIG.strings.epsg900913), new OpenLayers.Projection(CONFIG.strings.epsg4326)).toArray(false).toString(),
+			getShorelinesUrl = function (layer) {
+				var url = Shorelines.shorelinesServiceEndpoint,
+					params = {
+						action: 'getShorelinesWithBbox',
+						workspace: layer.prefix,
+						bbox: boundsString
+					};
+				return url + $.param(params);
+			},
+			ajaxCalls = validLayers.map(function (l) {
+				var context = {
+					layer: l,
+					bounds: boundsString
+				};
+				return $.ajax(getShorelinesUrl(l), {context: context}).promise();
+			}),
+			showNothingFoundAlert = function () {
+				CONFIG.ui.showAlert({
+					message: 'There is no data for the area of interest you selected<br />Try uploading data.',
+					caller: Shorelines,
+					displayTime: 3000,
+					style: {
+						classes: ['alert-warn']
+					}
+				});
+			};
+		if (validLayers.length) {
+			$.when.apply(this, ajaxCalls).done(function () {
+				// I should have as many incoming arguments as there were 
+				// ajax calls going out (probably 2: published and workspace).
+				// I need to create a dates array here 
+				
+				// I will also want to display and zoom to the user's shorelines
+				// in both the publish and session layers
+				var combinedBounds = new OpenLayers.Bounds();
+				for (var aIdx = 0; aIdx < arguments.length; aIdx++) {
+					// If there are no published shorelines, arguments will be 
+					// an array of a single ajax response (data, status, jqXHR).
+					// But if there are published shorelines, arguments will be 
+					// an array of ajax responses. 
+					// 
+					// TODO- Either be more clever about this or realize
+					// that not having published shorelines is an edge case
+					// in the infancy of the application and move on with life
+					var response = Array.isArray(arguments[0]) ? arguments[aIdx][0] : arguments[0],
+						shorelines = JSON.parse(response.shorelines),
+						layerInfo = Array.isArray(this) ? this[aIdx].layer : this.layer,
+						bounds = Array.isArray(this) ? this[aIdx].bounds : this.bounds;
+
+					// For each argument I want to read the response into a features array
+					// I check if this layer already exists in the map because 
+					// the for-loop I am in will loop here three times if 
+					// there are no published shorelines because of the 
+					// reasons mentioned in previous comment
+					if (shorelines.length > 0 && CONFIG.map.getMap().getLayersByName(layerInfo.name).length === 0) {
+						Shorelines.addLayerToMap({
+							name: layerInfo.name,
+							prefix: layerInfo.prefix,
+							title: layerInfo.title,
+							bounds: bounds,
+							shorelines: shorelines
+						});
+						Shorelines.setupTableSorting();
+						combinedBounds.extend(new OpenLayers.Bounds.fromArray(layerInfo.bbox['EPSG:4326'].bbox, true));
+					}
+				}
+				CONFIG.map.getMap().zoomToExtent(combinedBounds.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913)), true);
+			});
+		} else {
+			showNothingFoundAlert();
+		}
+	},
 	bindSelectAOIDoneButton: function () {
 		"use strict";
 		this.$buttonSelectAOIDone.on('click', function () {
@@ -849,85 +940,7 @@ var Shorelines = {
 
 			Shorelines.$buttonSelectAOI.trigger('click');
 			if (Shorelines.aoiBoundsSelected) {
-				var filterFunc = function (l) {
-					if (l.name.endsWith(Shorelines.stage)) {
-						var layerBounds = OpenLayers.Bounds.fromArray(l.bbox[CONFIG.strings.crs84].bbox, false)
-							.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913));
-						return Shorelines.aoiBoundsSelected.intersectsBounds(layerBounds);
-					}
-					return false;
-				},
-					validPublishedLayers = CONFIG.ows.wmsCapabilities.published.capability.layers.filter(filterFunc),
-					validSessionLayers = CONFIG.ows.wmsCapabilities[CONFIG.tempSession.getCurrentSessionKey()].capability.layers.filter(filterFunc),
-					validLayers = validPublishedLayers.concat(validSessionLayers),
-					bounds = Shorelines.aoiBoundsSelected.clone(),
-					boundsString = bounds.transform(new OpenLayers.Projection(CONFIG.strings.epsg900913), new OpenLayers.Projection(CONFIG.strings.epsg4326)).toArray(false).toString(),
-					getShorelinesUrl = function (layer) {
-						var url = Shorelines.shorelinesServiceEndpoint,
-							params = {
-								action: 'getShorelinesWithBbox',
-								workspace: layer.prefix,
-								bbox: boundsString
-							};
-						return url + $.param(params);
-					},
-					ajaxCalls = validLayers.map(function (l) {
-						var context = {
-							layer: l,
-							bounds: boundsString
-						};
-						return $.ajax(getShorelinesUrl(l), {context: context}).promise();
-					}),
-					showNothingFoundAlert = function () {
-						CONFIG.ui.showAlert({
-							message: 'There is no data for the area of interest you selected<br />Try uploading data.',
-							caller: Shorelines,
-							displayTime: 3000,
-							style: {
-								classes: ['alert-warn']
-							}
-						});
-					};
-				if (validLayers.length) {
-					$.when.apply(this, ajaxCalls).done(function () {
-						// I should have as many incoming arguments as there were 
-						// ajax calls going out (probably 2: published and workspace).
-						// I need to create a dates array here 
-						for (var aIdx = 0; aIdx < arguments.length; aIdx++) {
-							// If there are no published shorelines, arguments will be 
-							// an array of a single ajax response (data, status, jqXHR).
-							// But if there are published shorelines, arguments will be 
-							// an array of ajax responses. 
-							// 
-							// TODO- Either be more clever about this or realize
-							// that not having published shorelines is an edge case
-							// in the infancy of the application and move on with life
-							var response = Array.isArray(arguments[0]) ? arguments[aIdx][0] : arguments[0],
-								shorelines = JSON.parse(response.shorelines),
-								layerInfo = Array.isArray(this) ? this[aIdx].layer : this.layer,
-								bounds = Array.isArray(this) ? this[aIdx].bounds : this.bounds;
-
-							// For each argument I want to read the response into a features array
-							// I check if this layer already exists in the map because 
-							// the for-loop I am in will loop here three times if 
-							// there are no published shorelines because of the 
-							// reasons mentioned in previous comment
-							if (shorelines.length > 0 && CONFIG.map.getMap().getLayersByName(layerInfo.name).length === 0) {
-								var wmsLayer = Shorelines.addLayerToMap({
-									name: layerInfo.name,
-									prefix: layerInfo.prefix,
-									title: layerInfo.title,
-									bounds: bounds,
-									shorelines: shorelines
-								});
-								Shorelines.setupTableSorting();
-							}
-						}
-					});
-					CONFIG.map.getMap().zoomToExtent(Shorelines.aoiBoundsSelected.clone(), true);
-				} else {
-					showNothingFoundAlert();
-				}
+				Shorelines.displayLayersForBounds(Shorelines.aoiBoundsSelected);
 			} else {
 				CONFIG.ui.showAlert({
 					message: 'You have not selected an area of interest',
