@@ -919,7 +919,9 @@ var Shorelines = {
 						combinedBounds.extend(new OpenLayers.Bounds.fromArray(layerInfo.bbox['EPSG:4326'].bbox, true));
 					}
 				}
-				CONFIG.map.getMap().zoomToExtent(combinedBounds.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913)), true);
+				if (combinedBounds.getSize().w > 0 && combinedBounds.getSize().h > 0) {
+					CONFIG.map.getMap().zoomToExtent(combinedBounds.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913)), true);
+				}
 			});
 		} else {
 			showNothingFoundAlert();
