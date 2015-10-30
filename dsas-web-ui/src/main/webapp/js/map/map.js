@@ -154,7 +154,7 @@ var Map = function() {
             }
         },
         removeLayer : function(layer, setNewBaseLayer) {
-            if (layer) {
+            if (layer && layer.map) {
                 me.map.removeLayer(layer, setNewBaseLayer || false);
             }
         },
