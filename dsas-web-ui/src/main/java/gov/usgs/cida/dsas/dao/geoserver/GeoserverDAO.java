@@ -891,39 +891,39 @@ public class GeoserverDAO {
 		dbfFile.createNewFile();
 		prjFile.createNewFile();
 
-		FileOutputStream shpFileOutputStream = new FileOutputStream(shpFile);
-		FileOutputStream shxFileOutputStream = new FileOutputStream(shxFile);
-		FileOutputStream dbfFileOutputStream = new FileOutputStream(dbfFile);
-		FileOutputStream prjFileOutputStream = new FileOutputStream(prjFile);
-
 		// Write dbf file with single column, values will be added over WFS-T
-		DbaseFileHeader header = new DbaseFileHeader();
-
-		header.addColumn("ID", 'N', 4, 0);
-
-		if (extraColumns != null) {
-			for (DBaseColumn dbc : extraColumns) {
-				header.addColumn(dbc.getColumnName(), dbc.getColType().getType(), dbc.getFieldLength(), dbc.getInDecimalCount());
+		try (FileOutputStream shpFileOutputStream = new FileOutputStream(shpFile);
+				FileOutputStream shxFileOutputStream = new FileOutputStream(shxFile);
+				FileOutputStream dbfFileOutputStream = new FileOutputStream(dbfFile);
+				FileOutputStream prjFileOutputStream = new FileOutputStream(prjFile)) {
+			// Write dbf file with single column, values will be added over WFS-T
+			DbaseFileHeader header = new DbaseFileHeader();
+			
+			header.addColumn("ID", 'N', 4, 0);
+			
+			if (extraColumns != null) {
+				for (DBaseColumn dbc : extraColumns) {
+					header.addColumn(dbc.getColumnName(), dbc.getColType().getType(), dbc.getFieldLength(), dbc.getInDecimalCount());
+				}
 			}
+			
+			header.setNumRecords(0);
+			
+			DbaseFileWriter dfw = new DbaseFileWriter(header, dbfFileOutputStream.getChannel());
+			dfw.close();
+			
+			// Only write headers, geometry will be added over WFS-T
+			ShapefileWriter sw = new ShapefileWriter(shpFileOutputStream.getChannel(),
+					shxFileOutputStream.getChannel());
+			
+			sw.writeHeaders(new Envelope(0, 0, 0, 0), ShapeType.ARC, 0, 0);
+			sw.close();
+			
+			//TODO- Either copy the projection files to the shapefile directory or create them programatically
+			// using Geotools
+			String googlePrj = "PROJCS[\"WGS84 / Google Mercator\",  GEOGCS[\"WGS 84\",  DATUM[\"World Geodetic System 1984\",  SPHEROID[\"WGS 84\", 6378137.0, 298.257223563, AUTHORITY[\"EPSG\",\"7030\"]],  AUTHORITY[\"EPSG\",\"6326\"]],  PRIMEM[\"Greenwich\", 0.0, AUTHORITY[\"EPSG\",\"8901\"]],  UNIT[\"degree\", 0.017453292519943295],  AXIS[\"Longitude\", EAST],  AXIS[\"Latitude\", NORTH],  AUTHORITY[\"EPSG\",\"4326\"]],  PROJECTION[\"Mercator_1SP\"],  PARAMETER[\"semi_minor\", 6378137.0],  PARAMETER[\"latitude_of_origin\", 0.0],  PARAMETER[\"central_meridian\", 0.0],  PARAMETER[\"scale_factor\", 1.0],  PARAMETER[\"false_easting\", 0.0],  PARAMETER[\"false_northing\", 0.0],  UNIT[\"m\", 1.0],  AXIS[\"x\", EAST],  AXIS[\"y\", NORTH],  AUTHORITY[\"EPSG\",\"900913\"]]";
+			IOUtils.write(googlePrj, prjFileOutputStream, "UTF-8");
 		}
-
-		header.setNumRecords(0);
-
-		DbaseFileWriter dfw = new DbaseFileWriter(header, dbfFileOutputStream.getChannel());
-		dfw.close();
-
-		// Only write headers, geometry will be added over WFS-T
-		ShapefileWriter sw = new ShapefileWriter(shpFileOutputStream.getChannel(),
-				shxFileOutputStream.getChannel());
-
-		sw.writeHeaders(new Envelope(0, 0, 0, 0), ShapeType.ARC, 0, 0);
-		sw.close();
-
-		//TODO- Either copy the projection files to the shapefile directory or create them programatically
-		// using Geotools
-		String googlePrj = "PROJCS[\"WGS84 / Google Mercator\",  GEOGCS[\"WGS 84\",  DATUM[\"World Geodetic System 1984\",  SPHEROID[\"WGS 84\", 6378137.0, 298.257223563, AUTHORITY[\"EPSG\",\"7030\"]],  AUTHORITY[\"EPSG\",\"6326\"]],  PRIMEM[\"Greenwich\", 0.0, AUTHORITY[\"EPSG\",\"8901\"]],  UNIT[\"degree\", 0.017453292519943295],  AXIS[\"Longitude\", EAST],  AXIS[\"Latitude\", NORTH],  AUTHORITY[\"EPSG\",\"4326\"]],  PROJECTION[\"Mercator_1SP\"],  PARAMETER[\"semi_minor\", 6378137.0],  PARAMETER[\"latitude_of_origin\", 0.0],  PARAMETER[\"central_meridian\", 0.0],  PARAMETER[\"scale_factor\", 1.0],  PARAMETER[\"false_easting\", 0.0],  PARAMETER[\"false_northing\", 0.0],  UNIT[\"m\", 1.0],  AXIS[\"x\", EAST],  AXIS[\"y\", NORTH],  AUTHORITY[\"EPSG\",\"900913\"]]";
-		IOUtils.write(googlePrj, prjFileOutputStream, "UTF-8");
-		prjFileOutputStream.close();
 
 		return shpFile;
 	}

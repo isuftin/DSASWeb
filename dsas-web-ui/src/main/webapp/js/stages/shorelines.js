@@ -1,4 +1,8 @@
-/* global LOG, CONFIG, OpenLayers, Handlebars */
+/*global CONFIG*/
+/*global LOG*/
+/*global OpenLayers*/
+/*global Handlebars*/
+/*global Util*/
 var Shorelines = {
 	stage: 'shorelines',
 	suffixes: ['_shorelines'],
@@ -19,6 +23,9 @@ var Shorelines = {
 	CONTROL_IDENTIFY_ID: 'shoreline-identify-control',
 	CONTROL_IDENTIFY_AOI_ID: 'shoreline-identify-aoi-control',
 	LAYER_AOI_NAME: 'layer-aoi-box',
+	// Switch that defines whether or not a user's session's shorelines and the
+	// published shorelines should be shown immediately when they come in
+	SHOW_SHORELINES_IMMEDIATELY: true,
 	// Defines which columns from the shorelines table are shown in the click-to-id box
 	clickToIdColumnNames: ['date', 'source', 'mhw', 'uncy'],
 	$buttonSelectAOI: $('#shorelines-aoi-select-toggle'),
@@ -76,6 +83,11 @@ var Shorelines = {
 				}
 			});
 		});
+		
+		if (Shorelines.SHOW_SHORELINES_IMMEDIATELY) {
+			Shorelines.displayLayersForBounds(CONFIG.map.getMap().getExtent());
+		}
+		
 		Shorelines.enterStage();
 	},
 	initSession: function () {
@@ -320,33 +332,33 @@ var Shorelines = {
 					transparent: true,
 					sld_body: sldBody,
 					format: "image/png",
-					bbox: bounds,
+					bbox: bounds,	
 					cql_filter: cqlFilter
 				}, {
-				prefix: prefix,
-				zoomToWhenAdded: false,
-				isBaseLayer: false,
-				unsupportedBrowsers: [],
-				colorGroups: colorDatePairings,
-				tileOptions: {
-					// http://www.faqs.org/rfcs/rfc2616.html
-					// This will cause any request larger than this many characters to be a POST
-					maxGetUrlLength: 2048
-				},
-				title: title,
-				singleTile: true,
-				ratio: 1,
-				groupByAttribute: Shorelines.groupingColumn,
-				shorelines: shorelines,
-				layerType: Shorelines.stage,
-				displayInLayerSwitcher: false
-			}),
-			loadEnd = function (e) {
-				e.object.events.unregister('loadend', null, loadEnd);
-				Shorelines.updateFeatureTable(e);
-				Shorelines.showFeatureTable();
-				Shorelines.updateSortingSelectionControl();
-			};
+					prefix: prefix,
+					zoomToWhenAdded: false,
+					isBaseLayer: false,
+					unsupportedBrowsers: [],
+					colorGroups: colorDatePairings,
+					tileOptions: {
+						// http://www.faqs.org/rfcs/rfc2616.html
+						// This will cause any request larger than this many characters to be a POST
+						maxGetUrlLength: 2048
+					},
+					title: title,
+					singleTile: true,
+					ratio: 1,
+					groupByAttribute: Shorelines.groupingColumn,
+					shorelines: shorelines,
+					layerType: Shorelines.stage,
+					displayInLayerSwitcher: false
+				}),
+				loadEnd = function (e) {
+					e.object.events.unregister('loadend', null, loadEnd);
+					Shorelines.updateFeatureTable(e);
+					Shorelines.showFeatureTable();
+					Shorelines.updateSortingSelectionControl();
+				};
 
 		if (CONFIG.tempSession.getDisabledShorelines(prefix).length) {
 			wmsLayer.mergeNewParams({cql_filter: cqlFilter + " AND NOT(shoreline_id IN (" + CONFIG.tempSession.getDisabledShorelines(prefix) + "))"});
@@ -428,7 +440,7 @@ var Shorelines = {
 			LOG.debug('Shorelines.js::?: Grouping will be done by year');
 			var createRuleSets;
 			LOG.debug('Shorelines.js::?: Geoserver date column is actually a string');
-			createRuleSets = function (colorLimitPairs, workspace) {
+			createRuleSets = function (colorLimitPairs) {
 				var html = '';
 
 				for (var lpIndex = 0; lpIndex < colorLimitPairs.length; lpIndex++) {
@@ -548,9 +560,10 @@ var Shorelines = {
 			$tbody.append($(row));
 		}
 
-		// Allows user to click on the date field in a row and select the row
-		$tbody.find('tr td:nth-child(2)').off('click', Shorelines.featureTableRowClickCallback);
-		$tbody.find('tr td:nth-child(2)').on('click', Shorelines.featureTableRowClickCallback);
+		// Allows user to click on any field in the row (except the switch)
+		var $clickableCells = $('#shorelines-feature-table-container tbody tr td:not(:first-child)');
+		$clickableCells.off('click', Shorelines.featureTableRowClickCallback);
+		$clickableCells.on('click', Shorelines.featureTableRowClickCallback);
 		$switchCandidates = $('.switch>:not(.switch-animate)').parent();
 		$switchCandidates.off('switch-change', Shorelines.featureTableSwitchChangeCallback);
 		$switchCandidates.on('switch-change', Shorelines.featureTableSwitchChangeCallback);
@@ -726,10 +739,10 @@ var Shorelines = {
 		$("table.tablesorter").trigger('destroy');
 		$.tablesorter.addParser({
 			id: 'visibility',
-			is: function (s) {
+			is: function () {
 				return false;
 			},
-			format: function (s, table, cell, cellIndex) {
+			format: function (s, table, cell) {
 				var toggleButton = $(cell).find('.switch')[0];
 				return $(toggleButton).bootstrapSwitch('status') ? 1 : 0;
 			},
@@ -826,6 +839,98 @@ var Shorelines = {
 			Shorelines.$buttonSelectAOI.trigger('click');
 		}
 	},
+	displayLayersForBounds: function (bounds) {
+		var _bounds = bounds.clone();
+		var filterFunc = function (l) {
+			if (l.name.endsWith(Shorelines.stage)) {
+				var layerBounds = OpenLayers.Bounds.fromArray(l.bbox[CONFIG.strings.crs84].bbox, false)
+					.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913));
+				return _bounds.intersectsBounds(layerBounds);
+			}
+			return false;
+		},
+			validPublishedLayers = CONFIG.ows.wmsCapabilities.published.capability.layers.filter(filterFunc),
+			validSessionLayers = CONFIG.ows.wmsCapabilities[CONFIG.tempSession.getCurrentSessionKey()].capability.layers.filter(filterFunc),
+			validLayers = validPublishedLayers.concat(validSessionLayers),
+			boundsString = _bounds.transform(new OpenLayers.Projection(CONFIG.strings.epsg900913), new OpenLayers.Projection(CONFIG.strings.epsg4326)).toArray(false).toString(),
+			getShorelinesUrl = function (layer) {
+				var url = Shorelines.shorelinesServiceEndpoint,
+					params = {
+						action: 'getShorelinesWithBbox',
+						workspace: layer.prefix,
+						bbox: boundsString
+					};
+				return url + $.param(params);
+			},
+			ajaxCalls = validLayers.map(function (l) {
+				var context = {
+					layer: l,
+					bounds: boundsString
+				};
+				return $.ajax(getShorelinesUrl(l), {context: context}).promise();
+			}),
+			showNothingFoundAlert = function () {
+				CONFIG.ui.showAlert({
+					message: 'There is no data for the area of interest you selected<br />Try uploading data.',
+					caller: Shorelines,
+					displayTime: 3000,
+					style: {
+						classes: ['alert-warn']
+					}
+				});
+			};
+		if (validLayers.length) {
+			$.when.apply(this, ajaxCalls).done(function () {
+				// I should have as many incoming arguments as there were 
+				// ajax calls going out (probably 2: published and workspace).
+				// I need to create a dates array here 
+				
+				// I will also want to display and zoom to the user's shorelines
+				// in both the publish and session layers
+				var combinedBounds = new OpenLayers.Bounds();
+				for (var aIdx = 0; aIdx < arguments.length; aIdx++) {
+					// If there are no published shorelines, arguments will be 
+					// an array of a single ajax response (data, status, jqXHR).
+					// But if there are published shorelines, arguments will be 
+					// an array of ajax responses. 
+					// 
+					// TODO- Either be more clever about this or realize
+					// that not having published shorelines is an edge case
+					// in the infancy of the application and move on with life
+					var response = Array.isArray(arguments[0]) ? arguments[aIdx][0] : arguments[0],
+						shorelines = JSON.parse(response.shorelines),
+						layerInfo = Array.isArray(this) ? this[aIdx].layer : this.layer,
+						bounds = Array.isArray(this) ? this[aIdx].bounds : this.bounds;
+
+					// For each argument I want to read the response into a features array
+					// I check if this layer already exists in the map because 
+					// the for-loop I am in will loop here three times if 
+					// there are no published shorelines because of the 
+					// reasons mentioned in previous comment
+					if (shorelines.length > 0 && CONFIG.map.getMap().getLayersByName(layerInfo.name).length === 0) {
+						Shorelines.addLayerToMap({
+							name: layerInfo.name,
+							prefix: layerInfo.prefix,
+							title: layerInfo.title,
+							bounds: bounds,
+							shorelines: shorelines
+						});
+						Shorelines.setupTableSorting();
+						combinedBounds.extend(new OpenLayers.Bounds.fromArray(layerInfo.bbox['EPSG:4326'].bbox, true));
+					}
+				}
+				// Only perform a zoom if the bounds are valid (if there were 
+				// real layer bounds). Otherwise, don't perform a zoom.
+				if (combinedBounds.getSize().w > 0 && combinedBounds.getSize().h > 0) {
+					CONFIG.map.getMap().zoomToExtent(combinedBounds.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913)), true);
+				}
+			});
+			return true;
+		} else {
+			showNothingFoundAlert();
+			return false;
+		}
+	},
 	bindSelectAOIDoneButton: function () {
 		"use strict";
 		this.$buttonSelectAOIDone.on('click', function () {
@@ -841,84 +946,14 @@ var Shorelines = {
 
 			Shorelines.$buttonSelectAOI.trigger('click');
 			if (Shorelines.aoiBoundsSelected) {
-				var filterFunc = function (l) {
-					if (l.name.endsWith(Shorelines.stage)) {
-						var layerBounds = OpenLayers.Bounds.fromArray(l.bbox[CONFIG.strings.crs84].bbox, false)
-							.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913));
-						return Shorelines.aoiBoundsSelected.intersectsBounds(layerBounds);
-					}
-					return false;
-				},
-					validPublishedLayers = CONFIG.ows.wmsCapabilities.published.capability.layers.filter(filterFunc),
-					validSessionLayers = CONFIG.ows.wmsCapabilities[CONFIG.tempSession.getCurrentSessionKey()].capability.layers.filter(filterFunc),
-					validLayers = validPublishedLayers.concat(validSessionLayers),
-					bounds = Shorelines.aoiBoundsSelected.clone(),
-					boundsString = bounds.transform(new OpenLayers.Projection(CONFIG.strings.epsg900913), new OpenLayers.Projection(CONFIG.strings.epsg4326)).toArray(false).toString(),
-					getShorelinesUrl = function (layer) {
-						var url = Shorelines.shorelinesServiceEndpoint,
-							params = {
-								action: 'getShorelinesWithBbox',
-								workspace: layer.prefix,
-								bbox: boundsString
-							};
-						return url + $.param(params);
-					},
-					ajaxCalls = validLayers.map(function (l) {
-						var context = {
-							layer: l,
-							bounds: boundsString
-						};
-						return $.ajax(getShorelinesUrl(l), {context: context}).promise();
-					}),
-					showNothingFoundAlert = function () {
-						CONFIG.ui.showAlert({
-							message: 'There is no data for the area of interest you selected<br />Try uploading data.',
-							caller: Shorelines,
-							displayTime: 3000,
-							style: {
-								classes: ['alert-warn']
-							}
-						});
-					};
-				if (validLayers.length) {
-					$.when.apply(this, ajaxCalls).done(function () {
-						// I should have as many incoming arguments as there were 
-						// ajax calls going out (probably 2: published and workspace).
-						// I need to create a dates array here 
-						for (var aIdx = 0; aIdx < arguments.length; aIdx++) {
-							// If there are no published shorelines, arguments will be 
-							// an array of a single ajax response (data, status, jqXHR).
-							// But if there are published shorelines, arguments will be 
-							// an array of ajax responses. 
-							// 
-							// TODO- Either be more clever about this or realize
-							// that not having published shorelines is an edge case
-							// in the infancy of the application and move on with life
-							var response = Array.isArray(arguments[0]) ? arguments[aIdx][0] : arguments[0],
-								shorelines = JSON.parse(response.shorelines),
-								layerInfo = Array.isArray(this) ? this[aIdx].layer : this.layer,
-								bounds = Array.isArray(this) ? this[aIdx].bounds : this.bounds;
-
-							// For each argument I want to read the response into a features array
-							// I check if this layer already exists in the map because 
-							// the for-loop I am in will loop here three times if 
-							// there are no published shorelines because of the 
-							// reasons mentioned in previous comment
-							if (shorelines.length > 0 && CONFIG.map.getMap().getLayersByName(layerInfo.name).length === 0) {
-								var wmsLayer = Shorelines.addLayerToMap({
-									name: layerInfo.name,
-									prefix: layerInfo.prefix,
-									title: layerInfo.title,
-									bounds: bounds,
-									shorelines: shorelines
-								});
-								Shorelines.setupTableSorting();
-							}
-						}
-					});
-					CONFIG.map.getMap().zoomToExtent(Shorelines.aoiBoundsSelected.clone(), true);
-				} else {
-					showNothingFoundAlert();
+				var layersShown = Shorelines.displayLayersForBounds(Shorelines.aoiBoundsSelected);
+				if (layersShown) {
+					var aoi = boxLayer.features[0];
+					var newStyle = $.extend({}, boxLayer.styleMap.styles.default.defaultStyle);
+					newStyle.fillOpacity = 0.0;
+					newStyle.strokeOpacity = 0.3;
+					boxLayer.style = newStyle;
+					boxLayer.drawFeature(aoi, newStyle);
 				}
 			} else {
 				CONFIG.ui.showAlert({
@@ -935,6 +970,12 @@ var Shorelines = {
 	activateSelectAOIControl: function () {
 		"use strict";
 		this.$descriptionAOI.removeClass('hidden');
+		
+		var existingDrawBoxLayerArray = CONFIG.map.getMap().getLayersByName(Shorelines.LAYER_AOI_NAME);
+		if (existingDrawBoxLayerArray.length) {
+			CONFIG.map.removeLayer(existingDrawBoxLayerArray[0], false);
+		}
+		
 		var drawBoxLayer = new OpenLayers.Layer.Vector(Shorelines.LAYER_AOI_NAME),
 			aoiIdControl = new OpenLayers.Control.DrawFeature(drawBoxLayer,
 				OpenLayers.Handler.RegularPolygon, {
@@ -961,11 +1002,9 @@ var Shorelines = {
 	deactivateSelectAOIControl: function () {
 		"use strict";
 		this.$descriptionAOI.addClass('hidden');
-		var shorelineIdAOIControl = CONFIG.map.getControlBy('title', Shorelines.CONTROL_IDENTIFY_AOI_ID),
-			layer;
+		var shorelineIdAOIControl = CONFIG.map.getControlBy('title', Shorelines.CONTROL_IDENTIFY_AOI_ID);
+		
 		if (shorelineIdAOIControl) {
-			layer = shorelineIdAOIControl.layer;
-			CONFIG.map.removeLayer(layer, false);
 			Shorelines.hideFeatureTable(true);
 			shorelineIdAOIControl.destroy();
 		}
@@ -1001,7 +1040,7 @@ var Shorelines = {
 		var activeShorelines = $('#shorelines-feature-table-container tbody tr').map(function (i, ele) {
 			var $ele = $(ele);
 			if ($ele.find('.switch-on').length === 1) {
-				return $ele.attr('data-shoreline-workspace') + ":" + $ele.attr('data-shoreline-workspace') + "_shorelines"
+				return $ele.attr('data-shoreline-workspace') + ":" + $ele.attr('data-shoreline-workspace') + "_shorelines";
 			}
 			return null;
 		});
@@ -1097,11 +1136,14 @@ var Shorelines = {
 																	}
 																});
 																CONFIG.tempSession.updateLayersFromWMS(args);
-																CONFIG.ui.populateFeaturesList({
-																	caller: Shorelines
-																});
 																$('a[href="#shorelines-view-tab"]').tab('show');
-																$('#shorelines-list').val(workspace + ':' + layerName).trigger('change');
+
+																// Zoom to and show the session shorelines layer
+																var layerBounds = OpenLayers.Bounds
+																		.fromArray(args.wmsCapabilities.capability.layers[0].bbox['EPSG:4326'].bbox, true)
+																		.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913));
+																Shorelines.displayLayersForBounds(layerBounds);
+																
 															}
 														]
 													}

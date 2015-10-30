@@ -163,10 +163,6 @@
 		<servlet-class>gov.usgs.cida.dsas.service.ExportService</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>ConsumerServlet</servlet-name>
-		<servlet-class>gov.usgs.cida.dsas.service.ConsumerServlet</servlet-class>
-	</servlet>
-	<servlet>
 		<servlet-name>PublishService</servlet-name>
 		<servlet-class>gov.usgs.cida.dsas.service.PublishService</servlet-class>
 	</servlet>
@@ -210,10 +206,6 @@
 	<servlet-mapping>
 		<servlet-name>ExportService</servlet-name>
 		<url-pattern>/service/export/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>ConsumerServlet</servlet-name>
-		<url-pattern>/consumer</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>PublishService</servlet-name>

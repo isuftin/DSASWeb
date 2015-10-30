@@ -350,6 +350,16 @@ CCH.Session = function (name, isPerm) {
 						}
 					});
 				}
+				
+				// Special case for Shorelines 
+				var sessionKey = me.getCurrentSessionKey();
+				var sessionShorelineLayer = me.session.layers.find(function (l) {
+					return l.name === sessionKey + "_shorelines";
+				});
+				if (sessionShorelineLayer) {
+					me.session.shorelines.layers.push(sessionShorelineLayer.prefix + ":" + sessionShorelineLayer.name);
+					me.session.shorelines.layers = me.session.shorelines.layers.unique();
+				}
 			} else {
 				LOG.info('Session.js::updateLayersFromWMS: Could not find any layers for this session. Removing any existing layers in session object');
 				if (args.context && args.context.namespace) {
@@ -425,10 +435,10 @@ CCH.Session = function (name, isPerm) {
 		me.removeDisabledShoreline = function (workspace, id) {
 			me.session.stage[Shorelines.stage].slDisabled[workspace].remove(id);
 			return me.session.stage[Shorelines.stage].slDisabled[workspace];
-		}
+		};
 		me.isShorelineDisabled = function (workspace, id) {
 			return me.session.stage[Shorelines.stage].slDisabled[workspace].indexOf(id) !== -1;
-		}
+		};
 
 		me.getDisabledDates = function () {
 			return me.session.stage[Shorelines.stage].datesDisabled;
@@ -492,13 +502,6 @@ CCH.Session = function (name, isPerm) {
 				.addClass('dropdown-toggle')
 				.append($('<b />').addClass('caret'));
 			container.append(menuNavBar.append(innerNavBar.append(navBarItem.append(sessionDropDown.append(sessionDropDownLink)))));
-
-			CONFIG.ui.createLoginMenuItem();
-
-			var loginLink = $('<ul />').addClass('pull-right nav').append($('<li />').attr('id', 'login-list-item').append($('<div />').attr({
-				'id': 'session-login-link'
-			}).html('<img id="sign-in-img" src="images/OpenID/White-signin_Medium_base_44dp.png"></img>')));
-			container.append(menuNavBar.append(innerNavBar.append(loginLink)));
 
 			var fileDropDownList = $('<ul />')
 				.addClass('dropdown-menu')

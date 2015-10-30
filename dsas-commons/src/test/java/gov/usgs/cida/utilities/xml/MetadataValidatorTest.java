@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import javax.xml.xpath.XPathExpressionException;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
