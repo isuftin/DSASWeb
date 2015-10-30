@@ -129,9 +129,6 @@ public class ShapefileUploadServlet extends HttpServlet {
 			gsRestManager = new GeoServerRESTManager(geoserverEndpointURL, geoserverUsername, geoserverPassword);
 		} catch (IllegalArgumentException ex) {
 			throw new ServletException("Geoserver manager count not be built", ex);
-		} catch (MalformedURLException ex) {
-			// This should not happen since we take care of it above - we can probably move this into the try block above
-			throw new ServletException("Geoserver endpoint (" + geoserverEndpoint + ") could not be parsed into a valid URL.");
 		}
 
 		String dwJndiProp = PropertyUtil.getProperty(Property.GEOSERVER_DEFAULT_UPLOAD_WORKSPACE);
