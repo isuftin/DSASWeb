@@ -925,8 +925,10 @@ var Shorelines = {
 					CONFIG.map.getMap().zoomToExtent(combinedBounds.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913)), true);
 				}
 			});
+			return true;
 		} else {
 			showNothingFoundAlert();
+			return false;
 		}
 	},
 	bindSelectAOIDoneButton: function () {
@@ -944,7 +946,16 @@ var Shorelines = {
 
 			Shorelines.$buttonSelectAOI.trigger('click');
 			if (Shorelines.aoiBoundsSelected) {
-				Shorelines.displayLayersForBounds(Shorelines.aoiBoundsSelected);
+				var layersShown = Shorelines.displayLayersForBounds(Shorelines.aoiBoundsSelected);
+				if (layersShown) {
+					var aoi = boxLayer.features[0];
+					var newStyle = $.extend({}, boxLayer.styleMap.styles.default.defaultStyle);
+					newStyle.fillOpacity = 0.0;
+//					newStyle.strokeColor = "#0000FF";
+					newStyle.strokeOpacity = 0.3;
+					boxLayer.style = newStyle;
+					boxLayer.drawFeature(aoi, newStyle);
+				}
 			} else {
 				CONFIG.ui.showAlert({
 					message: 'You have not selected an area of interest',
@@ -960,6 +971,12 @@ var Shorelines = {
 	activateSelectAOIControl: function () {
 		"use strict";
 		this.$descriptionAOI.removeClass('hidden');
+		
+		var existingDrawBoxLayerArray = CONFIG.map.getMap().getLayersByName(Shorelines.LAYER_AOI_NAME);
+		if (existingDrawBoxLayerArray.length) {
+			CONFIG.map.removeLayer(existingDrawBoxLayerArray[0], false);
+		}
+		
 		var drawBoxLayer = new OpenLayers.Layer.Vector(Shorelines.LAYER_AOI_NAME),
 			aoiIdControl = new OpenLayers.Control.DrawFeature(drawBoxLayer,
 				OpenLayers.Handler.RegularPolygon, {
@@ -986,11 +1003,9 @@ var Shorelines = {
 	deactivateSelectAOIControl: function () {
 		"use strict";
 		this.$descriptionAOI.addClass('hidden');
-		var shorelineIdAOIControl = CONFIG.map.getControlBy('title', Shorelines.CONTROL_IDENTIFY_AOI_ID),
-			layer;
+		var shorelineIdAOIControl = CONFIG.map.getControlBy('title', Shorelines.CONTROL_IDENTIFY_AOI_ID);
+		
 		if (shorelineIdAOIControl) {
-			layer = shorelineIdAOIControl.layer;
-			CONFIG.map.removeLayer(layer, false);
 			Shorelines.hideFeatureTable(true);
 			shorelineIdAOIControl.destroy();
 		}
