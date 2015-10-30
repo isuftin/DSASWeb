@@ -1123,7 +1123,7 @@ var Shorelines = {
 																});
 																CONFIG.tempSession.updateLayersFromWMS(args);
 																$('a[href="#shorelines-view-tab"]').tab('show');
-																
+
 																// Zoom to and show the session shorelines layer
 																var layerBounds = OpenLayers.Bounds
 																		.fromArray(args.wmsCapabilities.capability.layers[0].bbox['EPSG:4326'].bbox, true)
