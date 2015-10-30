@@ -109,7 +109,7 @@ var OWS = function (endpoint) {
 			});
 
 			LOG.debug('OWS.js::getWMSCapabilities: A request is being made for GetCapabilities for the namespace: ' + namespace);
-			$.ajax(url, {
+			return $.ajax(url, {
 				context: args,
 				success: function (data, textStatus, jqXHR) {
 					var getCapsResponse = new OpenLayers.Format.WMSCapabilities.v1_3_0().read(data);

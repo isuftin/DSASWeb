@@ -350,6 +350,16 @@ CCH.Session = function (name, isPerm) {
 						}
 					});
 				}
+				
+				// Special case for Shorelines 
+				var sessionKey = me.getCurrentSessionKey();
+				var sessionShorelineLayer = me.session.layers.find(function (l) {
+					return l.name === sessionKey + "_shorelines";
+				});
+				if (sessionShorelineLayer) {
+					me.session.shorelines.layers.push(sessionShorelineLayer.prefix + ":" + sessionShorelineLayer.name);
+					me.session.shorelines.layers = me.session.shorelines.layers.unique();
+				}
 			} else {
 				LOG.info('Session.js::updateLayersFromWMS: Could not find any layers for this session. Removing any existing layers in session object');
 				if (args.context && args.context.namespace) {
@@ -425,10 +435,10 @@ CCH.Session = function (name, isPerm) {
 		me.removeDisabledShoreline = function (workspace, id) {
 			me.session.stage[Shorelines.stage].slDisabled[workspace].remove(id);
 			return me.session.stage[Shorelines.stage].slDisabled[workspace];
-		}
+		};
 		me.isShorelineDisabled = function (workspace, id) {
 			return me.session.stage[Shorelines.stage].slDisabled[workspace].indexOf(id) !== -1;
-		}
+		};
 
 		me.getDisabledDates = function () {
 			return me.session.stage[Shorelines.stage].datesDisabled;

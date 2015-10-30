@@ -919,6 +919,8 @@ var Shorelines = {
 						combinedBounds.extend(new OpenLayers.Bounds.fromArray(layerInfo.bbox['EPSG:4326'].bbox, true));
 					}
 				}
+				// Only perform a zoom if the bounds are valid (if there were 
+				// real layer bounds). Otherwise, don't perform a zoom.
 				if (combinedBounds.getSize().w > 0 && combinedBounds.getSize().h > 0) {
 					CONFIG.map.getMap().zoomToExtent(combinedBounds.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913)), true);
 				}
@@ -1120,11 +1122,14 @@ var Shorelines = {
 																	}
 																});
 																CONFIG.tempSession.updateLayersFromWMS(args);
-																CONFIG.ui.populateFeaturesList({
-																	caller: Shorelines
-																});
 																$('a[href="#shorelines-view-tab"]').tab('show');
-																$('#shorelines-list').val(workspace + ':' + layerName).trigger('change');
+
+																// Zoom to and show the session shorelines layer
+																var layerBounds = OpenLayers.Bounds
+																		.fromArray(args.wmsCapabilities.capability.layers[0].bbox['EPSG:4326'].bbox, true)
+																		.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913));
+																Shorelines.displayLayersForBounds(layerBounds);
+																
 															}
 														]
 													}
