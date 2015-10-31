@@ -5,20 +5,22 @@ define([
 	'utils/logger',
 	'views/HomeView',
 	'views/ShorelineView',
+	'models/ShorelineViewModel',
 	'underscore'
-], function (Backbone, log, HomeView, ShorelineView, _) {
+], function (Backbone, log, HomeView, ShorelineView, ShorelineViewModel, _) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
-		appEvents : {
-			map : {
-				aoiSelected : 'map_aoi_selected'
+		appEvents: {
+			map: {
+				aoiSelected: 'map_aoi_selected'
 			},
-			shorelines : {
-				aoiSelectionToggled : 'shorelines_aoi_selection_toggled',
-				aoiSelected : 'shorelines_aoi_selected'
+			shorelines: {
+				aoiSelectionToggled: 'shorelines_aoi_selection_toggled',
+				aoiSelected: 'shorelines_aoi_selected'
 			}
 		},
-		currentView : null,
+		viewModels: {},
+		currentView: null,
 		routes: {
 			'': 'displayShorelineToolset', // Effectively make Shorelines the default
 			'shorelines': 'displayShorelineToolset',
@@ -28,18 +30,20 @@ define([
 		},
 		initialize: function () {
 			log.trace("Initializing router");
-			
-			 _.extend(this.appEvents, Backbone.Events);
-			
+
+			_.extend(this.appEvents, Backbone.Events);
+
+			this.viewModels.shorelineViewModel = new ShorelineViewModel();
+
 			this.displayHomeView();
-			
+
 			return this;
 		},
 		displayHomeView: function () {
 			log.trace("Routing to home view");
 			this.homeView = new HomeView({
-				router : this,
-				appEvents : this.appEvents
+				router: this,
+				appEvents: this.appEvents
 			});
 			this.homeView.render();
 			return this.homeView;
@@ -52,11 +56,12 @@ define([
 			}
 
 			this.shorelineView = new ShorelineView({
-				parent : this.homeView,
-				router : this,
-				appEvents : this.appEvents
+				parent: this.homeView,
+				router: this,
+				appEvents: this.appEvents,
+				model: this.viewModels.shorelineViewModel
 			}).render({
-				activeTab : activeTab
+				activeTab: activeTab
 			});
 
 			$(this.shorelineView.el).appendTo($('#toolset-span'));
@@ -65,7 +70,7 @@ define([
 
 			return this.shorelineView;
 		},
-		displayBaselineToolset : function (activeTab) {
+		displayBaselineToolset: function (activeTab) {
 			if (this.currentView !== null) {
 				this.currentView.remove();
 			}

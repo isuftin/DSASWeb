@@ -8,11 +8,10 @@ define([
 	'views/NotificationView',
 	'utils/logger',
 	'utils/sessionUtil',
-	'utils/OwsUtil',
 	'collections/sessionCollection',
 	'models/sessionModel',
 	'text!templates/home-view.html'
-], function (Handlebars, BaseView, NavigationView, MapView, NotificationView, log, SessionUtil, OwsUtil, SessionCollection, SessionModel, template) {
+], function (Handlebars, BaseView, NavigationView, MapView, NotificationView, log, SessionUtil, SessionCollection, SessionModel, template) {
 	"use strict";
 
 	var view = BaseView.extend({

@@ -41,6 +41,10 @@ define([
 				this.context = {};
 			}
 			
+			if (_.has(options, 'model')) {
+				this.model = options.model;
+			}
+			
 			if (_.has(options, 'appEvents')) {
 				this.appEvents = options.appEvents;
 			}

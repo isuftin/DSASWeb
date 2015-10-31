@@ -2,21 +2,19 @@
 define([
 	'handlebars',
 	'views/BaseView',
+	'views/ShorelineManagementView',
+	'views/ShorelineViewerView',
 	'utils/logger',
 	'text!templates/shoreline-view.html'
-], function (Handlebars, BaseView, log, template) {
+], function (Handlebars, BaseView, ShorelineManagementView, ShorelineViewerView, log, template) {
 	"use strict";
 	var view = BaseView.extend({
 		// Defines what the default tab in the shorelines toolbox is
 		DEFAULT_TAB: "tabpanel-shorelines-view",
 		template: Handlebars.compile(template),
+		activeChildView: null,
 		events: {
-			'click #tabs-shorelines a': 'tabToggled',
-			'click #button-shorelines-aoi-toggle': 'toggleAoiSelection',
-			'click #button-shorelines-aoi-done': 'aoiSelected',
-			'click #button-shorelines-file-select': 'handleFileSelectClick',
-			'click #button-shorelines-upload': 'handleUploadButtonClick',
-			'change #input-shorelines-file': 'handleUploadContentChange'
+			'click #tabs-shorelines a': 'tabToggled'
 		},
 		/*
 		 * Renders the object's template using it's context into the view's element.
@@ -26,27 +24,33 @@ define([
 			options = options || {};
 			this.context.activeTab = options.activeTab || this.DEFAULT_TAB;
 			BaseView.prototype.render.apply(this, [options]);
+
+			if (this.context.activeTab === this.DEFAULT_TAB) {
+				this.activeChildView = new ShorelineViewerView({
+					parent : this,
+					router: this.router,
+					appEvents: this.appEvents,
+					model : this.model
+				});
+			} else {
+				this.activeChildView = new ShorelineManagementView({
+					parent : this,
+					router: this.router,
+					appEvents: this.appEvents,
+					model : this.model
+				});
+			}
+			
+			this.activeChildView.render({
+				el : this.$('#' + this.context.activeTab)
+			});
+
 			return this;
 		},
 		tabToggled: function (e) {
 			var clickedTab = $(e.target).attr('data-target');
+			this.activeChildView.remove();
 			this.router.navigate('shorelines/' + clickedTab, {trigger: true});
-		},
-		toggleAoiSelection: function (e) {
-			var activated = !$(e.target).hasClass('active');
-			log.debug("AOI Selection Toggled " + (activated ? "on" : "off"));
-			this.appEvents.trigger(this.appEvents.shorelines.aoiSelectionToggled, activated);
-
-			this.$('#description-aoi').toggleClass('hidden');
-		},
-		aoiSelected: function () {
-			log.debug("AOI Selected");
-			this.appEvents.trigger(this.appEvents.shorelines.aoiSelected);
-		},
-		processAoiSelection: function (bounds) {
-			if (bounds) {
-				// TODO
-			}
 		},
 		/*
 		 * @constructs
@@ -64,73 +68,6 @@ define([
 
 			this.listenTo(this.appEvents, this.appEvents.map.aoiSelected, this.processAoiSelection);
 
-
-			return this;
-		},
-		handleFileSelectClick: function () {
-			this.$('#input-shorelines-file').click();
-		},
-		handleUploadButtonClick: function () {
-			var file = document.getElementById('input-shorelines-file').files[0],
-					xhr = new XMLHttpRequest(),
-					workspace = localStorage.dsas;
-
-			var formData = new FormData();
-			formData.append("file", file);
-
-			xhr.upload.addEventListener("progress", function (e) {
-				if (e.lengthComputable) {
-					var percentage = Math.round((e.loaded * 100) / e.total);
-					log.info(percentage);
-				}
-			}, false);
-
-			xhr.onreadystatechange = function (e) {
-				var status = e.currentTarget.status,
-						response = e.currentTarget.response;
-				if (response) {
-					switch (status) {
-						case 200:
-							debugger;
-							break;
-						case 404:
-							debugger;
-							break;
-						case 500:
-							debugger;
-							break;
-					}
-				}
-			};
-
-			xhr.open("POST", "service/stage-shoreline?action=stage&workspace=" + workspace, true);
-			xhr.send(formData);
-		},
-		handleUploadContentChange: function (e) {
-			var chosenFile = e.target.files[0],
-					name = chosenFile.name,
-					size = chosenFile.size,
-					$infoContainer = this.$('#container-shorelines-file-info'),
-					$nameContainer = this.$('#container-shorelines-file-info-filename'),
-					$sizeContainer = this.$('#container-shorelines-file-info-filesize');
-
-			$infoContainer.addClass('hidden');
-
-			if (!name.endsWith(".zip")) {
-				// TODO - Display alert
-				log.debug("Not a zip");
-			} else if (size > Number.MAX_VALUE) {
-				// TODO - Figure out intelligent max size for a file
-				log.debug("File too large");
-			} else {
-				// Update the info container with file information
-				$nameContainer.html(name);
-				$sizeContainer.html(size);
-				$infoContainer.removeClass('hidden');
-			}
-		},
-		remove: function () {
-			BaseView.prototype.remove.apply(this);
 			return this;
 		}
 	});
