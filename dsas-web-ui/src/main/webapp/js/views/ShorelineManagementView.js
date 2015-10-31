@@ -43,24 +43,31 @@ define([
 
 			xhr.onreadystatechange = function (e) {
 				var status = e.currentTarget.status,
-						response = e.currentTarget.response;
-				if (response) {
+					readyState = e.currentTarget.readyState,
+					responseString = e.currentTarget.response,
+					response,
+					token;
+			
+				if (readyState === 4 && responseString) {
 					switch (status) {
 						case 200:
-							debugger;
+							response = JSON.parse(responseString);
+							token = response.token;
+							this.scope.handleFileStaged(token);
 							break;
 						case 404:
-							debugger;
 							break;
 						case 500:
-							debugger;
 							break;
 					}
+					this.scope.$('#container-shorelines-file-info').addClass('hidden');
 				}
 			};
-
+			
+			xhr.scope = this;
 			xhr.open("POST", "service/stage-shoreline?action=stage&workspace=" + workspace, true);
 			xhr.send(formData);
+			return xhr;
 		},
 		handleUploadContentChange: function (e) {
 			var chosenFile = e.target.files[0],
@@ -84,6 +91,9 @@ define([
 				$sizeContainer.html(size);
 				$infoContainer.removeClass('hidden');
 			}
+		},
+		handleFileStaged: function (token) {
+			
 		}
 	});
 
