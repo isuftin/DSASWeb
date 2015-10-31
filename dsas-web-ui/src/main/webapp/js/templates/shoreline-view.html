@@ -15,7 +15,7 @@
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane {{#ifIsActiveTab this.activeTab "tabpanel-shorelines-view" "active"}}{{/ifIsActiveTab}}" id="tabpanel-shorelines-view">
 				<div class="text-center well">
-					<button id="shorelines-aoi-select-toggle" data-toggle="button" class="btn btn-success" aria-pressed="false" autocomplete="off" type="button">
+					<button id="button-shorelines-aoi-toggle" data-toggle="button" class="btn btn-success" aria-pressed="false" autocomplete="off" type="button">
 						<i class="fa fa-map-marker icon-white"></i> Select Area Of Interest
 					</button>
 					<div id="description-aoi" class="hidden">
@@ -24,14 +24,30 @@
 							AOI Selection Instructions
 						</p>
 						<p>
-							<button class="btn btn-success" id="shorelines-aoi-select-button-done">
+							<button class="btn btn-success" id="button-shorelines-aoi-done">
 								<i class="fa fa-check icon-white"></i> I'm Done
 							</button>
 						</p>
 					</div>
 				</div>
 			</div>
-			<div role="tabpanel" class="tab-pane {{#ifIsActiveTab this.activeTab "tabpanel-shorelines-manager" "active"}}{{/ifIsActiveTab}}" id="tabpanel-shorelines-manage">MANAGE PANEL</div>
+			<div role="tabpanel" class="tab-pane {{#ifIsActiveTab this.activeTab "tabpanel-shorelines-manager" "active"}}{{/ifIsActiveTab}}" id="tabpanel-shorelines-manage">
+				<div class="text-center well">
+					<button class="btn btn-success" id="button-shorelines-file-select">
+						<i class="fa fa-folder-open-o icon-white"></i> Select Shorelines For Upload
+					</button>
+					<div class="well hidden" id="container-shorelines-file-info">
+						<p>
+						File Name: <span id="container-shorelines-file-info-filename"></span> <br />
+						File Size: <span id="container-shorelines-file-info-filesize"></span> bytes
+						</p>
+						<button class="btn btn-success" id="button-shorelines-upload">
+							<i class="fa fa-cloud-upload icon-white"></i> Upload Shoreline
+						</button>
+					</div>
+					<input type="file" id="input-shorelines-file" style="display:none"/>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

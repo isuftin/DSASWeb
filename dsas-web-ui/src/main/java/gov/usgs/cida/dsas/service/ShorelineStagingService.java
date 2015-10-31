@@ -10,6 +10,7 @@ import gov.usgs.cida.owsutils.commons.communication.RequestResponse.ResponseType
 import gov.usgs.cida.utilities.service.ServiceHelper;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -17,10 +18,13 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.feature.SchemaException;
 import org.opengis.referencing.FactoryException;
@@ -34,6 +38,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author isuftin
  */
+@MultipartConfig
 public class ShorelineStagingService extends HttpServlet {
 
 	private static final long serialVersionUID = 2377995353146379768L;
@@ -67,7 +72,13 @@ public class ShorelineStagingService extends HttpServlet {
 			// Client is uploading a file. I want to stage the file and return a token
 			ShorelineFile shorelineFile = null;
 			try {
-				ShorelineFileFactory shorelineFactory = new ShorelineFileFactory(request);
+				Part zipFilePart = request.getPart("file");
+				
+				ShorelineFileFactory shorelineFactory;
+				try (InputStream inputStream = zipFilePart.getInputStream();) {
+					shorelineFactory = new ShorelineFileFactory(request, inputStream);
+				}
+				
 				shorelineFile = shorelineFactory.buildShorelineFile();
 				String token = TokenToShorelineFileSingleton.addShorelineFile(shorelineFile);
 				responseMap.put(TOKEN_STRING, token);

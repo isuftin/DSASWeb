@@ -13,10 +13,14 @@ import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.utilities.file.FileHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +59,7 @@ public class ShorelineFileFactory {
 		this.zipFile = zipFile;
 		init(workspace);
 	}
-
+	
 	public ShorelineFileFactory(HttpServletRequest request) {
 		if (request == null) {
 			throw new NullPointerException("Request object may not be null");
@@ -69,7 +73,12 @@ public class ShorelineFileFactory {
 
 		init(requestWorkspace);
 	}
-
+	
+	public ShorelineFileFactory(HttpServletRequest request, InputStream is) throws IOException {
+		this(request);
+		this.zipFile = saveShorelineZipFileFromInputStream(is);
+	}
+	
 	private void init(String workspace) {
 		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
 		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
@@ -133,6 +142,12 @@ public class ShorelineFileFactory {
 		return result;
 	}
 
+	private File saveShorelineZipFileFromInputStream(InputStream stream) throws IOException {
+		File zipFile = Files.createTempFile(this.uploadDirectory.toPath(), null, ".zip").toFile();
+		IOUtils.copyLarge(stream, new FileOutputStream(zipFile));
+		return zipFile;
+	}
+	
 	private File saveShorelineZipFileFromRequest(HttpServletRequest request) throws IOException, FileUploadException {
 		String filenameParam = PropertyUtil.getProperty(Property.FILE_UPLOAD_FILENAME_PARAM);
 		String fnReqParam = request.getParameter(FILENAME_PARAM);
