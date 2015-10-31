@@ -29,9 +29,12 @@ define([
 			this.router.navigate('shorelines/' + clickedTab, {trigger: true});
 		},
 		toggleAoiSelection : function (e) {
+			e.stopImmediatePropagation();
 			var activated = !$(e.target).hasClass('active');
 			log.debug("AOI Selection Toggled " + (activated ? "on" : "off"));
-			this.appEvents
+			this.appEvents.trigger(this.appEvents.shorelines.aoiSelectionToggled, activated);
+			
+			this.$('#description-aoi').toggleClass('hidden');
 		},
 		/*
 		 * @constructs

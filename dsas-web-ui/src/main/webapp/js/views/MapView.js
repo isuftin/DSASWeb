@@ -11,6 +11,10 @@ define([
 
 	var view = BaseView.extend({
 		template: Handlebars.compile(template),
+		// The name given to the Area of Interest selection layer
+		LAYER_AOI_NAME: 'layer-aoi-box',
+		// The name of the control used to create area of interest selections
+		CONTROL_IDENTIFY_AOI_ID: 'shoreline-identify-aoi-control',
 		/*
 		 * Renders the object's template using it's context into the view's element.
 		 * @returns {extended BaseView}
@@ -141,14 +145,51 @@ define([
 			this.map.addLayer(new OpenLayers.Layer.Markers('geocoding-marker-layer', {
 				displayInLayerSwitcher: false
 			}));
+			
+			this.aoiSelectionLayer = new OpenLayers.Layer.Vector(this.LAYER_AOI_NAME, {
+				displayInLayerSwitcher: false
+			});
+			this.aoiSelectionLayer.events.register('beforefeatureadded', null, function (e) {
+				e.object.removeAllFeatures();
+			});
+			this.aoiSelectionControl = new OpenLayers.Control.DrawFeature(this.aoiSelectionLayer,
+				OpenLayers.Handler.RegularPolygon, {
+					title: this.CONTROL_IDENTIFY_AOI_ID,
+					handlerOptions: {
+						sides: 4,
+						irregular: true
+					}
+				});
+			
+			this.map.addLayer(this.aoiSelectionLayer);
 
 			this.map.addControls([
 				new OpenLayers.Control.MousePosition(),
 				new OpenLayers.Control.ScaleLine({geodesic: true}),
-				new OpenLayers.Control.LayerSwitcher({roundedCorner: true})
+				new OpenLayers.Control.LayerSwitcher({roundedCorner: true}),
+				this.aoiSelectionControl
 			]);
 
 			BaseView.prototype.initialize.apply(this, [options]);
+			
+			this.listenTo(this.appEvents, this.appEvents.shorelines.aoiSelectionToggled, this.toggleAOIControl);
+			
+			return this;
+		},
+		/**
+		 * TODO: Enter description
+		 * 
+		 * @param {Boolean} toggleOn
+		 * @returns {undefined}
+		 */
+		toggleAOIControl : function (toggleOn) {
+			if (toggleOn && !this.aoiSelectionControl.active) {
+				this.aoiSelectionLayer.removeAllFeatures();
+				this.aoiSelectionControl.activate();
+			} else {
+				this.aoiSelectionControl.deactivate();
+			}
+			return toggleOn;
 		},
 		remove: function () {
 			BaseView.prototype.remove.apply(this);

@@ -9,15 +9,23 @@ define([
 ], function (Backbone, log, HomeView, ShorelineView, _) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
+		appEvents : {
+			shorelines : {
+				aoiSelectionToggled : 'Shorelines_AOI_Selection_Toggled'
+			}
+		},
+		currentView : null,
 		routes: {
 			'': 'displayShorelineToolset', // Effectively make Shorelines the default
 			'shorelines': 'displayShorelineToolset',
-			'shorelines/:activeTab': 'displayShorelineToolset'
+			'shorelines/:activeTab': 'displayShorelineToolset',
+			'baseline': 'displayBaselineToolset',
+			'baseline/:activeTab': 'displayBaselineToolset'
 		},
 		initialize: function () {
 			log.trace("Initializing router");
 			
-			this.appEvents = _.extend({}, Backbone.Events);
+			 _.extend(this.appEvents, Backbone.Events);
 			
 			this.displayHomeView();
 			
@@ -35,8 +43,11 @@ define([
 		displayShorelineToolset: function (activeTab) {
 			log.trace("Routing to Shorelines toolset");
 
+			if (this.currentView !== null) {
+				this.currentView.remove();
+			}
+
 			this.shorelineView = new ShorelineView({
-				el: '#toolset-span',
 				parent : this.homeView,
 				router : this,
 				appEvents : this.appEvents
@@ -44,9 +55,16 @@ define([
 				activeTab : activeTab
 			});
 
-			this.homeView.subViews.shorelineView = this.shorelineView;
-			
+			$(this.shorelineView.el).appendTo($('#toolset-span'));
+
+			this.currentView = this.shorelineView;
+
 			return this.shorelineView;
+		},
+		displayBaselineToolset : function (activeTab) {
+			if (this.currentView !== null) {
+				this.currentView.remove();
+			}
 		}
 	});
 

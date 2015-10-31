@@ -14,10 +14,21 @@
 		</ul>
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane {{#ifIsActiveTab this.activeTab "tabpanel-shorelines-view" "active"}}{{/ifIsActiveTab}}" id="tabpanel-shorelines-view">
-				<div class="text-center">
+				<div class="text-center well">
 					<button id="shorelines-aoi-select-toggle" data-toggle="button" class="btn btn-success" aria-pressed="false" autocomplete="off" type="button">
 						<i class="fa fa-map-marker icon-white"></i> Select Area Of Interest
 					</button>
+					<div id="description-aoi" class="hidden">
+						<h3>Selecting An Area Of Interest</h3>
+						<p>
+							AOI Selection Instructions
+						</p>
+						<p>
+							<button class="btn btn-success" id="shorelines-aoi-select-button-done">
+								<i class="fa fa-check icon-white"></i> I'm Done
+							</button>
+						</p>
+					</div>
 				</div>
 			</div>
 			<div role="tabpanel" class="tab-pane {{#ifIsActiveTab this.activeTab "tabpanel-shorelines-manager" "active"}}{{/ifIsActiveTab}}" id="tabpanel-shorelines-manage">MANAGE PANEL</div>
