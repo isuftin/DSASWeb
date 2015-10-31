@@ -72,8 +72,8 @@ define([
 		},
 		handleUploadButtonClick: function () {
 			var file = document.getElementById('input-shorelines-file').files[0],
-				xhr = new XMLHttpRequest(),
-				workspace = localStorage.dsas;
+					xhr = new XMLHttpRequest(),
+					workspace = localStorage.dsas;
 
 			var formData = new FormData();
 			formData.append("file", file);
@@ -85,9 +85,23 @@ define([
 				}
 			}, false);
 
-			xhr.upload.addEventListener("load", function (e) {
-				
-			}, false);
+			xhr.onreadystatechange = function (e) {
+				var status = e.currentTarget.status,
+						response = e.currentTarget.response;
+				if (response) {
+					switch (status) {
+						case 200:
+							debugger;
+							break;
+						case 404:
+							debugger;
+							break;
+						case 500:
+							debugger;
+							break;
+					}
+				}
+			};
 
 			xhr.open("POST", "service/stage-shoreline?action=stage&workspace=" + workspace, true);
 			xhr.send(formData);
