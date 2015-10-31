@@ -8,10 +8,11 @@ define([
 	'views/NotificationView',
 	'utils/logger',
 	'utils/sessionUtil',
+	'utils/OwsUtil',
 	'collections/sessionCollection',
 	'models/sessionModel',
 	'text!templates/home-view.html'
-], function (Handlebars, BaseView, NavigationView, MapView, NotificationView, log, SessionUtil, SessionCollection, SessionModel, template) {
+], function (Handlebars, BaseView, NavigationView, MapView, NotificationView, log, SessionUtil, OwsUtil, SessionCollection, SessionModel, template) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -48,19 +49,19 @@ define([
 			this.subViews.navView = new NavigationView({
 				parent: this,
 				router: options.router,
-				appEvents : options.appEvents
+				appEvents: options.appEvents
 			});
 
 			this.subViews.mapView = new MapView({
 				parent: this,
 				router: options.router,
-				appEvents : options.appEvents
+				appEvents: options.appEvents
 			});
 
 			this.subViews.notificationView = new NotificationView({
 				parent: this,
 				router: options.router,
-				appEvents : options.appEvents
+				appEvents: options.appEvents
 			});
 
 			this.subViews.notificationView.setElement(this.$('#notification-span'));
@@ -79,6 +80,10 @@ define([
 							this.collection.create(new SessionModel({
 								id: workspace
 							}));
+							SessionUtil.updateSessionUsingWMSGetCapabilitiesResponse({
+								session: this.collection.get(workspace),
+								context: this
+							});
 						}, this))
 						.error(function (response) {
 							// TODO - What happens if I can't create a session on
@@ -88,7 +93,13 @@ define([
 							// user to a 500 Error page?
 							log.error("Could not create a session on the workspace.");
 						});
+			} else {
+				SessionUtil.updateSessionUsingWMSGetCapabilitiesResponse({
+					session: this.collection.get(localStorage.dsas),
+					context: this
+				});
 			}
+
 			BaseView.prototype.initialize.apply(this, arguments);
 		},
 		remove: function () {

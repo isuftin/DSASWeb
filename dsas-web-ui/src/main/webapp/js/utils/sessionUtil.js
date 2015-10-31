@@ -1,7 +1,8 @@
 /*jslint browser: true */
 define([
-	'utils/logger'
-], function (log) {
+	'utils/logger',
+	'utils/OwsUtil'
+], function (log, OwsUtil) {
 	"use strict";
 	var self = {};
 
@@ -33,7 +34,22 @@ define([
 	};
 
 	return {
-		prepareSession: function (context) {
+		updateSessionUsingWMSGetCapabilitiesResponse : function (session, context) {
+			var deferred = $.Deferred();
+			OwsUtil.getWMSCapabilities({
+				namespace : session.id,
+				context : {
+					deferred : deferred,
+					session : session,
+					context : context || this
+				}
+			}).done(function (capabilities) {
+				// TODO
+				deferred.resolveWith(this.context, [this.session, capabilities]);
+			});
+			return deferred;
+		},
+		prepareSession: function () {
 			// - A session has not yet been created for perm storage. Probably the first
 			// run of the application or a new browser with no imported session. Because 
 			// the session is used in the namespace for WFS-T, it needs to 

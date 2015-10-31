@@ -10,8 +10,12 @@ define([
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		appEvents : {
+			map : {
+				aoiSelected : 'map_aoi_selected'
+			},
 			shorelines : {
-				aoiSelectionToggled : 'Shorelines_AOI_Selection_Toggled'
+				aoiSelectionToggled : 'shorelines_aoi_selection_toggled',
+				aoiSelected : 'shorelines_aoi_selected'
 			}
 		},
 		currentView : null,

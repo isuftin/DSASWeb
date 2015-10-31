@@ -12,7 +12,8 @@ define([
 		template: Handlebars.compile(template),
 		events: {
 			'click #tabs-shorelines a': 'tabToggled',
-			'click #shorelines-aoi-select-toggle' : 'toggleAoiSelection'
+			'click #shorelines-aoi-select-toggle' : 'toggleAoiSelection',
+			'click #shorelines-aoi-select-button-done' : 'aoiSelected'
 		},
 		/*
 		 * Renders the object's template using it's context into the view's element.
@@ -29,12 +30,20 @@ define([
 			this.router.navigate('shorelines/' + clickedTab, {trigger: true});
 		},
 		toggleAoiSelection : function (e) {
-			e.stopImmediatePropagation();
 			var activated = !$(e.target).hasClass('active');
 			log.debug("AOI Selection Toggled " + (activated ? "on" : "off"));
 			this.appEvents.trigger(this.appEvents.shorelines.aoiSelectionToggled, activated);
 			
 			this.$('#description-aoi').toggleClass('hidden');
+		},
+		aoiSelected : function () {
+			log.debug("AOI Selected");
+			this.appEvents.trigger(this.appEvents.shorelines.aoiSelected);
+		},
+		processAoiSelection : function (bounds) {
+			if (bounds) {
+				// TODO
+			}
 		},
 		/*
 		 * @constructs
@@ -49,6 +58,10 @@ define([
 			});
 			log.debug("DSASweb Shoreline view initializing");
 			BaseView.prototype.initialize.apply(this, [options]);
+			
+			this.listenTo(this.appEvents, this.appEvents.map.aoiSelected, this.processAoiSelection);
+			
+			
 			return this;
 		},
 		remove: function () {

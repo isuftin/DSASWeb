@@ -173,14 +173,15 @@ define([
 			BaseView.prototype.initialize.apply(this, [options]);
 			
 			this.listenTo(this.appEvents, this.appEvents.shorelines.aoiSelectionToggled, this.toggleAOIControl);
+			this.listenTo(this.appEvents, this.appEvents.shorelines.aoiSelected, this.processAoiSelection);
 			
 			return this;
 		},
 		/**
-		 * TODO: Enter description
+		 * Enables or disables the Area of Interest selection control
 		 * 
 		 * @param {Boolean} toggleOn
-		 * @returns {undefined}
+		 * @returns {OpenLayers.Control.DrawFeature} The AOI selection control
 		 */
 		toggleAOIControl : function (toggleOn) {
 			if (toggleOn && !this.aoiSelectionControl.active) {
@@ -189,7 +190,15 @@ define([
 			} else {
 				this.aoiSelectionControl.deactivate();
 			}
-			return toggleOn;
+			return this.aoiSelectionControl;
+		},
+		processAoiSelection : function () {
+			if (this.aoiSelectionLayer.features.length === 1) {
+				var bounds = this.aoiSelectionLayer.features[0].geometry.bounds;
+				this.appEvents.trigger(this.appEvents.map.aoiSelected, bounds);
+			} else {
+				this.appEvents.trigger(this.appEvents.map.aoiSelected, null);
+			}
 		},
 		remove: function () {
 			BaseView.prototype.remove.apply(this);
