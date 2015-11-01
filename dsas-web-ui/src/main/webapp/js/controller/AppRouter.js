@@ -6,8 +6,9 @@ define([
 	'views/HomeView',
 	'views/ShorelineView',
 	'models/ShorelineViewModel',
+	'jquery',
 	'underscore'
-], function (Backbone, log, HomeView, ShorelineView, ShorelineViewModel, _) {
+], function (Backbone, log, HomeView, ShorelineView, ShorelineViewModel, $, _) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		appEvents: {
@@ -16,7 +17,10 @@ define([
 			},
 			shorelines: {
 				aoiSelectionToggled: 'shorelines_aoi_selection_toggled',
-				aoiSelected: 'shorelines_aoi_selected'
+				aoiSelected: 'shorelines_aoi_selected',
+				columnsMatched: 'shorelines_columns_matched',
+				layerImportSuccess: 'shorelines_layer_import_success',
+				layerImportFail: 'shorelines_layer_import_fail'
 			}
 		},
 		viewModels: {},

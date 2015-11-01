@@ -11,7 +11,8 @@ define([
 	"use strict";
 	var view = BaseView.extend({
 		events: {
-			'drop .drop-holder': 'dropHandler'
+			'drop .drop-holder': 'dropHandler',
+			'click #button-shorelines-update-columns' : 'doneButtonClickHandler'
 		},
 		template: Handlebars.compile(template),
 		render: function (options) {
@@ -88,6 +89,7 @@ define([
 				// left column, remove from map
 				mapping[layerAttribute] = '';
 			}
+			this.model.set('layerColumns', mapping);
 
 			// Check that all of the required columns are mapped properly
 			var readyToUpdate = _.difference(mandatoryColumns, _.values(mapping)).length === 0;
@@ -114,6 +116,9 @@ define([
 					.css('zIndex',  9999)
 					.animate({ left: horizontalMove }, options)
 					.animate({ top: verticalMove }, options);
+		},
+		doneButtonClickHandler : function () {
+			this.appEvents.trigger(this.appEvents.shorelines.columnsMatched, this.model.get('layerColumns'));
 		}
 	});
 

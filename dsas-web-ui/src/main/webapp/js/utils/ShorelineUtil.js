@@ -74,10 +74,12 @@ define([
 		importShorelineFromToken: function (args) {
 			var token = args.token,
 				workspace = args.workspace,
-				layerColumns = args.layerColumns;
+				layerColumns = args.layerColumns,
+				context = args.context || this;
 			
 			return $.ajax(this.SHORELINE_STAGE_ENDPOINT, {
 				type: 'POST',
+				context : context,
 				data: {
 					action: 'import',
 					token: token,
