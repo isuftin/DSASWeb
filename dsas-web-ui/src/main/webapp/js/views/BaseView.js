@@ -37,7 +37,9 @@ define([
 		initialize: function (options) {
 			options = options || {};
 
-			if (!this.context) {
+			if (_.has(options, 'context')) {
+				this.context = options.context;
+			} else {
 				this.context = {};
 			}
 			

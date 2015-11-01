@@ -45,22 +45,24 @@ define([
 		initialize: function (options) {
 			log.debug("DSASweb Home view initializing");
 
+			this.appEvents = options.appEvents;
+
 			this.subViews.navView = new NavigationView({
 				parent: this,
 				router: options.router,
-				appEvents: options.appEvents
+				appEvents: this.appEvents
 			});
 
 			this.subViews.mapView = new MapView({
 				parent: this,
 				router: options.router,
-				appEvents: options.appEvents
+				appEvents: this.appEvents
 			});
 
 			this.subViews.notificationView = new NotificationView({
 				parent: this,
 				router: options.router,
-				appEvents: options.appEvents
+				appEvents: this.appEvents
 			});
 
 			this.subViews.notificationView.setElement(this.$('#notification-span'));

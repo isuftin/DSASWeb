@@ -1,4 +1,5 @@
 
+<%@page import="gov.usgs.cida.utilities.features.Constants"%>
 <%@page import="gov.usgs.cida.dsas.service.util.Property"%>
 <%@page import="gov.usgs.cida.dsas.service.util.PropertyUtil"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -25,7 +26,8 @@
     <head>
 		<title>DSASweb</title>
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("css/bootstrap" + (development ? "" : ".min") + ".css")%>" />
-		<link type="text/css" rel="stylesheet" href="webjars/font-awesome/<%=versionFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/font-awesome/<%=versionFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/jquery-ui/<%= versionJqueryUi%>/jquery-ui.min.css" />
     </head>
 
     <body>
@@ -37,6 +39,25 @@
 				config: {
 					'init': {
 						'contextPath': "<%=baseUrl%>/"
+					},
+					'utils/ShorelineUtil': {
+						columnAttrNames: {
+							'LRR': '<%= Constants.LRR_ATTR%>',
+							'WLR': '<%= Constants.WLR_ATTR%>',
+							'SCE': '<%= Constants.SCE_ATTR%>',
+							'NSM': '<%= Constants.NSM_ATTR%>',
+							'EPR': '<%= Constants.EPR_ATTR%>',
+							'LCI': '<%= Constants.LCI_ATTR%>',
+							'WCI': '<%= Constants.WCI_ATTR%>',
+							'ECI': '<%= Constants.ECI_ATTR%>',
+							'MHW': '<%= Constants.MHW_ATTR%>',
+							'SurveyID': '<%= Constants.SURVEY_ID_ATTR%>',
+							'distance' : '<%= Constants.DISTANCE_ATTR%>',
+							'defaultDirection' : '<%= Constants.DEFAULT_D_ATTR%>',
+							'name' : '<%= Constants.NAME_ATTR%>',
+							'source' : '<%= Constants.SOURCE_ATTR%>',
+							'biasUncertainty' : '<%= Constants.BIAS_UNCY_ATTR%>'
+						}
 					}
 				},
 				baseUrl: "<%=baseUrl%>/js/",
@@ -49,6 +70,7 @@
 					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%=  PropertyUtil.getProperty("version.require.text")%>/text'],
 					"loglevel": ['<%=baseUrl%>/webjars/loglevel/<%=  PropertyUtil.getProperty("version.loglevel")%>/loglevel<%= development ? "" : ".min"%>'],
 					"openlayers": ['<%=baseUrl%>/webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? ".debug" : ""%>'],
+					"jqueryui": ['<%=baseUrl%>/webjars/jquery-ui/<%= PropertyUtil.getProperty("version.jquery.ui")%>/jquery-ui<%= development ? ".min" : ""%>'],
 					"localstorage": ['<%=baseUrl%>/webjars/backbone-localstorage/<%=  PropertyUtil.getProperty("version.backbone-localstorage")%>/backbone.localStorage<%= development ? "" : "-min"%>']
 				},
 				shim: {
