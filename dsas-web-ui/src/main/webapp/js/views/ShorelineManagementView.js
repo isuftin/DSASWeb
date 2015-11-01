@@ -155,7 +155,7 @@ define([
 										columnKeys: _.keys(layerColumns),
 										mandatoryColumns: ShorelineUtil.MANDATORY_COLUMNS
 									}),
-									parent: this,
+									parent: modalView,
 									router: this.router,
 									appEvents: this.appEvents
 								}),
@@ -166,6 +166,10 @@ define([
 										autoShow : true
 									})
 								}).render();
+								
+								$(modalView.el).on('shown.bs.modal', $.proxy(function () {
+									this.moveKnownColumns();
+								}, columnMatchingView));
 								
 							} else {
 								var importDeferred = ShorelineUtil.importShorelineFromToken({

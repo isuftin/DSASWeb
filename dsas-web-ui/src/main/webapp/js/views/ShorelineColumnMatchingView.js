@@ -37,7 +37,7 @@ define([
 			return this.render();
 		},
 		initializeDragDrop: function () {
-			
+
 			var layerName = this.model.get("layerName");
 
 			this.$('.' + layerName + '-drag-item').draggable({
@@ -57,6 +57,20 @@ define([
 				tolerance: 'intersect'
 			});
 		},
+		moveKnownColumns: function () {
+			var columns = this.model.get('layerColumns');
+
+			_.chain(columns)
+					.keys()
+					.each(function (key) {
+						if (columns[key]) {
+							var draggable = this.$('#' + key + '-drag-item').draggable('widget');
+							var droppable = this.$('#' + columns[key] + '-drop-item').droppable('widget');
+							draggable.queue("fx");
+							this.moveDraggable(draggable, droppable);
+						}
+					}, this);
+		},
 		dropHandler: function (e, ui) {
 			var draggable = ui.draggable;
 			var dragId = draggable.attr('id');
@@ -70,19 +84,36 @@ define([
 			if ($(e.target).hasClass('right-drop-holder')) {
 				// right column, add to map
 				mapping[layerAttribute] = layerMappingAttribute;
-			} else { 
+			} else {
 				// left column, remove from map
 				mapping[layerAttribute] = '';
 			}
 
 			// Check that all of the required columns are mapped properly
 			var readyToUpdate = _.difference(mandatoryColumns, _.values(mapping)).length === 0;
-			
+
 			if (readyToUpdate) {
 				this.$('#button-shorelines-update-columns').removeAttr('disabled');
 			} else {
 				this.$('#button-shorelines-update-columns').prop('disabled', true);
 			}
+		},
+		moveDraggable: function (draggable, droppable) {
+			var dragTop = draggable.position().top;
+			var dragLeft = draggable.offset().left;
+			var dropTop = droppable.position().top;
+			var dropLeft = droppable.offset().left;
+			var horizontalMove = dropLeft - dragLeft;
+			var verticalMove = dropTop - dragTop + 5; // 5 = margin-top
+			var options = {
+				queue: 'fx',
+				duration: 1000
+			};
+			
+			draggable
+					.css('zIndex',  9999)
+					.animate({ left: horizontalMove }, options)
+					.animate({ top: verticalMove }, options);
 		}
 	});
 

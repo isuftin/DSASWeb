@@ -12,7 +12,8 @@ define([
 	"use strict";
 	var view = BaseView.extend({
 		events : {
-			'click #window-modal-button-close' : 'remove'
+			'click #window-modal-button-close' : 'remove',
+			'hidden.bs.modal #window-modal': 'remove'
 		},
 		template: Handlebars.compile(template),
 		render: function (options) {
@@ -47,7 +48,6 @@ define([
 			return this;
 		},
 		remove: function () {
-			this.$('#window-modal').modal('hide').data('bs.modal', null);
 			$('.modal-backdrop').fadeOut(function () {
 				$(this).remove();
 			});

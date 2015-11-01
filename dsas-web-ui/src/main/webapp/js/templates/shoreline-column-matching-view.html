@@ -22,7 +22,7 @@
 	<div id="{{layerName}}-drag-drop-row" class="row-fluid drag-drop-row">
 		{{!-- Left-side FROM column --}}
 		<div id="{{layerName}}-drag-container" class="well col-sm-5 col-md-5 col-lg-5">
-			<ul id="{{layerName}}-drag-list" class="ui-helper-reset">
+			<ul id="{{layerName}}-drag-list" class="ui-helper-reset shorelines-matching-dd-list">
 				{{#each columnKeys}}
 				<li>
 					<div class="{{../layerName}}-drop-holder left-drop-holder drop-holder">
@@ -37,7 +37,7 @@
 
 		{{!-- Right-side TO column --}}
 		<div id="{{layerName}}-drop-container" class="well col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-sm-5 col-md-5 col-lg-5">
-			<ul id="{{layerName}}-drop-list" class="ui-helper-reset">
+			<ul id="{{layerName}}-drop-list" class="ui-helper-reset shorelines-matching-dd-list">
 				{{!-- Mandatory Columns --}}
 				{{#each mandatoryColumns}}
 				<li>
