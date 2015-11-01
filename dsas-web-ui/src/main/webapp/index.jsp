@@ -28,6 +28,7 @@
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("css/bootstrap" + (development ? "" : ".min") + ".css")%>" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/font-awesome/<%=versionFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/jquery-ui/<%= versionJqueryUi%>/jquery-ui.min.css" />
+		<link type="text/css" rel="stylesheet" href="css/shorelines/shorelines.css" />
     </head>
 
     <body>

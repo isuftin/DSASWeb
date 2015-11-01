@@ -6,11 +6,12 @@ define([
 	'utils/logger',
 	'utils/ShorelineUtil',
 	'views/ShorelineColumnMatchingView',
+	'models/ColumnMatchingModel',
 	'underscore',
 	'views/ModalWindowView',
 	'models/ModalModel',
 	'text!templates/shoreline-management-view.html'
-], function (Handlebars, BaseView, log, ShorelineUtil, ColumnMatchingView, _, ModalWindowView, ModalModel, template) {
+], function (Handlebars, BaseView, log, ShorelineUtil, ColumnMatchingView, ColumnMatchingModel, _, ModalWindowView, ModalModel, template) {
 	"use strict";
 	var view = BaseView.extend({
 		events: {
@@ -147,10 +148,16 @@ define([
 							if (!foundAllRequiredColumns) {
 								// User needs to match columns 
 								var columnMatchingView = new ColumnMatchingView({
+									model : new ColumnMatchingModel({
+										layerColumns: layerColumns,
+										layerName : localStorage.dsas + "_shorelines",
+										defaultColumns : ShorelineUtil.DEFAULT_COLUMNS,
+										columnKeys: _.keys(layerColumns),
+										mandatoryColumns: ShorelineUtil.MANDATORY_COLUMNS
+									}),
 									parent: this,
 									router: this.router,
-									appEvents: this.appEvents,
-									layerColumns: layerColumns
+									appEvents: this.appEvents
 								}),
 								modalView = new ModalWindowView({
 									model : new ModalModel({

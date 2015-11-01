@@ -1,4 +1,23 @@
 config: {
+	'utils/ShorelineUtil': {
+		columnAttrNames: {
+			'LRR': 'LRR',
+			'WLR': 'WLR',
+			'SCE': 'SCE',
+			'NSM': 'NSM',
+			'EPR': 'EPR',
+			'LCI': 'LCI',
+			'WCI': 'WCI',
+			'ECI': 'ECI',
+			'MHW': 'MHW',
+			'SurveyID': 'survey_id',
+			'distance' : 'Distance',
+			'defaultDirection' : 'defaultd',
+			'name' : 'name',
+			'source' : 'source',
+			'biasUncertainty' : 'UNCYB'
+		}
+	}
 },
 paths: {
 	"sinon": ['/webjars/sinonjs/${version.sinon}/sinon'],

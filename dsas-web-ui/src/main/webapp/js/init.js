@@ -6,7 +6,8 @@ define([
 	'backbone',
 	'module',
 	'underscore',
-	'bootstrap' // Load up bootstrap to get it worked into jquery
+	'bootstrap', // Load up bootstrap to get it worked into jquery
+	'jqueryui' // Do the same with JQuery UI
 ], function (Router, log, Backbone, module, _) {
 	"use strict";
 	var router = new Router();
