@@ -618,7 +618,7 @@ var UI = function () {
 			});
 
 			CONFIG.ui.createModalWindow({
-				headerHtml: 'Layer Attribute Mismatch Detected',
+				headerHtml: 'Please Assign Required and Optional Attribute Fields',
 				bodyHtml: html,
 				doneButtonText: 'Cancel',
 				buttons: [{
