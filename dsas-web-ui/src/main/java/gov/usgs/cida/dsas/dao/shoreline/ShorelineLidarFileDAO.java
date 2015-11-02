@@ -62,7 +62,9 @@ public class ShorelineLidarFileDAO extends ShorelineFileDAO {
 		} catch (FactoryException ex) {
 			// Something really bad is happening
 			this.targetCRS = null;
-			log.error("Unable to get CRS for WGS84");
+			String error = "Unable to get CRS for WGS84";
+			log.error(error);
+			throw new RuntimeException(error, ex);
 		}
 	}
 
