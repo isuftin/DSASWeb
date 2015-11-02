@@ -1,10 +1,15 @@
-/* global Util, OpenLayers, CONFIG, LOG */
+/*global Util*/
+/*global OpenLayers*/
+/*global CONFIG*/
+/*global LOG */
+/*global Handlebars*/
 var Baseline = {
 	stage: 'baseline',
 	suffixes: ['_baseline'],
 	mandatoryColumns: ['the_geom', 'ID', 'Orient'],
 	reservedColor: '#7570B3',
 	shorewardColor: '#76C5AD',
+	columnMatchingTemplate: undefined,
 	description: {
 		'stage': '<p>The baseline provides the local frame of reference for calculating erosion and deposition rates from shorelines.</p><p>Add a reference baseline to your workspace with the selection box above or upload your own zipped shapefile containing a baseline polyline with the Manage tab.</p><p>Alternatively, create a new reference baseline with the drawing, cloning, or editing tools that are located within the Manage tab.</p><hr />Select an existing published baseline, upload your own, or draw a new baseline. A baseline provides a reference polyline to determine the orientation of erosion and deposition of coastlines.',
 		'view-tab': 'Select a published collection of shorelines to add to the workspace.',
@@ -22,6 +27,17 @@ var Baseline = {
 		// Default value for new drawn base layer is random. If a shoreline is chosen,
 		// the name of the shoreline will be used instead
 		$('#baseline-draw-form-name').val(Util.getRandomLorem());
+		
+		$.get('templates/column-matching-modal.mustache').done(function (data) {
+			Baseline.columnMatchingTemplate = Handlebars.compile(data);
+			Handlebars.registerHelper('printDefaultValue', function () {
+				if (this.defaultValue) {
+					return new Handlebars.SafeString(' Default: "' + this.defaultValue + '"');
+				} else {
+					return '';
+				}
+			});
+		});
 
 		Baseline.baselineCloneButton.on('click', Baseline.cloneLayer);
 		Baseline.baselineRemoveButton.on('click', Baseline.removeResource);
@@ -260,17 +276,24 @@ var Baseline = {
 							attributes: attributes
 						});
 						var foundAll = true;
-						Baseline.mandatoryColumns.each(function (mc) {
-							if (!layerColumns[mc]) {
+						
+						layerColumns.values().each(function (v) {
+							if (!v) {
 								foundAll = false;
 							}
 						});
-
+						
 						if (!foundAll) {
 							CONFIG.ui.buildColumnMatchingModalWindow({
 								layerName: layerName,
 								columns: layerColumns,
-								caller: Baseline
+								caller: Baseline,
+								template: Baseline.columnMatchingTemplate,
+								continueCallback: function () {
+									Baseline.addLayerToMap({
+										layer: layerName
+									});
+								}
 							});
 						} else {
 							displayBaseline();
