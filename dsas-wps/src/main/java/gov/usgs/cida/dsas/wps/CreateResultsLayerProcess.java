@@ -167,9 +167,7 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
                 
             } catch (NoSuchAuthorityCodeException ex) {
                 throw new UnsupportedCoordinateReferenceSystemException("Could not find utm zone", ex);
-            } catch (FactoryException ex) {
-                throw new UnsupportedCoordinateReferenceSystemException("Could not find utm zone", ex);
-            } catch (TransformException ex) {
+            } catch (FactoryException | TransformException ex) {
                 throw new UnsupportedCoordinateReferenceSystemException("Could not find utm zone", ex);
             }
             SimpleFeatureCollection collection = DataUtilities.collection(joinedFeatures);
@@ -179,7 +177,7 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
 
         protected Map<Long, Double[]> parseTextToMap(String results, String[] headers) {
             String[] lines = results.split("\n");
-            Map<Long, Double[]> resultMap = new HashMap<Long, Double[]>();
+            Map<Long, Double[]> resultMap = new HashMap<>();
             int transectColumn = -1;
             for (String line : lines) {
                 String[] columns = line.split("\t");
@@ -237,10 +235,8 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
             
             SimpleFeatureType joinedFeatureType = builder.buildFeatureType();
             
-            SortedMap<Double, List<Object>> distanceToAttribureMap = new TreeMap<Double, List<Object>>();
-            FeatureIterator<SimpleFeature> features = null;
-            try { 
-                features = transects.features();
+            SortedMap<Double, List<Object>> distanceToAttribureMap = new TreeMap<>();
+            try (FeatureIterator<SimpleFeature> features = transects.features()) {
                 AttributeGetter getter = new AttributeGetter(joinedFeatureType);
                 while (features.hasNext()) {
                     SimpleFeature feature = features.next();
@@ -251,19 +247,18 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
                         throw new UnsupportedFeatureTypeException("Transects must include base_dist attribute");
                     }
                     Double[] values = resultMap.get(transectId);
-                    List<Object> joinedAttributes = new ArrayList<Object>(joinedFeatureType.getAttributeCount());
-                    joinedAttributes.addAll(feature.getAttributes());
-                    joinedAttributes.addAll(Arrays.asList(values));
-                    joinedAttributes.add(calculateNSD((Geometry)feature.getDefaultGeometry(), transectToIntersectMap.get(transectIdAsObject)));
-                    distanceToAttribureMap.put(baseDistance, joinedAttributes);
-                
+					if (values != null) {
+						List<Object> joinedAttributes = new ArrayList<>(joinedFeatureType.getAttributeCount());
+						joinedAttributes.addAll(feature.getAttributes());
+						joinedAttributes.addAll(Arrays.asList(values));
+						joinedAttributes.add(calculateNSD((Geometry) feature.getDefaultGeometry(), transectToIntersectMap.get(transectIdAsObject)));
+						distanceToAttribureMap.put(baseDistance, joinedAttributes);
+					}
                 }
-            } finally {
-                if (features != null) { features.close(); }
             }
             int joinedFeatureCount = distanceToAttribureMap.size();
             SequentialFeatureIDGenerator fidGenerator = new SequentialFeatureIDGenerator(joinedFeatureCount);
-            List<SimpleFeature> joinedFeatureList = new ArrayList<SimpleFeature>(distanceToAttribureMap.size()); 
+            List<SimpleFeature> joinedFeatureList = new ArrayList<>(distanceToAttribureMap.size()); 
             for (List<Object> attributes : distanceToAttribureMap.values()) {
                 joinedFeatureList.add(SimpleFeatureBuilder.build(
                         joinedFeatureType,
@@ -288,7 +283,7 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
     }
     
     private Map<Integer, List<Point>> generateTransectToIntersectMap(FeatureCollection<?, SimpleFeature> intersects) {
-        Map<Integer, List<Point>> transectToIntersectionMap = new HashMap<Integer, List<Point>>();
+        Map<Integer, List<Point>> transectToIntersectionMap = new HashMap<>();
         FeatureIterator<SimpleFeature> intersectsIterator = null;
 		try {
 			intersectsIterator = intersects.features();
@@ -298,7 +293,7 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
 				if (transectIdAsObject instanceof Integer) {
 					List<Point> pointList = transectToIntersectionMap.get((Integer)transectIdAsObject);
 					if (pointList == null) {
-						pointList = new ArrayList<Point>();
+						pointList = new ArrayList<>();
 						transectToIntersectionMap.put((Integer)transectIdAsObject, pointList);
 					}
 					Object geometryAsObject = feature.getDefaultGeometry();
