@@ -141,7 +141,7 @@ public class ShorelineLidarFileDAO extends ShorelineFileDAO {
 					prevShorelineId = shorelineId;
 					prevSegmentId = segmentId;
 				}
-				if (prevShorelineId == shorelineId && prevSegmentId == segmentId || xyUncies.size() >= BATCH_SIZE) {
+				if (prevShorelineId == shorelineId && prevSegmentId == segmentId && xyUncies.size() < BATCH_SIZE) {
 					xyUncies.add(new double[] {reprojectedX, reprojectedY, uncy});
 				} else {
 					insertPointsIntoShorelinePointsTable(
