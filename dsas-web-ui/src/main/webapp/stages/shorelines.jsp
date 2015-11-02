@@ -6,7 +6,7 @@
 	</div>
 	<ul class="nav nav-tabs" id="action-shorelines-tablist">
 		<li class="active"><a  data-toggle="tab" href="#shorelines-view-tab">View</a></li>
-		<li><a data-toggle="tab" href="#shorelines-manage-tab">Manage</a></li>
+		<li><a data-toggle="tab" href="#shorelines-manage-tab">Upload</a></li>
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane active" id="shorelines-view-tab">
@@ -51,7 +51,7 @@
 		</div>
 		<div class="tab-pane" id="shorelines-manage-tab">
 			<div id="shorelines-uploader" class="uploader"></div>
-			<button class="btn btn-success" id="shorelines-triggerbutton"><i class="icon-arrow-up icon-white"></i>Upload</button>
+			<button class="btn btn-success" id="shorelines-triggerbutton"><i class="icon-arrow-up icon-white"></i>Upload .zip</button>
 		</div>
 	</div>
 </div> <!-- /Shorelines -->
