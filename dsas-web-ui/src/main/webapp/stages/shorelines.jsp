@@ -18,11 +18,12 @@
 			<div id="description-aoi" class="well hidden">
 				<h3>Selecting An Area Of Interest</h3>
 				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin 
-					pretium varius ipsum, sit amet sollicitudin mauris tristique non. 
-					Sed ligula leo, ullamcorper non felis sit amet, facilisis luctus dui. 
-					Aliquam vel magna nunc. Mauris quam arcu, viverra id lacus sodales, 
-					imperdiet cursus magna. In vel efficitur lacus.
+				<ul>To select an area of interest, 
+					<li> Click "Select Area Of Interest" button to begin drawing.</li>
+					<li> Click and drag your mouse to draw a box around your area of interest.</li>
+					<li> When you're satisfied with the AOI, click "I'm Done" button.</li>
+					<li> To redraw the area of interest, repeat the process.</li>
+				</ul>
 				</p>
 				<p class="text-center">
 					<button class="btn btn-success" id="shorelines-aoi-select-done">
