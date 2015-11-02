@@ -242,7 +242,7 @@ var Transects = {
 					} else {
 						feature.state = OpenLayers.State.DELETE;
 						feature.style = {
-							strokeColor: '#FF0000'
+							strokeColor: '#D3D3D3'
 						};
 					}
 					feature.layer.redraw();
@@ -257,7 +257,7 @@ var Transects = {
 						var cloneFeature = cloneLayer.getFeatureBy('fid', fid);
 						cloneFeature.state = OpenLayers.State.DELETE;
 						cloneFeature.style = {
-							strokeColor: '#FF0000'
+							strokeColor: '#D3D3D3'
 						};
 						originalFeature.style = {
 							strokeOpacity: 0
@@ -369,7 +369,7 @@ var Transects = {
 						for (tIdx = 0; tIdx < sortedSplitTransects.length; tIdx++) {
 							transect = sortedSplitTransects[tIdx];
 							transect.style = {
-								strokeColor: '#FF0000'
+								strokeColor: '#D3D3D3'
 							};
 						}
 

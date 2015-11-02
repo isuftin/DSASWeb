@@ -39,7 +39,7 @@
 						<option value="true">Farthest</option>
 					</select>
 				</div>
-				<button class="btn btn-success" id="transects-edit-save-button" title="Update Modified Transect">Update Transects</button>
+				<button class="btn btn-success" id="transects-edit-save-button" title="Update Modified Transect">Save</button>
 				<button class="btn btn-success" id="transects-edit-add-button" title="Add Transect" data-toggle="button">Add Transect</button>
 				<button class="btn btn-success" id="transects-edit-crop-button" title="Crop Transect" data-toggle="button">Crop Transects</button>
 			</div>
