@@ -1,12 +1,12 @@
 <!-- Calculation -->
 <div class="tab-pane  container-fluid" id="calculation">
 	<div class="row-fluid">
-		<div class="span4"><h3>Review/Calculate</h3></div>
+		<div class="span4"><h3>Shoreline Change Rates</h3></div>
 		<div class="span8" id="calculation-alert-container"></div>
 	</div>
 	<ul class="nav nav-tabs" id="action-intersections-tablist">
 		<li class="active"><a  data-toggle="tab" href="#intersections-view-tab">View</a></li>
-		<li><a data-toggle="tab" href="#intersections-manage-tab">Manage</a></li>
+		<li><a data-toggle="tab" href="#intersections-manage-tab">Calculate</a></li>
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane active" id="intersections-view-tab">

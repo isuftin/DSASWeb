@@ -6,7 +6,7 @@
 	</div>
 	<ul class="nav nav-tabs" id="action-result-tablist">
 		<li class="active"><a  data-toggle="tab" href="#results-view-tab">View</a></li>
-		<li><a data-toggle="tab" href="#results-manage-tab">Manage</a></li>
+		<li><a data-toggle="tab" href="#results-manage-tab">Download</a></li>
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane active" id="results-view-tab">

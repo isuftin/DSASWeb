@@ -13,7 +13,7 @@ var Transects = {
 	suffixes: ['_lt', '_st', '_transects'],
 	reservedColor: '#D95F02',
 	createTransectsAndIntersectionsWPSTemplate: undefined,
-	DEFAULT_SPACING: 500,
+	DEFAULT_SPACING: 50,
 	NAME_CONTROL_SNAP: 'snap-control',
 	NAME_CONTROL_EDIT: 'transects-edit-control',
 	NAME_CONTROL_HIGHLIGHT: 'transects-highlight-control',
@@ -945,7 +945,7 @@ var Transects = {
 		}
 
 		if (isNaN(smoothing)) {
-			smoothing = 0.0;
+			smoothing = 2500.0;
 		} else {
 			smoothing = smoothing <= 0.0 ? 0.0 : smoothing;
 		}
