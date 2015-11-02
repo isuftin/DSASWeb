@@ -1,27 +1,16 @@
 <div class="container-fluid">
 	<div id="explanation-row" class="row-fluid">
 		<div id="explanation-well" class="well">
-			There is a possible attribute mismatch between the resource you are 
-			trying to view and what is considered a valid {{stage}} resource.
-			<br /><br />
-			Optional Attributes:
-			<ul>
-				{{#each defaultingColumns}}
-				<li>{{attr}}{{printDefaultValue}}</li>
-				{{/each}}
-			</ul>
-			<br /><br />
-			Optional attributes and their defaults. 
-			These can be left unmapped to accept the default values.
-			<br/>
-			Please drag attributes from the left to the right to properly 
-			map to the correct attributes. Attributes wrapped in blue are required, 
-			those wrapped in green are optional. The resource will be updated server-side once complete.
+			DSASweb requires two fields ({{#each mandatoryColumns}} {{this}} {{/each}}) and allows you to 
+			choose two optional fields.  Below, drag the field from your data 
+			on the left to the appropriate opening on the right.  To remove or 
+			change the field simply drag from right to left.
 		</div>
 	</div>
 	<div id="{{layerName}}-drag-drop-row" class="row-fluid">
 		{{!-- Left-side FROM column --}}
 		<div id="{{layerName}}-drag-container" class="well span5">
+			<h5>Uploaded Data</h5>
 			<ul id="{{layerName}}-drag-list" class="ui-helper-reset">
 				{{#each columnKeys}}
 				<li>
@@ -37,6 +26,7 @@
 
 		{{!-- Right-side TO column --}}
 		<div id="{{layerName}}-drop-container" class="well span5 offset2">
+			<h5>DSASweb</h5>
 			<ul id="{{layerName}}-drop-list" class="ui-helper-reset">
 				{{!-- Mandatory Columns --}}
 				{{#each mandatoryColumns}}
