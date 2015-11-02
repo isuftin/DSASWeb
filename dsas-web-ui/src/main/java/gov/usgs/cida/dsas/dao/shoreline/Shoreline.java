@@ -12,8 +12,6 @@ public class Shoreline implements Serializable {
 
 	private static long serialVersionUID = 5129615799852575469L;
 	private BigInteger id;
-	private double uncertainty;
-	private BigInteger segmentId;
 	private String date;
 	private boolean mhw;
 	private String workspace;
@@ -24,8 +22,6 @@ public class Shoreline implements Serializable {
 
 	public Shoreline() {
 		this.id = BigInteger.ZERO;
-		this.uncertainty = 0.0;
-		this.segmentId = BigInteger.ZERO;
 		this.date = "";
 		this.mhw = false;
 		this.workspace = "";
@@ -35,10 +31,8 @@ public class Shoreline implements Serializable {
 		this.name = "";
 	}
 	
-	public Shoreline(BigInteger id, double uncertainty, BigInteger segmentId, String date, boolean mhw, String workspace, String source, char type, String auxName, String auxValue, String name) {
+	public Shoreline(BigInteger id, String date, boolean mhw, String workspace, String source, char type, String auxName, String auxValue, String name) {
 		this.id = id;
-		this.uncertainty = uncertainty;
-		this.segmentId = segmentId;
 		this.date = date;
 		this.mhw = mhw;
 		this.workspace = workspace;
@@ -60,34 +54,6 @@ public class Shoreline implements Serializable {
 	 */
 	public void setId(BigInteger id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the uncertainty
-	 */
-	public double getUncertainty() {
-		return uncertainty;
-	}
-
-	/**
-	 * @param uncertainty the uncertainty to set
-	 */
-	public void setUncertainty(double uncertainty) {
-		this.uncertainty = uncertainty;
-	}
-
-	/**
-	 * @return the segmentId
-	 */
-	public BigInteger getSegmentId() {
-		return segmentId;
-	}
-
-	/**
-	 * @param segmentId the segmentId to set
-	 */
-	public void setSegmentId(BigInteger segmentId) {
-		this.segmentId = segmentId;
 	}
 
 	/**
