@@ -37,35 +37,22 @@ define([
 		initialize: function (options) {
 			options = options || {};
 
-			if (_.has(options, 'context')) {
-				this.context = options.context;
-			} else {
-				this.context = {};
-			}
-			
-			if (_.has(options, 'model')) {
-				this.model = options.model;
-			}
-			
-			if (_.has(options, 'appEvents')) {
-				this.appEvents = options.appEvents;
-			}
+			this.context = {};
 
-			if (_.has(options, 'template')) {
-				$.extend(this.context, options.context);
-			}
-
-			if (_.has(options, 'router')) {
-				this.router = options.router;
-			}
-			
-			if (_.has(options, 'parent')) {
-				this.parent = options.parent;
-			}
-
-			if (_.has(options, 'template')) {
-				this.template = options.template;
-			}
+			_.each([
+				'context',
+				'session',
+				'model',
+				'appEvents',
+				'template',
+				'router',
+				'parent',
+				'template'
+			], function (item) {
+				if (_.has(options, item)) {
+					this[item] = options[item];
+				}
+			}, this);
 
 			Backbone.View.prototype.initialize.apply(this, arguments);
 		}

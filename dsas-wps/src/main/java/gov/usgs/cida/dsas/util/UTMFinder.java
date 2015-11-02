@@ -1,14 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package gov.usgs.cida.dsas.util;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import java.util.ArrayList;
 import java.util.List;
-import org.geotools.data.crs.ReprojectFeatureReader;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
@@ -93,12 +87,12 @@ public class UTMFinder {
     }
     
     public static int findUTMZoneCRSCount(ReferencedEnvelope envelope) throws NoSuchAuthorityCodeException, FactoryException, TransformException {     
-        envelope = envelope.transform(UTM_GCRS, true);
-        double xMin = envelope.getMinX();
+		ReferencedEnvelope _envelope = envelope.transform(UTM_GCRS, true);
+        double xMin = _envelope.getMinX();
         // NOTE!  Don't use evelope max, min + width will handle date line crossing since we are subtracting
-        double xMax = xMin + envelope.getWidth(); 
+        double xMax = xMin + _envelope.getWidth(); 
         int zoneCount = findUTMZone(xMax) - findUTMZone(xMin) + 1;
-        if ((envelope.getMinY() > 0) != (envelope.getMaxY() > 0)) {
+        if ((_envelope.getMinY() > 0) != (_envelope.getMaxY() > 0)) {
             zoneCount *= 2;
         }
         return zoneCount;

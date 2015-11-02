@@ -14,10 +14,8 @@ import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
 import gov.usgs.cida.utilities.features.AttributeGetter;
 import gov.usgs.cida.utilities.features.Constants;
-
 import static gov.usgs.cida.utilities.features.Constants.SEGMENT_ID_ATTR;
 import static gov.usgs.cida.utilities.features.Constants.SHORELINE_ID_ATTR;
-
 import java.util.LinkedList;
 import java.util.List;
 import org.geotools.data.DataUtilities;

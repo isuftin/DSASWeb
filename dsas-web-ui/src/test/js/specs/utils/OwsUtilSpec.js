@@ -22,7 +22,7 @@ define([
 			this.server.restore();
 		});
 
-		it("Get valid WMS GetCaps", function () {
+		it("Gets a valid WMS GetCaps using getWMSCapabilities", function () {
 			var getCapsDeferred = OwsUtil.getWMSCapabilities();
 			getCapsDeferred.always($.proxy(function (response) {
 				expect(response).not.toBe(null);
@@ -33,7 +33,7 @@ define([
 			this.server.respond();
 		});
 		
-		it("Get 404", function () {
+		it("Gets a 404 when calling getWMSCapabilities", function () {
 			var getCapsDeferred = OwsUtil.getWMSCapabilities({
 				namespace : 'invalid'
 			});
@@ -44,6 +44,45 @@ define([
 			}, this));
 			this.server.respond();
 		});
-
+		
+		it("Properly creates bounds using 4326 array", function () {
+			var sourceArray = ["-159.35177778318248", "21.957387826403924", "-159.29265037686733", "22.174701746065356"];
+			var result = OwsUtil.getBoundsFromArray({
+				array : sourceArray
+			});
+			
+			// OpenLayers does not get precision exact after so many decimal places
+			expect(result.left).toBeCloseTo(sourceArray[0]);
+			expect(result.bottom).toBeCloseTo(sourceArray[1]);
+			expect(result.right).toBeCloseTo(sourceArray[2]);
+			expect(result.top).toBeCloseTo(sourceArray[3]);
+		});
+		
+		it("Properly creates bounds using 4326 array and flip", function () {
+			var sourceArray = ["-159.35177778318248", "21.957387826403924", "-159.29265037686733", "22.174701746065356"];
+			var result = OwsUtil.getBoundsFromArray({
+				array : sourceArray,
+				flipAxis : true
+			});
+			
+			expect(result.left).toBeCloseTo(sourceArray[1]);
+			expect(result.bottom).toBeCloseTo(sourceArray[0]);
+			expect(result.right).toBeCloseTo(sourceArray[3]);
+			expect(result.top).toBeCloseTo(sourceArray[2]);
+		});
+		
+		it("Properly creates bounds and transforms to 900913", function () {
+			var sourceArray = ["-159.35177778318248", "21.957387826403924", "-159.29265037686733", "22.174701746065356"];
+			var expectedResult = [-17738958.7573572, 2506409.9023636496, -17732376.72459576, 2532513.2277615];
+			var result = OwsUtil.getBoundsFromArray({
+				array : sourceArray,
+				epsgToCode : "EPSG:900913"
+			});
+			
+			expect(result.left).toBeCloseTo(expectedResult[0]);
+			expect(result.bottom).toBeCloseTo(expectedResult[1]);
+			expect(result.right).toBeCloseTo(expectedResult[2]);
+			expect(result.top).toBeCloseTo(expectedResult[3]);
+		});
 	});
 });

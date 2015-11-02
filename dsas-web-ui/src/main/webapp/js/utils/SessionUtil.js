@@ -1,8 +1,9 @@
 /*jslint browser: true */
 define([
 	'utils/logger',
-	'utils/OwsUtil'
-], function (log, OwsUtil) {
+	'utils/OwsUtil',
+	'underscore'
+], function (log, OwsUtil, _) {
 	"use strict";
 	var self = {};
 
@@ -34,17 +35,49 @@ define([
 	};
 
 	return {
-		updateSessionUsingWMSGetCapabilitiesResponse : function (session, context) {
+		updateSessionUsingWMSGetCapabilitiesResponse: function (session, context) {
 			var deferred = $.Deferred();
 			OwsUtil.getWMSCapabilities({
-				namespace : session.id,
-				context : {
-					deferred : deferred,
-					session : session,
-					context : context || this
+				namespace: session.id,
+				context: {
+					deferred: deferred,
+					session: session,
+					context: context || this
 				}
 			}).done(function (capabilities) {
-				// TODO
+				_.each(capabilities.capability.layers, function (l) {
+					var layerName = l.name;
+					var layerBoundsArray = l.llbbox;
+					var layerStage = l.title.substring(l.title.indexOf('_') + 1);
+					var session = this.session.session;
+					var sessionStage = session.get(layerStage);
+					var stageBboxArray = sessionStage.bbox;
+					// Check that it's a valid layer by testing the bbox
+					// TODO - Figure out a better way of checking for a valid layer
+					// or find out why some layers have a broken bbox like this
+					var isValidLayer = _.reduce(layerBoundsArray, function (a, b) {
+						return parseInt(a) + parseInt(b);
+					}) !== -2;
+
+					// Only add the layer to the session if it isn't already in there
+					if (!_.contains(sessionStage.layers, layerName) && isValidLayer) {
+						if (stageBboxArray.length === 0) {
+							sessionStage.bbox = layerBoundsArray;
+						} else {
+							var stageBounds = OwsUtil.getBoundsFromArray({
+								array: stageBboxArray
+							});
+							var incomingBounds = OwsUtil.getBoundsFromArray({
+								array: layerBoundsArray
+							});
+							var extendedBounds = OwsUtil.extendBounds(stageBounds, incomingBounds);
+							sessionStage.bbox = extendedBounds.toArray();
+						}
+
+						sessionStage.layers.push(layerName);
+					}
+					session.set(layerStage, sessionStage);
+				}, this);
 				deferred.resolveWith(this.context, [this.session, capabilities]);
 			});
 			return deferred;
@@ -67,6 +100,9 @@ define([
 			}).fail(function () {
 				log.error('Session.js::init: A workspace could not be created on the OWS server with the name of ' + randID);
 			});
+		},
+		getCurrentSessionKey: function () {
+			return localStorage.dsas;
 		}
 	};
 });

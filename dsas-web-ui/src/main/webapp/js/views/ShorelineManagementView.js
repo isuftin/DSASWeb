@@ -8,10 +8,11 @@ define([
 	'views/ShorelineColumnMatchingView',
 	'models/ColumnMatchingModel',
 	'underscore',
+	'utils/SessionUtil',
 	'views/ModalWindowView',
 	'models/ModalModel',
 	'text!templates/shoreline-management-view.html'
-], function (Handlebars, BaseView, log, ShorelineUtil, ColumnMatchingView, ColumnMatchingModel, _, ModalWindowView, ModalModel, template) {
+], function (Handlebars, BaseView, log, ShorelineUtil, ColumnMatchingView, ColumnMatchingModel, _, SessionUtil, ModalWindowView, ModalModel, template) {
 	"use strict";
 	var view = BaseView.extend({
 		events: {
@@ -42,7 +43,7 @@ define([
 		handleUploadButtonClick: function () {
 			var file = document.getElementById('input-shorelines-file').files[0],
 					xhr = new XMLHttpRequest(),
-					workspace = localStorage.dsas;
+					workspace = SessionUtil.getCurrentSessionKey();
 
 			var formData = new FormData();
 			formData.append("file", file);

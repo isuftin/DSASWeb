@@ -7,11 +7,8 @@ define([
 	'views/MapView',
 	'views/NotificationView',
 	'utils/logger',
-	'utils/sessionUtil',
-	'collections/sessionCollection',
-	'models/sessionModel',
 	'text!templates/home-view.html'
-], function (Handlebars, BaseView, NavigationView, MapView, NotificationView, log, SessionUtil, SessionCollection, SessionModel, template) {
+], function (Handlebars, BaseView, NavigationView, MapView, NotificationView, log, template) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -46,60 +43,19 @@ define([
 			log.debug("DSASweb Home view initializing");
 
 			this.appEvents = options.appEvents;
-
-			this.subViews.navView = new NavigationView({
+			
+			var subViewParams = {
 				parent: this,
 				router: options.router,
-				appEvents: this.appEvents
-			});
-
-			this.subViews.mapView = new MapView({
-				parent: this,
-				router: options.router,
-				appEvents: this.appEvents
-			});
-
-			this.subViews.notificationView = new NotificationView({
-				parent: this,
-				router: options.router,
-				appEvents: this.appEvents
-			});
+				appEvents: this.appEvents,
+				session : this.session
+			};
+			
+			this.subViews.navView = new NavigationView(subViewParams);
+			this.subViews.mapView = new MapView(subViewParams);
+			this.subViews.notificationView = new NotificationView(subViewParams);
 
 			this.subViews.notificationView.setElement(this.$('#notification-span'));
-
-			// Create a new session collection, check if it exists in localstorage. 
-			// If so, I'm done. Otherwise, call out to the server to create a workspace
-			// for this session and then create the session based on the workspace
-			// name. 
-			this.collection = new SessionCollection();
-			this.collection.fetch();
-			if (this.collection.models.length === 0) {
-				SessionUtil
-						.prepareSession()
-						.done($.proxy(function (response) {
-							var workspace = response.workspace;
-							this.collection.create(new SessionModel({
-								id: workspace
-							}));
-							SessionUtil.updateSessionUsingWMSGetCapabilitiesResponse({
-								session: this.collection.get(workspace),
-								context: this
-							});
-						}, this))
-						.error(function (response) {
-							// TODO - What happens if I can't create a session on
-							// the server? If I can't do that, I have to bail out 
-							// of the application because the user can't upload
-							// any files or really do much of anything. Send the
-							// user to a 500 Error page?
-							log.error("Could not create a session on the workspace.");
-						});
-			} else {
-				SessionUtil.updateSessionUsingWMSGetCapabilitiesResponse({
-					session: this.collection.get(localStorage.dsas),
-					context: this
-				});
-			}
 
 			BaseView.prototype.initialize.apply(this, arguments);
 		},

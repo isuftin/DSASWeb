@@ -5,10 +5,13 @@ define([
 	'utils/logger',
 	'views/HomeView',
 	'views/ShorelineView',
+	'collections/SessionCollection',
+	'models/sessionModel',
+	'utils/SessionUtil',
 	'models/ShorelineViewModel',
 	'jquery',
 	'underscore'
-], function (Backbone, log, HomeView, ShorelineView, ShorelineViewModel, $, _) {
+], function (Backbone, log, HomeView, ShorelineView, SessionCollection, SessionModel, SessionUtil, ShorelineViewModel, $, _) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		appEvents: {
@@ -38,6 +41,40 @@ define([
 			_.extend(this.appEvents, Backbone.Events);
 
 			this.viewModels.shorelineViewModel = new ShorelineViewModel();
+			
+			// Create a new session collection, check if it exists in localstorage. 
+			// If so, I'm done. Otherwise, call out to the server to create a workspace
+			// for this session and then create the session based on the workspace
+			// name. 
+			this.session = new SessionCollection();
+			this.session.fetch();
+			if (this.session.models.length === 0) {
+				SessionUtil
+						.prepareSession()
+						.done($.proxy(function (response) {
+							var workspace = response.workspace;
+							this.session.create(new SessionModel({
+								id: workspace
+							}));
+							SessionUtil.updateSessionUsingWMSGetCapabilitiesResponse({
+								session: this.session.get(workspace),
+								context: this
+							});
+						}, this))
+						.error(function (response) {
+							// TODO - What happens if I can't create a session on
+							// the server? If I can't do that, I have to bail out 
+							// of the application because the user can't upload
+							// any files or really do much of anything. Send the
+							// user to a 500 Error page?
+							log.error("Could not create a session on the workspace.");
+						});
+			} else {
+				SessionUtil.updateSessionUsingWMSGetCapabilitiesResponse({
+					session: this.session.get(SessionUtil.getCurrentSessionKey()),
+					context: this
+				});
+			}
 
 			this.displayHomeView();
 
@@ -47,7 +84,8 @@ define([
 			log.trace("Routing to home view");
 			this.homeView = new HomeView({
 				router: this,
-				appEvents: this.appEvents
+				appEvents: this.appEvents,
+				session : this.session
 			});
 			this.homeView.render();
 			return this.homeView;
@@ -63,7 +101,8 @@ define([
 				parent: this.homeView,
 				router: this,
 				appEvents: this.appEvents,
-				model: this.viewModels.shorelineViewModel
+				model: this.viewModels.shorelineViewModel,
+				session : this.session
 			}).render({
 				activeTab: activeTab
 			});

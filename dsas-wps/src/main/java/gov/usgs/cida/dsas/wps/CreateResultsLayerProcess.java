@@ -49,16 +49,14 @@ package gov.usgs.cida.dsas.wps;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
-
-import gov.usgs.cida.dsas.util.CRSUtils;
-import gov.usgs.cida.dsas.util.LayerImportUtil;
-import gov.usgs.cida.dsas.util.UTMFinder;
 import gov.usgs.cida.dsas.exceptions.InputFileFormatException;
 import gov.usgs.cida.dsas.exceptions.UnsupportedCoordinateReferenceSystemException;
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
+import gov.usgs.cida.dsas.util.CRSUtils;
+import gov.usgs.cida.dsas.util.LayerImportUtil;
+import gov.usgs.cida.dsas.util.UTMFinder;
 import gov.usgs.cida.utilities.features.AttributeGetter;
 import gov.usgs.cida.utilities.features.Constants;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,7 +65,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
 import org.apache.commons.lang.StringUtils;
 import org.geoserver.catalog.Catalog;
 import org.geoserver.catalog.ProjectionPolicy;
@@ -82,12 +79,10 @@ import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.process.factory.DescribeParameter;
 import org.geotools.process.factory.DescribeProcess;
 import org.geotools.process.factory.DescribeResult;
-import org.geotools.referencing.crs.AbstractCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.TransformException;
 
@@ -164,12 +159,7 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
                 if (!tCRS.getName().equals(iCRS.getName())) {
                     throw new IllegalStateException("Transects and Intersects do not share common Coordinate Reference System");
                 }
-                
-            } catch (NoSuchAuthorityCodeException ex) {
-                throw new UnsupportedCoordinateReferenceSystemException("Could not find utm zone", ex);
-            } catch (FactoryException ex) {
-                throw new UnsupportedCoordinateReferenceSystemException("Could not find utm zone", ex);
-            } catch (TransformException ex) {
+            } catch (FactoryException | TransformException ex) {
                 throw new UnsupportedCoordinateReferenceSystemException("Could not find utm zone", ex);
             }
             SimpleFeatureCollection collection = DataUtilities.collection(joinedFeatures);
@@ -237,10 +227,8 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
             
             SimpleFeatureType joinedFeatureType = builder.buildFeatureType();
             
-            SortedMap<Double, List<Object>> distanceToAttribureMap = new TreeMap<Double, List<Object>>();
-            FeatureIterator<SimpleFeature> features = null;
-            try { 
-                features = transects.features();
+            SortedMap<Double, List<Object>> distanceToAttribureMap = new TreeMap<>();
+            try (FeatureIterator<SimpleFeature> features = transects.features()) {
                 AttributeGetter getter = new AttributeGetter(joinedFeatureType);
                 while (features.hasNext()) {
                     SimpleFeature feature = features.next();
@@ -251,19 +239,17 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
                         throw new UnsupportedFeatureTypeException("Transects must include base_dist attribute");
                     }
                     Double[] values = resultMap.get(transectId);
-                    List<Object> joinedAttributes = new ArrayList<Object>(joinedFeatureType.getAttributeCount());
+                    List<Object> joinedAttributes = new ArrayList<>(joinedFeatureType.getAttributeCount());
                     joinedAttributes.addAll(feature.getAttributes());
                     joinedAttributes.addAll(Arrays.asList(values));
                     joinedAttributes.add(calculateNSD((Geometry)feature.getDefaultGeometry(), transectToIntersectMap.get(transectIdAsObject)));
                     distanceToAttribureMap.put(baseDistance, joinedAttributes);
                 
                 }
-            } finally {
-                if (features != null) { features.close(); }
             }
             int joinedFeatureCount = distanceToAttribureMap.size();
             SequentialFeatureIDGenerator fidGenerator = new SequentialFeatureIDGenerator(joinedFeatureCount);
-            List<SimpleFeature> joinedFeatureList = new ArrayList<SimpleFeature>(distanceToAttribureMap.size()); 
+            List<SimpleFeature> joinedFeatureList = new ArrayList<>(distanceToAttribureMap.size()); 
             for (List<Object> attributes : distanceToAttribureMap.values()) {
                 joinedFeatureList.add(SimpleFeatureBuilder.build(
                         joinedFeatureType,
@@ -288,7 +274,7 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
     }
     
     private Map<Integer, List<Point>> generateTransectToIntersectMap(FeatureCollection<?, SimpleFeature> intersects) {
-        Map<Integer, List<Point>> transectToIntersectionMap = new HashMap<Integer, List<Point>>();
+        Map<Integer, List<Point>> transectToIntersectionMap = new HashMap<>();
         FeatureIterator<SimpleFeature> intersectsIterator = null;
 		try {
 			intersectsIterator = intersects.features();
@@ -298,17 +284,13 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
 				if (transectIdAsObject instanceof Integer) {
 					List<Point> pointList = transectToIntersectionMap.get((Integer)transectIdAsObject);
 					if (pointList == null) {
-						pointList = new ArrayList<Point>();
+						pointList = new ArrayList<>();
 						transectToIntersectionMap.put((Integer)transectIdAsObject, pointList);
 					}
 					Object geometryAsObject = feature.getDefaultGeometry();
 					if (geometryAsObject instanceof Point) {
 						pointList.add((Point)geometryAsObject);
-					} else {
-						System.err.println("wtf?  null point");
-					}    
-				} else {
-					System.err.println("wtf? ");
+					} 
 				}
 			}
 		} finally {

@@ -4,9 +4,10 @@ define([
 	'views/BaseView',
 	'views/ShorelineManagementView',
 	'views/ShorelineViewerView',
+	'utils/SessionUtil',
 	'utils/logger',
 	'text!templates/shoreline-view.html'
-], function (Handlebars, BaseView, ShorelineManagementView, ShorelineViewerView, log, template) {
+], function (Handlebars, BaseView, ShorelineManagementView, ShorelineViewerView, SessionUtil, log, template) {
 	"use strict";
 	var view = BaseView.extend({
 		// Defines what the default tab in the shorelines toolbox is
@@ -25,24 +26,22 @@ define([
 			this.context.activeTab = options.activeTab || this.DEFAULT_TAB;
 			BaseView.prototype.render.apply(this, [options]);
 
+			var subViewParams = {
+				parent: this,
+				router: this.router,
+				appEvents: this.appEvents,
+				model: this.model,
+				session: this.session
+			};
+
 			if (this.context.activeTab === this.DEFAULT_TAB) {
-				this.activeChildView = new ShorelineViewerView({
-					parent : this,
-					router: this.router,
-					appEvents: this.appEvents,
-					model : this.model
-				});
+				this.activeChildView = new ShorelineViewerView(subViewParams);
 			} else {
-				this.activeChildView = new ShorelineManagementView({
-					parent : this,
-					router: this.router,
-					appEvents: this.appEvents,
-					model : this.model
-				});
+				this.activeChildView = new ShorelineManagementView(subViewParams);
 			}
-			
+
 			this.activeChildView.render({
-				el : this.$('#' + this.context.activeTab)
+				el: this.$('#' + this.context.activeTab)
 			});
 
 			return this;
@@ -67,8 +66,23 @@ define([
 			BaseView.prototype.initialize.apply(this, [options]);
 
 			this.listenTo(this.appEvents, this.appEvents.map.aoiSelected, this.processAoiSelection);
+			this.listenTo(this.appEvents, this.appEvents.layerImportSuccess, this.shorelineImportCompleteHandler);
 
 			return this;
+		},
+		processAoiSelection: function () {
+			// TODO
+		},
+		shorelineImportCompleteHandler: function () {
+			log.info("Shorelines imported");
+			SessionUtil.updateSessionUsingWMSGetCapabilitiesResponse({
+				session: this.session.get(SessionUtil.getCurrentSessionKey()),
+				context: this
+			}).done(function () {
+				
+			}).fail(function () {
+				
+			});
 		}
 	});
 
