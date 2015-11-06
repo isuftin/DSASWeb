@@ -18,11 +18,11 @@
 			<div id="description-aoi" class="well hidden">
 				<h3>Selecting An Area Of Interest</h3>
 				<p>
-				<ul>To select an area of interest, 
+				<ul>To select an area of interest (AOI), 
 					<li> Click "Select Area Of Interest" button to begin drawing.</li>
 					<li> Click and drag your mouse to draw a box around your area of interest.</li>
 					<li> When you're satisfied with the AOI, click "I'm Done" button.</li>
-					<li> To redraw the area of interest, repeat the process.</li>
+					<li> Note: If the area of interest in redrawn, the previously drawn AOI will not remain.</li>
 				</ul>
 				</p>
 				<p class="text-center">
