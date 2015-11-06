@@ -9,7 +9,7 @@
 			<a  data-toggle="tab" href="#transects-view-tab">View</a>
 		</li>
 		<li>
-			<a data-toggle="tab" href="#transects-manage-tab">Manage</a>
+			<a data-toggle="tab" href="#transects-manage-tab">Generate</a>
 		</li>
 	</ul>
 	<div class="tab-content">
@@ -39,7 +39,7 @@
 						<option value="true">Farthest</option>
 					</select>
 				</div>
-				<button class="btn btn-success" id="transects-edit-save-button" title="Update Modified Transect">Update Transects</button>
+				<button class="btn btn-success" id="transects-edit-save-button" title="Update Modified Transect">Save</button>
 				<button class="btn btn-success" id="transects-edit-add-button" title="Add Transect" data-toggle="button">Add Transect</button>
 				<button class="btn btn-success" id="transects-edit-crop-button" title="Crop Transect" data-toggle="button">Crop Transects</button>
 			</div>
@@ -50,10 +50,10 @@
 					<div id="create-transects-panel-container">
 						<div class="row-fluid">
 							<label for="create-transects-input-spacing">Spacing</label>
-							<input type="text" id="create-transects-input-spacing" maxLength="6" placeholder="500">m
+							<input type="text" id="create-transects-input-spacing" maxLength="6" placeholder="50">m
 							<input type="hidden" id="create-transects-input-name" class="customLayerName" style="width: 100%;">
 							<label for="create-transects-input-smoothing">Baseline Smoothing</label>
-							<input type="text" id="create-transects-input-smoothing" maxLength="6" placeholder="0.0">m
+							<input type="text" id="create-transects-input-smoothing" maxLength="6" placeholder="2500">m
 						</div>
 					</div>
 				</div>

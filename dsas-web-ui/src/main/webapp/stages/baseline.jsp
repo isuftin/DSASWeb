@@ -6,7 +6,7 @@
 	</div>
 	<ul class="nav nav-tabs" id="action-baseline-tablist">
 		<li class="active"><a data-toggle="tab" href="#baseline-view-tab">View</a></li>
-		<li><a data-toggle="tab" href="#baseline-manage-tab">Manage</a></li>
+		<li><a data-toggle="tab" href="#baseline-manage-tab">Upload/Edit</a></li>
 	</ul>
 	<div id="baseline-tab-content" class="tab-content">
 		<div class="tab-pane active" id="baseline-view-tab">

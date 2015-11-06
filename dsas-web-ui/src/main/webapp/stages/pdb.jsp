@@ -14,7 +14,7 @@
 		</div>
 		<div class="tab-pane" id="bias-manage-tab">
 			<div id="bias-uploader" class="uploader"></div>
-			<button class="btn btn-success" id="bias-triggerbutton"><i class="icon-arrow-up icon-white"></i>Upload</button>
+			<button class="btn btn-success" id="bias-triggerbutton"><i class="icon-arrow-up icon-white"></i>Upload uncertainty table .dbf</button>
 			<button id="bias-remove-btn" disabled class="btn btn-success">
 				<i class="icon-remove icon-white"></i>
 				&nbsp;Remove

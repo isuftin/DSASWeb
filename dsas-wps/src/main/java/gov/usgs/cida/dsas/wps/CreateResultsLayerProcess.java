@@ -169,7 +169,7 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
 
         protected Map<Long, Double[]> parseTextToMap(String results, String[] headers) {
             String[] lines = results.split("\n");
-            Map<Long, Double[]> resultMap = new HashMap<Long, Double[]>();
+            Map<Long, Double[]> resultMap = new HashMap<>();
             int transectColumn = -1;
             for (String line : lines) {
                 String[] columns = line.split("\t");
@@ -239,12 +239,13 @@ public class CreateResultsLayerProcess implements GeoServerProcess {
                         throw new UnsupportedFeatureTypeException("Transects must include base_dist attribute");
                     }
                     Double[] values = resultMap.get(transectId);
-                    List<Object> joinedAttributes = new ArrayList<>(joinedFeatureType.getAttributeCount());
-                    joinedAttributes.addAll(feature.getAttributes());
-                    joinedAttributes.addAll(Arrays.asList(values));
-                    joinedAttributes.add(calculateNSD((Geometry)feature.getDefaultGeometry(), transectToIntersectMap.get(transectIdAsObject)));
-                    distanceToAttribureMap.put(baseDistance, joinedAttributes);
-                
+					if (values != null) {
+						List<Object> joinedAttributes = new ArrayList<>(joinedFeatureType.getAttributeCount());
+						joinedAttributes.addAll(feature.getAttributes());
+						joinedAttributes.addAll(Arrays.asList(values));
+						joinedAttributes.add(calculateNSD((Geometry) feature.getDefaultGeometry(), transectToIntersectMap.get(transectIdAsObject)));
+						distanceToAttribureMap.put(baseDistance, joinedAttributes);
+					}
                 }
             }
             int joinedFeatureCount = distanceToAttribureMap.size();

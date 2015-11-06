@@ -13,7 +13,7 @@ var Transects = {
 	suffixes: ['_lt', '_st', '_transects'],
 	reservedColor: '#D95F02',
 	createTransectsAndIntersectionsWPSTemplate: undefined,
-	DEFAULT_SPACING: 500,
+	DEFAULT_SPACING: 50,
 	NAME_CONTROL_SNAP: 'snap-control',
 	NAME_CONTROL_EDIT: 'transects-edit-control',
 	NAME_CONTROL_HIGHLIGHT: 'transects-highlight-control',
@@ -242,7 +242,7 @@ var Transects = {
 					} else {
 						feature.state = OpenLayers.State.DELETE;
 						feature.style = {
-							strokeColor: '#FF0000'
+							strokeColor: '#D3D3D3'
 						};
 					}
 					feature.layer.redraw();
@@ -257,7 +257,7 @@ var Transects = {
 						var cloneFeature = cloneLayer.getFeatureBy('fid', fid);
 						cloneFeature.state = OpenLayers.State.DELETE;
 						cloneFeature.style = {
-							strokeColor: '#FF0000'
+							strokeColor: '#D3D3D3'
 						};
 						originalFeature.style = {
 							strokeOpacity: 0
@@ -369,7 +369,7 @@ var Transects = {
 						for (tIdx = 0; tIdx < sortedSplitTransects.length; tIdx++) {
 							transect = sortedSplitTransects[tIdx];
 							transect.style = {
-								strokeColor: '#FF0000'
+								strokeColor: '#D3D3D3'
 							};
 						}
 
@@ -945,7 +945,7 @@ var Transects = {
 		}
 
 		if (isNaN(smoothing)) {
-			smoothing = 0.0;
+			smoothing = 2500.0;
 		} else {
 			smoothing = smoothing <= 0.0 ? 0.0 : smoothing;
 		}
