@@ -102,7 +102,15 @@ $(document).ready(function () {
 					CONFIG.tempSession.updateLayersFromWMS,
 					finishLoadingApplication
 				],
-				error: [finishLoadingApplication]
+				error: [
+					function () {
+						var session = CONFIG.tempSession.createNewSession().sessions[0];
+						CONFIG.permSession.session.sessions.push(session);
+						CONFIG.permSession.session.currentSession = session.id;
+						CONFIG.permSession.save();
+						interrogateSessionResources();
+					}
+				]
 			}
 		});
 	};

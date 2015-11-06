@@ -53,6 +53,8 @@ var Baseline = {
 			displayInLayerSwitcher: false,
 			strategies: [new OpenLayers.Strategy.BBOX({
 					merge : function (resp) {
+						// Passthrough hack because the protocol on this layer
+						// causes an invalid request to the server
 						this.layer.events.triggerEvent("loadend", {response: resp});
 					}
 			}), new OpenLayers.Strategy.Save()],
