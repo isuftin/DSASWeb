@@ -67,14 +67,14 @@ define([
 				},
 				context: {
 					deferred: deferred,
-					scope: args.context || this
+					context: args.context || this
 				},
 				success: function (data) {
 					var getCapsResponse = new OpenLayers.Format.WMSCapabilities.v1_3_0().read(data);
-					this.deferred.resolveWith(this.scope, [getCapsResponse]);
+					this.deferred.resolveWith(this.context, [getCapsResponse]);
 				},
 				error: function () {
-					this.deferred.rejectWith(this.scope, arguments);
+					this.deferred.rejectWith(this.context, arguments);
 				}
 			});
 			return deferred;

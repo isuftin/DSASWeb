@@ -41,6 +41,8 @@ define([
 		 */
 		initialize: function (options) {
 			log.debug("DSASweb Home view initializing");
+			
+			BaseView.prototype.initialize.apply(this, arguments);
 
 			this.appEvents = options.appEvents;
 			
@@ -54,10 +56,7 @@ define([
 			this.subViews.navView = new NavigationView(subViewParams);
 			this.subViews.mapView = new MapView(subViewParams);
 			this.subViews.notificationView = new NotificationView(subViewParams);
-
 			this.subViews.notificationView.setElement(this.$('#notification-span'));
-
-			BaseView.prototype.initialize.apply(this, arguments);
 		},
 		remove: function () {
 			BaseView.prototype.remove.apply(this, arguments);

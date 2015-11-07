@@ -154,7 +154,7 @@ define([
 								// User needs to match columns 
 								var columnMatchingModel = new ColumnMatchingModel({
 									layerColumns: layerColumns,
-									layerName: localStorage.dsas + "_shorelines",
+									layerName: SessionUtil.getCurrentSessionKey() + "_shorelines",
 									defaultColumns: ShorelineUtil.DEFAULT_COLUMNS,
 									columnKeys: _.keys(layerColumns),
 									mandatoryColumns: ShorelineUtil.MANDATORY_COLUMNS
@@ -181,7 +181,7 @@ define([
 									ShorelineUtil
 											.importShorelineFromToken({
 												token: token,
-												workspace: localStorage.dsas,
+												workspace: SessionUtil.getCurrentSessionKey(),
 												layerColumns: columnMatchingModel.get('layerColumns'),
 												context: this
 											})
@@ -193,7 +193,7 @@ define([
 								ShorelineUtil.
 										importShorelineFromToken({
 											token: token,
-											workspace: localStorage.dsas,
+											workspace: SessionUtil.getCurrentSessionKey(),
 											layerColumns: layerColumns,
 											context: this
 										})

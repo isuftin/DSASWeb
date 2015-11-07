@@ -35,74 +35,92 @@ define([
 	};
 
 	return {
-		updateSessionUsingWMSGetCapabilitiesResponse: function (session, context) {
-			var deferred = $.Deferred();
-			OwsUtil.getWMSCapabilities({
-				namespace: session.id,
-				context: {
-					deferred: deferred,
-					session: session,
-					context: context || this
-				}
-			}).done(function (capabilities) {
-				_.each(capabilities.capability.layers, function (l) {
-					var layerName = l.name;
-					var layerBoundsArray = l.llbbox;
-					var layerStage = l.title.substring(l.title.indexOf('_') + 1);
-					var session = this.session.session;
-					var sessionStage = session.get(layerStage);
-					var stageBboxArray = sessionStage.bbox;
-					// Check that it's a valid layer by testing the bbox
-					// TODO - Figure out a better way of checking for a valid layer
-					// or find out why some layers have a broken bbox like this
-					var isValidLayer = _.reduce(layerBoundsArray, function (a, b) {
-						return parseInt(a) + parseInt(b);
-					}) !== -2;
-
-					// Only add the layer to the session if it isn't already in there
-					if (!_.contains(sessionStage.layers, layerName) && isValidLayer) {
-						if (stageBboxArray.length === 0) {
-							sessionStage.bbox = layerBoundsArray;
-						} else {
-							var stageBounds = OwsUtil.getBoundsFromArray({
-								array: stageBboxArray
-							});
-							var incomingBounds = OwsUtil.getBoundsFromArray({
-								array: layerBoundsArray
-							});
-							var extendedBounds = OwsUtil.extendBounds(stageBounds, incomingBounds);
-							sessionStage.bbox = extendedBounds.toArray();
+		updateSessionUsingWMSGetCapabilitiesResponse: function (args) {
+			args = args || this;
+			var deferred = $.Deferred(),
+					session = args.session,
+					context = args.context || this;
+			OwsUtil
+					.getWMSCapabilities({
+						namespace: session.id,
+						context: {
+							deferred: deferred,
+							session: session,
+							context: context
 						}
+					})
+					.done(function (capabilities) {
+						_.each(capabilities.capability.layers, function (l) {
+							var layerName = l.name;
+							var layerBoundsArray = l.llbbox;
+							var layerStage = l.title.substring(l.title.indexOf('_') + 1);
+							var session = this.session;
+							var sessionStage = session.get(layerStage);
+							var stageBboxArray = sessionStage.bbox;
+							// Check that it's a valid layer by testing the bbox
+							// TODO - Figure out a better way of checking for a valid layer
+							// or find out why some layers have a broken bbox like this
+							var isValidLayer = _.reduce(layerBoundsArray, function (a, b) {
+								return parseInt(a) + parseInt(b);
+							}) !== -2;
 
-						sessionStage.layers.push(layerName);
-					}
-					session.set(layerStage, sessionStage);
-				}, this);
-				deferred.resolveWith(this.context, [this.session, capabilities]);
-			});
+							// Only add the layer to the session if it isn't already in there
+							if (!_.contains(sessionStage.layers, layerName) && isValidLayer) {
+								if (stageBboxArray.length === 0) {
+									sessionStage.bbox = layerBoundsArray;
+								} else {
+									var stageBounds = OwsUtil.getBoundsFromArray({
+										array: stageBboxArray
+									});
+									var incomingBounds = OwsUtil.getBoundsFromArray({
+										array: layerBoundsArray
+									});
+									var extendedBounds = OwsUtil.extendBounds(stageBounds, incomingBounds);
+									sessionStage.bbox = extendedBounds.toArray();
+								}
+
+								sessionStage.layers.push(layerName);
+							}
+							session.set(layerStage, sessionStage);
+						}, this);
+						deferred.resolveWith(this.context, [this.session, capabilities]);
+					})
+					.fail(function () {
+						deferred.rejectWith(this.context, arguments);
+					});
 			return deferred;
 		},
-		prepareSession: function () {
+		prepareSession: function (workspace) {
 			// - A session has not yet been created for perm storage. Probably the first
 			// run of the application or a new browser with no imported session. Because 
 			// the session is used in the namespace for WFS-T, it needs to 
 			// not have a number at the head of it so add a random letter. I need 
 			// to remove any dashes from the random id and lowercase the entire
 			// id. This is due to a back-end id length limitation
-			var randID = String.fromCharCode(97 + Math.round(Math.random() * 25)) + self.getRandomUUID().replace(/-/g, '').toLowerCase();
+			var workspaceId = workspace || String.fromCharCode(97 + Math.round(Math.random() * 25)) + self.getRandomUUID().replace(/-/g, '').toLowerCase();
 
 			// Prepare the session on the OWS server
 			return $.get('service/session', {
 				action: 'prepare',
-				workspace: randID
+				workspace: workspaceId
 			}).done(function () {
-				log.info('Session.js::init: A workspace has been prepared on the OWS server with the name of ' + randID);
+				log.info('Session.js::init: A workspace has been prepared on the OWS server with the name of ' + workspaceId);
 			}).fail(function () {
-				log.error('Session.js::init: A workspace could not be created on the OWS server with the name of ' + randID);
+				log.error('Session.js::init: A workspace could not be created on the OWS server with the name of ' + workspaceId);
 			});
 		},
 		getCurrentSessionKey: function () {
-			return localStorage.dsas;
+			var keysString = localStorage.dsas || '',
+				keysArray = keysString.split(','),
+				currentKey;
+				
+				if (keysArray.length) {
+					currentKey = keysArray[0];
+				} else {
+					currentKey = null;
+				}
+				
+			return currentKey;
 		}
 	};
 });

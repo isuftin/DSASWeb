@@ -26,18 +26,22 @@ define([
 			this.context.activeTab = options.activeTab || this.DEFAULT_TAB;
 			BaseView.prototype.render.apply(this, [options]);
 
-			var subViewParams = {
-				parent: this,
-				router: this.router,
-				appEvents: this.appEvents,
-				model: this.model,
-				session: this.session
-			};
-
 			if (this.context.activeTab === this.DEFAULT_TAB) {
-				this.activeChildView = new ShorelineViewerView(subViewParams);
+				this.activeChildView = new ShorelineViewerView({
+					parent: this,
+					router: this.router,
+					appEvents: this.appEvents,
+					model: this.model,
+					session: this.session
+				});
 			} else {
-				this.activeChildView = new ShorelineManagementView(subViewParams);
+				this.activeChildView = new ShorelineManagementView({
+					parent: this,
+					router: this.router,
+					appEvents: this.appEvents,
+					model: this.model,
+					session: this.session
+				});
 			}
 
 			this.activeChildView.render({
@@ -65,23 +69,19 @@ define([
 			log.debug("DSASweb Shoreline view initializing");
 			BaseView.prototype.initialize.apply(this, [options]);
 
-			this.listenTo(this.appEvents, this.appEvents.map.aoiSelected, this.processAoiSelection);
-			this.listenTo(this.appEvents, this.appEvents.layerImportSuccess, this.shorelineImportCompleteHandler);
+			this.listenTo(this.appEvents, this.appEvents.shorelines.layerImportSuccess, this.shorelineImportCompleteHandler);
 
 			return this;
 		},
-		processAoiSelection: function () {
-			// TODO
-		},
 		shorelineImportCompleteHandler: function () {
 			log.info("Shorelines imported");
-			SessionUtil.updateSessionUsingWMSGetCapabilitiesResponse({
+			return SessionUtil.updateSessionUsingWMSGetCapabilitiesResponse({
 				session: this.session.get(SessionUtil.getCurrentSessionKey()),
 				context: this
 			}).done(function () {
-				
+				this.appEvents.trigger(this.appEvents.session.wmsGetCapsCompleted, arguments);
 			}).fail(function () {
-				
+				this.appEvents.trigger(this.appEvents.session.wmsGetCapsFailed, arguments);
 			});
 		}
 	});

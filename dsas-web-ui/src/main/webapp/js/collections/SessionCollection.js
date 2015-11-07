@@ -3,8 +3,9 @@
 define([
 	'backbone',
 	'models/sessionModel',
+	'underscore',
 	'localstorage'
-], function (Backbone, SessionModel) {
+], function (Backbone, SessionModel, _) {
 	"use strict";
 	var coll = Backbone.Collection.extend({
 		model: SessionModel,

@@ -5,11 +5,14 @@ define([
 	'utils/logger',
 	'utils/constants',
 	'openlayers',
+	'utils/SessionUtil',
+	'utils/OwsUtil',
 	'text!templates/map.html'
-], function (Handlebars, BaseView, log, Constants, OpenLayers, template) {
+], function (Handlebars, BaseView, log, Constants, OpenLayers, SessionUtil, OwsUtil, template) {
 	"use strict";
 
 	var view = BaseView.extend({
+		owsUtil: OwsUtil,
 		template: Handlebars.compile(template),
 		// The name given to the Area of Interest selection layer
 		LAYER_AOI_NAME: 'layer-aoi-box',
@@ -21,11 +24,11 @@ define([
 		 */
 		render: function () {
 			BaseView.prototype.render.apply(this, arguments);
-			
+
 			this.map.render(this.mapDivId);
-			
+
 			this.map.zoomToExtent(this.initialExtent, true);
-			
+
 			return this;
 		},
 		/*
@@ -37,10 +40,13 @@ define([
 		initialize: function (options) {
 			log.debug("DSASweb Map view initializing");
 			options = options || {};
+
+			BaseView.prototype.initialize.apply(this, [options]);
+
 			this.mapDivId = options.mapDivId || 'map';
-			
-			this.initialExtent = [-15843196.966553,2251625.961233,-5501572.7891212,7593656.9932838];
-			
+
+			this.initialExtent = [-15843196.966553, 2251625.961233, -5501572.7891212, 7593656.9932838];
+
 			this.map = new OpenLayers.Map({
 				projection: Constants.strings.epsg900913,
 				displayProjection: new OpenLayers.Projection(Constants.strings.epsg900913)
@@ -145,7 +151,7 @@ define([
 			this.map.addLayer(new OpenLayers.Layer.Markers('geocoding-marker-layer', {
 				displayInLayerSwitcher: false
 			}));
-			
+
 			this.aoiSelectionLayer = new OpenLayers.Layer.Vector(this.LAYER_AOI_NAME, {
 				displayInLayerSwitcher: false
 			});
@@ -153,14 +159,14 @@ define([
 				e.object.removeAllFeatures();
 			});
 			this.aoiSelectionControl = new OpenLayers.Control.DrawFeature(this.aoiSelectionLayer,
-				OpenLayers.Handler.RegularPolygon, {
-					title: this.CONTROL_IDENTIFY_AOI_ID,
-					handlerOptions: {
-						sides: 4,
-						irregular: true
-					}
-				});
-			
+					OpenLayers.Handler.RegularPolygon, {
+						title: this.CONTROL_IDENTIFY_AOI_ID,
+						handlerOptions: {
+							sides: 4,
+							irregular: true
+						}
+					});
+
 			this.map.addLayer(this.aoiSelectionLayer);
 
 			this.map.addControls([
@@ -170,11 +176,9 @@ define([
 				this.aoiSelectionControl
 			]);
 
-			BaseView.prototype.initialize.apply(this, [options]);
-			
 			this.listenTo(this.appEvents, this.appEvents.shorelines.aoiSelectionToggled, this.toggleAOIControl);
 			this.listenTo(this.appEvents, this.appEvents.shorelines.aoiSelected, this.processAoiSelection);
-			
+			this.listenTo(this.session.get(SessionUtil.getCurrentSessionKey()), "change:shorelines", this.shorelinesUpdatedHandler);
 			return this;
 		},
 		/**
@@ -183,7 +187,7 @@ define([
 		 * @param {Boolean} toggleOn
 		 * @returns {OpenLayers.Control.DrawFeature} The AOI selection control
 		 */
-		toggleAOIControl : function (toggleOn) {
+		toggleAOIControl: function (toggleOn) {
 			if (toggleOn && !this.aoiSelectionControl.active) {
 				this.aoiSelectionLayer.removeAllFeatures();
 				this.aoiSelectionControl.activate();
@@ -192,13 +196,42 @@ define([
 			}
 			return this.aoiSelectionControl;
 		},
-		processAoiSelection : function () {
+		processAoiSelection: function () {
 			if (this.aoiSelectionLayer.features.length === 1) {
-				var bounds = this.aoiSelectionLayer.features[0].geometry.bounds;
 				this.appEvents.trigger(this.appEvents.map.aoiSelected, bounds);
+				
+				var shorelinesBoundsArray = this.session
+						.get(SessionUtil.getCurrentSessionKey())
+						.get('shorelines')
+						.bbox;
+
+				// Check if the user has any shorelines in their session
+				if (!_.isEmpty(shorelinesBoundsArray)) {
+					var bounds = this.aoiSelectionLayer.features[0].geometry.bounds,
+							shorelinesBounds = this.owsUtil
+							.getBoundsFromArray({
+								array: shorelinesBoundsArray,
+								epsgToCode: 'EPSG:900913'
+							}),
+							aoiContainsShorelines = shorelinesBounds.intersectsBounds(bounds);
+
+					if (aoiContainsShorelines) {
+						// It looks like the AOI selection contains some shorelines, 
+						// so those should now be displayed
+						this.displayShowlinesForBounds({bounds : bounds});
+					}
+				}
+
+				
 			} else {
 				this.appEvents.trigger(this.appEvents.map.aoiSelected, null);
 			}
+		},
+		displayShorelinesForBounds: function (args) {
+			args = args || {};
+			var bounds = args.bounds;
+
+			
 		},
 		remove: function () {
 			BaseView.prototype.remove.apply(this);
