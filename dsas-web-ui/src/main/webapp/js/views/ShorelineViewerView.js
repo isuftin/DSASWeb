@@ -5,7 +5,11 @@ define([
 	'views/BaseView',
 	'utils/logger',
 	'text!templates/shoreline-viewer-view.html'
-], function (Handlebars, BaseView, log, template) {
+], function (
+		Handlebars, 
+		BaseView, 
+		log, 
+		template) {
 	"use strict";
 	var view = BaseView.extend({
 		events: {
@@ -47,11 +51,6 @@ define([
 		aoiSelected: function () {
 			log.debug("AOI Selected");
 			this.appEvents.trigger(this.appEvents.shorelines.aoiSelected);
-		},
-		processAoiSelection: function (bounds) {
-			if (bounds) {
-				// TODO
-			}
 		},
 		remove: function () {
 			this.appEvents.trigger(this.appEvents.shorelines.aoiSelectionToggled, false);

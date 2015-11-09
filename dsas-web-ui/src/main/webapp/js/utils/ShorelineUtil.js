@@ -34,8 +34,8 @@ define([
 		 * @returns {Object<String, String>} The mapped columns
 		 */
 		createLayerUnionAttributeMap: function (args) {
-			var attributes = args.attributes,
-					layerColumns = args.layerColumns;
+			var attributes = args.attributes;
+			var layerColumns = args.layerColumns;
 
 			if (!layerColumns) {
 				layerColumns = {};
@@ -81,10 +81,10 @@ define([
 			});
 		},
 		importShorelineFromToken: function (args) {
-			var token = args.token,
-					workspace = args.workspace,
-					layerColumns = args.layerColumns,
-					context = args.context || this;
+			var token = args.token;
+			var workspace = args.workspace;
+			var layerColumns = args.layerColumns;
+			var context = args.context || this;
 
 			return $.ajax(this.SHORELINE_STAGE_ENDPOINT, {
 				type: 'POST',
@@ -99,14 +99,14 @@ define([
 		},
 		displayShorelinesForBounds: function (args) {
 			args = args || {};
-			var collection = args.shorelineCollection,
-					workspace = collection.workspace,
-					name = workspace + "_shorelines",
-					bbox = collection.bbox,
-					map = args.map,
-					cqlFilter = 'BBOX(geom, ' + bbox + ')',
-					// Get all the dates for the models in a unique, sorted array
-					dates = _.chain(collection.models)
+			var collection = args.shorelineCollection;
+			var workspace = collection.workspace;
+			var name = workspace + "_shorelines";
+			var bbox = collection.bbox;
+			var map = args.map;
+			var cqlFilter = 'BBOX(geom, ' + bbox + ')';
+			// Get all the dates for the models in a unique, sorted array
+			var dates = _.chain(collection.models)
 					.map(function (m) {
 						return m.get('date');
 					})
@@ -114,39 +114,60 @@ define([
 					.sortBy(function (d) {
 						return new Date(d);
 					})
-					.value(),
-					sld = this.createSLDBody({
-						dates: dates,
-						workspace: workspace
-					}),
-					layer = new OpenLayers.Layer.WMS(
-							workspace + "_shorelines",
-							this.GEOSERVER_PROXY_ENDPOINT + workspace + '/wms', {
-								layers: [workspace + ":" +name],
-								transparent: true,
-								sld_body: sld,
-								format: "image/png",
-								bbox: bbox,
-								cql_filter: cqlFilter
-							}, {
-						zoomToWhenAdded: false,
-						isBaseLayer: false,
-						unsupportedBrowsers: [],
-						tileOptions: {
-							// http://www.faqs.org/rfcs/rfc2616.html
-							// This will cause any request larger than this many characters to be a POST
-							maxGetUrlLength: 2048
-						},
-						title: name,
-						singleTile: true,
-						ratio: 1,
-						layerType: "shorelines",
-						displayInLayerSwitcher: false
-					});
+					.value();
+			var sld = this.createSLDBody({
+				dates: dates,
+				workspace: workspace
+			});
+			
+			var layer = new OpenLayers.Layer.WMS(
+					workspace + "_shorelines",
+					this.GEOSERVER_PROXY_ENDPOINT + workspace + '/wms', {
+						layers: [workspace + ":" + name],
+						transparent: true,
+						sld_body: sld,
+						format: "image/png",
+						bbox: bbox,
+						cql_filter: cqlFilter
+					}, {
+				zoomToWhenAdded: false,
+				isBaseLayer: false,
+				unsupportedBrowsers: [],
+				tileOptions: {
+					// http://www.faqs.org/rfcs/rfc2616.html
+					// This will cause any request larger than this many characters to be a POST
+					maxGetUrlLength: 2048
+				},
+				title: name,
+				singleTile: true,
+				ratio: 1,
+				layerType: "shorelines",
+				displayInLayerSwitcher: false
+			});
+			
+			this.removeShorelineLayer({
+				map : map
+			});
 
 			map.addLayer(layer);
-			
+
 			return layer;
+		},
+		/**
+		 * Removes the current shoreline layer on the map if one exists
+		 * 
+		 * @param {Object} args
+		 *	@property {Object<OpenLayers.Map>} map the OpenLayers map to run against
+		 * @returns {Object<OpenLayers.Layer.Vecotr} the layer that was removed from the map.
+		 *	null if a shoreline layer did not exist on the map.
+		 */
+		removeShorelineLayer : function (args) {
+			var map = args.map;
+			var previousShorelinesLayer = map.getLayersBy('layerType', 'shorelines');
+			if (previousShorelinesLayer.length) {
+				map.removeLayer(previousShorelinesLayer[0], false);
+			}
+			return previousShorelinesLayer.length ? previousShorelinesLayer[0] : null;
 		},
 		/**
 		 * Given a date string (or, really, any string), provides a hex color code
@@ -177,18 +198,18 @@ define([
 		 * @returns {String} the SLD xml 
 		 */
 		createSLDBody: function (args) {
-			var dates = args.dates,
-					colorDatePairings = _.map(dates, function (d) {
-						return {
-							color: this.getColorForDateString(d),
-							date: d
-						};
-					}, this),
-					workspace = args.workspace,
-					sldBody = this.SHORELINE_SLD_TEMPLATE({
-						prefix: workspace,
-						dates: colorDatePairings
-					});
+			var dates = args.dates;
+			var colorDatePairings = _.map(dates, function (d) {
+				return {
+					color: this.getColorForDateString(d),
+					date: d
+				};
+			}, this);
+			var workspace = args.workspace;
+			var sldBody = this.SHORELINE_SLD_TEMPLATE({
+				prefix: workspace,
+				dates: colorDatePairings
+			});
 
 			return sldBody;
 		}
