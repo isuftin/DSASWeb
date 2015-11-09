@@ -7,8 +7,11 @@ define([
 	'openlayers',
 	'utils/SessionUtil',
 	'utils/OwsUtil',
+	'utils/ShorelineUtil',
+	'collections/ShorelineServiceModelCollection',
+	'underscore',
 	'text!templates/map.html'
-], function (Handlebars, BaseView, log, Constants, OpenLayers, SessionUtil, OwsUtil, template) {
+], function (Handlebars, BaseView, log, Constants, OpenLayers, SessionUtil, OwsUtil, ShorelineUtil, ShorelineServiceModelCollection, _, template) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -178,7 +181,11 @@ define([
 
 			this.listenTo(this.appEvents, this.appEvents.shorelines.aoiSelectionToggled, this.toggleAOIControl);
 			this.listenTo(this.appEvents, this.appEvents.shorelines.aoiSelected, this.processAoiSelection);
-			this.listenTo(this.session.get(SessionUtil.getCurrentSessionKey()), "change:shorelines", this.shorelinesUpdatedHandler);
+			
+			if (this.session) { // This is not functional during jasmine testing
+				this.listenTo(this.session.get(SessionUtil.getCurrentSessionKey()), "change:shorelines", this.shorelinesUpdatedHandler);
+			}
+			
 			return this;
 		},
 		/**
@@ -198,8 +205,7 @@ define([
 		},
 		processAoiSelection: function () {
 			if (this.aoiSelectionLayer.features.length === 1) {
-				this.appEvents.trigger(this.appEvents.map.aoiSelected, bounds);
-				
+
 				var shorelinesBoundsArray = this.session
 						.get(SessionUtil.getCurrentSessionKey())
 						.get('shorelines')
@@ -207,31 +213,36 @@ define([
 
 				// Check if the user has any shorelines in their session
 				if (!_.isEmpty(shorelinesBoundsArray)) {
-					var bounds = this.aoiSelectionLayer.features[0].geometry.bounds,
-							shorelinesBounds = this.owsUtil
+					var bounds = this.aoiSelectionLayer.features[0].geometry.bounds
+							.transform(new OpenLayers.Projection("EPSG:900913"),
+									new OpenLayers.Projection("EPSG:4326")),
+						shorelinesBounds = this.owsUtil
 							.getBoundsFromArray({
-								array: shorelinesBoundsArray,
-								epsgToCode: 'EPSG:900913'
+								array: shorelinesBoundsArray
 							}),
-							aoiContainsShorelines = shorelinesBounds.intersectsBounds(bounds);
+						aoiContainsShorelines = shorelinesBounds.intersectsBounds(bounds);
 
 					if (aoiContainsShorelines) {
-						// It looks like the AOI selection contains some shorelines, 
-						// so those should now be displayed
-						this.displayShowlinesForBounds({bounds : bounds});
+						var shorelineSvcModelCollection = new ShorelineServiceModelCollection(null, {
+							workspace: SessionUtil.getCurrentSessionKey(),
+							bbox: bounds.toArray().toString()
+						});
+						this.appEvents.trigger(this.appEvents.map.aoiSelected, shorelineSvcModelCollection);
+						
+						this.listenToOnce(shorelineSvcModelCollection, 'sync', function (collection) {
+							ShorelineUtil.displayShorelinesForBounds({
+								shorelineCollection : collection,
+								map : this.map
+							});
+						});
+						
+						shorelineSvcModelCollection.fetch();
 					}
 				}
 
-				
 			} else {
 				this.appEvents.trigger(this.appEvents.map.aoiSelected, null);
 			}
-		},
-		displayShorelinesForBounds: function (args) {
-			args = args || {};
-			var bounds = args.bounds;
-
-			
 		},
 		remove: function () {
 			BaseView.prototype.remove.apply(this);

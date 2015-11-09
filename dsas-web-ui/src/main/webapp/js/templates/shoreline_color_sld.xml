@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<StyledLayerDescriptor 
+	version="1.0.0" 
+	xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" 
+	xmlns="http://www.opengis.net/sld" 
+	xmlns:ogc="http://www.opengis.net/ogc" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<NamedLayer>
+		<Name>{{prefix}}:{{prefix}}_shorelines</Name>
+		<UserStyle>
+			<FeatureTypeStyle>
+				
+				{{#each dates}}
+				<Rule>
+					<ogc:Filter>
+						<ogc:PropertyIsLike escape="!" singleChar="." wildCard="*">
+							<ogc:PropertyName>date</ogc:PropertyName>
+							<ogc:Literal>{{date}}</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</ogc:Filter>
+					<PointSymbolizer>
+						<Graphic>
+							<Mark>
+								<WellKnownName>circle</WellKnownName>
+								<Fill>
+									<CssParameter name="fill">#FFFFFF</CssParameter>
+								</Fill>
+								<Stroke>
+									<CssParameter name="stroke">{{color}}</CssParameter>
+								</Stroke>
+							</Mark>
+							<Size>
+								<ogc:Function name="min">
+									<ogc:Literal>6</ogc:Literal>
+									<ogc:Function name="max">
+										<ogc:Literal>2</ogc:Literal>
+										<ogc:Div>
+											<ogc:Literal>1000000</ogc:Literal>
+											<ogc:Function name="env">
+												<ogc:Literal>wms_scale_denominator</ogc:Literal>
+											</ogc:Function>
+										</ogc:Div>
+									</ogc:Function>
+								</ogc:Function>
+							</Size>
+						</Graphic>
+					</PointSymbolizer>
+				</Rule>
+				{{/each}}
+				
+				<Rule>
+					<ElseFilter />
+					<PointSymbolizer>
+						<Graphic>
+							<Mark>
+								<WellKnownName>circle</WellKnownName>
+								<Stroke>
+									<CssParameter name="stroke-opacity">0</CssParameter>
+								</Stroke>
+							</Mark>
+						</Graphic>
+					</PointSymbolizer>
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
+	</NamedLayer>
+</StyledLayerDescriptor>

@@ -3,12 +3,13 @@ define([
 	'jquery',
 	'utils/logger',
 	'openlayers',
-	'underscore'
-], function ($, log, OpenLayers, _) {
+	'underscore',
+	'module'
+], function ($, log, OpenLayers, _, module) {
 	"use strict";
 
 	var utils = {
-		geoserverProxyEndpoint: 'geoserver/',
+		GEOSERVER_PROXY_ENDPOINT: module.config().geoserverProxyEndpoint,
 		/**
 		 * Creates an OpenLayers.Bounds object from a bounding box array
 		 * 
@@ -56,7 +57,7 @@ define([
 		getWMSCapabilities: function (args) {
 			args = args || {};
 			var namespace = args.namespace || 'ows';
-			var url = this.geoserverProxyEndpoint + namespace + '/wms';
+			var url = this.GEOSERVER_PROXY_ENDPOINT + namespace + '/wms';
 			var deferred = $.Deferred();
 			$.ajax(url, {
 				data: {

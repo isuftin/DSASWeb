@@ -1,6 +1,7 @@
 /*jslint browser : true*/
 /*global define*/
 define([
+	'utils/AppEvents',
 	'backbone',
 	'utils/logger',
 	'views/HomeView',
@@ -8,25 +9,9 @@ define([
 	'models/ShorelineViewModel',
 	'jquery',
 	'underscore'
-], function (Backbone, log, HomeView, ShorelineView, ShorelineViewModel, $, _) {
+], function (AppEvents, Backbone, log, HomeView, ShorelineView, ShorelineViewModel, $, _) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
-		appEvents: {
-			map: {
-				aoiSelected: 'map_aoi_selected'
-			},
-			shorelines: {
-				aoiSelectionToggled: 'shorelines_aoi_selection_toggled',
-				aoiSelected: 'shorelines_aoi_selected',
-				columnsMatched: 'shorelines_columns_matched',
-				layerImportSuccess: 'shorelines_layer_import_success',
-				layerImportFail: 'shorelines_layer_import_fail'
-			},
-			session: {
-				wmsGetCapsCompleted : 'session_wms_getcaps_completed',
-				wmsGetCapsFailed : 'session_wms_getcaps_failed'
-			}
-		},
 		viewModels: {},
 		currentView: null,
 		routes: {
@@ -39,8 +24,10 @@ define([
 		initialize: function () {
 			log.trace("Initializing router");
 
-			_.extend(this.appEvents, Backbone.Events);
-
+			_.extend(AppEvents, Backbone.Events);
+			
+			this.appEvents = AppEvents;
+			
 			this.viewModels.shorelineViewModel = new ShorelineViewModel();
 			
 			return this;

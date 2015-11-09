@@ -20,9 +20,7 @@
 <%
 	String baseUrl = PropertyUtil.getProperty("dsas.base.url", request.getContextPath());
 %>
-
 <html lang="en">
-
     <head>
 		<title>DSASweb</title>
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("css/bootstrap" + (development ? "" : ".min") + ".css")%>" />
@@ -41,6 +39,9 @@
 					'init': {
 						'contextPath': "<%=baseUrl%>/"
 					},
+					'utils/OwsUtil': {
+						'geoserverProxyEndpoint' : 'geoserver/'
+					},
 					'utils/ShorelineUtil': {
 						columnAttrNames: {
 							'LRR': '<%= Constants.LRR_ATTR%>',
@@ -58,7 +59,8 @@
 							'name' : '<%= Constants.NAME_ATTR%>',
 							'source' : '<%= Constants.SOURCE_ATTR%>',
 							'biasUncertainty' : '<%= Constants.BIAS_UNCY_ATTR%>'
-						}
+						},
+						'geoserverProxyEndpoint' : 'geoserver/'
 					}
 				},
 				baseUrl: "<%=baseUrl%>/js/",
