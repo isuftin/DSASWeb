@@ -8,10 +8,23 @@ define([
 	'utils/SessionUtil',
 	'utils/OwsUtil',
 	'utils/ShorelineUtil',
+	'utils/MapUtil',
 	'collections/ShorelineServiceModelCollection',
 	'underscore',
 	'text!templates/map.html'
-], function (Handlebars, BaseView, log, Constants, OpenLayers, SessionUtil, OwsUtil, ShorelineUtil, ShorelineServiceModelCollection, _, template) {
+], function (
+		Handlebars,
+		BaseView,
+		log,
+		Constants,
+		OpenLayers,
+		SessionUtil,
+		OwsUtil,
+		ShorelineUtil,
+		MapUtil,
+		ShorelineServiceModelCollection,
+		_,
+		template) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -55,114 +68,10 @@ define([
 				displayProjection: new OpenLayers.Projection(Constants.strings.epsg900913)
 			});
 
-			var arcGisOnlineUrlPrepend = "http://services.arcgisonline.com/ArcGIS/rest/services/";
-			var arcGisOnlineUrlPostpend = "/MapServer/tile/${z}/${y}/${x}";
+			this.map.addLayers(MapUtil.getBaseLayers());
 
-			this.map.addLayers([
-				new OpenLayers.Layer.XYZ("World Imagery",
-						arcGisOnlineUrlPrepend + "World_Imagery" + arcGisOnlineUrlPostpend,
-						{
-							sphericalMercator: true,
-							isBaseLayer: true,
-							numZoomLevels: 20,
-							wrapDateLine: true
-						}
-				),
-				new OpenLayers.Layer.XYZ("Street",
-						arcGisOnlineUrlPrepend + "World_Street_Map" + arcGisOnlineUrlPostpend,
-						{
-							sphericalMercator: true,
-							isBaseLayer: true,
-							numZoomLevels: 20,
-							wrapDateLine: true
-						}
-				),
-				new OpenLayers.Layer.XYZ("Topo",
-						arcGisOnlineUrlPrepend + "World_Topo_Map" + arcGisOnlineUrlPostpend,
-						{
-							sphericalMercator: true,
-							isBaseLayer: true,
-							numZoomLevels: 20,
-							wrapDateLine: true
-						}
-				),
-				new OpenLayers.Layer.XYZ("Terrain",
-						arcGisOnlineUrlPrepend + "World_Terrain_Base" + arcGisOnlineUrlPostpend,
-						{
-							sphericalMercator: true,
-							isBaseLayer: true,
-							numZoomLevels: 14,
-							wrapDateLine: true
-						}
-				),
-				new OpenLayers.Layer.XYZ("Shaded Relief",
-						arcGisOnlineUrlPrepend + "World_Shaded_Relief" + arcGisOnlineUrlPostpend,
-						{
-							sphericalMercator: true,
-							isBaseLayer: true,
-							numZoomLevels: 14,
-							wrapDateLine: true
-						}
-				),
-				new OpenLayers.Layer.XYZ("Physical",
-						arcGisOnlineUrlPrepend + "World_Physical_Map" + arcGisOnlineUrlPostpend,
-						{
-							sphericalMercator: true,
-							isBaseLayer: true,
-							numZoomLevels: 9,
-							wrapDateLine: true
-						}
-				),
-				new OpenLayers.Layer.XYZ("Ocean",
-						arcGisOnlineUrlPrepend + "Ocean_Basemap" + arcGisOnlineUrlPostpend,
-						{
-							sphericalMercator: true,
-							isBaseLayer: true,
-							numZoomLevels: 17,
-							wrapDateLine: true
-						}
-				),
-				new OpenLayers.Layer.XYZ("Boundaries",
-						arcGisOnlineUrlPrepend + "Reference/World_Boundaries_and_Places_Alternate" + arcGisOnlineUrlPostpend,
-						{
-							layers: '0',
-							numZoomLevels: 13,
-							transparent: true,
-							displayInLayerSwitcher: true
-						},
-				{
-					visibility: false,
-					isBaseLayer: false
-				}),
-				new OpenLayers.Layer.XYZ("World Reference",
-						arcGisOnlineUrlPrepend + "Reference/World_Reference_Overlay" + arcGisOnlineUrlPostpend,
-						{
-							layers: '0',
-							numZoomLevels: 14,
-							transparent: true,
-							displayInLayerSwitcher: true
-						},
-				{
-					visibility: false,
-					isBaseLayer: false
-				}),
-				new OpenLayers.Layer.Markers('geocoding-marker-layer', {
-					displayInLayerSwitcher: false
-				})
-			]);
+			this.aoiSelectionLayer = MapUtil.createAoiSelectionLayer();
 
-			this.map.addLayer(new OpenLayers.Layer.Markers('geocoding-marker-layer', {
-				displayInLayerSwitcher: false
-			}));
-
-			this.aoiSelectionLayer = new OpenLayers.Layer.Vector(this.LAYER_AOI_NAME, {
-				displayInLayerSwitcher: false
-			});
-			this.aoiSelectionLayer.defaultStyle = $.extend({}, this.aoiSelectionLayer.styleMap.styles['default'].defaultStyle);
-			this.aoiSelectionLayer.events.register('beforefeatureadded', null, function (e) {
-				e.object.removeAllFeatures();
-				this.style = $.extend({}, this.defaultStyle);
-			});
 			this.aoiSelectionControl = new OpenLayers.Control.DrawFeature(this.aoiSelectionLayer,
 					OpenLayers.Handler.RegularPolygon, {
 						title: this.CONTROL_IDENTIFY_AOI_ID,
@@ -232,15 +141,6 @@ define([
 						});
 						this.appEvents.trigger(this.appEvents.map.aoiSelected, shorelineSvcModelCollection);
 
-						// Change what the AOI selection box looks like in order
-						// to mark where the user has selected as their AOI
-						var aoi = this.aoiSelectionLayer.features[0];
-						var newStyle = $.extend({}, this.aoiSelectionLayer.defaultStyle);
-						newStyle.fillOpacity = 0.0;
-						newStyle.strokeOpacity = 1;
-						this.aoiSelectionLayer.style = newStyle;
-						this.aoiSelectionLayer.drawFeature(aoi, newStyle);
-
 						// Once the collection of shorelines is retrieved from the
 						// back end, use the data to create the SLD and display the
 						// layers.
@@ -249,8 +149,19 @@ define([
 								shorelineCollection: collection,
 								map: this.map
 							});
-							// Zoom to the extent of the AOI selection
+
 							this.map.zoomToExtent(this.aoiSelectionLayer.features[0].geometry.getBounds(), false);
+
+							// Change what the AOI selection box looks like in order
+							// to mark where the user has selected as their AOI
+							var aoi = this.aoiSelectionLayer.features[0];
+							var newStyle = $.extend({}, this.aoiSelectionLayer.defaultStyle);
+							newStyle.fillOpacity = 0.0;
+							newStyle.strokeOpacity = 1;
+							this.aoiSelectionLayer.style = newStyle;
+							this.aoiSelectionLayer.drawFeature(aoi, newStyle);
+
+							// Zoom to the extent of the AOI selection
 						});
 
 						shorelineSvcModelCollection.fetch();

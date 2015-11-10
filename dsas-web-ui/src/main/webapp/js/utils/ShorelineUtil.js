@@ -4,15 +4,18 @@ define([
 	'underscore',
 	'module',
 	'text!templates/shoreline_color_sld.xml',
-	'openlayers'
+	'openlayers',
+	'jquery'
 ], function (Handlebars,
 		_,
 		module,
 		template,
-		OpenLayers) {
+		OpenLayers,
+		$) {
 	"use strict";
 
 	var me = {
+		LAYER_AOI_NAME: 'layer-aoi-box',
 		MANDATORY_COLUMNS: ['date', 'uncy'],
 		DEFAULT_COLUMNS: [
 			{attr: module.config().columnAttrNames.MHW, defaultValue: "0"},
@@ -119,7 +122,7 @@ define([
 				dates: dates,
 				workspace: workspace
 			});
-			
+
 			var layer = new OpenLayers.Layer.WMS(
 					workspace + "_shorelines",
 					this.GEOSERVER_PROXY_ENDPOINT + workspace + '/wms', {
@@ -144,9 +147,9 @@ define([
 				layerType: "shorelines",
 				displayInLayerSwitcher: false
 			});
-			
+
 			this.removeShorelineLayer({
-				map : map
+				map: map
 			});
 
 			map.addLayer(layer);
@@ -161,7 +164,7 @@ define([
 		 * @returns {Object<OpenLayers.Layer.Vecotr} the layer that was removed from the map.
 		 *	null if a shoreline layer did not exist on the map.
 		 */
-		removeShorelineLayer : function (args) {
+		removeShorelineLayer: function (args) {
 			var map = args.map;
 			var previousShorelinesLayer = map.getLayersBy('layerType', 'shorelines');
 			if (previousShorelinesLayer.length) {
