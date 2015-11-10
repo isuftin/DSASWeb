@@ -107,7 +107,6 @@ define([
 		 */
 		toggleAOIControl: function (toggleOn) {
 			if (toggleOn && !this.aoiSelectionControl.active) {
-				this.aoiSelectionLayer.removeAllFeatures();
 				this.aoiSelectionControl.activate();
 			} else {
 				this.aoiSelectionControl.deactivate();

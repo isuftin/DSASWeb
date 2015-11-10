@@ -19,6 +19,7 @@ define([
 		template: Handlebars.compile(template),
 		initialize: function (options) {
 			BaseView.prototype.initialize.apply(this, [options]);
+			this.listenTo(this.appEvents, this.appEvents.map.aoiSelected, this.toggleAoiSelection)
 			return this;
 		},
 		render: function (options) {
@@ -42,11 +43,16 @@ define([
 		handleAoiSelectionClick: function (e) {
 			this.toggleAoiSelection(!$(e.target).hasClass('active'));
 		},
-		toggleAoiSelection: function (activated) {
-			log.debug("AOI Selection Toggled " + (activated ? "on" : "off"));
-			this.appEvents.trigger(this.appEvents.shorelines.aoiSelectionToggled, activated);
+		toggleAoiSelection: function () {
+			var activate = this.$('#description-aoi').hasClass('hidden');
+			log.debug("AOI Selection Toggled " + (activate ? "on" : "off"));
+			this.appEvents.trigger(this.appEvents.shorelines.aoiSelectionToggled, activate);
 			this.$('#description-aoi').toggleClass('hidden');
-			this.model.set('aoiToggledOn', activated);
+			if (!activate) {
+				this.$('#button-shorelines-aoi-toggle').removeClass('active');
+				this.$('#button-shorelines-aoi-toggle').prop("aria-pressed", false);
+			}
+			this.model.set('aoiToggledOn', activate);
 		},
 		aoiSelected: function () {
 			log.debug("AOI Selected");
