@@ -32,6 +32,8 @@
 		<version.sinon>1.7.3</version.sinon>
 		<version.squire>0.2.0</version.squire>
 		<version.backbone-localstorage>1.1.16</version.backbone-localstorage>
+		<version.bootstrap.toggle>2.2.0</version.bootstrap.toggle>
+		<version.bootstrap.table>1.9.0</version.bootstrap.table>
 	</properties>
 
 	<dependencies>
@@ -159,6 +161,11 @@
 			<artifactId>jquery-tablesorter</artifactId>
 			<type>war</type>
 			<version>2.7.6-2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>bootstrap-table</artifactId>
+			<version>${version.bootstrap.table}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
@@ -302,6 +309,11 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>backbone-localstorage</artifactId>
 			<version>${version.backbone-localstorage}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>bootstrap-toggle</artifactId>
+			<version>${version.bootstrap.toggle}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>

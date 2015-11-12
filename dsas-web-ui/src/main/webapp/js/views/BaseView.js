@@ -1,5 +1,5 @@
 /*jslint browser: true */
-
+/*global define*/
 define([
 	'backbone',
 	'underscore'

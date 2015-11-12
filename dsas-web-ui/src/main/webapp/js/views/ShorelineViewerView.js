@@ -3,13 +3,18 @@
 define([
 	'handlebars',
 	'views/BaseView',
+	'views/ShorelineTableView',
 	'utils/logger',
-	'text!templates/shoreline-viewer-view.html'
+	'text!templates/shoreline-viewer-view.html',
+	'jquery'
 ], function (
-		Handlebars, 
-		BaseView, 
-		log, 
-		template) {
+		Handlebars,
+		BaseView,
+		ShorelineTableView,
+		log,
+		template,
+		$
+		) {
 	"use strict";
 	var view = BaseView.extend({
 		events: {
@@ -19,7 +24,10 @@ define([
 		template: Handlebars.compile(template),
 		initialize: function (options) {
 			BaseView.prototype.initialize.apply(this, [options]);
-			this.listenTo(this.appEvents, this.appEvents.map.aoiSelected, this.toggleAoiSelection)
+			this.listenTo(this.appEvents, this.appEvents.map.aoiSelected, function (e) {
+				this.listenToOnce(e, 'sync', this.displayShorelinesData);
+				this.toggleAoiSelection();
+			});
 			return this;
 		},
 		render: function (options) {
@@ -53,6 +61,19 @@ define([
 				this.$('#button-shorelines-aoi-toggle').prop("aria-pressed", false);
 			}
 			this.model.set('aoiToggledOn', activate);
+		},
+		displayShorelinesData: function (shorelineCollection) {
+			var models = shorelineCollection.models;
+			this.shorelineTableView = new ShorelineTableView({
+				models: models
+			});
+			this.shorelineTableView.render();
+			$(this.shorelineTableView.el).appendTo(this.$('#shoreline-table'));
+			this.$('#shoreline-table').removeClass('hidden');
+			this.$('[data-toggle="table"]').bootstrapTable();
+		},
+		removeShorelinesData: function () {
+			this.shorelineTableView.remove();
 		},
 		aoiSelected: function () {
 			log.debug("AOI Selected");

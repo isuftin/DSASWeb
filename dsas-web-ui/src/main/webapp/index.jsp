@@ -16,6 +16,8 @@
 	String versionSugar = PropertyUtil.getProperty("version.sugarjs");
 	String versionBootstrapSwitch = PropertyUtil.getProperty("version.bootstrap.switch");
 	String versionHandlebars = PropertyUtil.getProperty("version.handlebars");
+	String versionBootstrapToggle = PropertyUtil.getProperty("version.bootstrap.toggle");
+	String versionBootstrapTable = PropertyUtil.getProperty("version.bootstrap.table");
 %>
 <%
 	String baseUrl = PropertyUtil.getProperty("dsas.base.url", request.getContextPath());
@@ -25,6 +27,8 @@
 		<title>DSASweb</title>
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("css/bootstrap" + (development ? "" : ".min") + ".css")%>" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/font-awesome/<%=versionFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/bootstrap-toggle/<%=versionBootstrapToggle%>/css/bootstrap-toggle<%= development ? "" : ".min"%>.css" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/bootstrap-table/<%=versionBootstrapTable%>/dist/bootstrap-table<%= development ? "" : ".min"%>.css" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/jquery-ui/<%= versionJqueryUi%>/jquery-ui.min.css" />
 		<link type="text/css" rel="stylesheet" href="css/shorelines/shorelines.css" />
     </head>
@@ -74,13 +78,24 @@
 					"loglevel": ['<%=baseUrl%>/webjars/loglevel/<%=  PropertyUtil.getProperty("version.loglevel")%>/loglevel<%= development ? "" : ".min"%>'],
 					"openlayers": ['<%=baseUrl%>/webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? ".debug" : ""%>'],
 					"jqueryui": ['<%=baseUrl%>/webjars/jquery-ui/<%= PropertyUtil.getProperty("version.jquery.ui")%>/jquery-ui<%= development ? ".min" : ""%>'],
-					"localstorage": ['<%=baseUrl%>/webjars/backbone-localstorage/<%=  PropertyUtil.getProperty("version.backbone-localstorage")%>/backbone.localStorage<%= development ? "" : "-min"%>']
+					"localstorage": ['<%=baseUrl%>/webjars/backbone-localstorage/<%=  PropertyUtil.getProperty("version.backbone-localstorage")%>/backbone.localStorage<%= development ? "" : "-min"%>'],
+					"bootstrapToggle": ['<%=baseUrl%>/webjars/bootstrap-toggle/<%=versionBootstrapToggle%>/js/bootstrap-toggle<%= development ? "" : ".min"%>'],
+					"BootstrapTable": ['<%=baseUrl%>/webjars/bootstrap-table/<%=versionBootstrapTable%>/dist/bootstrap-table<%= development ? "" : ".min"%>']
 				},
 				shim: {
 					openlayers: {
 						exports: "OpenLayers"
 					},
-					"bootstrap": { "deps" :['jquery'] }
+					bootstrapToggle : {
+						exports: "Toggle"
+					},
+					BootstrapTable : {
+						"deps" :['jquery'],
+						"exports" : "BootstrapTable"
+					},
+					"bootstrap": { 
+						"deps" :['jquery'] 
+					}
 				}
 			};
 		</script>

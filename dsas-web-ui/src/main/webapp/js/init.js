@@ -2,6 +2,7 @@
 /*global define*/
 /*global session*/
 define([
+	'jquery',
 	'controller/AppRouter',
 	'utils/logger',
 	'backbone',
@@ -11,8 +12,9 @@ define([
 	'models/sessionModel',
 	'utils/SessionUtil',
 	'bootstrap', // Load up bootstrap to get it worked into jquery
-	'jqueryui' // Do the same with JQuery UI
-], function (Router, log, Backbone, module, _, SessionCollection, SessionModel, SessionUtil) {
+	'jqueryui', // Do the same with JQuery UI
+	'BootstrapTable' // and bootstrap table
+], function ($, Router, log, Backbone, module, _, SessionCollection, SessionModel, SessionUtil) {
 	"use strict";
 	this.router = new Router();
 	

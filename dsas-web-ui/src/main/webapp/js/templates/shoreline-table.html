@@ -1,0 +1,36 @@
+<script>
+	window.visibilitySorter = function (a, b) {
+		return a.indexOf('checked="checked"') !== -1 ? 1 : -1;
+	}
+	window.dateSorter = function (a , b) {
+		return new Date(a.trim()).getTime() > new Date(b.trim()).getTime() ? 1 : -1;
+	}
+</script>
+<table id="shoreline-table" data-toggle="table" class="table table-hover">
+	<thead>
+		<tr>
+			<th data-sortable="true" data-sorter="visibilitySorter" data-title="Visibility"></th>
+			<th data-sortable="true" data-sorter="dateSorter"  data-title="Date"></th>
+			<th data-sortable="true" data-title="Source"></th>
+			<th data-sortable="false" data-title="Color"></th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each models}}
+		<tr id="shoreline-table-row-{{@index}}">
+			<td>
+				<input type="checkbox" checked="checked" data-toggle="toggle" data-size="mini" data-onstyle="primary" data-offstyle="danger">
+			</td>
+			<td>
+				{{attributes.date}}
+			</td>
+			<td>
+				{{attributes.source}}
+			</td>
+			<td>
+				color
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>

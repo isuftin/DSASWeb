@@ -107,6 +107,10 @@ define([
 		 */
 		toggleAOIControl: function (toggleOn) {
 			if (toggleOn && !this.aoiSelectionControl.active) {
+				this.aoiSelectionLayer.removeAllFeatures();
+				ShorelineUtil.removeShorelineLayer({
+					map : this.map
+				});
 				this.aoiSelectionControl.activate();
 			} else {
 				this.aoiSelectionControl.deactivate();
