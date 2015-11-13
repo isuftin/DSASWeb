@@ -147,10 +147,10 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 
 			if (biasRef == null) {
 				this.performBiasCorrection = false;
-				this.biasRefFeatureCollection = biasRef;
+				this.biasRefFeatureCollection = null;
 			} else {
 				this.performBiasCorrection = true;
-				this.biasRefFeatureCollection = null;
+				this.biasRefFeatureCollection = biasRef;
 			}
 
 			this.spacing = spacing;
@@ -172,7 +172,7 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 			CoordinateReferenceSystem shorelinesCrs = CRSUtils.getCRSFromFeatureCollection(shorelineFeatureCollection);
 			CoordinateReferenceSystem baselineCrs = CRSUtils.getCRSFromFeatureCollection(baselineFeatureCollection);
 			CoordinateReferenceSystem biasCrs = null;
-			if (!performBiasCorrection) {
+			if (performBiasCorrection) {
 				biasCrs = CRSUtils.getCRSFromFeatureCollection(biasRefFeatureCollection);
 			}
 
@@ -182,7 +182,7 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 			if (!CRS.equalsIgnoreMetadata(baselineCrs, REQUIRED_CRS_WGS84)) {
 				throw new UnsupportedCoordinateReferenceSystemException("Baseline is not in accepted projection");
 			}
-			if (!performBiasCorrection && !CRS.equalsIgnoreMetadata(biasCrs, REQUIRED_CRS_WGS84)) {
+			if (performBiasCorrection && !CRS.equalsIgnoreMetadata(biasCrs, REQUIRED_CRS_WGS84)) {
 				throw new UnsupportedCoordinateReferenceSystemException("Bias reference is not in accepted projection");
 			}
 			this.utmCrs = UTMFinder.findUTMZoneCRSForCentroid((SimpleFeatureCollection) shorelineFeatureCollection);
@@ -193,7 +193,7 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 			SimpleFeatureCollection transformedShorelines = CRSUtils.transformFeatureCollection(shorelineFeatureCollection, REQUIRED_CRS_WGS84, utmCrs);
 			SimpleFeatureCollection transformedBaselines = CRSUtils.transformFeatureCollection(baselineFeatureCollection, REQUIRED_CRS_WGS84, utmCrs);
 			SimpleFeatureCollection transformedBiasRef = null;
-			if (!performBiasCorrection) {
+			if (performBiasCorrection) {
 				transformedBiasRef = CRSUtils.transformFeatureCollection(biasRefFeatureCollection, REQUIRED_CRS_WGS84, utmCrs);
 			}
 
