@@ -80,39 +80,39 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  * @author Jordan Walker <jiwalker@usgs.gov>
  */
 public class Intersection {
-	
+
 	private Point point;
 	private double distance;
 	private int transectId;
 	private DateTime date;
 	private double uncy;
-	private ProxyDatumBias bias;
+	private ProxyDatumBias pdb;
 	private AttributeGetter attGet;
 	private boolean isMeanHighWater = Constants.DEFAULT_MHW_VALUE;
 	private static DateTimeFormatter inputFormat;
 	private static DateTimeFormatter outputFormat;
 
-    static {
-        try {
-            inputFormat = new DateTimeFormatterBuilder()
-                    .appendMonthOfYear(2)
-                    .appendLiteral('/')
-                    .appendDayOfMonth(2)
-                    .appendLiteral('/')
-                    .appendYear(4, 4)
-                    .toFormatter();
+	static {
+		try {
+			inputFormat = new DateTimeFormatterBuilder()
+					.appendMonthOfYear(2)
+					.appendLiteral('/')
+					.appendDayOfMonth(2)
+					.appendLiteral('/')
+					.appendYear(4, 4)
+					.toFormatter();
 
-            outputFormat = new DateTimeFormatterBuilder()
-                    .appendYear(4, 4)
-                    .appendLiteral('-')
-                    .appendMonthOfYear(2)
-                    .appendLiteral('-')
-                    .appendDayOfMonth(2)
-                    .toFormatter();
-        } catch (Exception ex) {
-            // log severe
-        }
-    }
+			outputFormat = new DateTimeFormatterBuilder()
+					.appendYear(4, 4)
+					.appendLiteral('-')
+					.appendMonthOfYear(2)
+					.appendLiteral('-')
+					.appendDayOfMonth(2)
+					.toFormatter();
+		} catch (Exception ex) {
+			// log severe
+		}
+	}
 
 	/**
 	 * Stores Intersections from feature for delivery to R
@@ -133,9 +133,9 @@ public class Intersection {
 		this.transectId = transectId;
 		this.attGet = intersectionGetter;
 		//this has to support either shapefile or DB load
-		if(shorelineGetter.getValue(DATE_ATTR, shoreline) != null) {
+		if (shorelineGetter.getValue(DATE_ATTR, shoreline) != null) {
 			this.date = parseDate(shorelineGetter.getValue(DATE_ATTR, shoreline));
-		} else if(shorelineGetter.getValue(DB_DATE_ATTR, shoreline) != null) {
+		} else if (shorelineGetter.getValue(DB_DATE_ATTR, shoreline) != null) {
 			this.date = parseDate(shorelineGetter.getValue(DB_DATE_ATTR, shoreline));
 		}
 		this.uncy = uncy;
@@ -159,49 +159,49 @@ public class Intersection {
 
 		double biasVal;
 		double uncybVal;
-		
+
 		try {
 			biasVal = attGet.getDoubleValue(BIAS_ATTR, intersectionFeature);
 		} catch (AttributeNotANumberException e) {
 			biasVal = DEFAULT_BIAS;
 		}
-		
+
 		try {
 			uncybVal = attGet.getDoubleValue(BIAS_UNCY_ATTR, intersectionFeature);
 		} catch (AttributeNotANumberException e) {
 			uncybVal = DEFAULT_BIAS_UNCY;
 		}
-		
-		this.bias = new ProxyDatumBias(Double.NaN, biasVal, uncybVal);
+
+		this.pdb = new ProxyDatumBias(Double.NaN, biasVal, uncybVal);
 	}
-	
+
 	public DateTime getDate() {
 		return this.date;
 	}
-	
+
 	public double getUncertainty() {
 		return this.uncy;
 	}
-	
+
 	public double getBias() {
-		return this.bias.getBias();
+		return this.pdb.getBias();
 	}
 
 	public void setBias(ProxyDatumBias inBias) {
 		if (inBias != null && !isMeanHighWater) {
-			this.bias = inBias;
+			this.pdb = inBias;
 		} else {
-			this.bias = new ProxyDatumBias(Double.NaN, DEFAULT_BIAS, DEFAULT_BIAS_UNCY);
+			this.pdb = new ProxyDatumBias(Double.NaN, DEFAULT_BIAS, DEFAULT_BIAS_UNCY);
 		}
 	}
-	
+
 	public double getBiasUncertainty() {
-		return this.bias.getUncyb();
+		return this.pdb.getUncyb();
 	}
 
-    /**
-     * Helper function to convert from mm/dd/yyy to yyyy-mm-dd
-     */
+	/**
+	 * Helper function to convert from mm/dd/yyy to yyyy-mm-dd
+	 */
 //    protected static String convertToYYYYMMDD(String t) throws ParseException {
 //        DateTime dateObj = new DateTime(new SimpleDateFormat("MM/dd/yyyy").parse(t));
 //        String outDate = dateObj.toString("yyyy-MM-dd");
@@ -241,9 +241,9 @@ public class Intersection {
 			} else if (attGet.matches(attrType.getName(), UNCY_ATTR)) {
 				featureObjectArr[i] = uncy;
 			} else if (attGet.matches(attrType.getName(), BIAS_ATTR)) {
-				featureObjectArr[i] = bias.getBias();
+				featureObjectArr[i] = pdb.getBias();
 			} else if (attGet.matches(attrType.getName(), BIAS_UNCY_ATTR)) {
-				featureObjectArr[i] = bias.getUncyb();
+				featureObjectArr[i] = pdb.getUncyb();
 			}
 		}
 		return SimpleFeatureBuilder.build(type, featureObjectArr, null);
@@ -262,140 +262,138 @@ public class Intersection {
 
 	public static double parseUncertainty(Object uncy) {
 		if (uncy instanceof Number) {
-			return ((Number)uncy).doubleValue();
+			return ((Number) uncy).doubleValue();
 		} else {
 			throw new UnsupportedFeatureTypeException("Uncertainty should be a number");
 		}
 	}
 
-    public int getTransectId() {
-        return transectId;
-    }
-    
-    public double getDistance() {
-        return distance;
-    }
+	public int getTransectId() {
+		return transectId;
+	}
 
-    /**
-     * Returns the desired intersection
-     *
-     * @param a first intersection
-     * @param b second intersection
-     * @param closest return the closest intersection (false for farthest)
-     * @return Intersection
-     */
-    public static Intersection compare(Intersection a, Intersection b, boolean closest) {
-        boolean aFarther = ((Math.abs(a.distance) - Math.abs(b.distance)) > 0);
-        if (closest) {
-            return (aFarther) ? b : a;
-        } else {
-            return (aFarther) ? a : b;
-        }
-    }
+	public double getDistance() {
+		return distance;
+	}
 
-    public static double absoluteFarthest(double min, Collection<Intersection> intersections) {
-        double maxVal = min;
-        for (Intersection intersection : intersections) {
-            double absDist = Math.abs(intersection.distance);
-            if (absDist > maxVal) {
-                maxVal = absDist;
-            }
-        }
-        return maxVal;
-    }
+	/**
+	 * Returns the desired intersection
+	 *
+	 * @param a first intersection
+	 * @param b second intersection
+	 * @param closest return the closest intersection (false for farthest)
+	 * @return Intersection
+	 */
+	public static Intersection compare(Intersection a, Intersection b, boolean closest) {
+		boolean aFarther = ((Math.abs(a.distance) - Math.abs(b.distance)) > 0);
+		if (closest) {
+			return (aFarther) ? b : a;
+		} else {
+			return (aFarther) ? a : b;
+		}
+	}
 
-    public static Map<DateTime, Intersection> calculateIntersections(Transect transect, STRtree strTree, boolean useFarthest, AttributeGetter intersectionGetter) {
-        Map<DateTime, Intersection> allIntersections = new HashMap<>();
-        LineString line = transect.getLineString();
-        AttributeGetter shorelineGetter = null;
-        
-        @SuppressWarnings("unchecked")
+	public static double absoluteFarthest(double min, Collection<Intersection> intersections) {
+		double maxVal = min;
+		for (Intersection intersection : intersections) {
+			double absDist = Math.abs(intersection.distance);
+			if (absDist > maxVal) {
+				maxVal = absDist;
+			}
+		}
+		return maxVal;
+	}
+
+	public static Map<DateTime, Intersection> calculateIntersections(Transect transect, STRtree strTree, boolean useFarthest, AttributeGetter intersectionGetter) {
+		Map<DateTime, Intersection> allIntersections = new HashMap<>();
+		LineString line = transect.getLineString();
+		AttributeGetter shorelineGetter = null;
+
 		List<ShorelineFeature> possibleIntersects = strTree.query(line.getEnvelopeInternal());
-        
-        for (ShorelineFeature shoreline : possibleIntersects) {
-            if (shorelineGetter == null) {
-                // featuretype should be the same across all features
-                shorelineGetter = new AttributeGetter(shoreline.feature1.getFeatureType());
-            }
-            LineString segment = shoreline.segment;
-            if (segment.intersects(line)) {
-                // must be a point
-                Point crossPoint = (Point) segment.intersection(line);
-                Orientation orientation = transect.getOrientation();
-                
-                int sign = orientation.getSign();
-                if (sign == 0) {
-                    throw new PoorlyDefinedBaselineException("Baseline must define orientation");
-                }
-                
-                double distance = sign
-                        * transect.getOriginCoord()
-                        .distance(crossPoint.getCoordinate());
-                // use feature1 to get the date and MHW attribute (can't change within shoreline)
-                double interpolatedUncy = shoreline.interpolate(crossPoint, UNCY_ATTR, shorelineGetter, 0.0d);
-                Intersection intersection = new Intersection(crossPoint, distance, shoreline.feature1,
-                        interpolatedUncy, transect.getId(), intersectionGetter, shorelineGetter);
-                DateTime date = intersection.getDate();
-                if (allIntersections.containsKey(date)) {  // use closest/farthest intersection
-                    Intersection thatIntersection = allIntersections.get(date);
-                    Intersection closest = Intersection.compare(intersection, thatIntersection, !useFarthest);
-                    allIntersections.put(date, closest);
-                } else {
-                    allIntersections.put(date, intersection);
-                }
-            }
-        }
-        return allIntersections;
-    }
-    
-    /**
-     * Map is mutated to include new intersections in section of transect called here "subTransect"
-     * 
-     * @param intersectionsSoFar
-     * @param origin
-     * @param subTransect
-     * @param strTree
-     * @param useFarthest
-     * @param getter 
-     */
-    public static void updateIntersectionsWithSubTransect(Map<DateTime, Intersection> intersectionsSoFar, Point origin,
-            Transect subTransect, STRtree strTree, boolean useFarthest, AttributeGetter getter) {
-        Map<DateTime, Intersection> intersectionSubset = calculateIntersections(subTransect, strTree, useFarthest, getter);
-        for (DateTime date : intersectionSubset.keySet()) {
-            Intersection intersection = intersectionSubset.get(date);
-            
-            int sign = subTransect.getOrientation().getSign();
-            if (subTransect.getOrientation().getSign() == 0) {
-                throw new PoorlyDefinedBaselineException("Baseline must define orientation");
-            }
-            
-            intersection.distance = sign * intersection.point.distance(origin);
-            if (intersectionsSoFar.containsKey(date)) {
-                boolean isFarther = Math.abs(intersection.distance) > Math.abs(intersectionsSoFar.get(date).distance);
-                // only true  && true
-                // or   false && false
-                if (useFarthest == isFarther) {
-                    intersectionsSoFar.put(date, intersection);
-                }
-            }
-            else {
-                intersectionsSoFar.put(date, intersection);
-            }
-        }
-    }
 
-    @Override
-    public String toString() {
-        String time = outputFormat.print(getDate());
-        double uncertainty = getUncertainty();
-        double bias = getBias();
-        double biasUncertainty = getBiasUncertainty();
-        String str = 
-        		time + "\t" + distance + "\t" + uncertainty + "\t" + bias + "\t" + biasUncertainty;
-        return str;
-    }
-    
-    public boolean isMeanHighWater() {
-    	return isMeanHighWater;
-    }
+		for (ShorelineFeature shoreline : possibleIntersects) {
+			if (shorelineGetter == null) {
+				// featuretype should be the same across all features
+				shorelineGetter = new AttributeGetter(shoreline.feature1.getFeatureType());
+			}
+			LineString segment = shoreline.segment;
+			if (segment.intersects(line)) {
+				// must be a point
+				Point crossPoint = (Point) segment.intersection(line);
+				Orientation orientation = transect.getOrientation();
+
+				int sign = orientation.getSign();
+				if (sign == 0) {
+					throw new PoorlyDefinedBaselineException("Baseline must define orientation");
+				}
+
+				double distance = sign
+						* transect.getOriginCoord()
+						.distance(crossPoint.getCoordinate());
+				// use feature1 to get the date and MHW attribute (can't change within shoreline)
+				double interpolatedUncy = shoreline.interpolate(crossPoint, UNCY_ATTR, shorelineGetter, 0.0d);
+				Intersection intersection = new Intersection(crossPoint, distance, shoreline.feature1,
+						interpolatedUncy, transect.getId(), intersectionGetter, shorelineGetter);
+				DateTime date = intersection.getDate();
+				if (allIntersections.containsKey(date)) {  // use closest/farthest intersection
+					Intersection thatIntersection = allIntersections.get(date);
+					Intersection closest = Intersection.compare(intersection, thatIntersection, !useFarthest);
+					allIntersections.put(date, closest);
+				} else {
+					allIntersections.put(date, intersection);
+				}
+			}
+		}
+		return allIntersections;
+	}
+
+	/**
+	 * Map is mutated to include new intersections in section of transect called
+	 * here "subTransect"
+	 *
+	 * @param intersectionsSoFar
+	 * @param origin
+	 * @param subTransect
+	 * @param strTree
+	 * @param useFarthest
+	 * @param getter
+	 */
+	public static void updateIntersectionsWithSubTransect(Map<DateTime, Intersection> intersectionsSoFar, Point origin,
+			Transect subTransect, STRtree strTree, boolean useFarthest, AttributeGetter getter) {
+		Map<DateTime, Intersection> intersectionSubset = calculateIntersections(subTransect, strTree, useFarthest, getter);
+		for (DateTime date : intersectionSubset.keySet()) {
+			Intersection intersection = intersectionSubset.get(date);
+
+			int sign = subTransect.getOrientation().getSign();
+			if (subTransect.getOrientation().getSign() == 0) {
+				throw new PoorlyDefinedBaselineException("Baseline must define orientation");
+			}
+
+			intersection.distance = sign * intersection.point.distance(origin);
+			if (intersectionsSoFar.containsKey(date)) {
+				boolean isFarther = Math.abs(intersection.distance) > Math.abs(intersectionsSoFar.get(date).distance);
+                // only true  && true
+				// or   false && false
+				if (useFarthest == isFarther) {
+					intersectionsSoFar.put(date, intersection);
+				}
+			} else {
+				intersectionsSoFar.put(date, intersection);
+			}
+		}
+	}
+
+	@Override
+	public String toString() {
+		String time = outputFormat.print(getDate());
+		double uncertainty = getUncertainty();
+		double bias = getBias();
+		double biasUncertainty = getBiasUncertainty();
+		String str = time + "\t" + distance + "\t" + uncertainty + "\t" + bias + "\t" + biasUncertainty;
+		return str;
+	}
+
+	public boolean isMeanHighWater() {
+		return isMeanHighWater;
+	}
 }
