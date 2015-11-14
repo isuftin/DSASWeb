@@ -63,6 +63,8 @@ define([
 			if (!activate) {
 				this.$('#button-shorelines-aoi-toggle').removeClass('active');
 				this.$('#button-shorelines-aoi-toggle').prop("aria-pressed", false);
+			} else {
+				this.removeShorelinesData();
 			}
 			this.model.set('aoiToggledOn', activate);
 		},
@@ -77,10 +79,13 @@ define([
 			this.$('[data-toggle="table"]').bootstrapTable();
 		},
 		removeShorelinesData: function () {
-			this.shorelineTableView.remove();
+			if (this.shorelineTableView) {
+				this.shorelineTableView.remove();
+			}
 		},
 		aoiSelected: function () {
 			log.debug("AOI Selected");
+			this.removeShorelinesData();
 			this.appEvents.trigger(this.appEvents.shorelines.aoiSelected);
 		},
 		remove: function () {

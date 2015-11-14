@@ -14,7 +14,7 @@ define([
 		template) {
 	"use strict";
 
-	var view = Backbone.View.extend({
+	var view = BaseView.extend({
 		template: Handlebars.compile(template),
 		render: function () {
 			BaseView.prototype.render.apply(this, arguments);
@@ -23,6 +23,10 @@ define([
 		initialize: function (options) {
 			this.context = options;
 			Backbone.View.prototype.initialize.apply(this, arguments);
+		},
+		remove: function () {
+			BaseView.prototype.remove.apply(this);
+			return this;
 		}
 	});
 
