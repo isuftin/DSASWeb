@@ -1,13 +1,14 @@
 /*jslint browser: true */
 /*global define*/
 define([
+	'utils/AppEvents',
 	'handlebars',
 	'views/BaseView',
 	'utils/logger',
 	'underscore',
 	'jquery',
 	'text!templates/shoreline-column-matching-view.html'
-], function (Handlebars, BaseView, log, _, $, template) {
+], function (AppEvents, Handlebars, BaseView, log, _, $, template) {
 	"use strict";
 	var view = BaseView.extend({
 		events: {
@@ -17,6 +18,7 @@ define([
 		template: Handlebars.compile(template),
 		render: function (options) {
 			options = options || {};
+			options.appEvents = AppEvents;
 			this.context = this.model.toJSON();
 			BaseView.prototype.render.apply(this, [options]);
 			this.initializeDragDrop();

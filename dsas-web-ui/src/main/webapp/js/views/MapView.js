@@ -4,6 +4,7 @@ define([
 	'views/BaseView',
 	'utils/logger',
 	'utils/constants',
+	'utils/AppEvents',
 	'openlayers',
 	'utils/SessionUtil',
 	'utils/OwsUtil',
@@ -17,6 +18,7 @@ define([
 		BaseView,
 		log,
 		Constants,
+		AppEvents,
 		OpenLayers,
 		SessionUtil,
 		OwsUtil,
@@ -56,9 +58,9 @@ define([
 		initialize: function (options) {
 			log.debug("DSASweb Map view initializing");
 			options = options || {};
-
+			options.appEvents = AppEvents;
 			BaseView.prototype.initialize.apply(this, [options]);
-
+			
 			this.mapDivId = options.mapDivId || 'map';
 
 			this.initialExtent = [-15843196.966553, 2251625.961233, -5501572.7891212, 7593656.9932838];

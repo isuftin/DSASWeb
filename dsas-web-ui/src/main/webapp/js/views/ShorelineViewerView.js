@@ -1,6 +1,7 @@
 /*jslint browser: true */
 /*global define*/
 define([
+	'utils/AppEvents',
 	'handlebars',
 	'views/BaseView',
 	'views/ShorelineTableView',
@@ -8,6 +9,7 @@ define([
 	'text!templates/shoreline-viewer-view.html',
 	'jquery'
 ], function (
+		AppEvents,
 		Handlebars,
 		BaseView,
 		ShorelineTableView,
@@ -23,6 +25,8 @@ define([
 		},
 		template: Handlebars.compile(template),
 		initialize: function (options) {
+			options = options || {};
+			options.appEvents = AppEvents;
 			BaseView.prototype.initialize.apply(this, [options]);
 			this.listenTo(this.appEvents, this.appEvents.map.aoiSelected, function (e) {
 				this.listenToOnce(e, 'sync', this.displayShorelinesData);

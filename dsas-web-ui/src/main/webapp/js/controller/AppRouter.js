@@ -1,7 +1,6 @@
 /*jslint browser : true*/
 /*global define*/
 define([
-	'utils/AppEvents',
 	'backbone',
 	'utils/logger',
 	'views/HomeView',
@@ -9,7 +8,7 @@ define([
 	'models/ShorelineViewModel',
 	'jquery',
 	'underscore'
-], function (AppEvents, Backbone, log, HomeView, ShorelineView, ShorelineViewModel, $, _) {
+], function (Backbone, log, HomeView, ShorelineView, ShorelineViewModel, $, _) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		viewModels: {},
@@ -24,10 +23,6 @@ define([
 		initialize: function () {
 			log.trace("Initializing router");
 
-			_.extend(AppEvents, Backbone.Events);
-			
-			this.appEvents = AppEvents;
-			
 			this.viewModels.shorelineViewModel = new ShorelineViewModel();
 			
 			return this;
@@ -37,7 +32,6 @@ define([
 			
 			this.homeView = new HomeView({
 				router: this,
-				appEvents: this.appEvents,
 				session : this.session
 			});
 			this.homeView.render();
@@ -57,7 +51,6 @@ define([
 			this.shorelineView = new ShorelineView({
 				parent: this.homeView,
 				router: this,
-				appEvents: this.appEvents,
 				model: this.viewModels.shorelineViewModel,
 				session : this.session
 			}).render({

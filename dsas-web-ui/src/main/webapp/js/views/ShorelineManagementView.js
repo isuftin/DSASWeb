@@ -1,6 +1,7 @@
 /*jslint browser: true */
 /*global define*/
 define([
+	'utils/AppEvents',
 	'handlebars',
 	'views/BaseView',
 	'utils/logger',
@@ -12,7 +13,7 @@ define([
 	'views/ModalWindowView',
 	'models/ModalModel',
 	'text!templates/shoreline-management-view.html'
-], function (Handlebars, BaseView, log, ShorelineUtil, ColumnMatchingView, ColumnMatchingModel, _, SessionUtil, ModalWindowView, ModalModel, template) {
+], function (AppEvents, Handlebars, BaseView, log, ShorelineUtil, ColumnMatchingView, ColumnMatchingModel, _, SessionUtil, ModalWindowView, ModalModel, template) {
 	"use strict";
 	var view = BaseView.extend({
 		events: {
@@ -23,6 +24,8 @@ define([
 		SHORELINE_STAGE_ENDPOINT: 'service/stage-shoreline',
 		template: Handlebars.compile(template),
 		initialize: function (options) {
+			options = options || {};
+			options.appEvents = AppEvents;
 			BaseView.prototype.initialize.apply(this, [options]);
 			log.debug("DSASweb Shoreline management view initializing");
 			return this;
@@ -161,8 +164,7 @@ define([
 								}),
 										columnMatchingView = new ColumnMatchingView({
 											model: columnMatchingModel,
-											router: this.router,
-											appEvents: this.appEvents
+											router: this.router
 										}),
 										modalView = new ModalWindowView({
 											model: new ModalModel({

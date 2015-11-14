@@ -6,8 +6,9 @@ define([
 	'views/ShorelineViewerView',
 	'utils/SessionUtil',
 	'utils/logger',
+	'utils/AppEvents',
 	'text!templates/shoreline-view.html'
-], function (Handlebars, BaseView, ShorelineManagementView, ShorelineViewerView, SessionUtil, log, template) {
+], function (Handlebars, BaseView, ShorelineManagementView, ShorelineViewerView, SessionUtil, log, AppEvents, template) {
 	"use strict";
 	var view = BaseView.extend({
 		// Defines what the default tab in the shorelines toolbox is
@@ -30,7 +31,6 @@ define([
 				this.activeChildView = new ShorelineViewerView({
 					parent: this,
 					router: this.router,
-					appEvents: this.appEvents,
 					model: this.model,
 					session: this.session
 				});
@@ -38,7 +38,6 @@ define([
 				this.activeChildView = new ShorelineManagementView({
 					parent: this,
 					router: this.router,
-					appEvents: this.appEvents,
 					model: this.model,
 					session: this.session
 				});
@@ -66,6 +65,9 @@ define([
 				}
 				return null;
 			});
+			
+			options.appEvents = AppEvents;
+			
 			log.debug("DSASweb Shoreline view initializing");
 			BaseView.prototype.initialize.apply(this, [options]);
 

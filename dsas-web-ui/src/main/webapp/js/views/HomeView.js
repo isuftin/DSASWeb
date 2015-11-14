@@ -2,13 +2,14 @@
 /*global define*/
 define([
 	'handlebars',
+	'utils/AppEvents',
 	'views/BaseView',
 	'views/NavigationView',
 	'views/MapView',
 	'views/NotificationView',
 	'utils/logger',
 	'text!templates/home-view.html'
-], function (Handlebars, BaseView, NavigationView, MapView, NotificationView, log, template) {
+], function (Handlebars, AppEvents, BaseView, NavigationView, MapView, NotificationView, log, template) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -44,12 +45,11 @@ define([
 			
 			BaseView.prototype.initialize.apply(this, arguments);
 
-			this.appEvents = options.appEvents;
+			this.appEvents = AppEvents;
 			
 			var subViewParams = {
 				parent: this,
 				router: options.router,
-				appEvents: this.appEvents,
 				session : this.session
 			};
 			
