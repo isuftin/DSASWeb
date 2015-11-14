@@ -20,6 +20,9 @@ define([
 		template: Handlebars.compile(template),
 		render: function () {
 			BaseView.prototype.render.apply(this, arguments);
+			$(window).on('resize', $.proxy(function () {
+				$(this.el).find('table').bootstrapTable('resetWidth');
+			}, this));
 			return this;
 		},
 		initialize: function (options) {

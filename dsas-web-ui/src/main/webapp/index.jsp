@@ -30,7 +30,9 @@
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/bootstrap-toggle/<%=versionBootstrapToggle%>/css/bootstrap-toggle<%= development ? "" : ".min"%>.css" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/bootstrap-table/<%=versionBootstrapTable%>/dist/bootstrap-table<%= development ? "" : ".min"%>.css" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/jquery-ui/<%= versionJqueryUi%>/jquery-ui.min.css" />
+		<link type="text/css" rel="stylesheet" href="css/home/home.css" />
 		<link type="text/css" rel="stylesheet" href="css/shorelines/shorelines.css" />
+		<link type="text/css" rel="stylesheet" href="css/map/map.css" />
     </head>
 
     <body>
