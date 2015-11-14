@@ -211,7 +211,7 @@ public class Intersection {
 		SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 
 		builder.setName("Intersections");
-		builder.add("geom", Point.class, crs);
+		builder.add("the_geom", Point.class, crs);
 		builder.add(TRANSECT_ID_ATTR, Integer.class);
 		builder.add(DISTANCE_ATTR, Double.class);
 		builder.add(MHW_ATTR, Boolean.class);
@@ -372,7 +372,7 @@ public class Intersection {
 			intersection.distance = sign * intersection.point.distance(origin);
 			if (intersectionsSoFar.containsKey(date)) {
 				boolean isFarther = Math.abs(intersection.distance) > Math.abs(intersectionsSoFar.get(date).distance);
-                // only true  && true
+				// only true  && true
 				// or   false && false
 				if (useFarthest == isFarther) {
 					intersectionsSoFar.put(date, intersection);

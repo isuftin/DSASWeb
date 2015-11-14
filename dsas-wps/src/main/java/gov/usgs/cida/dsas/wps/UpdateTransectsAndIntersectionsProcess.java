@@ -154,8 +154,8 @@ public class UpdateTransectsAndIntersectionsProcess implements GeoServerProcess 
 			if (biasRef != null) {
 				transformedBiasRef = CRSUtils.transformFeatureCollection(biasRef, REQUIRED_CRS_WGS84, utmCrs);
 			}
-			
-			IntersectionCalculator calc = new IntersectionCalculator(transformedShorelines, transformedBaseline, transformedBiasRef, -1, utmCrs, useFarthest);
+			double maxTransectLength = IntersectionCalculator.calculateMaxDistance(transformedShorelines, transformedBaseline);
+			IntersectionCalculator calc = new IntersectionCalculator(transformedShorelines, transformedBaseline, transformedBiasRef, maxTransectLength, utmCrs, useFarthest);
 
 			List<Transect> updatedTransects = new LinkedList<>();
 			try {
@@ -195,7 +195,7 @@ public class UpdateTransectsAndIntersectionsProcess implements GeoServerProcess 
 				}
 				calc.calculateIntersections(updatedTransects.toArray(new Transect[updatedTransects.size()]), shorelines);
 
-				SimpleFeatureCollection collection = DataUtilities.collection(calc.getResultIntersectionsCollection());
+				SimpleFeatureCollection collection = calc.getResultIntersectionsCollection();
 				try {
 					intersectionStore.addFeatures(collection);
 					transaction.commit();

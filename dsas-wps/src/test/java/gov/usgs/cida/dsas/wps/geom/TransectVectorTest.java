@@ -71,9 +71,13 @@ public class TransectVectorTest {
     public void testAngles() {
         Coordinate a = new Coordinate(0.0, 0.0);
         Transect east = new Transect(a, 0.0, Orientation.UNKNOWN, 0, "0", 0, null);
+        east.setLength(1.0);
         Transect north = new Transect(a, Angle.PI_OVER_2, Orientation.UNKNOWN, 0, "0", 0, null);
+        north.setLength(1.0);
         Transect west = new Transect(a, Math.PI, Orientation.UNKNOWN, 0, "0", 0, null);
+        west.setLength(1.0);
         Transect south = new Transect(a, 3 * Angle.PI_OVER_2, Orientation.UNKNOWN, 0, "0", 0, null);
+        south.setLength(1.0);
         assertEquals(east.getLineString().getEndPoint().getX(), 1.0, 0.00001);
         assertEquals(north.getLineString().getEndPoint().getY(), 1.0, 0.00001);
         assertEquals(west.getLineString().getEndPoint().getX(), -1.0, 0.00001);
@@ -88,6 +92,7 @@ public class TransectVectorTest {
         Coordinate a = new Coordinate(0.0, 0.0);
         Coordinate b = new Coordinate(0.0, 1.0);
         Transect instance = new Transect(a, Angle.PI_OVER_2, Orientation.UNKNOWN, 0, "0", 0, null);
+        instance.setLength(1.0);
         LineString expResult = factory.createLineString(new Coordinate[] {a, b});
         LineString result = instance.getLineString();
         assertEquals(expResult.getCoordinateN(0).x, result.getCoordinateN(0).x, 0.00001);
@@ -117,6 +122,7 @@ public class TransectVectorTest {
         Coordinate a = new Coordinate(0.0, 0.0);
         Coordinate b = new Coordinate(0.0, -1.0);
         Transect instance = new Transect(a, Angle.PI_OVER_2, Orientation.UNKNOWN, 0, "0", 0, null);
+        instance.setLength(1.0);
         instance.rotate180Deg();
         LineString expResult = factory.createLineString(new Coordinate[] {a, b});
         LineString result = instance.getLineString();

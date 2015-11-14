@@ -12,7 +12,6 @@ import com.vividsolutions.jts.index.strtree.STRtree;
 import gov.usgs.cida.dsas.exceptions.PoorlyDefinedBaselineException;
 import gov.usgs.cida.dsas.util.BaselineDistanceAccumulator;
 import gov.usgs.cida.dsas.util.CRSUtils;
-import gov.usgs.cida.dsas.wps.CreateTransectsAndIntersectionsProcess;
 import gov.usgs.cida.utilities.features.AttributeGetter;
 import gov.usgs.cida.utilities.features.Constants.Orientation;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class IntersectionCalculator {
 	
 	private SimpleFeatureCollection resultTransectsCollection;
 	private SimpleFeatureCollection resultIntersectionsCollection;
-	private SimpleFeatureType shorelineFeatureType;
+
 	private SimpleFeatureType intersectionFeatureType;
 	private SimpleFeatureType biasIncomingFeatureType;
 	private SimpleFeatureType transectFeatureType;
@@ -62,7 +61,7 @@ public class IntersectionCalculator {
 
 	public IntersectionCalculator(SimpleFeatureCollection shorelines, SimpleFeatureCollection baseline,
 			SimpleFeatureCollection biasRef, double maxTransectLength, CoordinateReferenceSystem utmCrs, boolean useFarthest) {
-		this.shorelineFeatureType = shorelines.getSchema();
+
 		this.intersectionFeatureType = Intersection.buildSimpleFeatureType(shorelines, utmCrs);
 		this.transectFeatureType = Transect.buildFeatureType(utmCrs);
 		if (biasRef != null) {
@@ -139,10 +138,20 @@ public class IntersectionCalculator {
 			Map<DateTime, Intersection> allIntersections = Maps.newHashMap();
 			double startDistance = 0;
 			ProxyDatumBias biasCorrection = null;
-
+			boolean changeTransectLength = true;
+			if (transect.getLength() > 0.0) {
+				changeTransectLength = false;
+			}
+			
 			do {
-				Transect subTransect = transect.subTransect(startDistance, guessTransectLength);
-				startDistance += guessTransectLength;
+				Transect subTransect = null;
+				if (changeTransectLength) {
+					subTransect = transect.subTransect(startDistance, guessTransectLength);
+					startDistance += guessTransectLength;
+				} else {
+					subTransect = transect;
+					startDistance = maxTransectLength; // end the loop
+				}
 				Intersection.updateIntersectionsWithSubTransect(allIntersections, transect.getOriginPoint(), subTransect, strTree, useFarthest, attGet);
 				if (biasCorrection == null && biasTree != null) {
 					biasCorrection = getBiasValue(subTransect, biasTree, biasGetter);
@@ -150,9 +159,10 @@ public class IntersectionCalculator {
 			} while (startDistance < maxTransectLength);
 
 			if (!allIntersections.isEmpty()) {  // ignore non-crossing lines
-
-				double transectLength = Intersection.absoluteFarthest(MIN_TRANSECT_LENGTH, allIntersections.values());
-				transect.setLength(transectLength + TRANSECT_PADDING);
+				if (changeTransectLength) {
+					double transectLength = Intersection.absoluteFarthest(MIN_TRANSECT_LENGTH, allIntersections.values());
+					transect.setLength(transectLength + TRANSECT_PADDING);
+				}
 				transect.setBias(biasCorrection);
 				SimpleFeature feature = transect.createFeature(transectFeatureType);
 				transectFeatures.add(feature);
