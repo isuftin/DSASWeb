@@ -33,7 +33,7 @@
 		<version.squire>0.2.0</version.squire>
 		<version.backbone-localstorage>1.1.16</version.backbone-localstorage>
 		<version.bootstrap.toggle>2.2.0</version.bootstrap.toggle>
-		<version.bootstrap.table>1.9.0</version.bootstrap.table>
+		<version.bootstrap.table>1.9.1</version.bootstrap.table>
 	</properties>
 
 	<dependencies>

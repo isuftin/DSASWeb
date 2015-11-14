@@ -77,6 +77,7 @@ define([
 			$(this.shorelineTableView.el).appendTo(this.$('#shoreline-table'));
 			this.$('#shoreline-table').removeClass('hidden');
 			this.$('[data-toggle="table"]').bootstrapTable();
+			this.shorelineTableView.updateColorColumn();
 		},
 		removeShorelinesData: function () {
 			if (this.shorelineTableView) {

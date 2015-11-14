@@ -1,12 +1,14 @@
 /*jslint browser: true */
 /*global define*/
 define([
+	'jquery',
 	'handlebars',
 	'views/BaseView',
 	'backbone',
 	'underscore',
 	'text!templates/shoreline-table.html'
 ], function (
+		$,
 		Handlebars,
 		BaseView,
 		Backbone,
@@ -27,6 +29,12 @@ define([
 		remove: function () {
 			BaseView.prototype.remove.apply(this);
 			return this;
+		},
+		updateColorColumn : function () {
+			this.$('#shoreline-table tbody tr > td:nth-child(4)').each(function (i, td) {
+				var $td = $(td);
+				$td.css('background-color', $td.attr('data-color'));
+			});
 		}
 	});
 
