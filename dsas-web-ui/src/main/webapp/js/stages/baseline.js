@@ -53,6 +53,8 @@ var Baseline = {
 			displayInLayerSwitcher: false,
 			strategies: [new OpenLayers.Strategy.BBOX({
 					merge : function (resp) {
+						// Passthrough hack because the protocol on this layer
+						// causes an invalid request to the server
 						this.layer.events.triggerEvent("loadend", {response: resp});
 					}
 			}), new OpenLayers.Strategy.Save()],
@@ -477,9 +479,9 @@ var Baseline = {
 
 				}
 			});
-			clonedLayer.addFeatures(originalLayer.features);
+			clonedLayer.addFeatures(originalLayer.features.clone());
 			clonedLayer.styleMap.styles['default'].defaultStyle.strokeWidth = 4;
-
+			
 			var editControl = new OpenLayers.Control.ModifyFeature(clonedLayer,
 				{
 					id: baselineEditControlId,
@@ -522,7 +524,7 @@ var Baseline = {
 
 			highlightControl.deactivate();
 			selectControl.deactivate();
-
+			
 			selectControl.onSelect = function (feature) {
 				var modifyControl = CONFIG.map.getMap().getControlsBy('id', baselineEditControlId)[0];
 				modifyControl.selectFeature(feature);
@@ -547,8 +549,8 @@ var Baseline = {
 				modifyControl.unselectFeature(feature);
 			};
 
-			selectControl.setLayer(clonedLayer);
-			highlightControl.setLayer(clonedLayer);
+			selectControl.setLayer([clonedLayer]);
+			highlightControl.setLayer([clonedLayer]);
 
 			highlightControl.activate();
 			selectControl.activate();
@@ -567,10 +569,14 @@ var Baseline = {
 			Baseline.deactivateHighlightControl();
 			CONFIG.map.removeLayerByName(baselineEditLayerId);
 			var map = CONFIG.map.getMap();
+			var selectionControl = map.getControlsBy('title', baselineSelectControlTitle)[0];
+			selectionControl.layers[0].destroyFeatures();
+			
 			map.removeControl(map.getControlsBy('id', baselineEditControlId)[0]);
 			map.getControlsBy('id', baselineEditDrawControlId)[0].deactivate();
 			map.removeControl(map.getControlsBy('id', baselineEditDrawControlId)[0]);
-			map.getControlsBy('title', baselineSelectControlTitle)[0].deactivate();
+			selectionControl.deactivate();
+			
 			Baseline.baselineDrawButton.removeAttr('disabled');
 		}
 	},
@@ -614,7 +620,6 @@ var Baseline = {
 			switch (targetId) {
 				case 'baseline-edit-create-vertex' :
 					modifyControl.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
-					modifyControl.mode.createVertices = true;
 					$('#baseline-edit-container-instructions-vertex').removeClass('hidden');
 					break;
 				case 'baseline-edit-rotate' :

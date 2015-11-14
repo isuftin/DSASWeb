@@ -33,5 +33,10 @@
 			<groupId>gov.usgs.cida.owsutils</groupId>
 			<artifactId>cida-owsutils-commons</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>gov.usgs.cida.dsas</groupId>
+			<artifactId>dsas-commons</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 </project>
