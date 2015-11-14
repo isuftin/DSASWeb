@@ -77,7 +77,7 @@ public class PostgresDAO {
 				+ "VALUES (?,?,?,?,?,?,?)";
 		long createdId;
 		try (final PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-			ps.setDate(1, new Date(date.getTime()));
+			ps.setDate(1, date);
 			ps.setBoolean(2, mhw);
 			ps.setString(3, workspace);
 			ps.setString(4, source);
