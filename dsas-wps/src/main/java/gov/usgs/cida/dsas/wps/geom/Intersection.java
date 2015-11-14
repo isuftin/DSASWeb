@@ -211,7 +211,7 @@ public class Intersection {
 		SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 
 		builder.setName("Intersections");
-		builder.add("the_geom", Point.class, crs);
+		builder.add(DEFAULT_GEOM_ATTR, Point.class, crs);
 		builder.add(TRANSECT_ID_ATTR, Integer.class);
 		builder.add(DISTANCE_ATTR, Double.class);
 		builder.add(MHW_ATTR, Boolean.class);

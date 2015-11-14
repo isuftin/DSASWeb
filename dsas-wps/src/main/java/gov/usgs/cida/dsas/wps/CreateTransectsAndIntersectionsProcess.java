@@ -1,58 +1,29 @@
 package gov.usgs.cida.dsas.wps;
 
-import com.google.common.collect.Maps;
-import com.vividsolutions.jts.algorithm.Angle;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineSegment;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.prep.PreparedGeometry;
 import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
-import com.vividsolutions.jts.index.strtree.STRtree;
-
-import gov.usgs.cida.dsas.util.BaselineDistanceAccumulator;
+import gov.usgs.cida.dsas.exceptions.UnsupportedCoordinateReferenceSystemException;
 import gov.usgs.cida.dsas.util.CRSUtils;
 import gov.usgs.cida.dsas.util.GeomAsserts;
 import gov.usgs.cida.dsas.util.LayerImportUtil;
 import gov.usgs.cida.dsas.util.UTMFinder;
-import gov.usgs.cida.dsas.exceptions.PoorlyDefinedBaselineException;
-import gov.usgs.cida.dsas.exceptions.UnsupportedCoordinateReferenceSystemException;
-import gov.usgs.cida.dsas.wps.geom.Intersection;
 import gov.usgs.cida.dsas.wps.geom.IntersectionCalculator;
-import gov.usgs.cida.dsas.wps.geom.ProxyDatumBias;
-import gov.usgs.cida.dsas.wps.geom.ShorelineFeature;
-import gov.usgs.cida.dsas.wps.geom.ShorelineSTRTreeBuilder;
 import gov.usgs.cida.dsas.wps.geom.Transect;
-import gov.usgs.cida.utilities.features.AttributeGetter;
-import gov.usgs.cida.utilities.features.Constants.Orientation;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-
+import static gov.usgs.cida.utilities.features.Constants.REQUIRED_CRS_WGS84;
 import org.geoserver.catalog.Catalog;
 import org.geoserver.catalog.ProjectionPolicy;
 import org.geoserver.wps.gs.GeoServerProcess;
 import org.geoserver.wps.gs.ImportProcess;
-import org.geotools.data.DataUtilities;
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
-import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.process.factory.DescribeParameter;
 import org.geotools.process.factory.DescribeProcess;
 import org.geotools.process.factory.DescribeResult;
 import org.geotools.referencing.CRS;
-import org.joda.time.DateTime;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import static gov.usgs.cida.utilities.features.Constants.*;
 
 /**
  *
@@ -129,8 +100,7 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 
 		private CoordinateReferenceSystem utmCrs;
 
-
-		private PreparedGeometry preparedShorelines;
+		private PreparedGeometry preparedShorelines = null;
 
 		protected Process(FeatureCollection<SimpleFeatureType, SimpleFeature> shorelines,
 				FeatureCollection<SimpleFeatureType, SimpleFeature> baseline,
@@ -142,6 +112,7 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 				String store,
 				String transectLayer,
 				String intersectionLayer) {
+			
 			this.shorelineFeatureCollection = shorelines;
 			this.baselineFeatureCollection = baseline;
 
@@ -161,8 +132,6 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 			this.store = store;
 			this.transectLayer = transectLayer;
 			this.intersectionLayer = intersectionLayer;
-
-			this.preparedShorelines = null;
 		}
 
 		protected String execute() throws Exception {
@@ -175,16 +144,19 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 			if (performBiasCorrection) {
 				biasCrs = CRSUtils.getCRSFromFeatureCollection(biasRefFeatureCollection);
 			}
+			
+			if (performBiasCorrection && !CRS.equalsIgnoreMetadata(biasCrs, REQUIRED_CRS_WGS84)) {
+				throw new UnsupportedCoordinateReferenceSystemException("Bias reference is not in accepted projection");
+			}
 
 			if (!CRS.equalsIgnoreMetadata(shorelinesCrs, REQUIRED_CRS_WGS84)) {
 				throw new UnsupportedCoordinateReferenceSystemException("Shorelines are not in accepted projection");
 			}
+			
 			if (!CRS.equalsIgnoreMetadata(baselineCrs, REQUIRED_CRS_WGS84)) {
 				throw new UnsupportedCoordinateReferenceSystemException("Baseline is not in accepted projection");
 			}
-			if (performBiasCorrection && !CRS.equalsIgnoreMetadata(biasCrs, REQUIRED_CRS_WGS84)) {
-				throw new UnsupportedCoordinateReferenceSystemException("Bias reference is not in accepted projection");
-			}
+			
 			this.utmCrs = UTMFinder.findUTMZoneCRSForCentroid((SimpleFeatureCollection) shorelineFeatureCollection);
 			if (this.utmCrs == null) {
 				throw new IllegalStateException("Must have usable UTM zone to continue");
