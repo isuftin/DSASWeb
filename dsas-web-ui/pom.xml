@@ -33,7 +33,7 @@
 		<version.squire>0.2.0</version.squire>
 		<version.backbone-localstorage>1.1.16</version.backbone-localstorage>
 		<version.bootstrap.toggle>2.2.0</version.bootstrap.toggle>
-		<version.bootstrap.table>1.9.1</version.bootstrap.table>
+		<version.tablesorter>2.17.8</version.tablesorter>
 	</properties>
 
 	<dependencies>
@@ -157,15 +157,9 @@
 			<version>3.4.0-4</version>
 		</dependency>
 		<dependency>
-			<groupId>gov.usgs.cida.jslibs</groupId>
-			<artifactId>jquery-tablesorter</artifactId>
-			<type>war</type>
-			<version>2.7.6-2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars.bower</groupId>
-			<artifactId>bootstrap-table</artifactId>
-			<version>${version.bootstrap.table}</version>
+			<groupId>org.webjars</groupId>
+			<artifactId>tablesorter</artifactId>
+			<version>${version.tablesorter}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>

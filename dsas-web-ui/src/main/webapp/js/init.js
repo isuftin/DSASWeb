@@ -7,17 +7,25 @@ define([
 	'utils/logger',
 	'backbone',
 	'module',
-	'underscore',
 	'collections/SessionCollection',
 	'models/sessionModel',
 	'utils/SessionUtil',
 	'bootstrap', // Load up bootstrap to get it worked into jquery
 	'jqueryui', // Do the same with JQuery UI
-	'BootstrapTable' // and bootstrap table
-], function ($, Router, log, Backbone, module, _, SessionCollection, SessionModel, SessionUtil) {
+	'bootstrapToggle', // and bootstrap toggle
+	'tablesorter' // and tablesorter
+], function (
+		$,
+		Router,
+		log,
+		Backbone,
+		module,
+		SessionCollection,
+		SessionModel,
+		SessionUtil) {
 	"use strict";
 	this.router = new Router();
-	
+
 	// TODO- Simplify session creation a bit. Getting a bit complicated
 
 	this.sessionUpdateComplete = function () {
