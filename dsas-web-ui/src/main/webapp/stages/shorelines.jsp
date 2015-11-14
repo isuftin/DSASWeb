@@ -22,7 +22,7 @@
 					<li> Click "Select Area Of Interest" button to begin drawing.</li>
 					<li> Click and drag your mouse to draw a box around your area of interest.</li>
 					<li> When you're satisfied with the AOI, click "I'm Done" button.</li>
-					<li> Note: If the area of interest in redrawn, the previously drawn AOI will not remain.</li>
+					<li> Note: If the area of interest is redrawn, the previously drawn AOI will not remain.</li>
 				</ul>
 				<p class="text-center">
 					<button class="btn btn-success" id="shorelines-aoi-select-done">
