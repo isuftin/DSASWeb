@@ -11,6 +11,10 @@
     #inner-navbar-container {
         padding-left: 2px;
     }
+    
+    #inner-navbar-container .nav {
+        margin:-4px 0 0 30px;
+    }
 
     #inner-navbar-container .nav > li > a {
         color : #FFFFFF;
@@ -42,7 +46,9 @@
         background-repeat: no-repeat;
         border: none;
         box-shadow: none;
-        padding-left: 2px;
+        padding-left: 10px;
+        height:30px;
+        position:relative;
     }
 
     #app-navbar-brand {
@@ -50,13 +56,15 @@
     }
 
     #app-navbar-search-icon {
-        margin-right: 5px;
-        color: white;
         font-size: 18px;
+        position:absolute;
+        right:205px;
+        top:3px;
     }
 
     #app-navbar-search-input {
         width : 200px;
+        margin:-12px 0 0 0;
     }
 </style>
 <div id="app-navbar-container" class="container">
@@ -70,7 +78,7 @@
                     <span class="icon-bar"></span>
                 </a>
 
-                <span id="app-navbar-brand"><h4>USGS DSAS</h4></span>
+                <span id="app-navbar-brand"><h4>USGS Digital Shoreline Analysis System</h4></span>
 
                 <div class="nav-collapse">
                     <ul class="nav">
@@ -93,7 +101,7 @@
                     
                     <form id="app-navbar-search-form" class="navbar-search pull-right" action="javascript:void(0);">
                     
-                        <i id="app-navbar-search-icon" class="icon-search"></i>
+                        <i id="app-navbar-search-icon" class="icon-search icon-white"></i>
                         
                         <label for="app-navbar-search-input" title="app-navbar-search-input"></label>
                         
