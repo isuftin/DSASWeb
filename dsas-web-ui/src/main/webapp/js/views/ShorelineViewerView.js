@@ -75,19 +75,10 @@ define([
 			});
 			this.shorelineTableView.render();
 			$(this.shorelineTableView.el).appendTo(this.$('#shoreline-table'));
-			this.$('#shoreline-table').removeClass('hidden');
-			this.$('[data-toggle="table"]').tablesorter();
-			this.$('[data-toggle="table"] input').bootstrapToggle();
-			this.$('[data-toggle="table"] input').change(function (e) {
-				var $e = $(e.currentTarget);
-				var active = $e.prop('checked');
-				if (active) {
-					$e.attr('checked', true);
-				} else {
-					$e.attr('checked', false);
-				}
-			});
+			this.shorelineTableView.createTableSorter();
 			this.shorelineTableView.updateColorColumn();
+			this.$('[data-toggle="table"] input').bootstrapToggle();
+			this.$('#shoreline-table').removeClass('hidden');
 		},
 		removeShorelinesData: function () {
 			if (this.shorelineTableView) {

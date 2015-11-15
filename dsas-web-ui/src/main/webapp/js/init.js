@@ -93,5 +93,16 @@ define([
 				});
 	}
 
+	$.tablesorter.addParser({
+		id: 'vis',
+		is: function () {
+			return false;
+		},
+		format: function (s, table, cell) {
+			return $(cell).find('input').prop('checked') ? 1 : 0;
+		},
+		type: 'numeric'
+	});
+
 	return this.router;
 });
