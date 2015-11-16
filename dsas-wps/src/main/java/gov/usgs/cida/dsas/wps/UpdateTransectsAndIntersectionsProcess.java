@@ -1,10 +1,8 @@
 package gov.usgs.cida.dsas.wps;
 
-import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.index.strtree.STRtree;
 import gov.usgs.cida.dsas.util.BaselineDistanceAccumulator;
 import gov.usgs.cida.dsas.util.CRSUtils;
 import gov.usgs.cida.dsas.util.GeoserverUtils;
@@ -12,11 +10,8 @@ import gov.usgs.cida.dsas.util.UTMFinder;
 import gov.usgs.cida.dsas.exceptions.LayerDoesNotExistException;
 import gov.usgs.cida.dsas.exceptions.PoorlyDefinedBaselineException;
 import gov.usgs.cida.dsas.exceptions.UnsupportedCoordinateReferenceSystemException;
-import gov.usgs.cida.dsas.wps.geom.Intersection;
 import gov.usgs.cida.dsas.wps.geom.IntersectionCalculator;
-import gov.usgs.cida.dsas.wps.geom.ShorelineSTRTreeBuilder;
 import gov.usgs.cida.dsas.wps.geom.Transect;
-import gov.usgs.cida.utilities.features.AttributeGetter;
 
 import static gov.usgs.cida.utilities.features.Constants.BASELINE_DIST_ATTR;
 import static gov.usgs.cida.utilities.features.Constants.REQUIRED_CRS_WGS84;
@@ -26,35 +21,28 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import org.geoserver.catalog.Catalog;
 import org.geoserver.catalog.DataStoreInfo;
 import org.geoserver.catalog.LayerInfo;
 import org.geoserver.wps.gs.GeoServerProcess;
 import org.geotools.data.DataAccess;
-import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
-import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.NameImpl;
-import org.geotools.filter.FilterFactoryImpl;
 import org.geotools.process.factory.DescribeParameter;
 import org.geotools.process.factory.DescribeProcess;
 import org.geotools.process.factory.DescribeResult;
 import org.geotools.referencing.CRS;
-import org.joda.time.DateTime;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.FeatureType;
-import org.opengis.filter.FilterFactory;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.PropertyIsEqualTo;
-import org.opengis.filter.expression.PropertyName;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**

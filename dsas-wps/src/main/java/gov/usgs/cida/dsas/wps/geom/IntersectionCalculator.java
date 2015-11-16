@@ -85,9 +85,7 @@ public class IntersectionCalculator {
 		BaselineDistanceAccumulator accumulator = new BaselineDistanceAccumulator();
 		AttributeGetter attGet = new AttributeGetter(baseline.getSchema());
 
-		SimpleFeatureIterator features = null;
-		try {
-			features = baseline.features();
+		try (SimpleFeatureIterator features  = baseline.features()){
 			while (features.hasNext()) {
 				SimpleFeature feature = features.next();
 				String orientVal = (String) attGet.getValue(BASELINE_ORIENTATION_ATTR, feature);
@@ -108,20 +106,14 @@ public class IntersectionCalculator {
 					vectList.addAll(handleLineString(line, spacing, orientation, direction, baselineId, baseDist, smoothing)); // rather than SEAWARD, get from baseline feature
 				}
 			}
-		} finally {
-			if (null != features) {
-				features.close();
-			}
 		}
-		Transect[] vectArr = new Transect[vectList.size()];
-		return vectList.toArray(vectArr);
+		return vectList.toArray(new Transect[vectList.size()]);
 	}
 
 	/**
 	 *
 	 * @param vectsOnBaseline
 	 * @param shorelines
-	 * @param useFarthest
 	 */
 	public void calculateIntersections(Transect[] vectsOnBaseline, SimpleFeatureCollection shorelines) {
 		if (vectsOnBaseline.length == 0) {

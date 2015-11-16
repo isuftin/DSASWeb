@@ -74,9 +74,7 @@ public class NearestPointOnLineProcess implements GeoServerProcess {
             LineSegment closestSegment = null;
             double closestDistance = Double.MAX_VALUE;
             
-            SimpleFeatureIterator featureIterator = null;
-            try {
-                featureIterator = featureCollection.features();
+            try (SimpleFeatureIterator featureIterator = featureCollection.features()) {
                 while (featureIterator.hasNext()) {
                     SimpleFeature feature = featureIterator.next();
                     Object geometryAsObject = feature.getDefaultGeometry();
@@ -108,10 +106,6 @@ public class NearestPointOnLineProcess implements GeoServerProcess {
                             append(' ').
                             append(outputPointP.getOrdinate(1)).
                             append(")").toString();
-                }
-            } finally {
-                if (featureIterator != null) {
-                    featureIterator.close();
                 }
             }
             // fallback
