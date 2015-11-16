@@ -9,6 +9,7 @@ import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.PointIterator;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.ShapeAndAttributes;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.XploderMultiLineHandler;
+import gov.usgs.cida.utilities.features.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -94,9 +95,9 @@ public class Xploder {
 		StringBuilder sb = new StringBuilder();
 
 		Map<ShpFileType, String> m = shp.getFileNames();
-		for (Map.Entry<ShpFileType, String> me : m.entrySet()) {
+		m.entrySet().stream().forEach((me) -> {
 			sb.append(me.getKey()).append("\t").append(me.getValue()).append("\n");
-		}
+		});
 
 		return sb.toString();
 	}
@@ -202,8 +203,8 @@ public class Xploder {
 			}
 			idx++;
 		}
-		typeBuilder.add("recordId", Integer.class);
-		typeBuilder.add("segmentId", Integer.class);
+		typeBuilder.add(Constants.RECORD_ID_ATTR, Integer.class);
+		typeBuilder.add(Constants.SEGMENT_ID_ATTR, Integer.class);
 		SimpleFeatureType outputFeatureType = typeBuilder.buildFeatureType();
 
 		logger.debug("Output feature type is {}", outputFeatureType);
@@ -226,7 +227,7 @@ public class Xploder {
 		return fout;
 	}
 
-	public File explode(String fn) throws IOException  {
+	public File explode(String fn) throws IOException {
 		File ptFile;
 
 		try (IterableShapefileReader rdr = initReader(fn)) {
@@ -264,7 +265,7 @@ public class Xploder {
 		return ptFile;
 	}
 
-	protected IterableShapefileReader initReader(String fn) throws ShapefileException  {
+	protected IterableShapefileReader initReader(String fn) throws ShapefileException {
 		CoordinateSequenceFactory csf = com.vividsolutions.jtsexample.geom.ExtendedCoordinateSequenceFactory.instance();
 		GeometryFactory gf = new GeometryFactory(csf);
 		XploderMultiLineHandler mlh = new XploderMultiLineHandler(ShapeType.ARCM, gf);

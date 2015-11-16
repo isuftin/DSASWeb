@@ -208,13 +208,13 @@ var UI = function () {
 					params: {
 						'response.encoding': 'json',
 						'filename.param': 'qqfile',
-						'overwrite.existing.layer': 'true',
+						'overwrite.existing.layer': caller.overrideOverwriteExistingLayer || 'true',
 						'workspace': caller.overrideWorkspace || CONFIG.tempSession.getCurrentSessionKey(),
 						'store': caller.overrideStore || 'ch-input',
 						'srs': CONFIG.map.getMap().getProjection(),
 						'use.crs.failover': 'true',
 						'projection.policy': 'reproject',
-						'layer': '' // Use the file name for the name
+						'layer': caller.overrideLayer || '' // Use the file name for the name
 					}
 				},
 			callbacks = $.extend({},
@@ -230,17 +230,20 @@ var UI = function () {
 							}
 						});
 
-						// Test to see if the upload name ends with an 
-						// underscore and the stage name we are in. If not, add it
-						if (!name.endsWith(caller.stage + '.zip')) {
-							this._options.request.params.layer = name.substring(0, name.length - 4) + '_' + caller.stage;
-						}
+						if (!this._options.request.params.layer) {
 
-						// Test to see if the first character in the layer is a digit. 
-						// If so, prepend an underscore. Otherwise we get big 
-						// fails working with the layer later on
-						if (/^[0-9]/.test(this._options.request.params.layer)) {
-							this._options.request.params.layer = '_' + this._options.request.params.layer;
+							// Test to see if the upload name ends with an 
+							// underscore and the stage name we are in. If not, add it
+							if (!name.endsWith(caller.stage + '.zip')) {
+								this._options.request.params.layer = name.substring(0, name.length - 4) + '_' + caller.stage;
+							}
+
+							// Test to see if the first character in the layer is a digit. 
+							// If so, prepend an underscore. Otherwise we get big 
+							// fails working with the layer later on
+							if (/^[0-9]/.test(this._options.request.params.layer)) {
+								this._options.request.params.layer = '_' + this._options.request.params.layer;
+							}
 						}
 					},
 					onCancel: function (id, name) {
@@ -316,8 +319,6 @@ var UI = function () {
 						}
 					}
 				}, caller.uploadCallbacks);
-
-			request.params.workspace = CONFIG.tempSession.getCurrentSessionKey();
 
 			LOG.info('UI.js::initializeUploader: Initializing uploader for the ' + context + ' context');
 
