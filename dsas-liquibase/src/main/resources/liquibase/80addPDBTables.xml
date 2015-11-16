@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+	logicalFilePath="path-independent">
+	
+	<changeSet author="slarson" id="add_pdb_table" logicalFilePath="path-independent">
+		<createTable tableName="proxy_datum_bias">
+			<column name="id" type="BIGSERIAL" />
+                        <column name="profile_id" type="VARCHAR(255)" />
+                        <column name="segment_id" type="BIGSERIAL" />
+                        <column name="xy" type="GEOMETRY" />
+                        <column name="bias" type="DOUBLE" />
+			<column name="uncyb" type="DOUBLE" />                        			
+                        <column name="last_update" type="TIMESTAMP" />
+		</createTable>
+		<addPrimaryKey tableName="proxy_datum_bias" columnNames="id" />
+
+		<rollback>
+			<dropPrimaryKey tableName="proxy_datum_bias" />
+			<dropTable tableName="proxy_datum_bias" />
+		</rollback>
+	</changeSet>
+	<changeSet author="slarson" id="add_pdb_view" logicalFilePath="path-independent">
+                <createView viewName="proxy_datum_bias_view" replaceIfExists="true">
+                    SELECT p.id, p.profile_id, p.segment_id, p.xy, p.bias, p.uncyb, p.last_update FROM proxy_datum_bias p 			 
+                </createView>
+		<rollback>
+                    <dropView viewName="proxy_datum_bias_view"/>
+                </rollback>
+	</changeSet>
+</databaseChangeLog>

@@ -14,5 +14,6 @@
 	<include file="50createGSMetadataTable.xml" relativeToChangelogFile="true"/>
 	<include file="60updateShorelineView.xml" relativeToChangelogFile="true"/>
 	<include file="70addShorelineNameToWorkspaceView.xml" relativeToChangelogFile="true"/>
+        <include file="80addPDBTables.xml" relativeToChangelogFile="true"/>
 	
 </databaseChangeLog>
