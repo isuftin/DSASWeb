@@ -1,0 +1,17 @@
+<div>
+	<button class="btn btn-success" id="button-file-select">
+		<i class="fa fa-folder-open-o icon-white"></i> Select {{fileTypeName}} File For Upload
+	</button>
+	<div class="well hidden" id="container-file-info">
+		<p>
+			File Name: <span id="container-file-info-filename"></span><br />
+			File Size: <span id="container-file-info-filesize"></span> bytes<br />
+			File Type: <span id="container-file-info-filetype"></span><br />
+			File Last Modified:  <span id="container-file-info-filelastmod"></span>
+		</p>
+		<button class="btn btn-success" id="button-file-upload">
+			<i class="fa fa-cloud-upload icon-white"></i> Upload {{fileTypeName}}
+		</button>
+	</div>
+	<input type="file" id="input-file" style="display:none"/>
+</div>
