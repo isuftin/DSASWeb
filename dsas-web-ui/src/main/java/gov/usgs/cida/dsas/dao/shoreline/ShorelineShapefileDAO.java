@@ -1,13 +1,13 @@
 package gov.usgs.cida.dsas.dao.shoreline;
 
-import gov.usgs.cida.dsas.shoreline.file.ShorelineFile;
-import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
-import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.shoreline.file.ShorelineFile;
 import gov.usgs.cida.dsas.uncy.Xploder;
+import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
+import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import gov.usgs.cida.utilities.features.AttributeGetter;
 import gov.usgs.cida.utilities.features.Constants;
 import java.io.File;
@@ -113,23 +113,21 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 
 			if (!fc.isEmpty()) {
 				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
-				SimpleFeatureIterator iter = null;
-				try {
-					iter = rfc.features();
+				try (SimpleFeatureIterator iter = rfc.features()){
 					connection.setAutoCommit(false);
-					int lastRecordId = -1;
+					int lastSegmentId = -1;
 					long shorelineId = -1;
 					while (iter.hasNext()) {
 						SimpleFeature sf = iter.next();
-						int recordId = getIntValue(Constants.RECORD_ID_ATTR, sf);
-
-						if (lastRecordId != recordId) {
+						int segmentId = getIntValue(Constants.SEGMENT_ID_ATTR, sf);
+						
+						if (lastSegmentId != segmentId) {
 							// Either I'm looping for the first time or I've got 
 							// a new shoreline that I need to insert. I should 
 							// probably insert all of the points for the previous 
 							/// shoreline
 							if (xyUncies.size() > 0 && shorelineId != -1) {
-								insertPointsIntoShorelinePointsTable(connection, shorelineId, lastRecordId, xyUncies.toArray(new double[xyUncies.size()][]));
+								insertPointsIntoShorelinePointsTable(connection, shorelineId, lastSegmentId, xyUncies.toArray(new double[xyUncies.size()][]));
 								xyUncies.clear();
 							}
 
@@ -156,18 +154,18 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 								}
 							}
 
-							lastRecordId = recordId;
+							lastSegmentId = segmentId;
 						}
 						xyUncies.add(getXYAndUncertaintyFromSimpleFeature(sf, uncertaintyFieldName));
 
 						if (xyUncies.size() == MAX_POINTS_AT_ONCE) {
-							insertPointsIntoShorelinePointsTable(connection, shorelineId, recordId, xyUncies.toArray(new double[xyUncies.size()][]));
+							insertPointsIntoShorelinePointsTable(connection, shorelineId, segmentId, xyUncies.toArray(new double[xyUncies.size()][]));
 							xyUncies.clear();
 						}
 					}
 
 					if (xyUncies.size() > 0) {
-						insertPointsIntoShorelinePointsTable(connection, shorelineId, lastRecordId, xyUncies.toArray(new double[xyUncies.size()][]));
+						insertPointsIntoShorelinePointsTable(connection, shorelineId, lastSegmentId, xyUncies.toArray(new double[xyUncies.size()][]));
 						xyUncies.clear();
 					}
 
@@ -182,14 +180,6 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 				} catch (NamingException | NoSuchElementException | ParseException | SQLException ex) {
 					connection.rollback();
 					throw ex;
-				} finally {
-					if (null != iter) {
-						try {
-							iter.close();
-						} catch (Exception ex) {
-							LOGGER.warn("Could not close feature iterator. This is not necessarily fatal.", ex);
-						}
-					}
 				}
 			}
 		} catch (SchemaException | TransformException | FactoryException ex) {
