@@ -11,3 +11,5 @@
 /dsas-commons/target/
 /dsas-n52/target/
 /dsas-web-ui/test-classes/
+/target/
+/dsas-web-ui/src/main/webapp/css/**
