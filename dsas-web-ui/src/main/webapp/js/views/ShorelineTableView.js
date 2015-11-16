@@ -19,7 +19,8 @@ define([
 	var view = BaseView.extend({
 		template: Handlebars.compile(template),
 		events: {
-			'change [data-toggle="table"] input': 'toggleChangeHandler'
+			'change [data-toggle="table"] input': 'toggleChangeHandler',
+			'click [data-toggle="table"] tbody tr': 'tableRowCLickHandler'
 		},
 		render: function () {
 			BaseView.prototype.render.apply(this, arguments);
@@ -62,6 +63,29 @@ define([
 				$e.attr('checked', true);
 			} else {
 				$e.attr('checked', false);
+			}
+		},
+		tableRowCLickHandler: function (e) {
+			if (!$(e.target).is('label')) { // User clicked on toggle, don't process
+				var $target = $(e.currentTarget);
+				var id = $target.prop('id');
+				var selectedClass = 'table-shoreline-selected';
+				var rangeSelectActivated = e.shiftKey;
+				var multiSelectActivated = e.altKey || e.ctrlKey;
+				var $table = $target.parentsUntil('table').parent();
+
+				if ($target.hasClass(selectedClass)) {
+					$target.removeClass(selectedClass);
+					// The user has deselected this row and because no other rows were
+					// selected, deselect all other rows as well
+					if (!rangeSelectActivated && !multiSelectActivated) {
+						$table.find('tbody tr').removeClass(selectedClass);
+					}
+				} else {
+					$target.addClass(selectedClass);
+				}
+			} else {
+				
 			}
 		}
 	});
