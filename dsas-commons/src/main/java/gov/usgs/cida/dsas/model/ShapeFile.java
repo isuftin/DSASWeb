@@ -14,6 +14,7 @@ import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.Transaction;
+import org.geotools.data.simple.SimpleFeatureSource;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
@@ -38,7 +39,6 @@ public class ShapeFile implements IShapeFile, AutoCloseable {
 		this.ds = DataStoreFinder.getDataStore(map);
 	}
 
-
 	@Override
 	public List<File> getRequiredFiles() {
 		Collection<File> requiredFiles = FileUtils.listFiles(this.shapefileLocation, REQUIRED_FILES, false);
@@ -56,7 +56,7 @@ public class ShapeFile implements IShapeFile, AutoCloseable {
 		if (!this.shapefileLocation.exists()) {
 			throw new IOException(MessageFormat.format("File location at {0} does not exist.", shapefileLocation));
 		}
-		
+
 		if (this.shapefileLocation.isFile() && this.shapefileLocation.getName().endsWith(".zip")) {
 			throw new IOException("Shapefile may not be a zip file. Shapefile must point to a directory.");
 		}
@@ -65,14 +65,14 @@ public class ShapeFile implements IShapeFile, AutoCloseable {
 		if (requiredFiles.size() < 3) {
 			throw new IOException("Shapefile does not meet content requirements for a shapefile (.shp, .shx, .dbf)");
 		}
-		
+
 		return true;
 	}
 
 	@Override
 	public String getEPSGCode() throws IOException {
-            FeatureReader<SimpleFeatureType, SimpleFeature> featureReader = ds.getFeatureReader(Query.ALL, Transaction.AUTO_COMMIT);
-            return featureReader.getFeatureType().getGeometryDescriptor().getCoordinateReferenceSystem().getName().getCode();
+		SimpleFeatureSource featureSource = ds.getFeatureSource(ds.getTypeNames()[0]);
+		return featureSource.getBounds().getCoordinateReferenceSystem().getName().toString();
 	}
 
 	@Override

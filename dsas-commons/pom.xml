@@ -29,19 +29,6 @@
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-referencing</artifactId>
 		</dependency>
-	<!--	<dependency>
-			<groupId>org.geoserver.extension</groupId>
-			<artifactId>wps-core</artifactId>
-			<version>${gs.version}</version>
-			<type>test-jar</type>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>net.sf.ehcache</groupId>
-					<artifactId>ehcache</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency> -->
 		<dependency>
 			<groupId>xmlunit</groupId>
 			<artifactId>xmlunit</artifactId>
