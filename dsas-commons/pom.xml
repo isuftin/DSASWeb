@@ -17,7 +17,19 @@
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-shapefile</artifactId>
 		</dependency>
-		<dependency>
+                <dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-epsg-extension</artifactId>
+		</dependency>
+                <dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-epsg-hsql</artifactId>
+		</dependency>
+                <dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-referencing</artifactId>
+		</dependency>
+	<!--	<dependency>
 			<groupId>org.geoserver.extension</groupId>
 			<artifactId>wps-core</artifactId>
 			<version>${gs.version}</version>
@@ -29,7 +41,7 @@
 					<artifactId>ehcache</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>xmlunit</groupId>
 			<artifactId>xmlunit</artifactId>

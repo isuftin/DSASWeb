@@ -1,14 +1,18 @@
 package gov.usgs.cida.dsas.model;
 
-import com.google.common.io.Files;
+
 import gov.usgs.cida.utilities.file.FileHelper;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
 import java.util.Date;
+import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.geotools.graph.util.ZipUtil;
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -68,7 +72,9 @@ public class ShapeFileTest {
 	@Test(expected = IOException.class)
 	public void testCreateShapefileFromEmptyDirectorypExpectIOE() throws IOException {
 		System.out.println("testCreateShapefileFromEmptyDirectorypExpectIOE");
-		File tempDir = Files.createTempDir();
+		Path path = Files.createTempDirectory("deleteMe",new FileAttribute[0]);
+                File tempDir = path.toFile();
+                
 		tempDir.deleteOnExit();
 		new ShapeFile(validShapeZip);
 	}
@@ -76,11 +82,25 @@ public class ShapeFileTest {
 	@Test
 	public void testCreateShapefileFromValidShapefile() throws Exception {
 		System.out.println("testCreateShapefileFromEmptyDirectorypExpectIOE");
-		File tmpDir = Files.createTempDir();
+		File tmpDir = Files.createTempDirectory("deleteMe", new FileAttribute[0]).toFile();
 		FileHelper.unzipFile(tmpDir.getAbsolutePath(), validShapeZip);
 		tmpDir.deleteOnExit();
 		try (ShapeFile instance = new ShapeFile(tmpDir)) {
 			assertNotNull(instance);
+		}
+	}
+        
+        @Test
+	public void testGetEPSGCodeFromValidShapefile() throws Exception {
+		System.out.println("testGetEPSGCodeFromValidShapefile");
+		File tmpDir = Files.createTempDirectory("deleteMe", new FileAttribute[0]).toFile();
+		FileHelper.unzipFile(tmpDir.getAbsolutePath(), validShapeZip);
+		tmpDir.deleteOnExit();
+		try (ShapeFile instance = new ShapeFile(tmpDir)) {
+			assertNotNull(instance);
+                       
+                        String epsgCode =  instance.getEPSGCode();
+                        assertTrue(StringUtils.isNotEmpty(epsgCode));
 		}
 	}
 
