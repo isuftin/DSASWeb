@@ -65,11 +65,6 @@ public class ShapeFile implements IShapeFile, AutoCloseable {
 	}
 
 	@Override
-	public boolean delete(boolean deleteDirectory) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
 	public String getEPSGCode() {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}

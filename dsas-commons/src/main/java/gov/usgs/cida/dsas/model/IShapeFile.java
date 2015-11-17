@@ -54,15 +54,4 @@ public interface IShapeFile {
 	 * @return the required files
 	 */
 	public List<File> getOptionalFiles();
-
-	/**
-	 * Deletes the underlying shapefile
-	 *
-	 * @param deleteDirectory whether or not to also delete the directory the
-	 * shapefile resides in
-	 *
-	 * @return whether or not deleting worked
-	 */
-	public boolean delete(boolean deleteDirectory);
-
 }
