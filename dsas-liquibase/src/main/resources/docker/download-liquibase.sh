@@ -32,3 +32,5 @@ else
     echo "Remote file SHA1 differs from downloaded version."
     exit 1
 fi
+
+unzip -o $LIQUIBASE_HOME/dsas-liquibase.jar -d $LIQUIBASE_HOME/dsas_liquibase

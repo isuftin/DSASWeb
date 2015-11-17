@@ -4,13 +4,18 @@ MAINTAINER Ivan Suftin <isuftin@usgs.gov>
 
 COPY init-database.txt /init-database.txt
 
-COPY run_liquibase.txt /run_liquibase.txt
+COPY run_liquibase.sh /run_liquibase.sh
+
+COPY rerun_liquibase.sh /rerun_liquibase.sh
+
+RUN chmod 755 /run_liquibase.sh
+RUN chmod 755 /rerun_liquibase.sh
 
 # Adds commands to create the dsas database
 RUN sed -i '80rinit-database.txt' /start-postgis.sh
 
 # Runs liquibase on running database to create DSAS schema
-RUN sed -i '127rrun_liquibase.txt' /start-postgis.sh
+RUN sed -i '127rrun_liquibase.sh' /start-postgis.sh
 
 # Required for JRE 8 - Java 8 is required to run the Liquibase JAR
 RUN echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/sources.list
@@ -34,5 +39,4 @@ RUN tar -xzf $LIQUIBASE_HOME/liquibase-3.4.1-bin.tar.gz -C $LIQUIBASE_HOME/
 
 RUN chmod 755 $LIQUIBASE_HOME/download-liquibase.sh \
     && sleep 1 \
-	&& $LIQUIBASE_HOME/download-liquibase.sh \
-	&& unzip $LIQUIBASE_HOME/dsas-liquibase.jar -d $LIQUIBASE_HOME/dsas_liquibase
+	&& $LIQUIBASE_HOME/download-liquibase.sh
