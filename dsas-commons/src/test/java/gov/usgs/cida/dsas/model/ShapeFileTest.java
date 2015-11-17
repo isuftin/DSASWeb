@@ -1,6 +1,5 @@
 package gov.usgs.cida.dsas.model;
 
-
 import gov.usgs.cida.utilities.file.FileHelper;
 import java.io.File;
 import java.io.IOException;
@@ -72,9 +71,9 @@ public class ShapeFileTest {
 	@Test(expected = IOException.class)
 	public void testCreateShapefileFromEmptyDirectorypExpectIOE() throws IOException {
 		System.out.println("testCreateShapefileFromEmptyDirectorypExpectIOE");
-		Path path = Files.createTempDirectory("deleteMe",new FileAttribute[0]);
-                File tempDir = path.toFile();
-                
+		Path path = Files.createTempDirectory("deleteMe", new FileAttribute[0]);
+		File tempDir = path.toFile();
+
 		tempDir.deleteOnExit();
 		new ShapeFile(validShapeZip);
 	}
@@ -89,18 +88,18 @@ public class ShapeFileTest {
 			assertNotNull(instance);
 		}
 	}
-        
-        @Test
+
+	@Test
 	public void testGetEPSGCodeFromValidShapefile() throws Exception {
 		System.out.println("testGetEPSGCodeFromValidShapefile");
-		File tmpDir = Files.createTempDirectory("deleteMe", new FileAttribute[0]).toFile();
+		File tmpDir = Files.createTempDirectory("deleteMe", new FileAttribute<?>[0]).toFile();
 		FileHelper.unzipFile(tmpDir.getAbsolutePath(), validShapeZip);
 		tmpDir.deleteOnExit();
 		try (ShapeFile instance = new ShapeFile(tmpDir)) {
 			assertNotNull(instance);
-                       
-                        String epsgCode =  instance.getEPSGCode();
-                        assertTrue(StringUtils.isNotEmpty(epsgCode));
+			String epsgCode = instance.getEPSGCode();
+			assertTrue(StringUtils.isNotEmpty(epsgCode));
+			assertEquals(epsgCode, "EPSG:WGS84 / Google Mercator");
 		}
 	}
 
