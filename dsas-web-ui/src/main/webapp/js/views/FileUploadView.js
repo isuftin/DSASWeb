@@ -103,16 +103,13 @@ define([
 				if (readyState === 4 && responseString) {
 					switch (status) {
 						case 200:
-							debugger;
 							response = JSON.parse(responseString);
 							token = response.token;
 							this.scope.handleFileStaged(token);
 							break;
 						case 404:
-							debugger;
 							break;
 						case 500:
-							debugger;
 							break;
 					}
 					this.scope.$('#container-file-info').addClass('hidden');
