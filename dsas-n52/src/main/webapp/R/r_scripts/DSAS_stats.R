@@ -93,16 +93,19 @@ calcWLR <- function(dates,dist,uncy){
   }
   else{return(c(NA,NA))}
 }
-calcNSM <- function(dates,dist){
+calcNSM <- function(dates,dist,uncy){
   mnN <-  2
   if (length(dates)>= mnN){
     firstDateIdx <- which.min(dates)
     lastDateIdx  <- which.max(dates)
+    timeRangeInYears <- as(dates[lastDateIdx]-dates[firstDateIdx],"numeric")*rateConv
     NSM_dist <- dist[firstDateIdx]-dist[lastDateIdx]
-    EPR_rates <- NSM_dist/(as(dates[lastDateIdx]-dates[firstDateIdx],"numeric"))*rateConv
-    return(c(NSM_dist,EPR_rates))
+    EPR_rates <- NSM_dist / timeRangeInYears
+    # Endpoint Rate Confidence Interval
+    ECI <- sqrt(uncy[firstDateIdx]^2 + uncy[lastDateIdx]^2) / timeRangeInYears
+    return(c(NSM_dist,EPR_rates,ECI))
   }
-  else{return(c(NA,NA))}
+  else{return(c(NA,NA,NA))}
 }
 
 calcSCE <- function(dist){
@@ -139,7 +142,7 @@ getDSAS <- function(blockText){
   LRRout   <- as.numeric(calcLRR(dates,dist))
   WLRout   <- as.numeric(calcWLR(dates,dist,uncy))
   SCE   <- calcSCE(dist)
-  NSMout  <- calcNSM(dates,dist)
+  NSMout  <- calcNSM(dates,dist,uncy)
   return(c(LRRout,WLRout,SCE,NSMout))  
 }
 
@@ -181,7 +184,7 @@ for (p in 1:numPar){
     SCE[b] <- DSASstats[5]
     NSM[b] <- DSASstats[6]
     EPR[b] <- DSASstats[7]
-    ECI[b] <- -99
+    ECI[b] <- DSASstats[8]
     b = b + 1
   }
 }

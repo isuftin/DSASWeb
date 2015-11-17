@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
 import gov.usgs.cida.dsas.wps.geom.Intersection;
 import gov.usgs.cida.utilities.features.AttributeGetter;
+
 import static gov.usgs.cida.utilities.features.Constants.BASELINE_DIST_ATTR;
 import static gov.usgs.cida.utilities.features.Constants.BASELINE_ID_ATTR;
 import static gov.usgs.cida.utilities.features.Constants.DATE_ATTR;
@@ -17,6 +18,8 @@ import static gov.usgs.cida.utilities.features.Constants.TRANSECT_ID_ATTR;
 import static gov.usgs.cida.utilities.features.Constants.UNCY_ATTR;
 import static gov.usgs.cida.utilities.features.Constants.WCI_ATTR;
 import static gov.usgs.cida.utilities.features.Constants.WLR_ATTR;
+import static gov.usgs.cida.utilities.features.Constants.ECI_ATTR;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -38,7 +41,6 @@ import org.n52.wps.io.datahandler.parser.AbstractParser;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.FeatureType;
 
-
 /**
  *
  * @author jiwalker
@@ -46,7 +48,7 @@ import org.opengis.feature.type.FeatureType;
 public class DSASParser extends AbstractParser {
     
     private static List<String> rateColumns = Lists.newArrayList(BASELINE_DIST_ATTR, BASELINE_ID_ATTR, 
-                        LRR_ATTR, LCI_ATTR, WLR_ATTR, WCI_ATTR, SCE_ATTR, NSM_ATTR, EPR_ATTR);
+                        LRR_ATTR, LCI_ATTR, WLR_ATTR, WCI_ATTR, SCE_ATTR, NSM_ATTR, EPR_ATTR, ECI_ATTR);
 
     public DSASParser() {
         supportedIDataTypes.add(GenericFileDataBinding.class);
@@ -72,7 +74,7 @@ public class DSASParser extends AbstractParser {
                     && getter.exists(DISTANCE_ATTR)
                     && getter.exists(DATE_ATTR)
                     && getter.exists(UNCY_ATTR)) {
-                Map<Integer, List<Intersection>> map = new TreeMap<Integer, List<Intersection>>();
+                Map<Integer, List<Intersection>> map = new TreeMap<>();
                 FeatureIterator<SimpleFeature> features = collection.features();
                 while (features.hasNext()) {
                     SimpleFeature feature = features.next();
@@ -82,7 +84,7 @@ public class DSASParser extends AbstractParser {
                     if (map.containsKey(transectId)) {
                         map.get(transectId).add(intersection);
                     } else {
-                        List<Intersection> pointList = new LinkedList<Intersection>();
+                        List<Intersection> pointList = new LinkedList<>();
                         pointList.add(intersection);
                         map.put(transectId, pointList);
                     }
@@ -100,7 +102,7 @@ public class DSASParser extends AbstractParser {
             } else if (getter.exists(TRANSECT_ID_ATTR)
                     && getter.exists(rateColumns)) {
                 FeatureIterator<SimpleFeature> features = collection.features();
-                Map<Integer, SimpleFeature> featureMap = new TreeMap<Integer, SimpleFeature>();
+                Map<Integer, SimpleFeature> featureMap = new TreeMap<>();
 
                 buf.write(StringUtils.join(rateColumns, '\t'));
                 buf.newLine();
