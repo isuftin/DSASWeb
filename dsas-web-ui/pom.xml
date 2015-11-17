@@ -317,6 +317,42 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.lesscss</groupId>
+				<artifactId>lesscss-maven-plugin</artifactId>
+				<version>1.7.0.1.1</version>
+				<configuration>
+					<sourceDirectory>${project.basedir}/src/main/webapp/less</sourceDirectory>
+					<outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
+					<includes>
+						<include>custom.less</include>
+					</includes>
+					<compress>false</compress>
+					<force>true</force>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>1.5.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<suffix>-${project.version}-min</suffix>
+				</configuration>  
+			</plugin>
 		</plugins>
 		<resources>
 			<resource>
