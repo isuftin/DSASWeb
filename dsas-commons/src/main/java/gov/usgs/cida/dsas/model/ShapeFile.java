@@ -11,6 +11,11 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
+import org.geotools.data.FeatureReader;
+import org.geotools.data.Query;
+import org.geotools.data.Transaction;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
 
 /**
  * @author isuftin
@@ -65,8 +70,9 @@ public class ShapeFile implements IShapeFile, AutoCloseable {
 	}
 
 	@Override
-	public String getEPSGCode() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public String getEPSGCode() throws IOException {
+            FeatureReader<SimpleFeatureType, SimpleFeature> featureReader = ds.getFeatureReader(Query.ALL, Transaction.AUTO_COMMIT);
+            return featureReader.getFeatureType().getGeometryDescriptor().getCoordinateReferenceSystem().getName().getCode();
 	}
 
 	@Override
