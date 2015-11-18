@@ -1,6 +1,6 @@
 package gov.usgs.cida.utilities.communication;
 
-import gov.usgs.cida.utilities.file.FileHelper;
+import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,12 +31,12 @@ public class FormUploadHandler {
                 FileItemStream item = iter.next();
                 String name = item.getFieldName();
                 if (filenameParameter.toLowerCase().equals(name.toLowerCase())) {
-                    FileHelper.saveFileFromInputStream(item.openStream(), destinationFile);
+                    FileHelper.copyInputStreamToFile(item.openStream(), destinationFile);
                     break;
                 }
             }
         } else {
-            FileHelper.saveFileFromInputStream(request.getInputStream(), destinationFile);
+            FileHelper.copyInputStreamToFile(request.getInputStream(), destinationFile);
         }
         return destinationFile;
     }
