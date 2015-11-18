@@ -4,9 +4,9 @@ import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.metadata.MetadataValidator;
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
-import gov.usgs.cida.utilities.communication.RequestResponseHelper;
-import gov.usgs.cida.utilities.file.FileHelper;
+import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import gov.usgs.cida.utilities.communication.CSWHandler;
+import gov.usgs.cida.utilities.communication.RequestResponseHelper;
 import gov.usgs.cida.utilities.xml.XMLUtils;
 import java.io.File;
 import java.io.IOException;
@@ -89,7 +89,7 @@ public class PublishService extends HttpServlet {
 							layer = IOUtils.toString(item.openStream());
 						}
 					} else {
-						FileHelper.saveFileFromInputStream(item.openStream(), tempFile);
+						FileHelper.copyInputStreamToFile(item.openStream(), tempFile);
 					}
 				}
 			}
@@ -126,13 +126,7 @@ public class PublishService extends HttpServlet {
 				RequestResponseHelper.sendErrorResponse(response, responseMap);
 			}
 
-		} catch (FileUploadException ex) {
-			responseMap.put("message", ex.getMessage());
-			RequestResponseHelper.sendErrorResponse(response, responseMap);
-		} catch (IOException ex) {
-			responseMap.put("message", ex.getMessage());
-			RequestResponseHelper.sendErrorResponse(response, responseMap);
-		} catch (XPathExpressionException ex) {
+		} catch (FileUploadException | IOException | XPathExpressionException ex) {
 			responseMap.put("message", ex.getMessage());
 			RequestResponseHelper.sendErrorResponse(response, responseMap);
 		} finally {
@@ -203,13 +197,10 @@ public class PublishService extends HttpServlet {
 	private String createInsertRequest(String metadata) {
 		String insertThis = metadata.replaceAll("<\\?xml.*\\?>", "");
 
-		StringBuilder response = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-				.append("<csw:Transaction xmlns:csw=\"http://www.opengis.net/cat/csw/2.0.2\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:dc=\"http://www.purl.org/dc/elements/1.1/\" service=\"CSW\" version=\"2.0.2\">")
-				.append("<csw:Insert>")
-				.append(insertThis)
-				.append("</csw:Insert>")
-				.append("</csw:Transaction>");
-		return response.toString();
+		String response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><csw:Transaction xmlns:csw=\"http://www.opengis.net/cat/csw/2.0.2\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:dc=\"http://www.purl.org/dc/elements/1.1/\" service=\"CSW\" version=\"2.0.2\"><csw:Insert>"
+				+ insertThis + 
+				"</csw:Insert></csw:Transaction>";
+		return response;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

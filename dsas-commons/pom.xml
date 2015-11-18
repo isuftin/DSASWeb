@@ -18,19 +18,6 @@
 			<artifactId>gt-shapefile</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.geoserver.extension</groupId>
-			<artifactId>wps-core</artifactId>
-			<version>${gs.version}</version>
-			<type>test-jar</type>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>net.sf.ehcache</groupId>
-					<artifactId>ehcache</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>xmlunit</groupId>
 			<artifactId>xmlunit</artifactId>
 			<scope>test</scope>
@@ -55,6 +42,12 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<type>jar</type>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -79,9 +72,19 @@
 			<artifactId>commons-lang</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.10</version>
+		</dependency>
+		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>gov.usgs.cida.owsutils</groupId>
+			<artifactId>cida-owsutils-commons</artifactId>
+			<version>1.0.8-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>

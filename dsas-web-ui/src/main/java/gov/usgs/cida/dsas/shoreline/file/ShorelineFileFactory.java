@@ -10,7 +10,7 @@ import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.shoreline.file.ShorelineFile.ShorelineType;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
-import gov.usgs.cida.utilities.file.FileHelper;
+import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

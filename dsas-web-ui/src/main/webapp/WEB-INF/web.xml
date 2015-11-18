@@ -178,6 +178,10 @@
 		<servlet-name>ShorelineService</servlet-name>
 		<servlet-class>gov.usgs.cida.dsas.service.ShorelineService</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>PdbManagementJsp</servlet-name>
+		<jsp-file>/WEB-INF/jsp/pdb/pdb-management.jsp</jsp-file>
+	</servlet>
 	<!-- MAPPING -->
 	<servlet-mapping>
 		<servlet-name>ShorelineStagingService</servlet-name>
@@ -214,5 +218,9 @@
 	<servlet-mapping>
 		<servlet-name>ShorelineService</servlet-name>
 		<url-pattern>/service/shoreline</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PdbManagementJsp</servlet-name>
+		<url-pattern>/pdb/*</url-pattern>
 	</servlet-mapping>
 </web-app>

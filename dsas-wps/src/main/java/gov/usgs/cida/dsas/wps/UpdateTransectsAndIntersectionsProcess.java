@@ -1,10 +1,8 @@
 package gov.usgs.cida.dsas.wps;
 
-import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.index.strtree.STRtree;
 import gov.usgs.cida.dsas.util.BaselineDistanceAccumulator;
 import gov.usgs.cida.dsas.util.CRSUtils;
 import gov.usgs.cida.dsas.util.GeoserverUtils;
@@ -12,10 +10,8 @@ import gov.usgs.cida.dsas.util.UTMFinder;
 import gov.usgs.cida.dsas.exceptions.LayerDoesNotExistException;
 import gov.usgs.cida.dsas.exceptions.PoorlyDefinedBaselineException;
 import gov.usgs.cida.dsas.exceptions.UnsupportedCoordinateReferenceSystemException;
-import gov.usgs.cida.dsas.wps.geom.Intersection;
-import gov.usgs.cida.dsas.wps.geom.ShorelineSTRTreeBuilder;
+import gov.usgs.cida.dsas.wps.geom.IntersectionCalculator;
 import gov.usgs.cida.dsas.wps.geom.Transect;
-import gov.usgs.cida.utilities.features.AttributeGetter;
 
 import static gov.usgs.cida.utilities.features.Constants.BASELINE_DIST_ATTR;
 import static gov.usgs.cida.utilities.features.Constants.REQUIRED_CRS_WGS84;
@@ -25,35 +21,28 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import org.geoserver.catalog.Catalog;
 import org.geoserver.catalog.DataStoreInfo;
 import org.geoserver.catalog.LayerInfo;
 import org.geoserver.wps.gs.GeoServerProcess;
 import org.geotools.data.DataAccess;
-import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
-import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.NameImpl;
-import org.geotools.filter.FilterFactoryImpl;
 import org.geotools.process.factory.DescribeParameter;
 import org.geotools.process.factory.DescribeProcess;
 import org.geotools.process.factory.DescribeResult;
 import org.geotools.referencing.CRS;
-import org.joda.time.DateTime;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.FeatureType;
-import org.opengis.filter.FilterFactory;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.PropertyIsEqualTo;
-import org.opengis.filter.expression.PropertyName;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
@@ -82,9 +71,10 @@ public class UpdateTransectsAndIntersectionsProcess implements GeoServerProcess 
 			@DescribeParameter(name = "intersectionLayer", description = "layer containing intersections", min = 1, max = 1) String intersectionLayer,
 			@DescribeParameter(name = "baselineLayer", description = "layer containing baseline", min = 1, max = 1) String baselineLayer,
 			@DescribeParameter(name = "shorelines", description = "shoreline features", min = 1, max = 1) SimpleFeatureCollection shorelines,
+			@DescribeParameter(name = "biasRef", min = 0, max = 1) SimpleFeatureCollection biasRef,
 			@DescribeParameter(name = "transectID", description = "edited transect id", min = 1, max = Integer.MAX_VALUE) int[] transectIds,
 			@DescribeParameter(name = "farthest", description = "use farthest intersection on shoreline (default: false)", min = 0, max = 1) Boolean useFarthest) throws Exception {
-		return new Process(transectLayer, intersectionLayer, baselineLayer, shorelines, transectIds, useFarthest).execute();
+		return new Process(transectLayer, intersectionLayer, baselineLayer, shorelines, biasRef, transectIds, useFarthest).execute();
 	}
 
 	private class Process {
@@ -93,14 +83,17 @@ public class UpdateTransectsAndIntersectionsProcess implements GeoServerProcess 
 		private LayerInfo intersectionLayer;
 		private LayerInfo baselineLayer;
 		private SimpleFeatureCollection shorelines;
+		private SimpleFeatureCollection biasRef;
 		private int[] transectIds;
 		private boolean useFarthest;
 
-		private Process(String transectLayer, String intersectionLayer, String baselineLayer, SimpleFeatureCollection shorelines, int[] transectIds, Boolean useFarthest) {
+		private Process(String transectLayer, String intersectionLayer, String baselineLayer, SimpleFeatureCollection shorelines,
+				SimpleFeatureCollection biasRef, int[] transectIds, Boolean useFarthest) {
 			this.transectLayer = catalog.getLayerByName(transectLayer);
 			this.intersectionLayer = catalog.getLayerByName(intersectionLayer);
 			this.baselineLayer = catalog.getLayerByName(baselineLayer);
 			this.shorelines = shorelines;
+			this.biasRef = biasRef;
 			this.transectIds = transectIds;
 			this.useFarthest = (null == useFarthest) ? false : useFarthest;
 		}
@@ -127,7 +120,6 @@ public class UpdateTransectsAndIntersectionsProcess implements GeoServerProcess 
 			DataAccess<? extends FeatureType, ? extends Feature> intersectionDa = gsUtils.getDataAccess(intersectionDs, null);
 			SimpleFeatureStore intersectionStore = (SimpleFeatureStore) gsUtils.getFeatureSource(intersectionDa, intersectionLayer.getName());
 			intersectionStore.setTransaction(transaction);
-			AttributeGetter intersectionAttr = new AttributeGetter(intersectionStore.getSchema());
 
 			DataStoreInfo baselineDs = gsUtils.getDataStoreByName(
 					baselineLayer.getResource().getStore().getWorkspace().getName(),
@@ -146,10 +138,14 @@ public class UpdateTransectsAndIntersectionsProcess implements GeoServerProcess 
 
 			SimpleFeatureCollection transformedBaseline = CRSUtils.transformFeatureCollection((SimpleFeatureCollection) baselineSource.getFeatures(), baselineSource.getInfo().getCRS(), utmCrs);
 			SimpleFeatureCollection transformedShorelines = CRSUtils.transformFeatureCollection(shorelines, REQUIRED_CRS_WGS84, utmCrs);
+			SimpleFeatureCollection transformedBiasRef = null;
+			if (biasRef != null) {
+				transformedBiasRef = CRSUtils.transformFeatureCollection(biasRef, REQUIRED_CRS_WGS84, utmCrs);
+			}
+			double maxTransectLength = IntersectionCalculator.calculateMaxDistance(transformedShorelines, transformedBaseline);
+			IntersectionCalculator calc = new IntersectionCalculator(transformedShorelines, transformedBaseline, transformedBiasRef, maxTransectLength, utmCrs, useFarthest);
 
-			STRtree strtree = new ShorelineSTRTreeBuilder(transformedShorelines).build();
-
-			List<SimpleFeature> newIntersectionFeatures = new LinkedList<>();
+			List<Transect> updatedTransects = new LinkedList<>();
 			try {
 				for (int id : transectIds) {
 					// use AttributeGetter to get real attr names
@@ -164,7 +160,7 @@ public class UpdateTransectsAndIntersectionsProcess implements GeoServerProcess 
 					}
 
 					SimpleFeatureCollection transectFeatures = transectStore.getFeatures(transectFilter);
-
+					
 					SimpleFeature transect = null;
 					try (SimpleFeatureIterator transectIterator = transectFeatures.features()) {
 						while (transectIterator.hasNext()) {
@@ -179,26 +175,15 @@ public class UpdateTransectsAndIntersectionsProcess implements GeoServerProcess 
 
 					if (null != transect) {
 						Transect transectObj = Transect.fromFeature(transect);
-
-						Map<DateTime, Intersection> newIntersections = Intersection.calculateIntersections(transectObj, strtree, useFarthest, intersectionAttr);
-						for (DateTime key : newIntersections.keySet()) {
-							Intersection newIntersection = newIntersections.get(key);
-							SimpleFeature newFeature = newIntersection.createFeature(intersectionStore.getSchema());
-							newIntersectionFeatures.add(newFeature);
-						}
 						Transect updatedTransect = updateTransectBaseDist(transectObj, transformedBaseline);
-						try {
-							transectStore.modifyFeatures(new NameImpl(BASELINE_DIST_ATTR), updatedTransect.getBaselineDistance(), transectFilter);
-
-						} catch (Exception e) {
-							transaction.rollback();
-							throw e;
-						}
+						transectStore.modifyFeatures(new NameImpl(BASELINE_DIST_ATTR), updatedTransect.getBaselineDistance(), transectFilter);
+						updatedTransects.add(updatedTransect);
 					}
 					transaction.commit();
 				}
+				calc.calculateIntersections(updatedTransects.toArray(new Transect[updatedTransects.size()]), shorelines);
 
-				SimpleFeatureCollection collection = DataUtilities.collection(newIntersectionFeatures);
+				SimpleFeatureCollection collection = calc.getResultIntersectionsCollection();
 				try {
 					intersectionStore.addFeatures(collection);
 					transaction.commit();

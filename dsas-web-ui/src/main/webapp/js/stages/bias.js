@@ -1,8 +1,10 @@
 /* global LOG */
 /* global CONFIG */
 var ProxyDatumBias = {
-	overrideWorkspace: CONFIG.name.proxydatumbias,
-	overrideStore: "Uploads",
+	overrideWorkspace: "published",
+	overrideStore: "pdb",
+	overrideLayer: 'published_proxy_datum_bias',
+	overrideOverwriteExistingLayer: 'false',
 	stage: 'bias',
 	suffixes: ['_bias'],
 	mandatoryColumns: ['the_geom', 'segment_id', 'bias', 'avg_slope', 'uncyb'],

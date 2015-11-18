@@ -949,7 +949,7 @@ var Shorelines = {
 				var layersShown = Shorelines.displayLayersForBounds(Shorelines.aoiBoundsSelected);
 				if (layersShown) {
 					var aoi = boxLayer.features[0];
-					var newStyle = $.extend({}, boxLayer.styleMap.styles['default'].defaultStyle);
+					var newStyle = $.extend({}, boxLayer.styleMap['styles']['default']['defaultStyle']);
 					newStyle.fillOpacity = 0.0;
 					newStyle.strokeOpacity = 0.3;
 					boxLayer.style = newStyle;

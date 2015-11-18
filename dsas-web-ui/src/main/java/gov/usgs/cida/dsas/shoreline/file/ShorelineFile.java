@@ -6,7 +6,7 @@ import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
-import gov.usgs.cida.owsutils.commons.shapefile.ProjectionUtils;
+import gov.usgs.cida.owsutils.commons.shapefile.utils.ProjectionUtils;
 import gov.usgs.cida.utilities.features.Constants;
 import gov.usgs.cida.utilities.file.TokenToFileSingleton;
 import java.io.File;

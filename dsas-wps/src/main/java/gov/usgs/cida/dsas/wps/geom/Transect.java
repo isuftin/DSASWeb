@@ -95,10 +95,22 @@ public class Transect {
         gf = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING));
     }
     
+    /**
+     * Generate a Zero Vector with given attributes
+     * 
+     * Length is set afterwards by calculating intersections
+     * @param coord xy coordinates of vector
+     * @param angle angle of the vector
+     * @param orientation orientation to shoreline
+     * @param transectId id for this transect
+     * @param baselineId id of baseline this projects from
+     * @param baselineDistance distance along baseline of this vector
+     * @param bias proxy datum bias to retain with this transect
+     */
     Transect(Coordinate coord, double angle, Orientation orientation, int transectId, String baselineId, double baselineDistance, ProxyDatumBias bias) {
         this.cartesianCoord = coord;
         this.angle = angle;
-        this.length = 1.0;
+        this.length = 0.0;
         this.orientation = orientation;
         this.transectId = transectId;
         this.baselineId = baselineId;
@@ -108,6 +120,10 @@ public class Transect {
     
     Transect(double x, double y, double angle, Orientation orientation, int transectId, String baselineId, double baselineDistance, ProxyDatumBias bias) {
         this(new Coordinate(x, y), angle, orientation, transectId, baselineId, baselineDistance, bias);
+    }
+
+    public double getLength() {
+        return length;
     }
 
     public void setLength(double length) {

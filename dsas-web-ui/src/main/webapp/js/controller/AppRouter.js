@@ -7,8 +7,8 @@ define([
 	'views/ShorelineView',
 	'models/ShorelineViewModel',
 	'jquery',
-	'underscore'
-], function (Backbone, log, HomeView, ShorelineView, ShorelineViewModel, $, _) {
+	'views/PdbManagementHomeView'
+], function (Backbone, log, HomeView, ShorelineView, ShorelineViewModel, $, PdbManagementView) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		viewModels: {},
@@ -18,7 +18,9 @@ define([
 			'shorelines': 'displayShorelineToolset',
 			'shorelines/:activeTab': 'displayShorelineToolset',
 			'baseline': 'displayBaselineToolset',
-			'baseline/:activeTab': 'displayBaselineToolset'
+			'baseline/:activeTab': 'displayBaselineToolset',
+			'pdb': 'displayPDBView',
+			'login' : 'displayLoginView'
 		},
 		initialize: function () {
 			log.trace("Initializing router");
@@ -67,6 +69,14 @@ define([
 			if (this.currentView !== null) {
 				this.currentView.remove();
 			}
+		},
+		displayPDBView: function () {
+			log.trace("Routing to PDB Management view");
+			var pdbMgmtView = new PdbManagementView().render();
+			return this.pdbView;
+		},
+		displayLoginView : function () {
+			// Not yet implemented
 		}
 	});
 

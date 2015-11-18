@@ -5,6 +5,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
+import gov.usgs.cida.dsas.wps.geom.IntersectionCalculator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.geoserver.wps.gs.GeoServerProcess;
@@ -73,9 +74,7 @@ public class NearestPointOnLineProcess implements GeoServerProcess {
             LineSegment closestSegment = null;
             double closestDistance = Double.MAX_VALUE;
             
-            SimpleFeatureIterator featureIterator = null;
-            try {
-                featureIterator = featureCollection.features();
+            try (SimpleFeatureIterator featureIterator = featureCollection.features()) {
                 while (featureIterator.hasNext()) {
                     SimpleFeature feature = featureIterator.next();
                     Object geometryAsObject = feature.getDefaultGeometry();
@@ -84,7 +83,7 @@ public class NearestPointOnLineProcess implements GeoServerProcess {
                         int gCount = geometry.getNumGeometries();
                         for (int gIndex = 0; gIndex < gCount; ++gIndex) {
                             LineString string = (LineString)geometry.getGeometryN(gIndex);
-                            for (LineSegment currentSegment : CreateTransectsAndIntersectionsProcess.toLineSegments(string)) {
+                            for (LineSegment currentSegment : IntersectionCalculator.toLineSegments(string)) {
                                 double currentDistance = currentSegment.distance(intpuCoordinateL);
                                 if (currentDistance < closestDistance) {
                                     closestDistance = currentDistance;
@@ -107,10 +106,6 @@ public class NearestPointOnLineProcess implements GeoServerProcess {
                             append(' ').
                             append(outputPointP.getOrdinate(1)).
                             append(")").toString();
-                }
-            } finally {
-                if (featureIterator != null) {
-                    featureIterator.close();
                 }
             }
             // fallback

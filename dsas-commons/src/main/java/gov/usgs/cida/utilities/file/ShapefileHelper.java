@@ -1,5 +1,6 @@
 package gov.usgs.cida.utilities.file;
 
+import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

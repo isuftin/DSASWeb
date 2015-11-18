@@ -2,7 +2,6 @@ package gov.usgs.cida.dsas.dao.shoreline;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Date;
 
 /**
  *
@@ -10,7 +9,7 @@ import java.util.Date;
  */
 public class Shoreline implements Serializable {
 
-	private static long serialVersionUID = 5129615799852575469L;
+	private static final long serialVersionUID = 5129615799852575469L;
 	private BigInteger id;
 	private String date;
 	private boolean mhw;

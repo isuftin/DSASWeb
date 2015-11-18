@@ -19,7 +19,7 @@ define([
 			aoiSelectionLayer.events.register('beforefeatureadded', null, function (e) {
 				e.object.removeAllFeatures();
 			});
-			aoiSelectionLayer.events.register('featureadded', null, function (e) {
+			aoiSelectionLayer.events.register('featureadded', null, function () {
 				this.style = $.extend({}, this.defaultStyle);
 				this.drawFeature(this.features[0], this.style);
 			});
