@@ -80,7 +80,7 @@ public class ImportUtil {
 				LOGGER.debug("Shapefile verified");
 				extension = ".shp";
 			}
-			gov.usgs.cida.utilities.file.FileHelper.unzipFile(saveDirectory.getAbsolutePath(), shorelineZipFile);
+			FileHelper.unzipFile(saveDirectory.getAbsolutePath(), shorelineZipFile);
 			LOGGER.debug("Shoreline unzipped");
 			if (shorelineZipFile.delete()) {
 				LOGGER.debug("Deleted zipped shapefile");
@@ -91,7 +91,7 @@ public class ImportUtil {
 			for (File file : shapeFileParts) {
 				String oldFilename = file.getName();
 				String newFilename = shorelineFileName + "." + FilenameUtils.getExtension(file.getName());
-				gov.usgs.cida.utilities.file.FileHelper.renameFile(file, newFilename);
+				FileHelper.renameFile(file, newFilename);
 				LOGGER.debug("Renamed {} to {}", oldFilename, newFilename);
 			}
 		} catch (FileUploadException | IOException ex) {
