@@ -276,7 +276,7 @@ var UI = function () {
 											CONFIG.ui.showAlert({
 												message: 'Upload Successful',
 												caller: caller,
-												displayTime: 0,
+												displayTime: 3000,
 												style: {
 													classes: ['alert-success']
 												}

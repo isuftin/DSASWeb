@@ -713,7 +713,7 @@ var Transects = {
 				CONFIG.ui.showAlert({
 					message: 'Transect removed',
 					caller: Transects,
-					displayTime: 0,
+					displayTime: 4000,
 					style: {
 						classes: ['alert-success']
 					}
@@ -996,7 +996,7 @@ var Transects = {
 											$('#stage-select-tablist a[href="#calculation"]').trigger('click');
 											CONFIG.ui.showAlert({
 												message: 'Intersection calculation succeeded.',
-												displayTime: 0,
+												displayTime: 7500,
 												caller: Calculation,
 												style: {
 													classes: ['alert-success']

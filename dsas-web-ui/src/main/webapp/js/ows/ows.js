@@ -148,7 +148,7 @@ var OWS = function (endpoint) {
 									LOG.info('Session.js::init: A workspace has been prepared on the OWS server with the name of ' + CONFIG.tempSession.getCurrentSessionKey());
 									CONFIG.ui.showAlert({
 										message: 'Your session has been created on the server',
-										displayTime: 0,
+										displayTime: 7500,
 										style: {
 											classes: ['alert-info']
 										}

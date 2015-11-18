@@ -699,7 +699,7 @@ var Baseline = {
 											if (typeof data === "string") {
 												CONFIG.ui.showAlert({
 													message: 'Layer cloned successfully.',
-													displayTime: 0,
+													displayTime: 7500,
 													caller: Baseline,
 													style: {
 														classes: ['alert-success']
@@ -1046,7 +1046,7 @@ var Baseline = {
 				CONFIG.ui.showAlert({
 					message: 'Baseline removed',
 					caller: Baseline,
-					displayTime: 0,
+					displayTime: 4000,
 					style: {
 						classes: ['alert-success']
 					}
@@ -1112,7 +1112,7 @@ var Baseline = {
 			CONFIG.ui.showAlert({
 				message: 'Draw Successful',
 				caller: Baseline,
-				displayTime: 0,
+				displayTime: 3000,
 				style: {
 					classes: ['alert-success']
 				}

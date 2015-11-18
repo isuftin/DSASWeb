@@ -289,7 +289,7 @@ var Shorelines = {
 								CONFIG.ui.showAlert({
 									message: 'Shoreline spans ' + data + ' UTM zones',
 									caller: Shorelines,
-									displayTime: 0
+									displayTime: 5000
 								});
 							}
 							addToMap(data, textStatus, jqXHR);
@@ -1130,7 +1130,7 @@ var Shorelines = {
 																CONFIG.ui.showAlert({
 																	message: 'Upload Successful',
 																	caller: Shorelines,
-																	displayTime: 0,
+																	displayTime: 3000,
 																	style: {
 																		classes: ['alert-success']
 																	}

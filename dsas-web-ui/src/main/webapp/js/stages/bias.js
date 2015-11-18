@@ -140,7 +140,7 @@ var ProxyDatumBias = {
 								CONFIG.ui.showAlert({
 									message: 'ProxyDatumBias spans ' + data + ' UTM zones',
 									caller: ProxyDatumBias,
-									displayTime: 0
+									displayTime: 3000
 								});
 							}
 							addToMap(data, textStatus, jqXHR);

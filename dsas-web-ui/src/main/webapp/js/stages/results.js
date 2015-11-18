@@ -119,7 +119,7 @@ var Results = {
                                     $('a[href="#' + Results.stage + '-view-tab"]').tab('show');
                                     CONFIG.ui.showAlert({
                                         message : 'Results were created successfully.',
-                                        displayTime : 0,
+                                        displayTime : 7500,
                                         caller : Results,
                                         style: {
                                             classes : ['alert-success']
