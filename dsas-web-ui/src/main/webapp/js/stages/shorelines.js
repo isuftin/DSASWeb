@@ -197,7 +197,7 @@ var Shorelines = {
 					message: 'Could not update sorting column. ' +
 						'If error continues to happen, contact support',
 					caller: Shorelines,
-					displayTime: 5000
+					displayTime: 0
 				});
 			});
 		Shorelines.updateSortingColumnOnServer({
@@ -233,7 +233,7 @@ var Shorelines = {
 								CONFIG.ui.showAlert({
 									message: 'Not enough attributes in upload - Check Logs',
 									caller: Shorelines,
-									displayTime: 7000,
+									displayTime: 0,
 									style: {
 										classes: ['alert-error']
 									}
@@ -289,7 +289,7 @@ var Shorelines = {
 								CONFIG.ui.showAlert({
 									message: 'Shoreline spans ' + data + ' UTM zones',
 									caller: Shorelines,
-									displayTime: 5000
+									displayTime: 0
 								});
 							}
 							addToMap(data, textStatus, jqXHR);
@@ -873,7 +873,7 @@ var Shorelines = {
 				CONFIG.ui.showAlert({
 					message: 'There is no data for the area of interest you selected<br />Try uploading data.',
 					caller: Shorelines,
-					displayTime: 3000,
+					displayTime: 0,
 					style: {
 						classes: ['alert-warn']
 					}
@@ -959,7 +959,7 @@ var Shorelines = {
 				CONFIG.ui.showAlert({
 					message: 'You have not selected an area of interest',
 					caller: Shorelines,
-					displayTime: 3000,
+					displayTime: 0,
 					style: {
 						classes: ['alert-warn']
 					}
@@ -1081,7 +1081,7 @@ var Shorelines = {
 									CONFIG.ui.showAlert({
 										message: 'Not enough attributes in upload - Check Logs',
 										caller: Shorelines,
-										displayTime: 7000,
+										displayTime: 0,
 										style: {
 											classes: ['alert-error']
 										}
@@ -1130,7 +1130,7 @@ var Shorelines = {
 																CONFIG.ui.showAlert({
 																	message: 'Upload Successful',
 																	caller: Shorelines,
-																	displayTime: 3000,
+																	displayTime: 0,
 																	style: {
 																		classes: ['alert-success']
 																	}
@@ -1154,7 +1154,7 @@ var Shorelines = {
 												CONFIG.ui.showAlert({
 													message: 'There was an error performing a shoreline import - Check Logs',
 													caller: Shorelines,
-													displayTime: 7000,
+													displayTime: 0,
 													style: {
 														classes: ['alert-error']
 													}
@@ -1195,7 +1195,7 @@ var Shorelines = {
 							CONFIG.ui.showAlert({
 								message: 'There was an error performing a shoreline upload - Check Logs',
 								caller: Shorelines,
-								displayTime: 7000,
+								displayTime: 0,
 								style: {
 									classes: ['alert-error']
 								}
@@ -1210,7 +1210,7 @@ var Shorelines = {
 				CONFIG.ui.showAlert({
 					message: 'Import incomplete. ' + (exception ? exception : ''),
 					caller: Shorelines,
-					displayTime: 3000,
+					displayTime: 0,
 					style: {
 						classes: ['alert-error']
 					}

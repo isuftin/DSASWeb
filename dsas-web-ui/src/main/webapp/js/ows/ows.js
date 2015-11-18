@@ -139,7 +139,7 @@ var OWS = function (endpoint) {
 					if (this.namespace === CONFIG.tempSession.getCurrentSessionKey() && jqXHR.toLowerCase() === 'not found') {
 						CONFIG.ui.showAlert({
 							message: 'Current session was not found on server. Attempting to initialize session on server.',
-							displayTime: 7500
+							displayTime: 0
 						});
 
 						$.ajax('service/session?action=prepare&workspace=' + this.namespace,
@@ -148,7 +148,7 @@ var OWS = function (endpoint) {
 									LOG.info('Session.js::init: A workspace has been prepared on the OWS server with the name of ' + CONFIG.tempSession.getCurrentSessionKey());
 									CONFIG.ui.showAlert({
 										message: 'Your session has been created on the server',
-										displayTime: 7500,
+										displayTime: 0,
 										style: {
 											classes: ['alert-info']
 										}

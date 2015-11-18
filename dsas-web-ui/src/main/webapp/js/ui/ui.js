@@ -276,7 +276,7 @@ var UI = function () {
 											CONFIG.ui.showAlert({
 												message: 'Upload Successful',
 												caller: caller,
-												displayTime: 3000,
+												displayTime: 0,
 												style: {
 													classes: ['alert-success']
 												}
@@ -297,7 +297,7 @@ var UI = function () {
 											CONFIG.ui.showAlert({
 												message: 'Import incomplete',
 												caller: caller,
-												displayTime: 3000,
+												displayTime: 0,
 												style: {
 													classes: ['alert-error']
 												}
@@ -311,7 +311,7 @@ var UI = function () {
 							CONFIG.ui.showAlert({
 								message: 'Import incomplete. ' + (responseJSON.exception ? responseJSON.exception : ''),
 								caller: caller,
-								displayTime: 3000,
+								displayTime: 0,
 								style: {
 									classes: ['alert-error']
 								}
@@ -497,7 +497,7 @@ var UI = function () {
 				CONFIG.ui.showAlert({
 					message: 'No shorelines found',
 					caller: Shorelines,
-					displayTime: 2000,
+					displayTime: 0,
 					style: {
 						classes: ['alert-info']
 					}
@@ -892,7 +892,7 @@ var UI = function () {
 								CONFIG.ui.showAlert({
 									close: false,
 									message: query + ' not found',
-									displayTime: 1000,
+									displayTime: 0,
 									style: {
 										classes: ['alert-info']
 									}

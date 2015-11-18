@@ -23,13 +23,13 @@ var Results = {
             if (isNaN(ci)) {
                 CONFIG.ui.showAlert({
                     message : 'Confidence Interval needs to be numeric.',
-                    displayTime : 3000,
+                    displayTime : 0,
                     caller : Calculation
                 });
             } else if (ciNum < 50 || ciNum > 100) {
                 CONFIG.ui.showAlert({
                     message : 'Confidence Interval needs to be in range 50 - 100.',
-                    displayTime : 3000,
+                    displayTime : 0,
                     caller : Calculation
                 });
             } else {
@@ -61,7 +61,7 @@ var Results = {
             || !$('#intersections-list :selected').length) {
             CONFIG.ui.showAlert({
                 message : 'Missing transects or intersections.',
-                displayTime : 7500,
+                displayTime : 0,
                 caller : Calculation
             });
             return;
@@ -119,7 +119,7 @@ var Results = {
                                     $('a[href="#' + Results.stage + '-view-tab"]').tab('show');
                                     CONFIG.ui.showAlert({
                                         message : 'Results were created successfully.',
-                                        displayTime : 7500,
+                                        displayTime : 0,
                                         caller : Results,
                                         style: {
                                             classes : ['alert-success']
@@ -133,7 +133,7 @@ var Results = {
                         LOG.error($(data).find('ows\\:ExceptionText').first().text());
                         CONFIG.ui.showAlert({
                             message : 'Results creation failed. Check logs.',
-                            displayTime : 7500,
+                            displayTime : 0,
                             caller : Results,
                             style: {
                                 classes : ['alert-error']
@@ -880,7 +880,7 @@ var Results = {
         if(!layerName){
 			CONFIG.ui.showAlert({
                 message : 'Please select a result from the list.',
-                displayTime : 7500,
+                displayTime : 0,
                 caller : Results
             });
         } else {
@@ -901,7 +901,7 @@ var Results = {
         if(!layerName){
 			CONFIG.ui.showAlert({
                 message : 'Please select a result from the list.',
-                displayTime : 7500,
+                displayTime : 0,
                 caller : Results
             });
         } else {

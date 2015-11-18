@@ -256,7 +256,7 @@ var Baseline = {
 										CONFIG.ui.showAlert({
 											message: 'Unable to normalize baseline attributes - Check logs',
 											caller: Baseline,
-											displayTime: 7000,
+											displayTime: 0,
 											style: {
 												classes: ['alert-error']
 											}
@@ -271,7 +271,7 @@ var Baseline = {
 							CONFIG.ui.showAlert({
 								message: 'Not enough attributes in upload - Check Logs',
 								caller: Baseline,
-								displayTime: 7000,
+								displayTime: 0,
 								style: {
 									classes: ['alert-error']
 								}
@@ -699,7 +699,7 @@ var Baseline = {
 											if (typeof data === "string") {
 												CONFIG.ui.showAlert({
 													message: 'Layer cloned successfully.',
-													displayTime: 7500,
+													displayTime: 0,
 													caller: Baseline,
 													style: {
 														classes: ['alert-success']
@@ -743,7 +743,7 @@ var Baseline = {
 												LOG.warn('Baseline.js::cloneLayer: Error returned from server: ' + $(data).find('ows\\:ExceptionText').text());
 												CONFIG.ui.showAlert({
 													message: 'Layer not cloned. Check logs.',
-													displayTime: 7500,
+													displayTime: 0,
 													caller: Baseline,
 													style: {
 														classes: ['alert-error']
@@ -756,7 +756,7 @@ var Baseline = {
 							} else {
 								CONFIG.ui.showAlert({
 									message: 'Cloned layer exists.',
-									displayTime: 7500,
+									displayTime: 0,
 									caller: Baseline
 								});
 							}
@@ -984,7 +984,7 @@ var Baseline = {
 								CONFIG.ui.showAlert({
 									message: 'Draw Failed - Check browser logs',
 									caller: Baseline,
-									displayTime: 4000,
+									displayTime: 0,
 									style: {
 										classes: ['alert-error']
 									}
@@ -1046,7 +1046,7 @@ var Baseline = {
 				CONFIG.ui.showAlert({
 					message: 'Baseline removed',
 					caller: Baseline,
-					displayTime: 4000,
+					displayTime: 0,
 					style: {
 						classes: ['alert-success']
 					}
@@ -1071,7 +1071,7 @@ var Baseline = {
 			CONFIG.ui.showAlert({
 				message: 'Draw Failed - ' + ex,
 				caller: Baseline,
-				displayTime: 4000,
+				displayTime: 0,
 				style: {
 					classes: ['alert-error']
 				}
@@ -1112,7 +1112,7 @@ var Baseline = {
 			CONFIG.ui.showAlert({
 				message: 'Draw Successful',
 				caller: Baseline,
-				displayTime: 3000,
+				displayTime: 0,
 				style: {
 					classes: ['alert-success']
 				}
@@ -1128,7 +1128,7 @@ var Baseline = {
 			CONFIG.ui.showAlert({
 				message: 'Draw Failed - Check browser logs',
 				caller: Baseline,
-				displayTime: 4000,
+				displayTime: 0,
 				style: {
 					classes: ['alert-error']
 				}
