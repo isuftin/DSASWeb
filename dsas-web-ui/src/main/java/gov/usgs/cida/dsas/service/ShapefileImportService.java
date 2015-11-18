@@ -151,9 +151,10 @@ public class ShapefileImportService extends HttpServlet {
 			String fileName = UUID.randomUUID().toString();
 			File subdir = new File(uploadDirectory + File.separator + fileToken);
 			FileUtils.forceMkdir(subdir);
-			File emptyShapeFile = geoserverHandler.createEmptyShapefile(subdir.getPath(), fileName, dbcList);
-			FileHelper.zipFilesInDirectory(emptyShapeFile.getParentFile(), emptyShapeFile);
 			fileDirectoryHandle = new File(new File(uploadDirectory), fileToken);
+			File zipFile = new File(fileDirectoryHandle, fileToken + ".zip");
+			File emptyShapeFile = geoserverHandler.createEmptyShapefile(subdir.getPath(), fileName, dbcList);
+			FileHelper.zipFilesInDirectory(emptyShapeFile.getParentFile(), zipFile);
 		} else {
 			fileDirectoryHandle = new File(new File(uploadDirectory), fileToken);
 		}
