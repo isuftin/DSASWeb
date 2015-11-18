@@ -2,13 +2,10 @@ package gov.usgs.cida.dsas.wps;
 
 import gov.usgs.cida.dsas.util.UTMFinder;
 import org.geoserver.wps.gs.GeoServerProcess;
-import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.process.factory.DescribeParameter;
 import org.geotools.process.factory.DescribeProcess;
 import org.geotools.process.factory.DescribeResult;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
 
 /**
  *

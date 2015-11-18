@@ -4,8 +4,8 @@ import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO.DBaseColumn.ColumnType;
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
+import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import gov.usgs.cida.utilities.communication.RequestResponseHelper;
-import gov.usgs.cida.utilities.file.FileHelper;
 import gov.usgs.cida.utilities.file.ShapefileHelper;
 import java.io.File;
 import java.io.FileFilter;
@@ -152,7 +152,7 @@ public class ShapefileImportService extends HttpServlet {
 			File subdir = new File(uploadDirectory + File.separator + fileToken);
 			FileUtils.forceMkdir(subdir);
 			File emptyShapeFile = geoserverHandler.createEmptyShapefile(subdir.getPath(), fileName, dbcList);
-			FileHelper.zipFile(emptyShapeFile.getParentFile(), null, null);
+			FileHelper.zipFilesInDirectory(emptyShapeFile.getParentFile(), emptyShapeFile);
 			fileDirectoryHandle = new File(new File(uploadDirectory), fileToken);
 		} else {
 			fileDirectoryHandle = new File(new File(uploadDirectory), fileToken);

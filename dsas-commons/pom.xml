@@ -17,6 +17,7 @@
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-shapefile</artifactId>
 		</dependency>
+<<<<<<< HEAD
                 <dependency>
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-epsg-extension</artifactId>
@@ -29,6 +30,8 @@
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-referencing</artifactId>
 		</dependency>
+=======
+>>>>>>> 1ee63e7178b5e44c7036261827e9f7da672f84a2
 		<dependency>
 			<groupId>xmlunit</groupId>
 			<artifactId>xmlunit</artifactId>
@@ -54,6 +57,12 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<type>jar</type>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -78,9 +87,19 @@
 			<artifactId>commons-lang</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.10</version>
+		</dependency>
+		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>gov.usgs.cida.owsutils</groupId>
+			<artifactId>cida-owsutils-commons</artifactId>
+			<version>1.0.8-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>
