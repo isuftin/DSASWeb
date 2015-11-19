@@ -511,7 +511,7 @@ var Transects = {
 							addedFeature.destroy();
 							CONFIG.ui.showAlert({
 								message: 'Intersection did not touch baseline',
-								displayTime: 7500,
+								displayTime: 0,
 								caller: Transects
 							});
 						}
@@ -556,7 +556,7 @@ var Transects = {
 				LOG.debug('Transects.js::saveEditedLayer: UpdateTransectsAndIntersections WPS failed. Removing Intersections layer');
 				CONFIG.ui.showAlert({
 					message: 'Automatic intersection generation failed.',
-					displayTime: 7500,
+					displayTime: 0,
 					caller: Transects
 				});
 				Transects.refreshFeatureList({
@@ -736,7 +736,7 @@ var Transects = {
 			CONFIG.ui.showAlert({
 				message: 'Remove Failed - ' + ex,
 				caller: Transects,
-				displayTime: 4000,
+				displayTime: 0,
 				style: {
 					classes: ['alert-error']
 				}
@@ -936,7 +936,7 @@ var Transects = {
 			CONFIG.ui.showAlert({
 				message: 'You\'ve not selected shorelines to build transects against',
 				caller: Transects,
-				displayTime: 2000,
+				displayTime: 0,
 				style: {
 					classes: ['alert-info']
 				}
@@ -1017,7 +1017,7 @@ var Transects = {
 
 							CONFIG.ui.showAlert({
 								message: msg,
-								displayTime: 7500,
+								displayTime: 0,
 								caller: Transects,
 								style: {
 									classes: ['alert-error']
