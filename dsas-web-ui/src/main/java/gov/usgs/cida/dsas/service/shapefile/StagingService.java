@@ -12,25 +12,27 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
-import javax.ws.rs.GET;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author isuftin
  */
+@MultipartConfig
 @Path("/staging")
 public class StagingService {
 
@@ -38,23 +40,25 @@ public class StagingService {
 	private static final Integer DEFAULT_MAX_FILE_SIZE = Integer.MAX_VALUE;
 	private static final File baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
 	private static final File uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-	private final Integer maxFileSize;
 
-	public StagingService() {
-		this.maxFileSize = this.getMaxFileSize();
-	}
-
-	@GET
+	@POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createToken(@Context HttpServletRequest req) {
+	public Response createToken(
+			@Context HttpServletRequest req,
+			@FormDataParam("file") InputStream fileInputStream,
+			@FormDataParam("file") FormDataContentDisposition fileDisposition
+	) {
 		Response response;
 		Map<String, String> responseMap = new HashMap<>();
 		Gson gson = new Gson();
 		File shapeZip = null;
-		
+
 		try {
-			shapeZip = saveZipFileFromRequest(req);
-		} catch (IOException | ServletException ex) {
+			shapeZip = Files.createTempFile(uploadDirectory.toPath(), null, ".zip").toFile();
+			IOUtils.copyLarge(fileInputStream, new FileOutputStream(shapeZip));
+			FileHelper.flattenZipFile(shapeZip);
+		} catch (IOException ex) {
 			LOGGER.warn("Could not create token for uploaded shapefile. ", ex);
 		}
 
@@ -72,18 +76,6 @@ public class StagingService {
 		}
 
 		return response;
-	}
-
-	private File saveZipFileFromRequest(HttpServletRequest request) throws IOException, ServletException {
-		Part zipFilePart = request.getPart("file");
-
-		File zipFile;
-		try (InputStream inputStream = zipFilePart.getInputStream();) {
-			zipFile = Files.createTempFile(uploadDirectory.toPath(), null, ".zip").toFile();
-			IOUtils.copyLarge(inputStream, new FileOutputStream(zipFile));
-		}
-
-		return FileHelper.flattenZipFile(zipFile);
 	}
 
 	protected final Integer getMaxFileSize() {
