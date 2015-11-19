@@ -336,6 +336,11 @@
 			<artifactId>jersey-media-moxy</artifactId>
 			<version>${version.jersey}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+			<version>${version.jersey}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

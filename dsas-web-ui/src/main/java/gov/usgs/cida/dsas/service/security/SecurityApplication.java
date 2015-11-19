@@ -7,6 +7,7 @@ import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import javax.ws.rs.ApplicationPath;
 import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.mvc.jsp.JspMvcFeature;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -20,7 +21,8 @@ public class SecurityApplication extends ResourceConfig {
 
 	public SecurityApplication() {
 		packages(true, this.getClass().getPackage().getName());
-		
+		register(JspMvcFeature.class);
+
 		if (!AuthClientSingleton.isInitialized()) {
 			String nullRoles = PropertyUtil.getProperty(NullAuthClient.AUTH_ROLES_JNDI_NAME);
 			if (StringUtils.isNotBlank(nullRoles)) {
