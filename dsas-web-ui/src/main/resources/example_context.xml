@@ -11,6 +11,12 @@ dsas.files.upload.max-size: The maximum file size that is allowed to
 the server - Set to 0 to disable size checking -->
 <Environment name="dsas.files.upload.max-size" type="java.lang.String" value="15728640" />
 
+<!--
+cida.auth.service.endpoint: The service endpoint that the authentication client
+uses to check for valid logins
+-->
+<Environment name="cida.auth.service.endpoint" override="true" type="java.lang.String" value="http://some.address.somewhere/auth-service/" />
+
 <!-- 
 dsas.files.upload.filename-param: The parameter that the application 
 uses to get the name of the incoming file - “qqfile” is used by default. This 

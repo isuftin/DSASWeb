@@ -87,7 +87,7 @@ var ProxyDatumBias = {
 								CONFIG.ui.showAlert({
 									message: 'Not enough attributes in upload - Check Logs',
 									caller: ProxyDatumBias,
-									displayTime: 7000,
+									displayTime: 0,
 									style: {
 										classes: ['alert-error']
 									}
@@ -140,7 +140,7 @@ var ProxyDatumBias = {
 								CONFIG.ui.showAlert({
 									message: 'ProxyDatumBias spans ' + data + ' UTM zones',
 									caller: ProxyDatumBias,
-									displayTime: 5000
+									displayTime: 3000
 								});
 							}
 							addToMap(data, textStatus, jqXHR);
@@ -291,7 +291,7 @@ var ProxyDatumBias = {
 				CONFIG.ui.showAlert({
 					message: 'ProxyDatumBias removed',
 					caller: ProxyDatumBias,
-					displayTime: 4000,
+					displayTime: 0,
 					style: {
 						classes: ['alert-success']
 					}
@@ -326,7 +326,7 @@ var ProxyDatumBias = {
 			CONFIG.ui.showAlert({
 				message: 'Unable to remove resource - ' + ex,
 				caller: ProxyDatumBias,
-				displayTime: 4000,
+				displayTime: 0,
 				style: {
 					classes: ['alert-error']
 				}

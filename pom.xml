@@ -182,18 +182,6 @@
 				<version>1.6</version>
 				<scope>test</scope>
 			</dependency>
-			<!--			<dependency>
-				<groupId>org.easymock</groupId>
-				<artifactId>easymockclassextension</artifactId>
-				<version>3.2</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.mockrunner</groupId>
-				<artifactId>mockrunner-all</artifactId>
-				<version>0.3.6</version>
-				<scope>test</scope>
-			</dependency>-->
 			<dependency>
 				<groupId>org.geoserver</groupId>
 				<artifactId>main</artifactId>
