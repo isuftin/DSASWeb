@@ -142,7 +142,7 @@ public class UpdateTransectsAndIntersectionsProcess implements GeoServerProcess 
 			if (biasRef != null) {
 				transformedBiasRef = CRSUtils.transformFeatureCollection(biasRef, REQUIRED_CRS_WGS84, utmCrs);
 			}
-			//double maxTransectLength = IntersectionCalculator.calculateMaxDistance(transformedShorelines, transformedBaseline);
+
 			IntersectionCalculator calc = new IntersectionCalculator(transformedShorelines, transformedBaseline, transformedBiasRef, Double.NaN, utmCrs, useFarthest);
 
 			List<Transect> updatedTransects = new LinkedList<>();
