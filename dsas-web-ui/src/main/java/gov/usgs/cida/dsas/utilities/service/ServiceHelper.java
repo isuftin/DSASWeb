@@ -1,4 +1,4 @@
-package gov.usgs.cida.utilities.service;
+package gov.usgs.cida.dsas.utilities.service;
 
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse;
 import java.util.HashMap;

@@ -1,5 +1,8 @@
 package gov.usgs.cida.dsas;
 
+import gov.usgs.cida.auth.client.AuthClientSingleton;
+import gov.usgs.cida.auth.client.CachingAuthClient;
+import gov.usgs.cida.auth.client.NullAuthClient;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineShapefileDAO;
 import gov.usgs.cida.dsas.service.util.Property;
@@ -11,7 +14,9 @@ import java.text.MessageFormat;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -19,19 +24,29 @@ import org.slf4j.LoggerFactory;
  *
  * @author isuftin
  */
+@WebListener
 public class InitListener implements ServletContextListener {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(InitListener.class);
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		LOGGER.info("Coastal Hazards UI Application Initializing.");
+		LOGGER.info("DSASWeb Application Initializing.");
 		ServletContext sc = sce.getServletContext();
 		String key = Property.JDBC_NAME.getKey();
 		String initParameter = sc.getInitParameter(key);
 		System.setProperty(key, initParameter);
 
-		String baseDir = PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectoryPath() + "/coastal-hazards");
+		createWorkingDirectories();
+
+		createGeoserverWorkspaces();
+
+		// TODO- Create file cleanup service for work and upload directories
+		LOGGER.info("DSASWeb UI Application Initialized.");
+	}
+
+	private void createWorkingDirectories() {
+		String baseDir = PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectoryPath() + "/DSASWeb");
 		String workDir = PropertyUtil.getProperty(Property.DIRECTORIES_WORK, "/work");
 		String uploadDir = PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD, "/upload");
 		File baseDirFile, workDirFile, uploadDirFile;
@@ -51,7 +66,9 @@ public class InitListener implements ServletContextListener {
 		if (!uploadDirFile.exists()) {
 			createDir(uploadDirFile);
 		}
+	}
 
+	private void createGeoserverWorkspaces() {
 		try {
 			LOGGER.info("Updating published workspace in database");
 			new ShorelineShapefileDAO().createViewAgainstPublishedWorkspace();
@@ -67,16 +84,13 @@ public class InitListener implements ServletContextListener {
 		} catch (IOException ex) {
 			LOGGER.warn("Could not create or update published workspace on Geoserver. This may affect the proper funcitoning of the application", ex);
 		}
-
-		// TODO- Create file cleanup service for work and upload directories
-		LOGGER.info("Coastal Hazards UI Application Initialized.");
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		LOGGER.info("Coastal Hazards UI Application Destroying.");
+		LOGGER.info("DSASWeb Application Destroying.");
 		// Do stuff here for application cleanup
-		LOGGER.info("Coastal Hazards UI Application Destroyed.");
+		LOGGER.info("DSASWeb Application Destroyed.");
 	}
 
 	private void createDir(File directory) {
