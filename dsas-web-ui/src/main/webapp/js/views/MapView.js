@@ -3,7 +3,7 @@ define([
 	'handlebars',
 	'views/BaseView',
 	'utils/logger',
-	'utils/constants',
+	'utils/Constants',
 	'utils/AppEvents',
 	'openlayers',
 	'utils/SessionUtil',

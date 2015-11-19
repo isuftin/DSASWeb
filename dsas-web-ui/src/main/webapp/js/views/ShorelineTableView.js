@@ -73,19 +73,50 @@ define([
 				var rangeSelectActivated = e.shiftKey;
 				var multiSelectActivated = e.altKey || e.ctrlKey;
 				var $table = $target.parentsUntil('table').parent();
+				var $tableRows = $table.find('tbody tr');
 
 				if ($target.hasClass(selectedClass)) {
 					$target.removeClass(selectedClass);
-					// The user has deselected this row and because no other rows were
-					// selected, deselect all other rows as well
-					if (!rangeSelectActivated && !multiSelectActivated) {
-						$table.find('tbody tr').removeClass(selectedClass);
-					}
 				} else {
-					$target.addClass(selectedClass);
+					// The user has deselected this row and because no other rows were
+					// selected, deselect all other rows as well. Also perform the
+					// same action if, for some reason, the user has held down
+					// the range selection and multiple selection keys at the same time
+					if ((!rangeSelectActivated && !multiSelectActivated) ||
+							(rangeSelectActivated && multiSelectActivated)) {
+						$tableRows.removeClass(selectedClass);
+					}
+					
+					if (rangeSelectActivated) {
+						// Find the row that was clicked
+						var rowId = parseInt(id.substring(id.lastIndexOf('-') + 1), 10);
+						// Find all other selected rows
+						var otherSelectedRows = _.map($table.find('.' + selectedClass), function (a) {
+							var id = $(a).prop('id');
+							return parseInt(id.substring(id.lastIndexOf('-') + 1), 10);
+						});
+						if (otherSelectedRows.length > 0) {
+							// The clicked row sits before any other selected rows.
+							// Highlight the range from the first to the last row.
+							if (rowId <= otherSelectedRows[0]) {
+								for (var rIdx = rowId;rIdx < otherSelectedRows[otherSelectedRows.length - 1];rIdx++) {
+									$table.find('#shoreline-table-row-' + rIdx).addClass(selectedClass);
+								}
+							} else {
+								for (var rIdx = otherSelectedRows[0];rIdx < rowId;rIdx++) {
+									$table.find('#shoreline-table-row-' + rIdx).addClass(selectedClass);
+								}
+							}
+						}
+					} else if (multiSelectActivated) {
+						$target.addClass(selectedClass);
+					} else {
+						$tableRows.removeClass(selectedClass);
+						$target.addClass(selectedClass);
+					}
 				}
 			} else {
-				
+				// TODO - handle toggle
 			}
 		}
 	});

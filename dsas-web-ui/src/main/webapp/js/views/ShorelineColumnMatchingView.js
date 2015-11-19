@@ -25,6 +25,7 @@ define([
 			return this;
 		},
 		initialize: function (options) {
+			this.appEvents = AppEvents;
 			Handlebars.registerHelper('printDefaultValue', function () {
 				if (this.defaultValue) {
 					return new Handlebars.SafeString(' Default: "' + this.defaultValue + '"');
