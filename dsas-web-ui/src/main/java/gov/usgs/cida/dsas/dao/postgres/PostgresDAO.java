@@ -456,37 +456,38 @@ public class PostgresDAO {
 	}
 
 	/**
-	 * Get shorelines from database by bounding box.  Note: this is only the
-	 * top level shoreline metadata, and doesn't include info related to uncertainty
+	 * Get shorelines from database by bounding box. Note: this is only the top
+	 * level shoreline metadata, and doesn't include info related to uncertainty
 	 * needed for further calculations.
-	 * 
+	 *
 	 * @param workspace
 	 * @param bbox
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public List<Shoreline> getShorelinesFromBoundingBox(String workspace, double[] bbox) throws SQLException {
-		String sql = "select distinct shoreline_id, to_char(date, 'YYYY-MM-dd') as date, mhw, workspace, source, auxillary_name, auxillary_value, shoreline_name from " + workspace
+		String sql = "select distinct shoreline_id, to_char(date, 'YYYY-MM-dd') as date, mhw, workspace, source, auxillary_name, auxillary_value, shoreline_name, segment_id from " + workspace
 				+ " where geom && ST_MakeEnvelope(" + bbox[0] + "," + bbox[1] + "," + bbox[2] + "," + bbox[3] + ",4326)"
 				+ " order by date desc, shoreline_id";
 		List<Shoreline> shorelines = new ArrayList<>();
 		try (Connection connection = getConnection()) {
-				ResultSet rs = connection.createStatement().executeQuery(sql);
-				while (rs.next()) {
-					Shoreline shoreline = new Shoreline();
-					shoreline.setId(BigInteger.valueOf(rs.getLong(1)));
-					shoreline.setDate(rs.getString(2));
-					shoreline.setMhw(rs.getBoolean(3));
-					shoreline.setWorkspace(rs.getString(4));
-					shoreline.setSource(rs.getString(5));
-					shoreline.setAuxName(rs.getString(6));
-					shoreline.setAuxValue(rs.getString(7));
-					shoreline.setName(rs.getString(8));
-					shorelines.add(shoreline);
-				}
+			ResultSet rs = connection.createStatement().executeQuery(sql);
+			while (rs.next()) {
+				Shoreline shoreline = new Shoreline();
+				shoreline.setId(BigInteger.valueOf(rs.getLong(1)));
+				shoreline.setDate(rs.getString(2));
+				shoreline.setMhw(rs.getBoolean(3));
+				shoreline.setWorkspace(rs.getString(4));
+				shoreline.setSource(rs.getString(5));
+				shoreline.setAuxName(rs.getString(6));
+				shoreline.setAuxValue(rs.getString(7));
+				shoreline.setName(rs.getString(8));
+				shoreline.setSegmentId(rs.getInt(9));
+				shorelines.add(shoreline);
+			}
 		}
 		return shorelines;
-		
+
 	}
 
 }

@@ -10,7 +10,7 @@
 	
 	 <tbody>
 		{{#each models}}
-		<tr id="shoreline-table-row-{{@index}}">
+		<tr id="shoreline-table-row-{{@index}}" data-segment="{{attributes.segmentId}}">
 			<td>
 				<input type="checkbox" checked="checked" data-toggle="toggle" data-size="mini" data-onstyle="primary" data-offstyle="danger">
 			</td>

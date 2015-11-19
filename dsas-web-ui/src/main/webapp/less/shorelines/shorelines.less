@@ -7,6 +7,12 @@
 #shoreline-table {
 	max-height: 600px;
 	overflow: scroll;
+	/* Keeps user from highlighting when selecting multiple rows on the table via shift or ctrl/alt keys */
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 	.table-shoreline-selected td {
 		background-color: #eeeeee;
 	}
@@ -17,11 +23,6 @@
 			}
 		}
 	}
-	-webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
 }
 
 .drop-holder {

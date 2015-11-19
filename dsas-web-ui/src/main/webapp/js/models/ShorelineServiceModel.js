@@ -14,7 +14,8 @@ define([
 			workspace: '',
 			source: '',
 			name: '',
-			color: '#FFFFFF'
+			color: '#FFFFFF',
+			segmentId: ''
 		},
 		getColorForDateString: ShorelineUtil.getColorForDateString,
 		constructor: function (model) {

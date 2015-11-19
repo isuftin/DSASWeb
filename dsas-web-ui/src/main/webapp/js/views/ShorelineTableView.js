@@ -57,23 +57,42 @@ define([
 			});
 		},
 		toggleChangeHandler: function (e) {
-			var $e = $(e.currentTarget);
-			var active = $e.prop('checked');
+			var $target = $(e.currentTarget);
+			var active = $target.prop('checked');
+			var $table = $target.parentsUntil('table').parent();
+			var selectedClass = 'table-shoreline-selected';
+			var $selectedTableRows = $table.find('.' + selectedClass);
+			var $selectedToggles = $selectedTableRows.find('td:nth-child(1) input');
+			
+			// Do not want an infinite event loop here
+			this.undelegateEvents();
 			if (active) {
-				$e.attr('checked', true);
+				$target.attr('checked', true);
+				
+				$selectedToggles.each(function(i, t) {
+					$(t).bootstrapToggle('on');
+				});
 			} else {
-				$e.attr('checked', false);
+				$target.attr('checked', false);
+				$selectedToggles.each(function(i, t) {
+					$(t).bootstrapToggle('off');
+				});
 			}
+			this.delegateEvents();
+			
+			// TODO- Handle the updated toggles 
 		},
 		tableRowCLickHandler: function (e) {
+			var $target = $(e.currentTarget);
+			var id = $target.prop('id');
+			var selectedClass = 'table-shoreline-selected';
+			var rangeSelectActivated = e.shiftKey;
+			var multiSelectActivated = e.altKey || e.ctrlKey;
+			var $table = $target.parentsUntil('table').parent();
+			var $tableRows = $table.find('tbody tr');
+			var $selectedTableRows = $table.find('.' + selectedClass);
+
 			if (!$(e.target).is('label')) { // User clicked on toggle, don't process
-				var $target = $(e.currentTarget);
-				var id = $target.prop('id');
-				var selectedClass = 'table-shoreline-selected';
-				var rangeSelectActivated = e.shiftKey;
-				var multiSelectActivated = e.altKey || e.ctrlKey;
-				var $table = $target.parentsUntil('table').parent();
-				var $tableRows = $table.find('tbody tr');
 
 				if ($target.hasClass(selectedClass)) {
 					$target.removeClass(selectedClass);
@@ -86,12 +105,12 @@ define([
 							(rangeSelectActivated && multiSelectActivated)) {
 						$tableRows.removeClass(selectedClass);
 					}
-					
+
 					if (rangeSelectActivated) {
 						// Find the row that was clicked
 						var rowId = parseInt(id.substring(id.lastIndexOf('-') + 1), 10);
 						// Find all other selected rows
-						var otherSelectedRows = _.map($table.find('.' + selectedClass), function (a) {
+						var otherSelectedRows = _.map($selectedTableRows, function (a) {
 							var id = $(a).prop('id');
 							return parseInt(id.substring(id.lastIndexOf('-') + 1), 10);
 						});
@@ -99,11 +118,11 @@ define([
 							// The clicked row sits before any other selected rows.
 							// Highlight the range from the first to the last row.
 							if (rowId <= otherSelectedRows[0]) {
-								for (var rIdx = rowId;rIdx < otherSelectedRows[otherSelectedRows.length - 1];rIdx++) {
+								for (var rIdx = rowId; rIdx < otherSelectedRows[otherSelectedRows.length - 1]; rIdx++) {
 									$table.find('#shoreline-table-row-' + rIdx).addClass(selectedClass);
 								}
 							} else {
-								for (var rIdx = otherSelectedRows[0];rIdx < rowId;rIdx++) {
+								for (var rIdx = otherSelectedRows[0]; rIdx < rowId; rIdx++) {
 									$table.find('#shoreline-table-row-' + rIdx).addClass(selectedClass);
 								}
 							}
@@ -115,8 +134,6 @@ define([
 						$target.addClass(selectedClass);
 					}
 				}
-			} else {
-				// TODO - handle toggle
 			}
 		}
 	});

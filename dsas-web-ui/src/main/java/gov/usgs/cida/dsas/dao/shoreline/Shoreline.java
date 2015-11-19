@@ -18,6 +18,7 @@ public class Shoreline implements Serializable {
 	private String auxName;
 	private String auxValue;
 	private String name;
+	private Integer segmentId;
 
 	public Shoreline() {
 		this.id = BigInteger.ZERO;
@@ -145,6 +146,14 @@ public class Shoreline implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Integer getSegmentId() {
+		return segmentId;
+	}
+
+	public void setSegmentId(Integer segmentId) {
+		this.segmentId = segmentId;
 	}
 
 }
