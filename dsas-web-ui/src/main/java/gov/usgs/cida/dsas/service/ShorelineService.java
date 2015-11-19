@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.dao.shoreline.Shoreline;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse;
-import gov.usgs.cida.utilities.service.ServiceHelper;
+import gov.usgs.cida.dsas.utilities.service.ServiceHelper;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
