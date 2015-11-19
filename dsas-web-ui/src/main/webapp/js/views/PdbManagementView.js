@@ -26,7 +26,7 @@ define([
 				},
 				allowedFileTypes : [".zip"],
 				fileType: 'pdb',
-				uploadEndpoint: 'service/shapefile/stage'
+				uploadEndpoint: 'service/shapefile/staging'
 			}).render();
 			$(this.fileUploadView.el).appendTo(this.$('#pdb-management-upload'));
 			this.fileUploadView.wireFileControls();
