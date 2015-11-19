@@ -53,6 +53,7 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 	 * @param biasRef feature collection of PDBC bias reference line
 	 * @param spacing spacing in meters of transects along baseline
 	 * @param smoothing how much smoothing to apply to transect generation
+	 * @param maxLength maximum length to use when drawing transects (default is to calculate)
 	 * @param farthest whether to use nearest or farthest intersection of
 	 * shoreline (default false)
 	 * @param workspace workspace in which to create new layers
@@ -69,6 +70,7 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 			@DescribeParameter(name = "biasRef", min = 0, max = 1) SimpleFeatureCollection biasRef,
 			@DescribeParameter(name = "spacing", min = 1, max = 1) Double spacing,
 			@DescribeParameter(name = "smoothing", min = 0, max = 1) Double smoothing,
+			@DescribeParameter(name = "maxLength", min = 0, max =1) Double maxLength,
 			@DescribeParameter(name = "farthest", min = 0, max = 1) Boolean farthest,
 			@DescribeParameter(name = "workspace", min = 1, max = 1) String workspace,
 			@DescribeParameter(name = "store", min = 1, max = 1) String store,
@@ -78,10 +80,14 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 		if (smoothing == null) {
 			smoothing = 0d;
 		}
+		if (maxLength == null) {
+			maxLength = Double.NaN;
+		}
 		if (farthest == null) {
 			farthest = false;
 		}
-		return new Process(shorelines, baseline, biasRef, spacing, smoothing, farthest, workspace, store, transectLayer, intersectionLayer).execute();
+
+		return new Process(shorelines, baseline, biasRef, spacing, smoothing, maxLength, farthest, workspace, store, transectLayer, intersectionLayer).execute();
 	}
 
 	protected class Process {
@@ -91,6 +97,7 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 		private final FeatureCollection<SimpleFeatureType, SimpleFeature> biasRefFeatureCollection;
 		private final double spacing;
 		private final double smoothing;
+		private double maxLength;
 		private final boolean useFarthest;
 		private final boolean performBiasCorrection;
 		private final String workspace;
@@ -107,6 +114,7 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 				FeatureCollection<SimpleFeatureType, SimpleFeature> biasRef,
 				double spacing,
 				double smoothing,
+				double maxLength,
 				Boolean farthest,
 				String workspace,
 				String store,
@@ -169,8 +177,9 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 				transformedBiasRef = CRSUtils.transformFeatureCollection(biasRefFeatureCollection, REQUIRED_CRS_WGS84, utmCrs);
 			}
 
-			// this could be from a parameter
-			double maxTransectLength = IntersectionCalculator.calculateMaxDistance(transformedShorelines, transformedBaselines);
+			if (Double.isNaN(maxLength) || maxLength == 0.0) {
+				maxLength = IntersectionCalculator.calculateMaxDistance(transformedShorelines, transformedBaselines);
+			}
 
 			// These lines should be removed by creating a more proper assertion
 			MultiLineString shorelineGeometry = CRSUtils.getLinesFromFeatureCollection(transformedShorelines);
@@ -178,7 +187,7 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 			this.preparedShorelines = PreparedGeometryFactory.prepare(shorelineGeometry);
 			GeomAsserts.assertBaselinesDoNotCrossShorelines(preparedShorelines, baselineGeometry);
 
-			IntersectionCalculator calc = new IntersectionCalculator(transformedShorelines, transformedBaselines, transformedBiasRef, maxTransectLength, utmCrs, useFarthest);
+			IntersectionCalculator calc = new IntersectionCalculator(transformedShorelines, transformedBaselines, transformedBiasRef, maxLength, utmCrs, useFarthest);
 
 			Transect[] vectsOnBaseline = calc.getEvenlySpacedOrthoVectorsAlongBaseline(transformedBaselines, shorelineGeometry, spacing, smoothing);
 
