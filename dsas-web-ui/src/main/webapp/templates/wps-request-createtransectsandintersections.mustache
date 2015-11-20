@@ -74,6 +74,14 @@
 				<wps:LiteralData>{{spacing}}</wps:LiteralData>
 			</wps:Data>
 		</wps:Input>
+		{{#if length}}
+		<wps:Input>
+			<ows:Identifier>maxLength</ows:Identifier>
+			<wps:Data>
+				<wps:LiteralData>{{length}}</wps:LiteralData>
+			</wps:Data>
+		</wps:Input>
+		{{/if}}
 		<wps:Input>
 			<ows:Identifier>smoothing</ows:Identifier>
 			<wps:Data>

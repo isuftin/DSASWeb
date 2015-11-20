@@ -929,6 +929,7 @@ var Transects = {
 			baseline = $('#baseline-list :selected')[0].value,
 			biasRef = ProxyDatumBias.getBiasRef(),
 			spacing = $('#create-transects-input-spacing').val() || 0,
+			length = $('#create-transects-input-length').val(),
 			layerName = $('#create-transects-input-name').val(),
 			farthest = $('#create-intersections-nearestfarthest-list').val(),
 			smoothing = parseFloat($('#create-transects-input-smoothing').val());
@@ -943,6 +944,10 @@ var Transects = {
 			});
 			return;
 		}
+		
+		if (!length.length) {
+			length = null;
+		}
 
 		if (isNaN(smoothing)) {
 			smoothing = 2500.0;
@@ -955,6 +960,7 @@ var Transects = {
 			biasRef: biasRef,
 			baseline: baseline,
 			spacing: spacing,
+			length: length,
 			farthest: farthest,
 			smoothing: smoothing,
 			workspace: CONFIG.tempSession.getCurrentSessionKey(),
@@ -1078,6 +1084,7 @@ var Transects = {
 		var workspace = args.workspace;
 		var transectLayer = args.transectLayer;
 		var intersectionLayer = args.intersectionLayer;
+		var length = args.length;
 		var store = args.store;
 		var bounds = Shorelines.aoiBoundsSelected.clone().transform(new OpenLayers.Projection(CONFIG.strings.epsg900913), new OpenLayers.Projection(CONFIG.strings.epsg4326)).toArray(false);
 		var shorelineInfo = [];
@@ -1099,6 +1106,7 @@ var Transects = {
 			baseline: baseline,
 			baselineNS: baselineNS,
 			spacing: spacing,
+			length: length,
 			smoothing: smoothing,
 			farthest: farthest,
 			store: store,
