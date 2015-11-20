@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -25,6 +26,8 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpHeaders;
+import org.geotools.data.shapefile.shp.ShapefileException;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.LoggerFactory;
@@ -34,10 +37,10 @@ import org.slf4j.LoggerFactory;
  * @author isuftin
  */
 @MultipartConfig
-@Path(ServiceURI.SHAPEFILE_STAGING_SERVICE_ENDPOINT)
-public class StagingService {
+@Path("/")
+public class ShapefileResource {
 
-	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(StagingService.class);
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShapefileResource.class);
 	private static final Integer DEFAULT_MAX_FILE_SIZE = Integer.MAX_VALUE;
 	private static final File baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
 	private static final File uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
@@ -51,7 +54,7 @@ public class StagingService {
 			@FormDataParam("file") FormDataContentDisposition fileDisposition
 	) {
 		Response response;
-		Map<String, String> responseMap = new HashMap<>();
+		Map<String, String> responseMap = new HashMap<>(1);
 		Gson gson = new Gson();
 		File shapeZip = null;
 
@@ -63,23 +66,39 @@ public class StagingService {
 			LOGGER.warn("Could not create token for uploaded shapefile. ", ex);
 		}
 
-		if (shapeZip != null) {
-			// TODO - Perform some validation on the shapefile
-			String token = UUID.randomUUID().toString();
+		// TODO - Perform some validation on the shapefile
+		String token = UUID.randomUUID().toString();
 			// TODO - Associate token with file in a Singleton
-			responseMap.put("success", "true");
-			responseMap.put("token", token);
-			response = Response.ok(gson.toJson(responseMap, HashMap.class)).build();
-		} else {
-			responseMap.put("success", "false");
-			responseMap.put("error", "what happened");
-			response = Response.serverError().entity(gson.toJson(responseMap, HashMap.class)).build();
+
+		try {
+			validate(shapeZip);
+			
+			response = Response
+					.accepted()
+					.header(HttpHeaders.LOCATION, ServiceURI.SHAPEFILE_SERVICE_ENDPOINT + "/" + token)
+					.build();
+		} catch (ShapefileException ex) {
+			responseMap.put("error", ex.getMessage());
+			response = Response
+						.status(Response.Status.PRECONDITION_FAILED)
+						.entity(gson.toJson(responseMap, HashMap.class))
+						.build();
 		}
 
 		return response;
 	}
+	
+	protected void validate(File shapeFile) throws ShapefileException {
+		if (shapeFile == null || !shapeFile.exists()) {
+			throw new ShapefileException("An error occurred attempting to save file");
+		} else if (shapeFile.length() > getMaxFileSize()) {
+			throw new ShapefileException(MessageFormat.format("File maximum size: {0}", getMaxFileSize()));
+		} else if (false) {
+			// TODO
+		}
+	}
 
-	protected final Integer getMaxFileSize() {
+	protected Integer getMaxFileSize() {
 		Integer maxFSize = DEFAULT_MAX_FILE_SIZE;
 		String mfsJndiProp = PropertyUtil.getProperty(Property.FILE_UPLOAD_MAX_SIZE);
 		if (StringUtils.isNotBlank(mfsJndiProp)) {
