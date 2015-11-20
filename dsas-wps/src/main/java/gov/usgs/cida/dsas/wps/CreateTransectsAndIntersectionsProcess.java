@@ -134,6 +134,7 @@ public class CreateTransectsAndIntersectionsProcess implements GeoServerProcess 
 
 			this.spacing = spacing;
 			this.smoothing = smoothing;
+			this.maxLength = maxLength;
 			this.useFarthest = farthest;
 
 			this.workspace = workspace;
