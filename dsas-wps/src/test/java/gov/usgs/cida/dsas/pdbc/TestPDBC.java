@@ -37,7 +37,7 @@ public class TestPDBC {
 		FeatureCollection<SimpleFeatureType, SimpleFeature> biasReffc =
 				FeatureCollectionFromShp.getFeatureCollectionFromShp(biasRefShapefile);
 		CreateTransectsAndIntersectionsProcess generate = new CreateTransectsAndIntersectionsProcess(new DummyImportProcess(shpfile), new DummyCatalog());
-		generate.execute((SimpleFeatureCollection)shorelinefc, (SimpleFeatureCollection)baselinefc, (SimpleFeatureCollection)biasReffc, 50.0d, 0d, Boolean.FALSE, null, null, null, null);
+		generate.execute((SimpleFeatureCollection)shorelinefc, (SimpleFeatureCollection)baselinefc, (SimpleFeatureCollection)biasReffc, 50.0d, 0d, null, Boolean.FALSE, null, null, null, null);
 	}
 	
 }

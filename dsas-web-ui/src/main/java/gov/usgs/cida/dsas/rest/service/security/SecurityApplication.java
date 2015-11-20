@@ -1,4 +1,4 @@
-package gov.usgs.cida.dsas.service.security;
+package gov.usgs.cida.dsas.rest.service.security;
 
 import gov.usgs.cida.auth.client.AuthClientSingleton;
 import gov.usgs.cida.auth.client.CachingAuthClient;

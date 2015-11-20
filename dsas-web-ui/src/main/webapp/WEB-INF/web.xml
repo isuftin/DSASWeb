@@ -2,7 +2,7 @@
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <display-name>dsas-ui</display-name>
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>/WEB-INF/jsp/index.jsp</welcome-file>
     </welcome-file-list>
     <!-- This should match the database JNDI connection name in the container -->
     <context-param>
@@ -176,8 +176,8 @@
         <servlet-class>gov.usgs.cida.dsas.service.ShorelineService</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>PdbManagementJsp</servlet-name>
-        <jsp-file>/WEB-INF/jsp/pdb/pdb-management.jsp</jsp-file>
+        <servlet-name>AdminSectionJsp</servlet-name>
+        <jsp-file>/WEB-INF/jsp/admin/admin.jsp</jsp-file>
     </servlet>
     <!-- MAPPING -->
     <servlet-mapping>
@@ -217,7 +217,7 @@
         <url-pattern>/service/shoreline</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>PdbManagementJsp</servlet-name>
-        <url-pattern>/pdb/*</url-pattern>
+        <servlet-name>AdminSectionJsp</servlet-name>
+        <url-pattern>/admin/*</url-pattern>
     </servlet-mapping>
 </web-app>

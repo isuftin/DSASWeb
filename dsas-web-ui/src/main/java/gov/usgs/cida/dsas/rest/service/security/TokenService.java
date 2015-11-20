@@ -1,4 +1,4 @@
-package gov.usgs.cida.dsas.service.security;
+package gov.usgs.cida.dsas.rest.service.security;
 
 import com.google.gson.Gson;
 import java.util.HashMap;
