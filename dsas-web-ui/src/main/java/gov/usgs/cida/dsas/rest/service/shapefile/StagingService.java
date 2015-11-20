@@ -1,6 +1,7 @@
-package gov.usgs.cida.dsas.service.shapefile;
+package gov.usgs.cida.dsas.rest.service.shapefile;
 
 import com.google.gson.Gson;
+import gov.usgs.cida.dsas.service.ServiceURI;
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author isuftin
  */
 @MultipartConfig
-@Path("/staging")
+@Path(ServiceURI.SHAPEFILE_STAGING_SERVICE_ENDPOINT)
 public class StagingService {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(StagingService.class);

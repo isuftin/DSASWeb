@@ -33,7 +33,7 @@
         <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
-        <jsp:include page="template/USGSHead.jsp">
+        <jsp:include page="/template/USGSHead.jsp">
             <jsp:param name="relPath" value="" />
             <jsp:param name="shortName" value="USGS DSAS" />
             <jsp:param name="title" value="USGS DSAS" />
@@ -71,7 +71,7 @@
 
 			<div class="container-fluid">
 				<div class="row-fluid" id="header-row">
-                <jsp:include page="template/USGSHeader.jsp">
+                <jsp:include page="/template/USGSHeader.jsp">
                     <jsp:param name="relPath" value="" />
                     <jsp:param name="header-class" value="" />
                     <jsp:param name="site-title" value="USGS DSAS" />
@@ -118,7 +118,7 @@
 				</div>
 
 				<div class="row-fluid" id="footer-row">
-                <jsp:include page="template/USGSFooter.jsp">
+                <jsp:include page="/template/USGSFooter.jsp">
                     <jsp:param name="relPath" value="" />
                     <jsp:param name="header-class" value="" />
                     <jsp:param name="site-url" value="<script type='text/javascript'>document.write(document.location.href);</script>" />
@@ -142,17 +142,17 @@
         <iframe id="download" class="hidden"></iframe>
 
 		<script type="text/javascript">splashUpdate("Loading Graphing Utilities...");</script>
-		<jsp:include page="js/dygraphs/dygraphs.jsp">
+		<jsp:include page="/js/dygraphs/dygraphs.jsp">
 			<jsp:param name="debug-qualifier" value="true" />
 		</jsp:include>
 
 		<script type="text/javascript">splashUpdate("Loading Logging...");</script>
-		<jsp:include page="js/log4javascript/log4javascript.jsp">
+		<jsp:include page="/js/log4javascript/log4javascript.jsp">
 			<jsp:param name="relPath" value="" />
 		</jsp:include>
 
 		<script type="text/javascript">splashUpdate("Loading Sorting Tables...");</script>
-		<jsp:include page="js/jquery-tablesorter/package.jsp">
+		<jsp:include page="/js/jquery-tablesorter/package.jsp">
 			<jsp:param name="relPath" value="" />
 			<jsp:param name="debug-qualifier" value="<%= development%>" />
 		</jsp:include>
@@ -161,7 +161,7 @@
 		<script type="text/javascript" src="webjars/bootstrap/<%=versionBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? ".debug" : ""%>.js"></script>
 		<script type="text/javascript" src="webjars/handlebars/<%= versionHandlebars%>/handlebars.min.js"></script>
-		<jsp:include page="js/fineuploader/fineuploader.jsp">
+		<jsp:include page="/js/fineuploader/fineuploader.jsp">
 			<jsp:param name="debug-qualifier" value="true" />
 		</jsp:include>
 		<jsp:include page="components/config.jsp"></jsp:include>
@@ -190,7 +190,7 @@
 		<script type="text/javascript">splashUpdate("Loading Toggle plugin...");</script>
 		<script type="text/javascript" src="webjars/bootstrap-switch/<%=versionBootstrapSwitch%>/js/bootstrap-switch.js"></script>
 		<script type="text/javascript">splashUpdate("Loading Intro Module...");</script>
-		<jsp:include page="js/bootstro/bootstro.jsp">
+		<jsp:include page="/js/bootstro/bootstro.jsp">
 			<jsp:param name="debug-qualifier" value="true" />
 		</jsp:include>
 		<script type="text/javascript">splashUpdate("Loading Main module...");</script>

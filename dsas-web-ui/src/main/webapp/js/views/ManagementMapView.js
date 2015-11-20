@@ -7,7 +7,7 @@ define([
 	'utils/logger',
 	'utils/Constants',
 	'utils/MapUtil',
-	'text!templates/pdb-management-map-view.html'
+	'text!templates/management-map-view.html'
 ], function (
 		OpenLayers,
 		Handlebars,
@@ -22,27 +22,27 @@ define([
 		template: Handlebars.compile(template),
 		render: function () {
 			BaseView.prototype.render.apply(this, arguments);
-			
+
 			return this;
 		},
 		initialize: function (args) {
 			args = args || {};
-			
+
 			this.initialExtent = [-15843196.966553, 2251625.961233, -5501572.7891212, 7593656.9932838];
 			this.map = new OpenLayers.Map({
 				projection: Constants.strings.epsg900913,
 				displayProjection: new OpenLayers.Projection(Constants.strings.epsg900913)
 			});
 			this.map.addLayers(MapUtil.getBaseLayers());
-			
-			
-			log.debug("DSASweb Proxy Datum Bias map view initializing");
+
+
+			log.debug("DSASweb Management map view initializing");
 			BaseView.prototype.initialize.apply(this, arguments);
 			return this;
 		},
-		renderMap : function () {
+		renderMap: function () {
 			this.map.render('map');
-			
+
 			this.map.zoomToExtent(this.initialExtent, true);
 		}
 	});
