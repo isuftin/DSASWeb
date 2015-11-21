@@ -1184,6 +1184,10 @@ var Shorelines = {
 																			}
 																		});
 																	}
+																	
+																	$.ajax(response.getResponseHeader("Location"), {
+																		type : 'DELETE'
+																	});
 															}
 														});
 													}
