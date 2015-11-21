@@ -68,6 +68,8 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
+import static java.lang.Double.NaN;
+
 /**
  * Transect.
  * 
@@ -227,7 +229,7 @@ public class Transect {
 		try {
 			baseDist = getter.getDoubleValue(BASELINE_DIST_ATTR, feature);
 		} catch (AttributeNotANumberException e) {
-			baseDist = null;
+			baseDist = NaN;
 		}
 		ProxyDatumBias bias = ProxyDatumBias.fromFeature(feature);
 

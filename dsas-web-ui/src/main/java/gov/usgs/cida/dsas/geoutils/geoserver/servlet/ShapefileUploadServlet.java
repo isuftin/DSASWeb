@@ -1,4 +1,4 @@
-package gov.usgs.cida.geoutils.geoserver.servlet;
+package gov.usgs.cida.dsas.geoutils.geoserver.servlet;
 
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
@@ -6,7 +6,7 @@ import gov.usgs.cida.owsutils.commons.communication.RequestResponse;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse.ResponseType;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.ProjectionUtils;
-import gov.usgs.cida.utilities.service.ServiceHelper;
+import gov.usgs.cida.dsas.utilities.service.ServiceHelper;
 import it.geosolutions.geoserver.rest.GeoServerRESTManager;
 import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
 import it.geosolutions.geoserver.rest.encoder.GSResourceEncoder.ProjectionPolicy;

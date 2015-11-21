@@ -7,7 +7,7 @@ import gov.usgs.cida.dsas.shoreline.file.ShorelineFileFactory;
 import gov.usgs.cida.dsas.shoreline.file.TokenToShorelineFileSingleton;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse.ResponseType;
-import gov.usgs.cida.utilities.service.ServiceHelper;
+import gov.usgs.cida.dsas.utilities.service.ServiceHelper;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;

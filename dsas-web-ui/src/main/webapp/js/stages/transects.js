@@ -511,7 +511,7 @@ var Transects = {
 							addedFeature.destroy();
 							CONFIG.ui.showAlert({
 								message: 'Intersection did not touch baseline',
-								displayTime: 7500,
+								displayTime: 0,
 								caller: Transects
 							});
 						}
@@ -556,7 +556,7 @@ var Transects = {
 				LOG.debug('Transects.js::saveEditedLayer: UpdateTransectsAndIntersections WPS failed. Removing Intersections layer');
 				CONFIG.ui.showAlert({
 					message: 'Automatic intersection generation failed.',
-					displayTime: 7500,
+					displayTime: 0,
 					caller: Transects
 				});
 				Transects.refreshFeatureList({
@@ -736,7 +736,7 @@ var Transects = {
 			CONFIG.ui.showAlert({
 				message: 'Remove Failed - ' + ex,
 				caller: Transects,
-				displayTime: 4000,
+				displayTime: 0,
 				style: {
 					classes: ['alert-error']
 				}
@@ -929,6 +929,7 @@ var Transects = {
 			baseline = $('#baseline-list :selected')[0].value,
 			biasRef = ProxyDatumBias.getBiasRef(),
 			spacing = $('#create-transects-input-spacing').val() || 0,
+			length = $('#create-transects-input-length').val(),
 			layerName = $('#create-transects-input-name').val(),
 			farthest = $('#create-intersections-nearestfarthest-list').val(),
 			smoothing = parseFloat($('#create-transects-input-smoothing').val());
@@ -936,12 +937,16 @@ var Transects = {
 			CONFIG.ui.showAlert({
 				message: 'You\'ve not selected shorelines to build transects against',
 				caller: Transects,
-				displayTime: 2000,
+				displayTime: 0,
 				style: {
 					classes: ['alert-info']
 				}
 			});
 			return;
+		}
+		
+		if (!length.length) {
+			length = null;
 		}
 
 		if (isNaN(smoothing)) {
@@ -955,6 +960,7 @@ var Transects = {
 			biasRef: biasRef,
 			baseline: baseline,
 			spacing: spacing,
+			length: length,
 			farthest: farthest,
 			smoothing: smoothing,
 			workspace: CONFIG.tempSession.getCurrentSessionKey(),
@@ -1017,7 +1023,7 @@ var Transects = {
 
 							CONFIG.ui.showAlert({
 								message: msg,
-								displayTime: 7500,
+								displayTime: 0,
 								caller: Transects,
 								style: {
 									classes: ['alert-error']
@@ -1078,6 +1084,7 @@ var Transects = {
 		var workspace = args.workspace;
 		var transectLayer = args.transectLayer;
 		var intersectionLayer = args.intersectionLayer;
+		var length = args.length;
 		var store = args.store;
 		var bounds = Shorelines.aoiBoundsSelected.clone().transform(new OpenLayers.Projection(CONFIG.strings.epsg900913), new OpenLayers.Projection(CONFIG.strings.epsg4326)).toArray(false);
 		var shorelineInfo = [];
@@ -1099,6 +1106,7 @@ var Transects = {
 			baseline: baseline,
 			baselineNS: baselineNS,
 			spacing: spacing,
+			length: length,
 			smoothing: smoothing,
 			farthest: farthest,
 			store: store,

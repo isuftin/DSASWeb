@@ -125,12 +125,13 @@ public class IntersectionCalculator {
 		AttributeGetter biasGetter = new AttributeGetter(biasIncomingFeatureType);
 		// grow by about 200?
 		double guessTransectLength = MIN_TRANSECT_LENGTH * 4;
-
+		
 		for (Transect transect : vectsOnBaseline) {
 			Map<DateTime, Intersection> allIntersections = Maps.newHashMap();
 			double startDistance = 0;
 			ProxyDatumBias biasCorrection = null;
 			boolean changeTransectLength = true;
+			double subTransectLength = guessTransectLength;
 			if (transect.getLength() > 0.0) {
 				changeTransectLength = false;
 			}
@@ -138,8 +139,12 @@ public class IntersectionCalculator {
 			do {
 				Transect subTransect = null;
 				if (changeTransectLength) {
-					subTransect = transect.subTransect(startDistance, guessTransectLength);
-					startDistance += guessTransectLength;
+					
+					if (startDistance + guessTransectLength >= maxTransectLength) {
+						subTransectLength = maxTransectLength - startDistance;
+					}
+					subTransect = transect.subTransect(startDistance, subTransectLength);
+					startDistance += subTransectLength;
 				} else {
 					subTransect = transect;
 					startDistance = maxTransectLength; // end the loop

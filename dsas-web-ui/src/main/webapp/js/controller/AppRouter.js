@@ -7,8 +7,8 @@ define([
 	'views/ShorelineView',
 	'models/ShorelineViewModel',
 	'jquery',
-	'views/PdbManagementHomeView'
-], function (Backbone, log, HomeView, ShorelineView, ShorelineViewModel, $, PdbManagementView) {
+	'views/ManagementHomeView'
+], function (Backbone, log, HomeView, ShorelineView, ShorelineViewModel, $, ManagementHomeView) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		viewModels: {},
@@ -19,22 +19,22 @@ define([
 			'shorelines/:activeTab': 'displayShorelineToolset',
 			'baseline': 'displayBaselineToolset',
 			'baseline/:activeTab': 'displayBaselineToolset',
-			'pdb': 'displayPDBView',
-			'login' : 'displayLoginView'
+			'admin': 'displayManagementHomeView',
+			'login': 'displayLoginView'
 		},
 		initialize: function () {
 			log.trace("Initializing router");
 
 			this.viewModels.shorelineViewModel = new ShorelineViewModel();
-			
+
 			return this;
 		},
 		displayHomeView: function () {
 			log.trace("Routing to home view");
-			
+
 			this.homeView = new HomeView({
 				router: this,
-				session : this.session
+				session: this.session
 			});
 			this.homeView.render();
 			return this.homeView;
@@ -45,7 +45,7 @@ define([
 			if (this.homeView === undefined) {
 				this.displayHomeView();
 			}
-			
+
 			if (this.currentView !== null) {
 				this.currentView.remove();
 			}
@@ -54,7 +54,7 @@ define([
 				parent: this.homeView,
 				router: this,
 				model: this.viewModels.shorelineViewModel,
-				session : this.session
+				session: this.session
 			}).render({
 				activeTab: activeTab
 			});
@@ -70,12 +70,12 @@ define([
 				this.currentView.remove();
 			}
 		},
-		displayPDBView: function () {
-			log.trace("Routing to PDB Management view");
-			var pdbMgmtView = new PdbManagementView().render();
-			return this.pdbView;
+		displayManagementHomeView: function () {
+			log.trace("Routing to Management view");
+			this.displayManagementHomeView = new displayManagementHomeView().render();
+			return this.displayManagementHomeView;
 		},
-		displayLoginView : function () {
+		displayLoginView: function () {
 			// Not yet implemented
 		}
 	});

@@ -50,10 +50,13 @@
 					<div id="create-transects-panel-container">
 						<div class="row-fluid">
 							<label for="create-transects-input-spacing">Spacing</label>
-							<input type="text" id="create-transects-input-spacing" maxLength="6" placeholder="50">m
+							<input type="number" id="create-transects-input-spacing" value="50">m
+							<label for="create-transects-input-length">Maximum Length</label>
+							<input type="number" id="create-transects-input-length">m
 							<input type="hidden" id="create-transects-input-name" class="customLayerName" style="width: 100%;">
 							<label for="create-transects-input-smoothing">Baseline Smoothing</label>
-							<input type="text" id="create-transects-input-smoothing" maxLength="6" placeholder="2500">m
+							<input type="number" id="create-transects-input-smoothing" value="2500">m
+
 						</div>
 					</div>
 				</div>
@@ -65,6 +68,7 @@
 						<option value="true">Farthest</option>
 					</select>
 				</div>
+
 				<div class="control-group">
 					<button type="button" class="btn btn-success span12 hidden" id="create-transects-input-button">
 						<i class="icon-tasks icon-white"></i>

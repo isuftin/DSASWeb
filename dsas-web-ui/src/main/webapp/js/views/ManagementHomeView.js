@@ -4,16 +4,16 @@ define([
 	'jquery',
 	'handlebars',
 	'views/BaseView',
-	'views/PdbManagementMapView',
-	'views/PdbManagementView',
+	'views/ManagementMapView',
+	'views/ManagementView',
 	'utils/logger',
-	'text!templates/pdb-management-home-view.html'
+	'text!templates/management-home-view.html'
 ], function (
 		$,
 		Handlebars,
 		BaseView,
-		PdbManagementMapView,
-		PdbManagementView,
+		ManagementMapView,
+		ManagementView,
 		log,
 		template) {
 	"use strict";
@@ -24,17 +24,17 @@ define([
 		render: function () {
 			BaseView.prototype.render.apply(this, arguments);
 
-			this.mgmtView = new PdbManagementView().render();
+			this.mgmtView = new ManagementView().render();
 			$(this.mgmtView.el).appendTo(this.$('#management-view'));
 
-			this.mapView = new PdbManagementMapView().render();
+			this.mapView = new ManagementMapView().render();
 			$(this.mapView.el).appendTo(this.$('#map-view'));
 			this.mapView.renderMap();
 			
 			return this;
 		},
 		initialize: function () {
-			log.debug("DSASweb Proxy Datum Bias management home view initializing");
+			log.debug("DSASweb management home view initializing");
 			BaseView.prototype.initialize.apply(this, arguments);
 		}
 	});

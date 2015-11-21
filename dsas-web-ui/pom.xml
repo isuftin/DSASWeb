@@ -34,6 +34,7 @@
 		<version.backbone-localstorage>1.1.16</version.backbone-localstorage>
 		<version.bootstrap.toggle>2.2.0</version.bootstrap.toggle>
 		<version.tablesorter>2.24.5</version.tablesorter>
+		<version.jersey>2.22.1</version.jersey>
 	</properties>
 
 	<dependencies>
@@ -350,6 +351,37 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>webjars-locator</artifactId>
 			<version>0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>gov.usgs.cida.auth</groupId>
+			<artifactId>auth-client</artifactId>
+			<version>1.1.0</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+			<version>${version.jersey}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.ext</groupId>
+			<artifactId>jersey-mvc-bean-validation</artifactId>
+			<version>${version.jersey}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.ext</groupId>
+			<artifactId>jersey-mvc-jsp</artifactId>
+			<version>${version.jersey}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-moxy</artifactId>
+			<version>${version.jersey}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+			<version>${version.jersey}</version>
 		</dependency>
 	</dependencies>
 
