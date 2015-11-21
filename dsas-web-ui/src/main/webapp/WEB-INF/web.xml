@@ -179,6 +179,10 @@
         <servlet-name>AdminSectionJsp</servlet-name>
         <jsp-file>/WEB-INF/jsp/admin/admin.jsp</jsp-file>
     </servlet>
+    <servlet>
+        <servlet-name>NewJsp</servlet-name>
+        <jsp-file>/WEB-INF/jsp/index_new.jsp</jsp-file>
+    </servlet>
     <!-- MAPPING -->
     <servlet-mapping>
         <servlet-name>ShorelineStagingService</servlet-name>
@@ -219,5 +223,9 @@
     <servlet-mapping>
         <servlet-name>AdminSectionJsp</servlet-name>
         <url-pattern>/admin/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NewJsp</servlet-name>
+        <url-pattern>/new/*</url-pattern>
     </servlet-mapping>
 </web-app>
