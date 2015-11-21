@@ -1,30 +1,29 @@
 package gov.usgs.cida.dsas.service;
 
+import com.google.gson.Gson;
+import gov.usgs.cida.dsas.rest.service.shapefile.ShapefileImportProcess;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.shoreline.file.IShorelineFile;
 import gov.usgs.cida.dsas.shoreline.file.ShorelineFile;
 import gov.usgs.cida.dsas.shoreline.file.ShorelineFileFactory;
 import gov.usgs.cida.dsas.shoreline.file.TokenToShorelineFileSingleton;
+import gov.usgs.cida.dsas.utilities.service.ServiceHelper;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse.ResponseType;
-import gov.usgs.cida.dsas.utilities.service.ServiceHelper;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.geotools.feature.SchemaException;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
+import org.apache.http.HttpHeaders;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -54,7 +53,7 @@ public class ShorelineStagingService extends HttpServlet {
 	 * @throws ServletException if a servlet-specific error occurs
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		boolean success = false;
 		Map<String, String> responseMap = new HashMap<>();
 		ResponseType responseType = ServiceHelper.getResponseType(request);
@@ -81,37 +80,23 @@ public class ShorelineStagingService extends HttpServlet {
 		} else if (action.equalsIgnoreCase(IMPORT_ACTION_STRING)) {
 			// Client is requesting to import a file associated with a token
 			String token = request.getParameter(TOKEN_STRING);
-			if (StringUtils.isNotBlank(token)) {
-				IShorelineFile shorelineFile = null;
 
-				try {
-					shorelineFile = TokenToShorelineFileSingleton.getShorelineFile(token);
-					if (null == shorelineFile || !shorelineFile.exists()) {
-						throw new FileNotFoundException();
-					}
-					
-					// Do the actual import into the database
-					String viewName = shorelineFile.importToDatabase(request);
-					
-					// Now that the shapefile is in the database, import to Geoserver
-					shorelineFile.importToGeoserver(viewName);
-					
-					// Done
-					responseMap.put("layer", viewName);
-					responseMap.put("workspace", shorelineFile.getWorkspace());
-					success = true;
-				} catch (FileNotFoundException ex) {
-					LOGGER.warn("File not found for token " + token, ex);
-					responseMap.put("serverCode", "404");
-					responseMap.put(RequestResponse.ERROR_STRING, "File not found. Try re-staging file");
-					RequestResponse.sendErrorResponse(response, responseMap, responseType);
-				} catch (ShorelineFileFormatException | IOException | SQLException | ParseException | NoSuchElementException | NamingException | SchemaException | FactoryException | TransformException ex) {
-					sendException(response, "Could not import file", ex, responseType);
-				} finally {
-					if (shorelineFile != null) {
-						shorelineFile.clear();
-					}
+			if (StringUtils.isNotBlank(token)) {
+				String columnsString = request.getParameter("columns");
+				Map<String, String> columns = new HashMap<>();
+				if (StringUtils.isNotBlank(columnsString)) {
+					columns = new Gson().fromJson(columnsString, Map.class);
+					ShapefileImportProcess process = new ShapefileImportProcess(token, columns);
+					Thread thread = new Thread(process);
+					thread.start();
+					response.addHeader(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + process.getProcessId());
+					response.setStatus(Response.Status.ACCEPTED.getStatusCode());
+					IOUtils.copy(new ByteArrayInputStream(new byte[0]), response.getWriter());
+					response.flushBuffer();
+				} else {
+					ServiceHelper.sendNotEnoughParametersError(response, new String[]{"columns"}, responseType);
 				}
+				
 			} else {
 				ServiceHelper.sendNotEnoughParametersError(response, new String[]{TOKEN_STRING}, responseType);
 			}

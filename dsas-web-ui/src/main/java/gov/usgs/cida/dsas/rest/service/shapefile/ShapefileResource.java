@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -68,11 +69,11 @@ public class ShapefileResource {
 
 		// TODO - Perform some validation on the shapefile
 		String token = UUID.randomUUID().toString();
-			// TODO - Associate token with file in a Singleton
+		// TODO - Associate token with file in a Singleton
 
 		try {
 			validate(shapeZip);
-			
+
 			response = Response
 					.accepted()
 					.header(HttpHeaders.LOCATION, ServiceURI.SHAPEFILE_SERVICE_ENDPOINT + "/" + token)
@@ -80,14 +81,44 @@ public class ShapefileResource {
 		} catch (ShapefileException ex) {
 			responseMap.put("error", ex.getMessage());
 			response = Response
-						.status(Response.Status.PRECONDITION_FAILED)
-						.entity(gson.toJson(responseMap, HashMap.class))
-						.build();
+					.status(Response.Status.PRECONDITION_FAILED)
+					.entity(gson.toJson(responseMap, HashMap.class))
+					.build();
 		}
 
 		return response;
 	}
-	
+
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("{token}")
+	public Response importShapefile(
+			@Context HttpServletRequest req,
+			@PathParam("token") String fileToken
+	) {
+		String columnsString = req.getParameter("columns");
+		Map<String, String> columns = new HashMap<>();
+		if (StringUtils.isNotBlank(columnsString)) {
+			columns = new Gson().fromJson(columnsString, Map.class);
+			ShapefileImportProcess process = new ShapefileImportProcess(fileToken, columns);
+			String processId = process.getProcessId();
+			process.run();
+			return Response
+					.accepted()
+					.header(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + processId)
+					.build();
+		} else {
+			Map<String, String> map = new HashMap<>();
+			map.put("error", "Parameter \"columns\" missing");
+			return Response
+					.serverError()
+					.status(Response.Status.BAD_REQUEST)
+					.entity(new Gson().toJson(map))
+					.build();
+		}
+		
+	}
+
 	protected void validate(File shapeFile) throws ShapefileException {
 		if (shapeFile == null || !shapeFile.exists()) {
 			throw new ShapefileException("An error occurred attempting to save file");
