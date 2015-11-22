@@ -192,10 +192,10 @@
         <servlet-name>52n-Servlet</servlet-name>
         <url-pattern>/52n/*</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
+<!--    <servlet-mapping>
         <servlet-name>SessionService</servlet-name>
         <url-pattern>/service/session</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
     <servlet-mapping>
         <servlet-name>shapefile-upload-servlet</servlet-name>
         <url-pattern>/service/upload</url-pattern>

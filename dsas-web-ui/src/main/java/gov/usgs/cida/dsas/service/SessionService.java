@@ -90,33 +90,6 @@ public class SessionService extends HttpServlet {
 					RequestResponseHelper.sendErrorResponse(response, responseMap);
 					return;
 				}
-			} else if ("logout".equals(action)) {
-				HttpSession session = request.getSession(false);
-				if (session != null) {
-					try {
-						session.invalidate();
-						Cookie cookie = new Cookie("JSESSIONID", null);
-						cookie.setPath(request.getContextPath());
-						cookie.setMaxAge(0);
-						response.addCookie(cookie);
-					} catch (IllegalStateException ex) {
-						// Session was already invalidated
-					}
-				}
-			} else if ("get-oid-info".equals(action)) {
-				HttpSession session = request.getSession(false);
-				if (session == null || session.getAttribute("oid-info") == null) {
-					responseMap.put("error", "OpenID credentials not in session.");
-					RequestResponseHelper.sendErrorResponse(response, responseMap);
-					return;
-				} else {
-					Map<String, String> oidInfoMap = ((Map<String, String>) session.getAttribute("oid-info"));
-					responseMap.put("firstname", oidInfoMap.get("oid-firstname"));
-					responseMap.put("lastname", oidInfoMap.get("oid-lastname"));
-					responseMap.put("country", oidInfoMap.get("oid-country"));
-					responseMap.put("language", oidInfoMap.get("oid-language"));
-					responseMap.put("email", oidInfoMap.get("oid-email"));
-				}
 			}
 		}
 
