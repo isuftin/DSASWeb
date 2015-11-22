@@ -1125,7 +1125,6 @@ var Shorelines = {
 														$.ajax(loc, {
 															context: this
 														}).always(function (proc, status, response) {
-															var location = response.getResponseHeader("Location").substr(1);
 															switch (proc.status) {
 																case 'running' :
 																	LOG.info('Shorelines.js::Shoreline import still processing. Will try again in 5 seconds.');
@@ -1189,6 +1188,7 @@ var Shorelines = {
 																	$.ajax(location, {
 																		type : 'DELETE'
 																	});
+																	break;
 															}
 														});
 													};
