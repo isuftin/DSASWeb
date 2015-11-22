@@ -198,7 +198,7 @@ public class PostgresDAO {
 	 * @throws SQLException
 	 */
 	public void removeShorelineView(String view) throws SQLException {
-		String sql = "DROP VIEW IF EXISTS \"" + view + "\";";
+		String sql = "DROP VIEW IF EXISTS \"" + view + "\" CASCADE;";
 		try (Connection connection = getConnection()) {
 			try (final Statement statement = connection.createStatement()) {
 				statement.execute(sql);

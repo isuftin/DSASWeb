@@ -1,6 +1,6 @@
 package gov.usgs.cida.dsas.rest.service.shapefile;
 
-import gov.usgs.cida.dsas.service.ServiceURI;
+import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import javax.ws.rs.ApplicationPath;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
