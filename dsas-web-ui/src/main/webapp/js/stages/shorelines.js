@@ -1125,6 +1125,7 @@ var Shorelines = {
 														$.ajax(loc, {
 															context: this
 														}).always(function (proc, status, response) {
+															var location = response.getResponseHeader("Location").substr(1);
 															switch (proc.status) {
 																case 'running' :
 																	LOG.info('Shorelines.js::Shoreline import still processing. Will try again in 5 seconds.');
@@ -1139,7 +1140,7 @@ var Shorelines = {
 																	});
 																	
 																	setTimeout(function () {
-																		poller(response.getResponseHeader("Location"));
+																		poller(location);
 																	}, 5000);
 																	break;
 																case 'terminated' :
@@ -1185,13 +1186,12 @@ var Shorelines = {
 																		});
 																	}
 																	
-																	$.ajax(response.getResponseHeader("Location"), {
+																	$.ajax(location, {
 																		type : 'DELETE'
 																	});
 															}
 														});
-													}
-													;
+													};
 													// Begin polling
 													poller(location);
 												}
