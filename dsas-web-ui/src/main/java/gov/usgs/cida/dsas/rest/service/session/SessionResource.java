@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.rest.service.ServiceURI;
-import gov.usgs.cida.dsas.service.SessionService;
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import java.io.IOException;
@@ -32,7 +31,7 @@ import org.slf4j.LoggerFactory;
 @Path("/")
 public class SessionResource {
 
-	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(SessionService.class);
+	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(SessionResource.class);
 	private static GeoserverDAO geoserverHandler = null;
 	private static String geoserverEndpoint = null;
 	private static String geoserverUsername = null;

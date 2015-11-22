@@ -142,8 +142,8 @@ var Results = {
                     }
                 }
                 ]
-            })
-        }
+            });
+        };
         
         if ($('#results-list option[value="'+ CONFIG.tempSession.getCurrentSessionKey() + ':' + resultsLayerName + '"]').length) {
             CONFIG.ui.createModalWindow({
@@ -155,20 +155,17 @@ var Results = {
                 buttons : [
                 {
                     text : 'Overwrite',
-                    callback : function(event) {
-                        $.get('service/session', {
-                            action : 'remove-layer',
-                            workspace : CONFIG.tempSession.getCurrentSessionKey(),
-                            store : 'ch-output',
-                            layer : resultsLayerName
-                        },
-                        function(data, textStatus, jqXHR) {
-                            wpsProc();
-                        }, 'json')
+					callback: function (event) {
+						$.ajax('service/layer/workspace/' + CONFIG.tempSession.getCurrentSessionKey() + '/store/ch-output/' + resultsLayerName,
+								{
+									type: 'DELETE',
+									context: this
+								})
+								.done(wpsProc);
                     }           
                 }
                 ]
-            })
+            });
         } else {
             wpsProc();
         }

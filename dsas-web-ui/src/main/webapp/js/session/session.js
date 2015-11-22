@@ -827,23 +827,21 @@ CCH.Session = function (name, isPerm) {
 				workspace = args.session || CONFIG.tempSession.getCurrentSessionKey(),
 				extraParams = args.extraParams || {},
 				params = $.extend({}, {
-					action: 'remove-layer',
-					workspace: workspace,
-					store: store,
-					layer: layer
+					type: 'DELETE',
+					context : this
 				}, extraParams);
 
 			if (workspace.toLowerCase() === CONFIG.name.published) {
 				throw 'Workspace cannot be read-only (Ex.: ' + CONFIG.name.published + ')';
 			}
 
-			$.get('service/session',
-				params,
-				function (data, textStatus, jqXHR) {
-					callbacks.each(function (callback) {
-						callback(data, textStatus, jqXHR);
+			$.ajax('service/layer/workspace/' + workspace + '/store/' + store + '/' + layer,
+					params)
+					.done(function (data, textStatus, jqXHR) {
+						callbacks.each(function (callback) {
+							callback(data, textStatus, jqXHR);
+						});
 					});
-				}, 'json');
 		}
 	});
 };
