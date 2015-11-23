@@ -1,4 +1,5 @@
 <style type="text/css">
+
     #app-navbar-container {
         width: auto;
     }
@@ -65,6 +66,37 @@
     #app-navbar-search-input {
         width : 200px;
         margin:-12px 0 0 0;
+    }
+    
+    @media screen and (max-width:979px){
+        .nav-collapse{
+            background:#345280;
+            width:250px;
+            position:absolute;
+            right:0;
+            top:40px;
+            z-index:3000;
+        }
+        
+        #inner-navbar-container .nav{
+            margin:0;
+            width:100%;
+        }
+        
+        #app-navbar-search-form{
+            height:20px;
+        }
+        
+        #app-navbar-search-input{
+            position:absolute;
+            right:10px;
+            top:17px;
+        }
+        
+        #app-navbar-search-icon {
+            right:220px;
+            top:10px;
+        }
     }
 </style>
 <div id="app-navbar-container" class="container">
