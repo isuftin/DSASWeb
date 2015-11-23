@@ -45,7 +45,9 @@ public class ShapefileImportProcess implements Runnable {
 				// removing the idea of Shorelines from this prcess and push that down
 				// to implementing classes
 				shorelineFile = TokenToShorelineFileSingleton.getShorelineFile(this.fileToken);
-				if (null == shorelineFile || !shorelineFile.exists()) {
+				shorelineFile.setDSASProcess(process);
+				
+				if (!shorelineFile.exists()) {
 					throw new FileNotFoundException(String.format("File not found for token %s", this.fileToken));
 				}
 				this.process.setPercentCompleted(33);

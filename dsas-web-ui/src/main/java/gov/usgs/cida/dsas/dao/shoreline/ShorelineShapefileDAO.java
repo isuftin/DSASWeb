@@ -104,15 +104,20 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 			Xploder xploder = new Xploder(uncertaintyFieldName);
 			File pointsShapefile;
 			LOGGER.debug("Exploding shapefile at {}", shpFile.getAbsolutePath());
+			updateProcessInformation("Exploding shapefile");
 			pointsShapefile = xploder.explode(parentDirectory + File.separator + baseFileName);
 			LOGGER.debug("Shapefile exploded");
-
+			updateProcessInformation("Shapefile exploded");
+			
 			FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(pointsShapefile.toURI().toURL());
+			int fcSize = fc.size();
+			updateProcessInformation(String.format("Will attempt to enter %s features into the database", fcSize));
 			Class<?> dateType = fc.getSchema().getDescriptor(dateFieldName).getType().getBinding();
 			List<double[]> xyUncies = new ArrayList<>();
 
 			if (!fc.isEmpty()) {
 				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
+				
 				try (SimpleFeatureIterator iter = rfc.features()){
 					connection.setAutoCommit(false);
 					int lastSegmentId = -1;
