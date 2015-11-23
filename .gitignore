@@ -11,3 +11,4 @@
 /dsas-commons/target/
 /dsas-n52/target/
 /dsas-web-ui/test-classes/
+/dsas-liquibase/nbactions.xml
