@@ -570,39 +570,39 @@ var Transects = {
 			} else {
 				LOG.debug('Transects.js::saveEditedLayer: Removing associated results layer');
 				Transects.$buttonToggleEdit.trigger('click');
-				$.get('service/session', {
-					action: 'remove-layer',
-					workspace: CONFIG.tempSession.getCurrentSessionKey(),
-					store: 'ch-output',
-					layer: resultsLayer.split(':')[1]
-				},
-				function () {
-					CONFIG.ows.getWMSCapabilities({
-						namespace: CONFIG.tempSession.getCurrentSessionKey(),
-						callbacks: {
-							success: [
-								CONFIG.tempSession.updateLayersFromWMS,
-								function () {
-									Transects.refreshFeatureList({
-										selectLayer: layer.cloneOf
-									});
-									CONFIG.map.removeLayerByName(layer.cloneOf);
-									if (Transects.$buttonToggleEdit.hasClass('active')) {
-										Transects.$buttonToggleEdit.trigger('click');
-									}
-									CONFIG.map.removeLayerByName(layer.cloneOf);
-									intersectionsList.val(intersectsLayer);
-									resultsList.val(resultsLayer);
-									LOG.debug('Transects.js::saveEditedLayer: WMS Capabilities retrieved for your session');
-									Results.clear();
+				var workspace = CONFIG.tempSession.getCurrentSessionKey();
+				$.ajax('service/layer/workspace/' + workspace + '/store/ch-output/' + resultsLayer.split(':')[1],
+						{
+							type: 'DELEETE',
+							context: this
+						})
+						.done(function (data, textStatus, jqXHR) {
+							CONFIG.ows.getWMSCapabilities({
+								namespace: CONFIG.tempSession.getCurrentSessionKey(),
+								callbacks: {
+									success: [
+										CONFIG.tempSession.updateLayersFromWMS,
+										function () {
+											Transects.refreshFeatureList({
+												selectLayer: layer.cloneOf
+											});
+											CONFIG.map.removeLayerByName(layer.cloneOf);
+											if (Transects.$buttonToggleEdit.hasClass('active')) {
+												Transects.$buttonToggleEdit.trigger('click');
+											}
+											CONFIG.map.removeLayerByName(layer.cloneOf);
+											intersectionsList.val(intersectsLayer);
+											resultsList.val(resultsLayer);
+											LOG.debug('Transects.js::saveEditedLayer: WMS Capabilities retrieved for your session');
+											Results.clear();
+										}
+									],
+									error: [function () {
+											LOG.warn('Transects.js::saveEditedLayer: There was an error in retrieving the WMS capabilities for your session. This is probably be due to a new session. Subsequent loads should not see this error');
+										}]
 								}
-							],
-							error: [function () {
-									LOG.warn('Transects.js::saveEditedLayer: There was an error in retrieving the WMS capabilities for your session. This is probably be due to a new session. Subsequent loads should not see this error');
-								}]
-						}
-					});
-				}, 'json');
+							});
+						});
 			}
 
 			Transects.enableUpdateTransectsButton();
@@ -1047,23 +1047,19 @@ var Transects = {
 					{
 						text: 'Overwrite',
 						callback: function () {
-							$.get('service/session', {
-								action: 'remove-layer',
-								workspace: CONFIG.tempSession.getCurrentSessionKey(),
-								store: 'ch-input',
-								layer: layerName + '_transects'
-							},
-							function () {
-								$.get('service/session', {
-									action: 'remove-layer',
-									workspace: CONFIG.tempSession.getCurrentSessionKey(),
-									store: 'ch-input',
-									layer: layerName + '_intersects'
-								},
-								function () {
-									wpsProc();
-								}, 'json');
-							}, 'json');
+							$.when(
+									$.ajax('service/layer/workspace/' + CONFIG.tempSession.getCurrentSessionKey() + '/store/ch-input/' + layerName + '_transects',
+											{
+												type: 'DELETE',
+												context: this
+											}),
+									$.ajax('service/layer/workspace/' + CONFIG.tempSession.getCurrentSessionKey() + '/store/ch-input/' + layerName + '_intersects',
+											{
+												type: 'DELETE',
+												context: this
+											})
+									)
+									.then(wpsProc)
 						}
 					}
 				]

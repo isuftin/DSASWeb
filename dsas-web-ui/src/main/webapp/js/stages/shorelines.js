@@ -1118,36 +1118,85 @@ var Shorelines = {
 												workspace: CONFIG.tempSession.session.id,
 												columns: JSON.stringify(layerColumns)
 											},
-											success: function (data) {
-												var layerName = data.layer,
-													workspace = CONFIG.tempSession.session.id;
-												CONFIG.ows.getWMSCapabilities({
-													namespace: workspace,
-													layerName: layerName,
-													callbacks: {
-														success: [
-															function (args) {
-																CONFIG.ui.showAlert({
-																	message: 'Upload Successful',
-																	caller: Shorelines,
-																	displayTime: 3000,
-																	style: {
-																		classes: ['alert-success']
-																	}
-																});
-																CONFIG.tempSession.updateLayersFromWMS(args);
-																$('a[href="#shorelines-view-tab"]').tab('show');
+											success: function (data, status, response) {
+												if (response.status === 202) {
+													var location = response.getResponseHeader("Location").substr(1);
+													var poller = function (loc) {
+														$.ajax(loc, {
+															context: this
+														}).always(function (proc, status, response) {
+															switch (proc.status) {
+																case 'running' :
+																	LOG.info('Shorelines.js::Shoreline import still processing. Will try again in 5 seconds.');
+																	LOG.info('Process Status:' + proc.information.join('\n'));
+																	CONFIG.ui.showAlert({
+																		message: 'Shoreline Import Processing. ' + proc.percentCompleted + '% completed',
+																		caller: Shorelines,
+																		displayTime: 4000,
+																		style: {
+																			classes: ['alert-info']
+																		}
+																	});
+																	
+																	setTimeout(function () {
+																		poller(location);
+																	}, 5000);
+																	break;
+																case 'terminated' :
+																	LOG.info('Shorelines.js::Shoreline import process completed.');
+																	if (proc.ranSuccessfully) {
+																		CONFIG.ui.showAlert({
+																			message: 'Shoreline Import Successful',
+																			caller: Shorelines,
+																			displayTime: 4000,
+																			style: {
+																				classes: ['alert-success']
+																			}
+																		});
+																		var layerName = proc.output.layer,
+																		workspace = proc.output.workspace;
+																		CONFIG.ows.getWMSCapabilities({
+																			namespace: workspace,
+																			layerName: layerName,
+																			callbacks: {
+																				success: [
+																					function (args) {
+																						CONFIG.tempSession.updateLayersFromWMS(args);
+																						$('a[href="#shorelines-view-tab"]').tab('show');
 
-																// Zoom to and show the session shorelines layer
-																var layerBounds = OpenLayers.Bounds
-																		.fromArray(args.wmsCapabilities.capability.layers[0].bbox['EPSG:4326'].bbox, true)
-																		.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913));
-																Shorelines.displayLayersForBounds(layerBounds);
-																
+																						// Zoom to and show the session shorelines layer
+																						var layerBounds = OpenLayers.Bounds
+																								.fromArray(args.wmsCapabilities.capability.layers[0].bbox['EPSG:4326'].bbox, true)
+																								.transform(new OpenLayers.Projection(CONFIG.strings.epsg4326), new OpenLayers.Projection(CONFIG.strings.epsg900913));
+																						Shorelines.displayLayersForBounds(layerBounds);
+
+																					}
+																				]
+																			}
+																		});
+																	} else {
+																		CONFIG.ui.showAlert({
+																			message: 'Shoreline Import Process Failed. Reason: ' + proc.information.last(),
+																			caller: Shorelines,
+																			displayTime: 0,
+																			style: {
+																				classes: ['alert-error']
+																			}
+																		});
+																	}
+																	
+																	$.ajax(location, {
+																		type : 'DELETE'
+																	});
+																	break;
 															}
-														]
-													}
-												});
+														});
+													};
+													// Begin polling
+													poller(location);
+												}
+												
+												
 											},
 											error: function () {
 												Shorelines.removeResource();

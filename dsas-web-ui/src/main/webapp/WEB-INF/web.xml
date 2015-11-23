@@ -143,19 +143,6 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
-        <servlet-name>SessionService</servlet-name>
-        <servlet-class>gov.usgs.cida.dsas.service.SessionService</servlet-class>
-        <!-- 
-		Used for reading JNDI variables. All JNDI variables used for this application 
-		will be prefixed with this parameter. Example: 
-		<Environment name="dsas.max.upload.file.size" type="java.lang.String" value="20000" />
-		-->
-        <init-param>
-            <param-name>application.name</param-name>
-            <param-value>dsas</param-value>
-        </init-param>
-    </servlet>
-    <servlet>
         <servlet-name>ExportService</servlet-name>
         <servlet-class>gov.usgs.cida.dsas.service.ExportService</servlet-class>
     </servlet>
@@ -175,10 +162,7 @@
         <servlet-name>ShorelineService</servlet-name>
         <servlet-class>gov.usgs.cida.dsas.service.ShorelineService</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>AdminSectionJsp</servlet-name>
-        <jsp-file>/WEB-INF/jsp/admin/admin.jsp</jsp-file>
-    </servlet>
+	
     <!-- MAPPING -->
     <servlet-mapping>
         <servlet-name>ShorelineStagingService</servlet-name>
@@ -191,10 +175,6 @@
     <servlet-mapping>
         <servlet-name>52n-Servlet</servlet-name>
         <url-pattern>/52n/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>SessionService</servlet-name>
-        <url-pattern>/service/session</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>shapefile-upload-servlet</servlet-name>
@@ -215,9 +195,5 @@
     <servlet-mapping>
         <servlet-name>ShorelineService</servlet-name>
         <url-pattern>/service/shoreline</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AdminSectionJsp</servlet-name>
-        <url-pattern>/admin/*</url-pattern>
     </servlet-mapping>
 </web-app>

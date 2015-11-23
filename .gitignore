@@ -12,3 +12,5 @@
 /dsas-n52/target/
 /dsas-web-ui/test-classes/
 /dsas-liquibase/nbactions.xml
+/dsas-web-ui/src/main/webapp/css/custom.css.map
+/dsas-web-ui/src/main/webapp/css/custom.css

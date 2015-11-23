@@ -17,7 +17,6 @@
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-shapefile</artifactId>
 		</dependency>
-<<<<<<< HEAD
                 <dependency>
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-epsg-extension</artifactId>
@@ -30,8 +29,6 @@
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-referencing</artifactId>
 		</dependency>
-=======
->>>>>>> 1ee63e7178b5e44c7036261827e9f7da672f84a2
 		<dependency>
 			<groupId>xmlunit</groupId>
 			<artifactId>xmlunit</artifactId>

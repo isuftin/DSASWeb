@@ -11,12 +11,9 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
-import org.geotools.data.FeatureReader;
-import org.geotools.data.Query;
-import org.geotools.data.Transaction;
+import org.geotools.data.shapefile.dbf.DbaseFileHeader;
+import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.simple.SimpleFeatureSource;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
 
 /**
  * @author isuftin
@@ -25,7 +22,8 @@ public class ShapeFile implements IShapeFile, AutoCloseable {
 
 	private DataStore ds = null;
 	private File shapefileLocation = null;
-
+        private DbaseFileReader dbfReader;
+        
 	public ShapeFile(File shapefileLocation) throws IOException {
 		this.shapefileLocation = shapefileLocation;
 		if (this.shapefileLocation.isFile()) {
@@ -37,6 +35,7 @@ public class ShapeFile implements IShapeFile, AutoCloseable {
 		Map<String, Object> map = new HashMap<>(1);
 		map.put("url", this.shapefileLocation.toURI().toURL());
 		this.ds = DataStoreFinder.getDataStore(map);
+             //   this.dbfReader = new DbaseFileReader(shpFile, false, charset); 
 	}
 
 	@Override
@@ -81,5 +80,8 @@ public class ShapeFile implements IShapeFile, AutoCloseable {
 			this.ds.dispose();
 		}
 	}
-
+        
+//        public DbaseFileHeader getDbaseFileHeader() {
+//            
+//        }
 }

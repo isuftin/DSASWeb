@@ -1,5 +1,6 @@
 package gov.usgs.cida.dsas.dao.shoreline;
 
+import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.service.util.Property;
@@ -28,33 +29,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author isuftin
  */
-public abstract class ShorelineFileDAO {
+public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShorelineFileDAO.class);
-	public final static int DATABASE_PROJECTION = 4326;
 	public final static String[] REQUIRED_FIELD_NAMES = new String[]{Constants.DB_DATE_ATTR, Constants.UNCY_ATTR, Constants.MHW_ATTR};
-	public final static String DB_SCHEMA_NAME = PropertyUtil.getProperty(Property.DB_SCHEMA_NAME, "public");
-	public final static String[] PROTECTED_WORKSPACES = new String[]{GeoserverDAO.PUBLISHED_WORKSPACE_NAME};
-	protected String JNDI_NAME;
-	private final PostgresDAO pgDao = new PostgresDAO();
-
-	/**
-	 * Retrieves a connection from the database
-	 *
-	 * @return
-	 */
-	protected Connection getConnection() {
-		Connection con = null;
-		try {
-			Context initCtx = new InitialContext();
-			Context envCtx = (Context) initCtx.lookup("java:comp/env");
-			DataSource ds = (DataSource) envCtx.lookup(JNDI_NAME);
-			con = ds.getConnection();
-		} catch (SQLException | NamingException ex) {
-			LOGGER.error("Could not create database connection", ex);
-		}
-		return con;
-	}
 
 	/**
 	 * Inserts a shoreline into the shorelines table
@@ -177,25 +155,5 @@ public abstract class ShorelineFileDAO {
 		return pgDao.getShorelineCountInShorelineView(workspace);
 	}
 
-	/**
-	 * Imports the shoreline file into the database. Returns the name of the
-	 * view that holds this shoreline
-	 *
-	 * @param shorelineFile File that will be used to import into the database
-	 * @param columns mapping of file columns to database required columns
-	 * @param workspace the unique name of workspace to create or append to
-	 * @param EPSGCode the projection code for this shoreline file
-	 * @return
-	 * @throws
-	 * gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException
-	 * @throws java.sql.SQLException
-	 * @throws javax.naming.NamingException
-	 * @throws java.text.ParseException
-	 * @throws java.io.IOException
-	 * @throws org.geotools.feature.SchemaException
-	 * @throws org.opengis.referencing.FactoryException
-	 * @throws org.opengis.referencing.operation.TransformException
-	 */
-	public abstract String importToDatabase(File shorelineFile, Map<String, String> columns, String workspace, String EPSGCode) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
 
 }
