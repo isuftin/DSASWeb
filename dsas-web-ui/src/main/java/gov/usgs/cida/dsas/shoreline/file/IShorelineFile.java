@@ -1,5 +1,6 @@
 package gov.usgs.cida.dsas.shoreline.file;
 
+import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,14 @@ import org.opengis.referencing.operation.TransformException;
  * @author isuftin
  */
 public interface IShorelineFile {
+	
+	/**
+	 * Sets the DSASProcess object. If present, functions that may want to update 
+	 * it may do so
+	 * 
+	 * @param process 
+	 */
+	public void setDSASProcess(DSASProcess process);
 
 	/**
 	 * Saves a zip file, unpacks it to application work directory of the same

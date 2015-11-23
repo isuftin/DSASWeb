@@ -88,6 +88,9 @@ public class ShorelineLidarFileDAO extends ShorelineFileDAO {
 			long prevShorelineId = -1;
 			int prevSegmentId = -1;
 			HashMap<String, Long> shorelineDateToIdMap = new HashMap<>();
+			
+			updateProcessInformation("Beginning read of LIDAR file to insert into database");
+			
 			while ((line = br.readLine()) != null) {
 				row++;
 
