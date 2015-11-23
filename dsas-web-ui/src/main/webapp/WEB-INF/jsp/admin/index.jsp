@@ -1,4 +1,4 @@
-<%@page import="gov.usgs.cida.dsas.service.ServiceURI"%>
+<%@page import="gov.usgs.cida.dsas.rest.service.ServiceURI"%>
 <%@page import="gov.usgs.cida.dsas.service.util.PropertyUtil"%>
 <%@page import="gov.usgs.cida.dsas.service.util.Property"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -31,7 +31,7 @@
 					},
 					'views/ManagementView' : {
 						'paths' : {
-							'staging' : '<%= ServiceURI.SHAPEFILE_STAGING_SERVICE_ENDPOINT %>'
+							'staging' : '<%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT %>'
 						}
 					}
 				},
