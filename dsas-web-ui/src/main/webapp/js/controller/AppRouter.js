@@ -3,23 +3,22 @@
 define([
 	'backbone',
 	'utils/logger',
-	'views/PdbManagementHomeView',
-	'jquery'
-], function (Backbone, log, PdbManagementView, $) {
+	'views/ManagementHomeView'
+], function (Backbone, log, ManagementView) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		routes: {
-			'': 'displayPDBView',
+			'': 'displayManagementView',
 			'login' : 'displayLoginView'
 		},
 		initialize: function () {
 			log.trace("Initializing router");
 			return this;
 		},
-		displayPDBView: function () {
-			log.trace("Routing to PDB Management view");
-			var pdbMgmtView = new PdbManagementView().render();
-			return this.pdbView;
+		displayManagementView: function () {
+			log.trace("Routing to Management view");
+			this.managementView = new ManagementView().render();
+			return this.managementView;
 		},
 		displayLoginView : function () {
 			// Not yet implemented

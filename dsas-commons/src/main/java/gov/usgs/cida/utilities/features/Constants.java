@@ -86,7 +86,7 @@ public class Constants {
     public static final String BIAS_ATTR = "BIAS";
     public static final String BIAS_UNCY_ATTR = "UNCYB";
     public static final String COMBINED_UNCY_ATTR = "total_uncy";
-
+    public static final String PROFILE_ID = "PROF_ID"; // #TODO# will need to verify with Emily and Meredith for shape file column in the DBF
 	// new constants tied to point features
 	public static final String SHORELINE_ID_ATTR = "shoreline_id";
 	public static final String SEGMENT_ID_ATTR = "segment_id";

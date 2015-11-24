@@ -1,7 +1,9 @@
 package gov.usgs.cida.dsas.dao.shoreline;
 
+import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
+import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
@@ -28,15 +30,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author isuftin
  */
-public abstract class ShorelineFileDAO {
+public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShorelineFileDAO.class);
-	public final static int DATABASE_PROJECTION = 4326;
 	public final static String[] REQUIRED_FIELD_NAMES = new String[]{Constants.DB_DATE_ATTR, Constants.UNCY_ATTR, Constants.MHW_ATTR};
 	public final static String DB_SCHEMA_NAME = PropertyUtil.getProperty(Property.DB_SCHEMA_NAME, "public");
 	public final static String[] PROTECTED_WORKSPACES = new String[]{GeoserverDAO.PUBLISHED_WORKSPACE_NAME};
 	protected String JNDI_NAME;
 	private final PostgresDAO pgDao = new PostgresDAO();
+	protected DSASProcess process = null;
 
 	/**
 	 * Retrieves a connection from the database
@@ -98,6 +100,7 @@ public abstract class ShorelineFileDAO {
 	 * @throws SQLException
 	 */
 	protected boolean insertPointsIntoShorelinePointsTable(Connection connection, long shorelineId, int segmentId, double[][] XYuncyArray) throws SQLException {
+		updateProcessInformation(String.format("Inserting %s into shoreline points table for shoreline ID %s, segment ID %s", XYuncyArray.length, shorelineId, segmentId));
 		return pgDao.insertPointsIntoShorelinePointsTable(connection, shorelineId, segmentId, XYuncyArray);
 	}
 
@@ -114,6 +117,7 @@ public abstract class ShorelineFileDAO {
 	 * element was repeated earlier in the shoreline file
 	 */
 	protected int insertAuxillaryAttribute(Connection connection, long shorelineId, String name, String value) throws SQLException {
+		updateProcessInformation(String.format("Inserting into auxillary table for shoreline ID %s", shorelineId));
 		return pgDao.insertAuxillaryAttribute(connection, shorelineId, name, value);
 	}
 
@@ -177,25 +181,15 @@ public abstract class ShorelineFileDAO {
 		return pgDao.getShorelineCountInShorelineView(workspace);
 	}
 
-	/**
-	 * Imports the shoreline file into the database. Returns the name of the
-	 * view that holds this shoreline
-	 *
-	 * @param shorelineFile File that will be used to import into the database
-	 * @param columns mapping of file columns to database required columns
-	 * @param workspace the unique name of workspace to create or append to
-	 * @param EPSGCode the projection code for this shoreline file
-	 * @return
-	 * @throws
-	 * gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException
-	 * @throws java.sql.SQLException
-	 * @throws javax.naming.NamingException
-	 * @throws java.text.ParseException
-	 * @throws java.io.IOException
-	 * @throws org.geotools.feature.SchemaException
-	 * @throws org.opengis.referencing.FactoryException
-	 * @throws org.opengis.referencing.operation.TransformException
-	 */
-	public abstract String importToDatabase(File shorelineFile, Map<String, String> columns, String workspace, String EPSGCode) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
+
+	public void setDSASProcess(DSASProcess process) {
+		this.process = process;
+	}
+
+	protected void updateProcessInformation(String string) {
+		if (this.process != null) {
+			this.process.addProcessInformation(string);
+		}
+	}
 
 }

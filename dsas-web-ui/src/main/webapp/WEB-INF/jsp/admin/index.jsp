@@ -1,3 +1,4 @@
+<%@page import="gov.usgs.cida.dsas.rest.service.ServiceURI"%>
 <%@page import="gov.usgs.cida.dsas.service.util.PropertyUtil"%>
 <%@page import="gov.usgs.cida.dsas.service.util.Property"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -27,6 +28,11 @@
 				config: {
 					'init': {
 						'contextPath': "<%=baseUrl%>"
+					},
+					'views/ManagementView' : {
+						'paths' : {
+							'staging' : '<%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT %>'
+						}
 					}
 				},
 				baseUrl: "<%=baseUrl%>/js/",

@@ -1,8 +1,9 @@
-package gov.usgs.cida.dsas.service.security;
+package gov.usgs.cida.dsas.rest.service.security;
 
 import gov.usgs.cida.auth.client.AuthClientSingleton;
 import gov.usgs.cida.auth.client.CachingAuthClient;
 import gov.usgs.cida.auth.client.NullAuthClient;
+import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import javax.ws.rs.ApplicationPath;
 import org.apache.commons.lang.StringUtils;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author isuftin
  */
-@ApplicationPath("/service/security")
+@ApplicationPath(ServiceURI.SECURITY_SERVICE_ENDPOINT)
 public class SecurityApplication extends ResourceConfig {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SecurityApplication.class);
