@@ -203,7 +203,7 @@ public class IntersectionCalculator {
 		AttributeGetter instersectionGetter = new AttributeGetter(intersectionFeatureType);
 		Map<DateTime, Intersection> intersections = Intersection.calculateIntersections(transect, strTree, useFarthest, instersectionGetter);
 		for (Intersection point : intersections.values()) {
-			total += point.getDistance();
+			total += point.getShiftedDistance();
 		}
 		if (intersections.size() > 0) {
 			average = total / intersections.size();
