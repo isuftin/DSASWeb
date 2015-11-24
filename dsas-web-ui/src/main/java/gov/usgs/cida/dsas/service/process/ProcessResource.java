@@ -22,9 +22,6 @@ import org.apache.http.HttpHeaders;
 @Path("/")
 public class ProcessResource {
 
-	@Context
-	private UriInfo _uriInfo;
-
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{token}")

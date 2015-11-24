@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
+import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.ProjectionUtils;
@@ -58,6 +59,7 @@ public abstract class ShorelineFile implements IShorelineFile {
 	protected String token;
 	protected Map<String, File> fileMap;
 	protected String workspace;
+	protected DSASProcess process = null;
 	public static final String[] AUXILLARY_ATTRIBUTES = new String[]{
 		Constants.SURVEY_ID_ATTR,
 		Constants.DISTANCE_ATTR,
@@ -164,7 +166,7 @@ public abstract class ShorelineFile implements IShorelineFile {
 		return result;
 	}
 
-	@Override
+	@Override // TODO: This should probably be broken out of this class
 	public abstract String importToDatabase(Map<String, String> columns) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
 
 	@Override
@@ -235,5 +237,19 @@ public abstract class ShorelineFile implements IShorelineFile {
 
 	@Override
 	public abstract int hashCode();
+	
+	@Override
+	public void setDSASProcess(DSASProcess process) {
+		this.process = process;
+		if (this.dao != null) {
+			this.dao.setDSASProcess(process);
+		}
+	}
+	
+	protected void updateProcessInformation(String string) {
+		if (this.process != null) {
+			this.process.addProcessInformation(string);
+		}
+	}
 
 }

@@ -123,6 +123,7 @@ public class PostgresDAO {
 	 * @throws SQLException
 	 */
 	public boolean insertPointsIntoShorelinePointsTable(Connection connection, long shorelineId, int segmentId, double[][] XYuncyArray) throws SQLException {
+		
 		StringBuilder sql = new StringBuilder("INSERT INTO shoreline_points (shoreline_id, segment_id, geom, uncy) VALUES");
 		for (double[] XYUncy : XYuncyArray) {
 			sql.append("(").append(shorelineId).append(",").append(segmentId).append(",").append("ST_GeomFromText('POINT(").append(XYUncy[0]).append(" ").append(XYUncy[1]).append(")',").append(ShorelineFileDAO.DATABASE_PROJECTION).append("),").append(XYUncy[2]).append("),");

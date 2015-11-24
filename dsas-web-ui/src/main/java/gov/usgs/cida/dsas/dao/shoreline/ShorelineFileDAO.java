@@ -3,6 +3,7 @@ package gov.usgs.cida.dsas.dao.shoreline;
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
+import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
@@ -33,6 +34,29 @@ public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShorelineFileDAO.class);
 	public final static String[] REQUIRED_FIELD_NAMES = new String[]{Constants.DB_DATE_ATTR, Constants.UNCY_ATTR, Constants.MHW_ATTR};
+	public final static String DB_SCHEMA_NAME = PropertyUtil.getProperty(Property.DB_SCHEMA_NAME, "public");
+	public final static String[] PROTECTED_WORKSPACES = new String[]{GeoserverDAO.PUBLISHED_WORKSPACE_NAME};
+	protected String JNDI_NAME;
+	private final PostgresDAO pgDao = new PostgresDAO();
+	protected DSASProcess process = null;
+
+	/**
+	 * Retrieves a connection from the database
+	 *
+	 * @return
+	 */
+	protected Connection getConnection() {
+		Connection con = null;
+		try {
+			Context initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+			DataSource ds = (DataSource) envCtx.lookup(JNDI_NAME);
+			con = ds.getConnection();
+		} catch (SQLException | NamingException ex) {
+			LOGGER.error("Could not create database connection", ex);
+		}
+		return con;
+	}
 
 	/**
 	 * Inserts a shoreline into the shorelines table
@@ -76,6 +100,7 @@ public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 	 * @throws SQLException
 	 */
 	protected boolean insertPointsIntoShorelinePointsTable(Connection connection, long shorelineId, int segmentId, double[][] XYuncyArray) throws SQLException {
+		updateProcessInformation(String.format("Inserting %s into shoreline points table for shoreline ID %s, segment ID %s", XYuncyArray.length, shorelineId, segmentId));
 		return pgDao.insertPointsIntoShorelinePointsTable(connection, shorelineId, segmentId, XYuncyArray);
 	}
 
@@ -92,6 +117,7 @@ public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 	 * element was repeated earlier in the shoreline file
 	 */
 	protected int insertAuxillaryAttribute(Connection connection, long shorelineId, String name, String value) throws SQLException {
+		updateProcessInformation(String.format("Inserting into auxillary table for shoreline ID %s", shorelineId));
 		return pgDao.insertAuxillaryAttribute(connection, shorelineId, name, value);
 	}
 
@@ -155,5 +181,15 @@ public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 		return pgDao.getShorelineCountInShorelineView(workspace);
 	}
 
+
+	public void setDSASProcess(DSASProcess process) {
+		this.process = process;
+	}
+
+	protected void updateProcessInformation(String string) {
+		if (this.process != null) {
+			this.process.addProcessInformation(string);
+		}
+	}
 
 }
