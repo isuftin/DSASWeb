@@ -52,6 +52,9 @@ public class AttributeGetter {
 				else if (isOther(desc, Constants.DISTANCE_ATTR)) {
 					attrMap.put(Constants.DISTANCE_ATTR, desc.getName());
 				}
+				else if (isOther(desc, Constants.UNSHIFTED_DISTANCE_ATTR)) {
+					attrMap.put(Constants.UNSHIFTED_DISTANCE_ATTR, desc.getName());
+				}
 				else if (isOther(desc, Constants.MHW_ATTR)) {
 					attrMap.put(Constants.MHW_ATTR, desc.getName());
 				}
@@ -90,6 +93,9 @@ public class AttributeGetter {
 				}
 				else if (isOther(desc, Constants.BIAS_UNCY_ATTR)) {
 					attrMap.put(Constants.BIAS_UNCY_ATTR, desc.getName());
+				}
+				else if (isOther(desc, Constants.COMBINED_UNCY_ATTR)) {
+					attrMap.put(Constants.COMBINED_UNCY_ATTR, desc.getName());
 				}
 			}
 		}
