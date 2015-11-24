@@ -1,5 +1,6 @@
 package gov.usgs.cida.dsas.dao.postgres;
 
+import gov.usgs.cida.dsas.dao.pdb.Pdb;
 import gov.usgs.cida.dsas.dao.shoreline.Shoreline;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.service.util.Property;
@@ -11,10 +12,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.naming.Context;
@@ -33,7 +37,8 @@ public class PostgresDAO {
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PostgresDAO.class);
 	public static final String METADATA_TABLE_NAME = "gt_pk_metadata_table";
 	private final String JNDI_JDBC_NAME;
-
+        static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
+        
 	public PostgresDAO() {
 		this.JNDI_JDBC_NAME = PropertyUtil.getProperty(Property.JDBC_NAME);
 	}
@@ -129,6 +134,62 @@ public class PostgresDAO {
 		}
 	}
 
+        	/**
+	 * Inserts an array of points into the pdb table
+	 *
+	 * @param connection
+	 * @param pdbs
+	 *
+	 * @return
+	 * @throws SQLException
+	 */
+	public boolean insertPointsIntoPDBTable(Connection connection, List<Pdb> pdbs) throws SQLException {  
+		StringBuilder sql = new StringBuilder("INSERT INTO proxy_datum_bias (profile_id, segment_id, xy, bias, uncyb, last_update) VALUES");
+                Timestamp now = getUTCNowAsSQLTimestamp();
+                
+                for (Pdb pdb : pdbs)
+                {
+                    sql.append("(");
+                    sql.append(pdb.getProfileId());
+                    sql.append(",");
+                    sql.append(pdb.getSegmentId());
+                    sql.append(",");
+                    sql.append("ST_GeomFromText('POINT(");
+                    sql.append(pdb.getX()); //  ... ST_GeomFromText('POINT(x y)',4326)
+                    sql.append(" ");                    
+                    sql.append(pdb.getY()); 
+                    sql.append(ShorelineFileDAO.DATABASE_PROJECTION);
+                    sql.append("),");
+                    sql.append(pdb.getBias());
+                    sql.append(",");
+                    sql.append(pdb.getUncyb());
+                    sql.append(",");
+                    sql.append(now);
+                    sql.append(");");  
+                }
+                
+  
+		sql.deleteCharAt(sql.length() - 1);
+                LOGGER.debug("Insert points into Proxy_Datum_Bias : " + sql.toString());
+		try (final Statement st = connection.createStatement()) { 
+			return st.execute(sql.toString());
+		} //after an insert, look and see if there is a postgres process to recalibrate the index - vacuum process or trigger based on time if its performance is poor #TODO# 
+	}
+        
+        /**
+         * 
+         * @return Timestamp a current UTC sql timestamp
+         */
+        
+        public static Timestamp getUTCNowAsSQLTimestamp()
+        {
+            Instant now = Instant.now();
+            java.sql.Timestamp currentTimestamp = Timestamp.from(now);
+            return currentTimestamp; 
+
+        }
+     
+        
 	/**
 	 * Sets up a view against a given workspace in the shorelines table
 	 *

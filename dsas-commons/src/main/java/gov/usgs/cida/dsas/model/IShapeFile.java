@@ -33,7 +33,7 @@ public interface IShapeFile {
 	 *
 	 * @return string representation of EPSG code
 	 */
-	public String getEPSGCode();
+	public String getEPSGCode() throws IOException;
 
 	/**
 	 * Validates file to be a valid shapefile
