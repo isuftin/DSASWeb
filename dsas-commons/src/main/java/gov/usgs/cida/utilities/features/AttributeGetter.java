@@ -79,6 +79,9 @@ public class AttributeGetter {
 				else if (isOther(desc, Constants.EPR_ATTR)) {
 					attrMap.put(Constants.EPR_ATTR, desc.getName());
 				}
+				else if (isOther(desc, Constants.ECI_ATTR)) {
+					attrMap.put(Constants.ECI_ATTR, desc.getName());
+				}
 				else if (isOther(desc, Constants.SHORELINE_ID_ATTR)) {
 					attrMap.put(Constants.SHORELINE_ID_ATTR, desc.getName());
 				}
