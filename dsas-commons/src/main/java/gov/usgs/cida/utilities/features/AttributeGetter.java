@@ -52,6 +52,9 @@ public class AttributeGetter {
 				else if (isOther(desc, Constants.DISTANCE_ATTR)) {
 					attrMap.put(Constants.DISTANCE_ATTR, desc.getName());
 				}
+				else if (isOther(desc, Constants.UNSHIFTED_DISTANCE_ATTR)) {
+					attrMap.put(Constants.UNSHIFTED_DISTANCE_ATTR, desc.getName());
+				}
 				else if (isOther(desc, Constants.MHW_ATTR)) {
 					attrMap.put(Constants.MHW_ATTR, desc.getName());
 				}
@@ -76,6 +79,9 @@ public class AttributeGetter {
 				else if (isOther(desc, Constants.EPR_ATTR)) {
 					attrMap.put(Constants.EPR_ATTR, desc.getName());
 				}
+				else if (isOther(desc, Constants.ECI_ATTR)) {
+					attrMap.put(Constants.ECI_ATTR, desc.getName());
+				}
 				else if (isOther(desc, Constants.SHORELINE_ID_ATTR)) {
 					attrMap.put(Constants.SHORELINE_ID_ATTR, desc.getName());
 				}
@@ -90,6 +96,9 @@ public class AttributeGetter {
 				}
 				else if (isOther(desc, Constants.BIAS_UNCY_ATTR)) {
 					attrMap.put(Constants.BIAS_UNCY_ATTR, desc.getName());
+				}
+				else if (isOther(desc, Constants.COMBINED_UNCY_ATTR)) {
+					attrMap.put(Constants.COMBINED_UNCY_ATTR, desc.getName());
 				}
 			}
 		}

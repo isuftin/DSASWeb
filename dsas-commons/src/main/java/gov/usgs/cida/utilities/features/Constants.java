@@ -60,6 +60,7 @@ public class Constants {
     public static final String BASELINE_ORIENTATION_ATTR = "Orient";
     public static final String TRANSECT_ID_ATTR = "TransectID";
     public static final String DISTANCE_ATTR = "Distance";
+    public static final String UNSHIFTED_DISTANCE_ATTR = "orig_dist";
     public static final String DATE_ATTR = "Date_";
     public static final String DB_DATE_ATTR = "date";
     public static final String UNCY_ATTR = "uncy";
@@ -84,7 +85,9 @@ public class Constants {
     public static final String AVG_SLOPE_ATTR = "avg_slope";
     public static final String BIAS_ATTR = "BIAS";
     public static final String BIAS_UNCY_ATTR = "UNCYB";
+    public static final String COMBINED_UNCY_ATTR = "total_uncy";
     public static final String PROFILE_ID = "profileID"; 
+
 	// new constants tied to point features
 	public static final String SHORELINE_ID_ATTR = "shoreline_id";
 	public static final String SEGMENT_ID_ATTR = "segment_id";

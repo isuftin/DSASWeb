@@ -169,7 +169,7 @@ public class IntersectionParserTest {
     private void assertExpectedToStringFormat(Intersection p) {
     	String[] tabSeparatedParts = p.toString().split("\t");
     	assertTrue("Has 5 columns", tabSeparatedParts.length == 5);
-    	assertEquals("Distance is in correct place", "" + p.getDistance(), tabSeparatedParts[1]);
+    	assertEquals("Distance is in correct place", "" + p.getShiftedDistance(), tabSeparatedParts[1]);
     	assertEquals("Uncertainty is in correct place", "" + p.getUncertainty(), tabSeparatedParts[2]);
     	assertEquals("Bias is in correct place", "" + p.getBias(), tabSeparatedParts[3]);
     	assertEquals("Bias uncertainty is in correct place", "" + p.getBiasUncertainty(), tabSeparatedParts[4]);
