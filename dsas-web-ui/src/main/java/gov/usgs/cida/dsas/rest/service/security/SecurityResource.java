@@ -1,15 +1,10 @@
 package gov.usgs.cida.dsas.rest.service.security;
 
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import org.glassfish.jersey.server.mvc.Viewable;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -20,10 +15,14 @@ public class SecurityResource {
 
 	private static final long serialVersionUID = 1032470707499055942L;
 
-	@GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("login")
-    public Response loginPage(@Context HttpServletRequest req) throws URISyntaxException {
-        return Response.ok(new Viewable("/WEB-INF/jsp/login/index.jsp", new HashMap<>())).build();
-    }
+	@HEAD
+	@Path("check/{token}")
+	public Response checkToken(@PathParam("token") String token) throws java.net.URISyntaxException {
+		if (StringUtils.isBlank(token)) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		} else {
+			return Response.ok().build();
+		}
+	}
+	
 }

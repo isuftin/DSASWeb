@@ -28,7 +28,7 @@ public class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenExcept
 		String[] pathParts = uriInfo.getAbsolutePath().getPath().split("/");
 		String applicationPath = "/" + (StringUtils.isNotBlank(pathParts[0]) ? pathParts[0] : pathParts[1]);
 		try {
-			return Response.temporaryRedirect(new URI(applicationPath + "/service/security/login")).build();
+			return Response.temporaryRedirect(new URI(applicationPath + "/ui/security/login")).build();
 		} catch (URISyntaxException ex) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error redirecting to login page").encoding(MediaType.TEXT_PLAIN).build();
 		}

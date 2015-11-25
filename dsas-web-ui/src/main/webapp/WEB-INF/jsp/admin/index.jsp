@@ -17,7 +17,7 @@
 
     <head>
 		<title>DSASweb</title>
-		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("css/bootstrap" + (development ? "" : ".min") + ".css")%>" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/bootstrap/<%= PropertyUtil.getProperty("version.bootstrap")%>/css/bootstrap<%= development ? "" : ".min"%>.css" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/font-awesome/<%=PropertyUtil.getProperty("version.fontawesome")%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/css/pdb-management/pdb-management.css" />
 	</head>
@@ -56,6 +56,6 @@
 				}
 			};
 		</script>
-		<script data-main="init" src="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("require" + (development ? "" : ".min") + ".js")%>"></script>
+		<script data-main="init"  src="<%=baseUrl%>/webjars/requirejs/<%= PropertyUtil.getProperty("version.require")%>/require<%= development ? "" : ".min"%>.js"></script>
 	</body>
 </html>
