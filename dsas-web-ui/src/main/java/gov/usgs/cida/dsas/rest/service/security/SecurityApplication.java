@@ -21,9 +21,15 @@ public class SecurityApplication extends ResourceConfig {
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SecurityApplication.class);
 
 	public SecurityApplication() {
-		packages(true, this.getClass().getPackage().getName());
+		packages(this.getClass().getPackage().getName());
 		register(JspMvcFeature.class);
 
+		// Also check gov.usgs.cida.auth.ws.rs.service.AbstractAuthTokenService 
+		// AuthTokenResource extends that abstract class which provides HTTP request
+		// paths:
+		// /auth/authenticate
+		// /auth/logout
+		
 		if (!AuthClientSingleton.isInitialized()) {
 			String nullRoles = PropertyUtil.getProperty(NullAuthClient.AUTH_ROLES_JNDI_NAME);
 			if (StringUtils.isNotBlank(nullRoles)) {
