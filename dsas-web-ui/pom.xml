@@ -32,7 +32,7 @@
 		<version.loglevel>1.3.1</version.loglevel>
 		<version.jersey>2.22.1</version.jersey>
 		<version.jquery.cookie>1.4.1-1</version.jquery.cookie>
-		<version.auth.utils>1.1.2-SNAPSHOT</version.auth.utils>
+		<version.auth.utils>1.1.2</version.auth.utils>
 	</properties>
 
 	<dependencies>
@@ -297,17 +297,6 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>loglevel</artifactId>
 			<version>${version.loglevel}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>webjars-locator</artifactId>
-			<version>0.1</version>
-		 <exclusions>
-		  <exclusion>
-		   <groupId>org.reflections</groupId>
-		   <artifactId>reflections</artifactId>
-		  </exclusion>
-		 </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>

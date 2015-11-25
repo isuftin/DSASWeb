@@ -1,8 +1,5 @@
 package gov.usgs.cida.dsas;
 
-import gov.usgs.cida.auth.client.AuthClientSingleton;
-import gov.usgs.cida.auth.client.CachingAuthClient;
-import gov.usgs.cida.auth.client.NullAuthClient;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineShapefileDAO;
 import gov.usgs.cida.dsas.service.util.Property;
@@ -16,7 +13,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 /**
