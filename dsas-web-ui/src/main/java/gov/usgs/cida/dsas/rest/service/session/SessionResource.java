@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -64,9 +66,10 @@ public class SessionResource {
 		}
 
 		try {
+			new PostgresDAO().createWorkspace(_token);
 			geoserverHandler.prepareWorkspace(geoserverDataDir, _token);
 			response = Response.created(new URI(ServiceURI.SESSION_SERVICE_ENDPOINT + "/" + _token)).build();
-		} catch (IllegalArgumentException | IOException | URISyntaxException ex) {
+		} catch (IllegalArgumentException | IOException | URISyntaxException | SQLException ex) {
 			Map<String, String> map = new HashMap<>();
 			map.put("error", ex.getMessage());
 			response = Response.serverError().entity(new Gson().toJson(map)).build();
@@ -79,30 +82,32 @@ public class SessionResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteWorkspace(@PathParam("token") String token) {
 		Response response;
-
+		Map<String, String> map = null;
 		// Make sure the workspace being deleted is not required by the application
 		if (token.toLowerCase().trim().equals("published")) {
 			response = Response.status(Status.FORBIDDEN).build();
-		} else if (!geoserverHandler.workspaceExists(token)){
+		} else if (!geoserverHandler.workspaceExists(token)) {
 			// If the workspace doesn't exist, send no content. This will be the same 
 			// response if the workspace got deleted.
 			response = Response.noContent().build();
-		} else {
+		} else if (geoserverHandler.deleteWorkspace(token)) {
 			// Try deleting the workspace.
-			if (geoserverHandler.deleteWorkspace(token)) {
-				PostgresDAO pgDAO = new PostgresDAO();
-				String shorelinesViewName = token + "_shorelines";
-				try {
-					pgDAO.removeShorelineView(shorelinesViewName);
-				} catch (SQLException ex) {
-					LOG.warn(String.format("Could not remove Shorelines view %s", shorelinesViewName), ex);
-				}
+			PostgresDAO pgDAO = new PostgresDAO();
+
+			try {
+				pgDAO.removeWorkspace(token);
 				response = Response.noContent().build();
-			} else {
-				Map<String, String> map = new HashMap<>();
-				map.put("error", String.format("Workspace %s could not be deleted", token));
+			} catch (SQLException ex) {
+				LOG.warn(String.format("Could not remove workspace %s", token), ex);
+				map = new HashMap<>(1);
+				map.put("error", ex.getLocalizedMessage());
 				response = Response.serverError().entity(new Gson().toJson(map)).build();
 			}
+
+		} else {
+			map = new HashMap<>(1);
+			map.put("error", String.format("Workspace %s could not be deleted", token));
+			response = Response.serverError().entity(new Gson().toJson(map)).build();
 		}
 
 		return response;

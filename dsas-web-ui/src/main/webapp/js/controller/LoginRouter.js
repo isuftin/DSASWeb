@@ -8,7 +8,8 @@ define([
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		routes: {
-			'': 'displayLoginView'
+			'': 'displayLoginView',
+			':route(/:subroute)': 'displayLoginView'
 		},
 		initialize: function () {
 			log.trace("Initializing login router");
@@ -16,7 +17,9 @@ define([
 		},
 		displayLoginView: function () {
 			log.trace("Routing to Management view");
-			this.loginView = new LoginView().render();
+			this.loginView = new LoginView({
+				'context': {'redirectedFrom': "/" + Array.prototype.join.call(arguments, "/")}
+			}).render();
 			return this.loginView;
 		}
 	});
