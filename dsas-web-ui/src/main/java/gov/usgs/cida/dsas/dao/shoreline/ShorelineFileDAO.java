@@ -167,7 +167,7 @@ public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 	 * @throws SQLException
 	 */
 	public void removeShorelineView(String view) throws SQLException {
-		pgDao.removeShorelineView(view);
+		pgDao.removeView(view);
 	}
 
 	/**
