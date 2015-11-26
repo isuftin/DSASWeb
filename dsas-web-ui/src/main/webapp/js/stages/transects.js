@@ -573,7 +573,7 @@ var Transects = {
 				var workspace = CONFIG.tempSession.getCurrentSessionKey();
 				$.ajax('service/layer/workspace/' + workspace + '/store/ch-output/' + resultsLayer.split(':')[1],
 						{
-							type: 'DELEETE',
+							type: 'DELETE',
 							context: this
 						})
 						.done(function (data, textStatus, jqXHR) {
