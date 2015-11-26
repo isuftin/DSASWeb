@@ -7,15 +7,24 @@
 				   logicalFilePath="path-independent">
 	
 	<changeSet author="isuftin" id="create_foreign_key_shoreline_to_workspace_table" logicalFilePath="path-independent">
+		<comment>
+			When a row is deleted in the "workspace" table, delete the points from
+			the "shorelines" table that belong to that workspace
+		</comment>
 		<addForeignKeyConstraint 
-			baseTableName="shoreline_points"
+			baseTableName="shorelines"
+			baseColumnNames="workspace"
 			constraintName="fk_workspace"
 			referencedTableName="workspace"
 			referencedColumnNames="workspace"
 			onUpdate="CASCADE"
 			onDelete="CASCADE"
-		>
-			
-		</addForeignKeyConstraint>
+		/>
+		<rollback>
+			<dropForeignKeyConstraint 
+				baseTableName="shoreline_points"
+				constraintName="fk_workspace"
+			/>
+		</rollback>
 	</changeSet>
 </databaseChangeLog>

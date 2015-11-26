@@ -74,6 +74,7 @@
 							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
 							<schemas>${dsas.db.schema}</schemas>
 							<contexts>default</contexts>
+							<verbose>true</verbose>
 						</configuration>
 					</plugin>
 				</plugins>

@@ -7,11 +7,21 @@
 				   logicalFilePath="path-independent">
 	
 	<changeSet author="isuftin" id="create_workspace_table" logicalFilePath="path-independent">
+		<comment>
+			Creates a "workspace" table which allows us to have a single table to 
+			reference points in a workspace. Other tables should have a foreign
+			key to the workspace column with an ON DELETE CASCADE.
+		</comment>
 		
 		<createTable tableName="workspace">
-			<column name="id" type="BIGSERIAL" autoIncrement="true" />
-			<column name="create_time" type="TIME" defaultValue="now" />
-			<column name="workspace" type="VARCHAR(255)" />
+			<column name="workspace" type="VARCHAR(255)">
+				<constraints 
+					unique="true"
+					uniqueConstraintName="unique_workspace_name"
+					nullable="false"
+				/>
+			</column>
+			<column name="create_time" type="DATETIME" defaultValue="now" />
 		</createTable>
 
 		<rollback>
@@ -21,15 +31,16 @@
 	</changeSet>
 	
 	<changeSet author="isuftin" id="add_prikey_workspace_table" logicalFilePath="path-independent">
-		
+		<comment>
+			Creates a primary key on the workspace column
+		</comment>
 		<addPrimaryKey 
 			tableName="workspace" 
-			columnNames="id" 
+			columnNames="workspace" 
 			constraintName="pk_workspace"/>
 		
 		<rollback>
 			<dropPrimaryKey tableName="workspace" />
-			<dropTable tableName="workspace" />
 		</rollback>
 		
 	</changeSet>
