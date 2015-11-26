@@ -87,9 +87,11 @@ public class ShorelineStagingService extends HttpServlet {
 				Map<String, String> columns = new HashMap<>();
 				if (StringUtils.isNotBlank(columnsString)) {
 					columns = new Gson().fromJson(columnsString, Map.class);
+					
 					ShapefileImportProcess process = new ShapefileImportProcess(token, columns);
 					Thread thread = new Thread(process);
 					thread.start();
+					
 					response.addHeader(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + process.getProcessId());
 					response.setStatus(Response.Status.ACCEPTED.getStatusCode());
 					IOUtils.copy(new ByteArrayInputStream(new byte[0]), response.getWriter());

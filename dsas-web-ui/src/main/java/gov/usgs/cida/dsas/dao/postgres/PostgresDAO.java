@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 /**
+ * DAO class to work against the Postgres backing DB
  *
  * @author isuftin
  */
@@ -35,11 +36,13 @@ public class PostgresDAO {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PostgresDAO.class);
 	public static final String METADATA_TABLE_NAME = "gt_pk_metadata_table";
-	private final String JNDI_JDBC_NAME;
+	private static String JNDI_JDBC_NAME;
 	static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	public PostgresDAO() {
-		this.JNDI_JDBC_NAME = PropertyUtil.getProperty(Property.JDBC_NAME);
+		if (StringUtils.isBlank(JNDI_JDBC_NAME)) {
+			JNDI_JDBC_NAME = PropertyUtil.getProperty(Property.JDBC_NAME);
+		}
 	}
 
 	/**
@@ -58,6 +61,27 @@ public class PostgresDAO {
 			LOGGER.error("Could not create database connection", ex);
 		}
 		return con;
+	}
+
+	/**
+	 * Get workspace names in the workspaces table that have expired.
+	 * 
+	 * @param expireSeconds the time, in seconds, past which a workspace may be 
+	 * considered expired
+	 * @return the expired workspaces
+	 * @throws SQLException 
+	 */
+	public String[] getExpiredWorkspaces(long expireSeconds) throws SQLException {
+		List<String> results = new ArrayList<>();
+		String sql = String.format("select workspace from workspace where create_time < (now() - '%s seconds'::interval)", expireSeconds);
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql);
+				final ResultSet rs = ps.executeQuery();) {
+			while (rs.next()) {
+				results.add(rs.getString(1));
+			}
+		}
+		return results.toArray(new String[results.size()]);
 	}
 
 	/**

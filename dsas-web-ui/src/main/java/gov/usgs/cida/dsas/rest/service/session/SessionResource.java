@@ -92,10 +92,8 @@ public class SessionResource {
 			response = Response.noContent().build();
 		} else if (geoserverHandler.deleteWorkspace(token)) {
 			// Try deleting the workspace.
-			PostgresDAO pgDAO = new PostgresDAO();
-
 			try {
-				pgDAO.removeWorkspace(token);
+				new PostgresDAO().removeWorkspace(token);
 				response = Response.noContent().build();
 			} catch (SQLException ex) {
 				LOG.warn(String.format("Could not remove workspace %s", token), ex);

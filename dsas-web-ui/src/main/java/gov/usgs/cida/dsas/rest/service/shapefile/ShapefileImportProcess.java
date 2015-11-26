@@ -8,7 +8,6 @@ import gov.usgs.cida.dsas.shoreline.file.TokenToShorelineFileSingleton;
 import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
 /**
