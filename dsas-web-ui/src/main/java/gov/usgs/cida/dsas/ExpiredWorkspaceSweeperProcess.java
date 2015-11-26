@@ -9,6 +9,7 @@ import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import java.sql.SQLException;
 import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.Weeks;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -34,7 +35,9 @@ public class ExpiredWorkspaceSweeperProcess implements Runnable {
 		this.processId = StringUtils.isNotBlank(processId) ? processId : UUID.randomUUID().toString();
 		this.process = new DSASProcess(this.processId, "Workspace Sweeper Process");
 		this.pgDao = new PostgresDAO();
-		this.WORKSPACE_MAX_AGE_SECONDS = Long.parseLong(PropertyUtil.getProperty(Property.WORKSPACE_MAX_AGE_SECONDS, "60"));
+		this.WORKSPACE_MAX_AGE_SECONDS = Long.parseLong(PropertyUtil.getProperty(
+				Property.WORKSPACE_MAX_AGE_SECONDS, 
+				String.valueOf(Weeks.ONE.toStandardSeconds().getSeconds())));
 		this.process.setStatus(DSASProcessStatus.CREATED);
 		DSASProcessSingleton.addProcess(this.process);
 	}
