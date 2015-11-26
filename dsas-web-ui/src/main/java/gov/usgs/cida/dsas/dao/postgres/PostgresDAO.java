@@ -1,5 +1,6 @@
 package gov.usgs.cida.dsas.dao.postgres;
 
+import gov.usgs.cida.dsas.dao.pdb.Pdb;
 import gov.usgs.cida.dsas.dao.shoreline.Shoreline;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.service.util.Property;
@@ -11,7 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 /**
+ * DAO class to work against the Postgres backing DB
  *
  * @author isuftin
  */
@@ -32,10 +36,13 @@ public class PostgresDAO {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PostgresDAO.class);
 	public static final String METADATA_TABLE_NAME = "gt_pk_metadata_table";
-	private final String JNDI_JDBC_NAME;
+	private static String JNDI_JDBC_NAME;
+	static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	public PostgresDAO() {
-		this.JNDI_JDBC_NAME = PropertyUtil.getProperty(Property.JDBC_NAME);
+		if (StringUtils.isBlank(JNDI_JDBC_NAME)) {
+			JNDI_JDBC_NAME = PropertyUtil.getProperty(Property.JDBC_NAME);
+		}
 	}
 
 	/**
@@ -54,6 +61,68 @@ public class PostgresDAO {
 			LOGGER.error("Could not create database connection", ex);
 		}
 		return con;
+	}
+
+	/**
+	 * Get workspace names in the workspaces table that have expired.
+	 *
+	 * @param expireSeconds the time, in seconds, past which a workspace may be
+	 * considered expired
+	 * @return the expired workspaces
+	 * @throws SQLException
+	 */
+	public String[] getExpiredWorkspaces(long expireSeconds) throws SQLException {
+		List<String> results = new ArrayList<>();
+		String sql = String.format("select workspace from workspace where last_accessed < (now() - '%s seconds'::interval)", expireSeconds);
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql);
+				final ResultSet rs = ps.executeQuery();) {
+			while (rs.next()) {
+				results.add(rs.getString(1));
+			}
+		}
+		return results.toArray(new String[results.size()]);
+	}
+
+	/**
+	 * Checks whether or not a workspace exists in the database
+	 * 
+	 * @param workspace name of the workspace
+	 * @return true if workspace exists, false if not
+	 * @throws SQLException 
+	 */
+	public boolean workspaceExists(String workspace) throws SQLException {
+		String sql = "select count(*) from workspace "
+				+ "where workspace = ?";
+
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspace);
+			try (final ResultSet rs = ps.executeQuery()) {
+				rs.next();
+				return rs.getInt(1) == 1;
+			}
+		}
+	}
+
+	/**
+	 * Updates a workspace last accessed time to now.
+	 *
+	 * @param workspace the workspace id to update
+	 * @return workspace update status
+	 * @throws SQLException
+	 */
+	public boolean updateWorkspaceLastAccessTime(String workspace) throws SQLException {
+		String sql = "UPDATE workspace "
+				+ "SET last_accessed = now() "
+				+ "WHERE workspace = ?";
+		int updated;
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspace);
+			updated = ps.executeUpdate();
+		}
+		return updated > 0;
 	}
 
 	/**
@@ -118,6 +187,7 @@ public class PostgresDAO {
 	 * @throws SQLException
 	 */
 	public boolean insertPointsIntoShorelinePointsTable(Connection connection, long shorelineId, int segmentId, double[][] XYuncyArray) throws SQLException {
+
 		StringBuilder sql = new StringBuilder("INSERT INTO shoreline_points (shoreline_id, segment_id, geom, uncy) VALUES");
 		for (double[] XYUncy : XYuncyArray) {
 			sql.append("(").append(shorelineId).append(",").append(segmentId).append(",").append("ST_GeomFromText('POINT(").append(XYUncy[0]).append(" ").append(XYUncy[1]).append(")',").append(ShorelineFileDAO.DATABASE_PROJECTION).append("),").append(XYUncy[2]).append("),");
@@ -126,6 +196,135 @@ public class PostgresDAO {
 		try (final Statement st = connection.createStatement()) {
 			return st.execute(sql.toString());
 		}
+	}
+
+	/**
+	 * Inserts an array of points into the pdb table
+	 *
+	 * @param connection
+	 * @param pdbs
+	 *
+	 * @return
+	 * @throws SQLException
+	 */
+	public boolean insertPointsIntoPDBTable(Connection connection, List<Pdb> pdbs) throws SQLException {
+		StringBuilder sql = new StringBuilder("INSERT INTO proxy_datum_bias (profile_id, segment_id, xy, bias, uncyb, last_update) VALUES");
+		Timestamp now = getUTCNowAsSQLTimestamp();
+
+		for (Pdb pdb : pdbs) {
+			sql.append("(");
+			sql.append(pdb.getProfileId());
+			sql.append(",");
+			sql.append(pdb.getSegmentId());
+			sql.append(",");
+			sql.append("ST_GeomFromText('POINT(");
+			sql.append(pdb.getX()); //  ... ST_GeomFromText('POINT(x y)',4326)
+			sql.append(" ");
+			sql.append(pdb.getY());
+			sql.append(ShorelineFileDAO.DATABASE_PROJECTION);
+			sql.append("),");
+			sql.append(pdb.getBias());
+			sql.append(",");
+			sql.append(pdb.getUncyb());
+			sql.append(",");
+			sql.append(now);
+			sql.append(");");
+		}
+
+		sql.deleteCharAt(sql.length() - 1);
+		LOGGER.debug("Insert points into Proxy_Datum_Bias : " + sql.toString());
+		try (final Statement st = connection.createStatement()) {
+			return st.execute(sql.toString());
+		} //after an insert, look and see if there is a postgres process to recalibrate the index - vacuum process or trigger based on time if its performance is poor #TODO# 
+	}
+
+	/**
+	 *
+	 * @return Timestamp a current UTC sql timestamp
+	 */
+	public static Timestamp getUTCNowAsSQLTimestamp() {
+		Instant now = Instant.now();
+		java.sql.Timestamp currentTimestamp = Timestamp.from(now);
+		return currentTimestamp;
+
+	}
+
+	/**
+	 * Creates a row in the workspace table given the provided workspace id.
+	 *
+	 * Workspace id must be unique
+	 *
+	 * @param workspace id of workspace to be created
+	 * @return success in creating workspace
+	 * @throws SQLException
+	 */
+	public boolean createWorkspace(String workspace) throws SQLException {
+		String sql = "INSERT INTO workspace (workspace) VALUES(?)";
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspace);
+			ps.execute();
+		}
+		return true;
+	}
+
+	/**
+	 * Removes a workspace from the workspace table.
+	 *
+	 * This will also remove all associated points. Optionally, also remove the
+	 * associated views.
+	 *
+	 * @param workspace the workspace id to remove
+	 * @return true if workspace was deleted, false if not
+	 * @throws java.sql.SQLException
+	 */
+	public boolean removeWorkspace(String workspace) throws SQLException {
+		String sql = "DELETE FROM workspace "
+				+ "WHERE workspace=?";
+
+		boolean deleted;
+
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspace);
+			deleted = ps.executeUpdate() > 0;
+		}
+
+		if (deleted) {
+			LOGGER.debug(String.format("Removed workspace %s from workspace table", workspace));
+			String[] views = getWorkspaceAssociatedViews(workspace);
+			for (String view : views) {
+				removeView(view);
+				LOGGER.debug(String.format("Removed view %s", view));
+			}
+		} else {
+			LOGGER.debug(String.format("Could not remove workspace %s from workspace table", workspace));
+		}
+
+		return deleted;
+	}
+
+	/**
+	 * Gets all views associated with a workspace.
+	 *
+	 * @param workspace the name of the workspace
+	 * @return the workspace view names associated with the workspace name
+	 * @throws SQLException
+	 */
+	private String[] getWorkspaceAssociatedViews(String workspace) throws SQLException {
+		String statement = "select table_name from INFORMATION_SCHEMA.views "
+				+ "where table_name LIKE ?;";
+		List<String> viewNames = new ArrayList<>();
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(statement)) {
+			ps.setString(1, workspace + "%");
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					viewNames.add(rs.getString(1));
+				}
+			}
+		}
+		return viewNames.toArray(new String[viewNames.size()]);
 	}
 
 	/**
@@ -168,12 +367,11 @@ public class PostgresDAO {
 
 		int deleteCt;
 
-		try (Connection connection = getConnection()) {
-			try (PreparedStatement ps = connection.prepareStatement(sql)) {
-				ps.setString(1, workspace);
-				ps.setString(2, name + "%");
-				deleteCt = ps.executeUpdate();
-			}
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspace);
+			ps.setString(2, name + "%");
+			deleteCt = ps.executeUpdate();
 		}
 
 		return deleteCt > 0;
@@ -181,13 +379,12 @@ public class PostgresDAO {
 
 	public int getShorelinesByWorkspace(String workspace) throws SQLException {
 		String sql = "SELECT COUNT(*) FROM shorelines WHERE workspace=?";
-		try (Connection connection = getConnection()) {
-			try (final PreparedStatement ps = connection.prepareStatement(sql)) {
-				ps.setString(1, workspace);
-				ResultSet rs = ps.executeQuery();
-				rs.next();
-				return rs.getInt(1);
-			}
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspace);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			return rs.getInt(1);
 		}
 	}
 
@@ -197,8 +394,8 @@ public class PostgresDAO {
 	 * @param view
 	 * @throws SQLException
 	 */
-	public void removeShorelineView(String view) throws SQLException {
-		String sql = "DROP VIEW IF EXISTS \"" + view + "\";";
+	public void removeView(String view) throws SQLException {
+		String sql = "DROP VIEW IF EXISTS \"" + view + "\" CASCADE;";
 		try (Connection connection = getConnection()) {
 			try (final Statement statement = connection.createStatement()) {
 				statement.execute(sql);
@@ -215,11 +412,10 @@ public class PostgresDAO {
 	 */
 	public int getShorelineCountInShorelineView(String workspace) throws SQLException {
 		String sql = "SELECT COUNT(id) FROM " + workspace + "_shorelines";
-		try (Connection connection = getConnection()) {
-			try (final Statement ps = connection.prepareStatement(sql)) {
-				ResultSet resultSet = ps.getResultSet();
-				return resultSet.getInt(1);
-			}
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ResultSet resultSet = ps.getResultSet();
+			return resultSet.getInt(1);
 		}
 	}
 
@@ -262,7 +458,7 @@ public class PostgresDAO {
 	 * element was repeated earlier in the shoreline file
 	 */
 	public int insertAuxillaryAttribute(Connection connection, long shorelineId, String name, String value) throws SQLException {
-		String sql = "INSERT INTO shoreline_auxillary_attrs " + "(shoreline_id, attr_name, value) " + "VALUES (?,?,?)";
+		String sql = "INSERT INTO shoreline_auxillary_attrs  (shoreline_id, attr_name, value) VALUES (?,?,?)";
 		try (final PreparedStatement st = connection.prepareStatement(sql)) {
 			st.setLong(1, shorelineId);
 			st.setString(2, name);
@@ -286,13 +482,12 @@ public class PostgresDAO {
 				+ "WHERE s.workspace = ?";
 
 		List<String> auxNames = new ArrayList<>();
-		try (Connection connection = getConnection()) {
-			try (PreparedStatement ps = connection.prepareStatement(sql)) {
-				ps.setString(1, workspaceName);
-				ResultSet resultSet = ps.executeQuery();
-				while (resultSet.next()) {
-					auxNames.add(resultSet.getString(1));
-				}
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspaceName);
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				auxNames.add(resultSet.getString(1));
 			}
 		}
 		return auxNames.toArray(new String[auxNames.size()]);
@@ -315,14 +510,13 @@ public class PostgresDAO {
 				+ "AND a.attr_name = ?";
 
 		List<String> auxValues = new ArrayList<>();
-		try (Connection connection = getConnection()) {
-			try (PreparedStatement ps = connection.prepareStatement(sql)) {
-				ps.setString(1, workspaceName);
-				ps.setString(2, auxName);
-				ResultSet resultSet = ps.executeQuery();
-				while (resultSet.next()) {
-					auxValues.add(resultSet.getString(1));
-				}
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspaceName);
+			ps.setString(2, auxName);
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				auxValues.add(resultSet.getString(1));
 			}
 		}
 		return auxValues.toArray(new String[auxValues.size()]);
@@ -348,13 +542,12 @@ public class PostgresDAO {
 				return false;
 			}
 
-			try (Connection connection = getConnection()) {
-				try (PreparedStatement ps = connection.prepareStatement(sql)) {
-					ps.setString(1, auxName);
-					ps.setString(2, workspaceName);
-					int rowsUpdated = ps.executeUpdate();
-					return rowsUpdated > 0;
-				}
+			try (Connection connection = getConnection();
+					final PreparedStatement ps = connection.prepareStatement(sql)) {
+				ps.setString(1, auxName);
+				ps.setString(2, workspaceName);
+				int rowsUpdated = ps.executeUpdate();
+				return rowsUpdated > 0;
 			}
 		} else {
 			return false;
@@ -377,17 +570,16 @@ public class PostgresDAO {
 				+ "AND a.attr_name = s.auxillary_name "
 				+ "WHERE s.workspace = ? "
 				+ "ORDER BY s.date";
-		try (Connection connection = getConnection()) {
-			try (PreparedStatement ps = connection.prepareStatement(sql)) {
-				ps.setString(1, workspaceName);
-				ResultSet rs = ps.executeQuery();
-				SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-dd");
-				while (rs.next()) {
-					Date date = rs.getDate(1);
-					String value = rs.getString(2);
-					String dateStr = df.format(date);
-					d2a.put(dateStr, value);
-				}
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspaceName);
+			ResultSet rs = ps.executeQuery();
+			SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-dd");
+			while (rs.next()) {
+				Date date = rs.getDate(1);
+				String value = rs.getString(2);
+				String dateStr = df.format(date);
+				d2a.put(dateStr, value);
 			}
 		}
 		return d2a;
@@ -407,13 +599,12 @@ public class PostgresDAO {
 				+ "FROM shorelines "
 				+ "WHERE workspace = ?";
 
-		try (Connection connection = getConnection()) {
-			try (PreparedStatement ps = connection.prepareStatement(sql)) {
-				ps.setString(1, workspaceName);
-				ResultSet rs = ps.executeQuery();
-				while (rs.next()) {
-					name = rs.getString(1);
-				}
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspaceName);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				name = rs.getString(1);
 			}
 		}
 		return name;
@@ -445,13 +636,12 @@ public class PostgresDAO {
 				+ "FROM gt_pk_metadata_table "
 				+ "WHERE table_name = ?";
 
-		try (Connection connection = getConnection()) {
-			try (PreparedStatement ps = connection.prepareStatement(sql)) {
-				ps.setString(1, viewName);
-				ResultSet rs = ps.executeQuery();
-				rs.next();
-				return rs.getInt(1) != 0;
-			}
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, viewName);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			return rs.getInt(1) != 0;
 		}
 	}
 
@@ -470,8 +660,8 @@ public class PostgresDAO {
 				+ " where geom && ST_MakeEnvelope(" + bbox[0] + "," + bbox[1] + "," + bbox[2] + "," + bbox[3] + ",4326)"
 				+ " order by date desc, shoreline_id";
 		List<Shoreline> shorelines = new ArrayList<>();
-		try (Connection connection = getConnection()) {
-			ResultSet rs = connection.createStatement().executeQuery(sql);
+		try (Connection connection = getConnection();
+				ResultSet rs = connection.createStatement().executeQuery(sql)) {
 			while (rs.next()) {
 				Shoreline shoreline = new Shoreline();
 				shoreline.setId(BigInteger.valueOf(rs.getLong(1)));
@@ -482,7 +672,6 @@ public class PostgresDAO {
 				shoreline.setAuxName(rs.getString(6));
 				shoreline.setAuxValue(rs.getString(7));
 				shoreline.setName(rs.getString(8));
-				shoreline.setSegmentId(rs.getInt(9));
 				shorelines.add(shoreline);
 			}
 		}

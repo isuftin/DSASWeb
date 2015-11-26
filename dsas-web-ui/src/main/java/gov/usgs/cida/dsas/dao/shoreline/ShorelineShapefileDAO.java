@@ -104,23 +104,28 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 			Xploder xploder = new Xploder(uncertaintyFieldName);
 			File pointsShapefile;
 			LOGGER.debug("Exploding shapefile at {}", shpFile.getAbsolutePath());
+			updateProcessInformation("Exploding shapefile");
 			pointsShapefile = xploder.explode(parentDirectory + File.separator + baseFileName);
 			LOGGER.debug("Shapefile exploded");
+			updateProcessInformation("Shapefile exploded");
 
 			FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(pointsShapefile.toURI().toURL());
+			int fcSize = fc.size();
+			updateProcessInformation(String.format("Will attempt to enter %s features into the database", fcSize));
 			Class<?> dateType = fc.getSchema().getDescriptor(dateFieldName).getType().getBinding();
 			List<double[]> xyUncies = new ArrayList<>();
 
 			if (!fc.isEmpty()) {
 				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
-				try (SimpleFeatureIterator iter = rfc.features()){
+
+				try (SimpleFeatureIterator iter = rfc.features()) {
 					connection.setAutoCommit(false);
 					int lastSegmentId = -1;
 					long shorelineId = -1;
 					while (iter.hasNext()) {
 						SimpleFeature sf = iter.next();
 						int segmentId = getIntValue(Constants.SEGMENT_ID_ATTR, sf);
-						
+
 						if (lastSegmentId != segmentId) {
 							// Either I'm looping for the first time or I've got 
 							// a new shoreline that I need to insert. I should 
@@ -185,6 +190,7 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 		} catch (SchemaException | TransformException | FactoryException ex) {
 			Logger.getLogger(ShorelineShapefileDAO.class.getName()).log(Level.SEVERE, null, ex);
 		}
+
 		return viewName;
 	}
 

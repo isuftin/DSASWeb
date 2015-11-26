@@ -55,26 +55,27 @@ CCH.Session = function (name, isPerm) {
 		// id. This is due to a back-end id length limitation
 		var randID = String.fromCharCode(97 + Math.round(Math.random() * 25)) + Util.randomUUID().remove(/-/g).toLowerCase();
 		// Prepare the session on the OWS server
-		$.get('service/session?action=prepare&workspace=' + randID)
-			.done(function () {
-				LOG.info('Session.js::init: A workspace has been prepared on the OWS server with the name of ' + randID);
-				CONFIG.ui.showAlert({
-					message: 'No session could be found. A new session has been created',
-					displayTime: 0,
-					style: {
-						classes: ['alert-info']
-					}
-				});
-			})
-			.fail(function () {
-				LOG.error('Session.js::init: A workspace could not be created on the OWS server with the name of ' + randID);
-				CONFIG.ui.showAlert({
-					message: 'No session could be found. A new session could not be created on server. This application may not function correctly.',
-					style: {
-						classes: ['alert-error']
-					}
-				});
+		$.ajax('service/session/' + randID, {
+			type: 'POST'
+		}).done(function () {
+			LOG.info('Session.js::init: A workspace has been prepared on the OWS server with the name of ' + randID);
+			CONFIG.ui.showAlert({
+				message: 'No session could be found. A new session has been created',
+				displayTime: 0,
+				style: {
+					classes: ['alert-info']
+				}
 			});
+		})
+		.fail(function () {
+			LOG.error('Session.js::init: A workspace could not be created on the OWS server with the name of ' + randID);
+			CONFIG.ui.showAlert({
+				message: 'No session could be found. A new session could not be created on server. This application may not function correctly.',
+				style: {
+					classes: ['alert-error']
+				}
+			});
+		});
 
 		var newSession = Object.extended();
 		newSession.sessions = [];
@@ -794,20 +795,35 @@ CCH.Session = function (name, isPerm) {
 		getCurrentSession: function () {
 			return me.session;
 		},
+		removeSession: function (sessionId) {
+			return $.ajax('service/session/' + sessionId, {
+				type : 'DELETE'
+			});
+		},
+		updateSession: function (sessionId) {
+			return $.ajax('service/session/' + sessionId, {
+				type : 'PUT'
+			});
+		},
 		clearSessions: function (type) {
 			type = type || '';
-			switch (type) {
-				case  'temp' :
-					sessionStorage.removeItem(me.SESSION_OBJECT_NAME);
-					break;
-				case 'perm' :
-					// Fall through
-				default :
-					localStorage.removeItem(me.SESSION_OBJECT_NAME);
-					sessionStorage.removeItem(me.SESSION_OBJECT_NAME);
+			var workspaces = JSON.parse(localStorage.getItem('dsas')).sessions.map(function (a) {
+				return a.id;
+			});
+			var deleteCalls = [];
+			for (var wIdx = 0;wIdx < workspaces.length;wIdx++) {
+				deleteCalls.push($.ajax('service/session/' + workspaces[wIdx], {type: 'DELETE'}));
 			}
+
+			$.when
+					.apply($, deleteCalls)
+					.then(function () {
+						location.reload(true);
+					});
+			localStorage.removeItem(me.SESSION_OBJECT_NAME);
+			sessionStorage.removeItem(me.SESSION_OBJECT_NAME);
 			LOG.warn('UI.js::Cleared ' + type + ' session. Reloading application.');
-			location.reload(true);
+			
 		},
 		removeResource: function (args) {
 			var store = args.store,
@@ -816,23 +832,21 @@ CCH.Session = function (name, isPerm) {
 				workspace = args.session || CONFIG.tempSession.getCurrentSessionKey(),
 				extraParams = args.extraParams || {},
 				params = $.extend({}, {
-					action: 'remove-layer',
-					workspace: workspace,
-					store: store,
-					layer: layer
+					type: 'DELETE',
+					context : this
 				}, extraParams);
 
 			if (workspace.toLowerCase() === CONFIG.name.published) {
 				throw 'Workspace cannot be read-only (Ex.: ' + CONFIG.name.published + ')';
 			}
 
-			$.get('service/session',
-				params,
-				function (data, textStatus, jqXHR) {
-					callbacks.each(function (callback) {
-						callback(data, textStatus, jqXHR);
+			$.ajax('service/layer/workspace/' + workspace + '/store/' + store + '/' + layer,
+					params)
+					.done(function (data, textStatus, jqXHR) {
+						callbacks.each(function (callback) {
+							callback(data, textStatus, jqXHR);
+						});
 					});
-				}, 'json');
 		}
 	});
 };

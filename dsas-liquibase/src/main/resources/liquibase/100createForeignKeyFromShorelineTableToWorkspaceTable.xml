@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+				   logicalFilePath="path-independent">
+	
+	<changeSet author="isuftin" id="create_foreign_key_shoreline_to_workspace_table" logicalFilePath="path-independent">
+		<comment>
+			When a row is deleted in the "workspace" table, delete the points from
+			the "shorelines" table that belong to that workspace
+		</comment>
+		<addForeignKeyConstraint 
+			baseTableName="shorelines"
+			baseColumnNames="workspace"
+			constraintName="fk_workspace"
+			referencedTableName="workspace"
+			referencedColumnNames="workspace"
+			onUpdate="CASCADE"
+			onDelete="CASCADE"
+		/>
+		<rollback>
+			<dropForeignKeyConstraint 
+				baseTableName="shoreline_points"
+				constraintName="fk_workspace"
+			/>
+		</rollback>
+	</changeSet>
+</databaseChangeLog>

@@ -1,6 +1,6 @@
 package gov.usgs.cida.dsas.service.process;
 
-import gov.usgs.cida.dsas.service.ServiceURI;
+import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.ApplicationPath;

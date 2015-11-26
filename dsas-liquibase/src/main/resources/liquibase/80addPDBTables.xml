@@ -10,7 +10,7 @@
 		<createTable tableName="proxy_datum_bias">
 			<column name="id" type="BIGSERIAL" />
                         <column name="profile_id" type="VARCHAR(255)" />
-                        <column name="segment_id" type="BIGSERIAL" />
+                        <column name="segment_id" type="BIGINT" />
                         <column name="xy" type="GEOMETRY" />
                         <column name="bias" type="DOUBLE" />
 			<column name="uncyb" type="DOUBLE" />                        			

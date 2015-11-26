@@ -1,4 +1,6 @@
-<%@page import="gov.usgs.cida.dsas.service.ServiceURI"%>
+
+<%@page import="gov.usgs.cida.dsas.rest.service.ServiceURI"%>
+<%@page import="gov.usgs.cida.dsas.rest.service.security.AuthTokenResource"%>
 <%@page import="gov.usgs.cida.dsas.service.util.PropertyUtil"%>
 <%@page import="gov.usgs.cida.dsas.service.util.Property"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -17,22 +19,23 @@
 
     <head>
 		<title>DSASweb</title>
-		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("css/bootstrap" + (development ? "" : ".min") + ".css")%>" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/bootstrap/<%= PropertyUtil.getProperty("version.bootstrap")%>/css/bootstrap<%= development ? "" : ".min"%>.css" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/font-awesome/<%=PropertyUtil.getProperty("version.fontawesome")%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
-		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/css/pdb-management/pdb-management.css" />
 	</head>
 	<body>
 		<div id="page-content-container" class="container-fluid" role="application"></div>
 		<script type="text/javascript">
+			"use strict";
 			var require = {
 				config: {
-					'init': {
-						'contextPath': "<%=baseUrl%>"
+					'loginInit': {
+						'contextPath': "<%=baseUrl%><%= ServiceURI.SECURITY_UI_ENDPOINT%>/login",
+						'authTokenLabel': "<%= AuthTokenResource.AUTH_TOKEN_LABEL %>"
 					},
-					'views/ManagementView' : {
-						'paths' : {
-							'staging' : '<%= ServiceURI.SHAPEFILE_STAGING_SERVICE_ENDPOINT %>'
-						}
+					'utils/AuthUtil' : {
+						'contextPath': "<%=baseUrl%>",
+						'SECURITY_SERVICE_PATH': "<%= ServiceURI.SECURITY_SERVICE_ENDPOINT%>",
+						'authTokenLabel': "<%= AuthTokenResource.AUTH_TOKEN_LABEL %>"
 					}
 				},
 				baseUrl: "<%=baseUrl%>/js/",
@@ -44,18 +47,19 @@
 					"handlebars": ['<%=baseUrl%>/webjars/handlebars/<%=  PropertyUtil.getProperty("version.handlebars")%>/handlebars<%= development ? "" : ".min"%>'],
 					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%=  PropertyUtil.getProperty("version.require.text")%>/text'],
 					"loglevel": ['<%=baseUrl%>/webjars/loglevel/<%=  PropertyUtil.getProperty("version.loglevel")%>/loglevel<%= development ? "" : ".min"%>'],
-					"openlayers": ['<%=baseUrl%>/webjars/openlayers/<%= PropertyUtil.getProperty("version.openlayers")%>/OpenLayers<%= development ? ".debug" : ""%>']
+					"jqueryCookie": ['<%=baseUrl%>/webjars/jquery-cookie/<%=  PropertyUtil.getProperty("version.jquery.cookie")%>/jquery.cookie']
+					
 				},
 				shim: {
-					openlayers: {
-						exports: "OpenLayers"
-					},
 					"bootstrap": { 
 						"deps" :['jquery'] 
+					},
+					"jqueryCookie": {
+						"deps" :['jquery']
 					}
 				}
 			};
 		</script>
-		<script data-main="init" src="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("require" + (development ? "" : ".min") + ".js")%>"></script>
+	<script data-main="loginInit" src="<%=baseUrl%>/webjars/requirejs/<%= PropertyUtil.getProperty("version.require")%>/require<%= development ? "" : ".min"%>.js"></script>
 	</body>
 </html>

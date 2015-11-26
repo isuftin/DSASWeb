@@ -31,6 +31,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.xpath.XPathExpressionException;
@@ -297,6 +298,10 @@ public class GeoserverDAO {
 		}
 	}
 
+	public boolean deleteWorkspace(String workspace) {
+		return gsrm.getPublisher().removeWorkspace(workspace, true);
+	}
+	
 	/**
 	 * Deletes the directory the shapefiles are located in on disk.
 	 *
@@ -329,12 +334,6 @@ public class GeoserverDAO {
 						+ diskLocationFileObject.getParent() + "\nPossibly files left over.");
 			}
 		}
-	}
-
-	boolean workspaceExists(String workspace) throws IOException {
-		int responseCode = getResponseCode(PARAM_REST_WORKSPACES + workspace, PARAM_GET);
-
-		return isSuccessResponse(responseCode);
 	}
 
 	boolean dataStoreExists(String workspace, String dataStore) throws IOException {
@@ -445,6 +444,17 @@ public class GeoserverDAO {
 		return result;
 	}
 
+	public boolean workspaceExists(String workspace) {
+		Optional<String> foundWorkspace = gsrm.getReader().getWorkspaceNames()
+				.stream()
+				.filter(
+						wsName -> wsName.toLowerCase().trim().equals(workspace.toLowerCase().trim())
+				)
+				.findFirst();
+		
+		return foundWorkspace.isPresent();
+	}
+	
 	public List<String> listWorkspaces()
 			throws IOException, XPathExpressionException {
 

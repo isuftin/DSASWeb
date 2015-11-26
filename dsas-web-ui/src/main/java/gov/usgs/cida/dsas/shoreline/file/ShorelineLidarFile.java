@@ -2,6 +2,7 @@ package gov.usgs.cida.dsas.shoreline.file;
 
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
+import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
@@ -85,6 +86,11 @@ public class ShorelineLidarFile extends ShorelineFile {
 	 * @param workspace 
 	 */
 	public ShorelineLidarFile(GeoserverDAO gsHandler, ShorelineFileDAO dao, String workspace) {
+		this(gsHandler, dao, workspace, null);
+	}
+	
+	public ShorelineLidarFile(GeoserverDAO gsHandler, ShorelineFileDAO dao, String workspace, DSASProcess process) {
+		this.process = process;
 		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, System.getProperty("java.io.tmpdir")));
 		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
 		this.workDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_WORK));
@@ -92,6 +98,9 @@ public class ShorelineLidarFile extends ShorelineFile {
 		this.dao = dao;
 		this.fileMap = new HashMap<>(fileParts.length);
 		this.workspace = workspace;
+		if (this.process != null) {
+			dao.setDSASProcess(process);
+		}
 	}
 
 	@Override
@@ -123,5 +132,5 @@ public class ShorelineLidarFile extends ShorelineFile {
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
 	}
-
+	
 }

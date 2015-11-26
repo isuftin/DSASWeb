@@ -1,7 +1,7 @@
 package gov.usgs.cida.dsas.rest.service.shapefile;
 
 import com.google.gson.Gson;
-import gov.usgs.cida.dsas.service.ServiceURI;
+import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
@@ -100,12 +100,14 @@ public class ShapefileResource {
 		Map<String, String> columns = new HashMap<>();
 		if (StringUtils.isNotBlank(columnsString)) {
 			columns = new Gson().fromJson(columnsString, Map.class);
+			
 			ShapefileImportProcess process = new ShapefileImportProcess(fileToken, columns);
-			String processId = process.getProcessId();
-			process.run();
+			Thread thread = new Thread(process);
+			thread.start();
+			
 			return Response
 					.accepted()
-					.header(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + processId)
+					.header(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + process.getProcessId())
 					.build();
 		} else {
 			Map<String, String> map = new HashMap<>();

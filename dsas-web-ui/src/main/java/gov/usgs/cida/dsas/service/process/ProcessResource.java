@@ -3,7 +3,7 @@ package gov.usgs.cida.dsas.service.process;
 import com.google.gson.Gson;
 import gov.usgs.cida.dsas.DSASProcessSingleton;
 import gov.usgs.cida.dsas.model.DSASProcess;
-import gov.usgs.cida.dsas.service.ServiceURI;
+import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -21,9 +21,6 @@ import org.apache.http.HttpHeaders;
  */
 @Path("/")
 public class ProcessResource {
-
-	@Context
-	private UriInfo _uriInfo;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

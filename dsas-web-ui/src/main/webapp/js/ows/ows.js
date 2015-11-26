@@ -142,8 +142,9 @@ var OWS = function (endpoint) {
 							displayTime: 0
 						});
 
-						$.ajax('service/session?action=prepare&workspace=' + this.namespace,
+						$.ajax('service/session/' + this.namespace,
 							{
+								type: 'POST',
 								success: function (data, textStatus, jqXHR) {
 									LOG.info('Session.js::init: A workspace has been prepared on the OWS server with the name of ' + CONFIG.tempSession.getCurrentSessionKey());
 									CONFIG.ui.showAlert({
