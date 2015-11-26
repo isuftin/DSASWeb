@@ -46,6 +46,10 @@ public class DSASProcessSingleton {
 		return procMap.remove(processId);
 	}
 	
+	public static String[] getProcessIds() {
+		return procMap.keySet().toArray(new String[procMap.keySet().size()]);
+	}
+	
 	private DSASProcessSingleton() {
 		// Static utility class
 	}

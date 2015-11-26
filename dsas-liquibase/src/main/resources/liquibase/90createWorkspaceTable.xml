@@ -21,7 +21,7 @@
 					nullable="false"
 				/>
 			</column>
-			<column name="create_time" type="DATETIME" defaultValue="now" />
+			<column name="last_accessed" type="DATETIME" defaultValue="now" />
 		</createTable>
 
 		<rollback>
