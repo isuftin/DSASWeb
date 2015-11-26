@@ -87,6 +87,22 @@ $(document).ready(function () {
 
 		CONFIG.ui.precacheImages();
 
+		// Update the last accessed time stamp on each session on the back end.
+		// This prevents the sessions from being wiped
+		$.each(CONFIG.permSession.session.sessions, function (i, session) {
+			var sessionName = session.name;
+			CONFIG.permSession.updateSession(sessionName)
+					// Session not found on the back-end. Clean up both front and back ends
+					.error($.proxy(function (resp) {
+						if (resp.status === 404) {
+							CONFIG.permSession.session.sessions = CONFIG.permSession.session.sessions.filter(function (a) {
+								return a.id !== this.name;
+							}, this);
+							CONFIG.tempSession.persistSession();
+						}
+					}, this));
+		});
+
 		$('.qq-upload-button').addClass('btn btn-success');
 
 		$('#application-overlay').fadeOut(2000, function () {

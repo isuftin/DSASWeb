@@ -800,6 +800,11 @@ CCH.Session = function (name, isPerm) {
 				type : 'DELETE'
 			});
 		},
+		updateSession: function (sessionId) {
+			return $.ajax('service/session/' + sessionId, {
+				type : 'PUT'
+			});
+		},
 		clearSessions: function (type) {
 			type = type || '';
 			var workspaces = JSON.parse(localStorage.getItem('dsas')).sessions.map(function (a) {

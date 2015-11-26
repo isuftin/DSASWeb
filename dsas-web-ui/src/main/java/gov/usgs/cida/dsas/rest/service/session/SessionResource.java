@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
 @Path("/")
 public class SessionResource {
 
-	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(SessionResource.class);
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SessionResource.class);
 	private static GeoserverDAO geoserverHandler = null;
 	private static String geoserverEndpoint = null;
 	private static String geoserverUsername = null;
@@ -46,6 +47,27 @@ public class SessionResource {
 		geoserverPassword = PropertyUtil.getProperty(Property.GEOSERVER_PASSWORD);
 		geoserverDataDir = PropertyUtil.getProperty(Property.GEOSERVER_DATA_DIRECTORY);
 		geoserverHandler = new GeoserverDAO(geoserverEndpoint, geoserverUsername, geoserverPassword);
+	}
+	
+	@PUT
+	@Path("{token}")
+	public Response updateTokenLastAccessed(@PathParam("token") String token) {
+		Response response;
+		PostgresDAO pgDao = new PostgresDAO();
+		try {
+			if (!pgDao.workspaceExists(token)) {
+				response = Response.status(Status.NOT_FOUND).build();
+			} else if (new PostgresDAO().updateWorkspaceLastAccessTime(token)) {
+				response = Response.noContent().contentLocation(new URI(ServiceURI.SESSION_SERVICE_ENDPOINT + "/" + token)).build();
+			} else {
+				response = Response.status(Status.PRECONDITION_FAILED).build();
+			}
+		} catch (SQLException | URISyntaxException ex) {
+			Map<String, String> map = new HashMap<>();
+			map.put("error", ex.getLocalizedMessage());
+			response = Response.serverError().entity(new Gson().toJson(map)).build();
+		}
+		return response;
 	}
 
 	@POST
@@ -96,7 +118,7 @@ public class SessionResource {
 				new PostgresDAO().removeWorkspace(token);
 				response = Response.noContent().build();
 			} catch (SQLException ex) {
-				LOG.warn(String.format("Could not remove workspace %s", token), ex);
+				LOGGER.warn(String.format("Could not remove workspace %s", token), ex);
 				map = new HashMap<>(1);
 				map.put("error", ex.getLocalizedMessage());
 				response = Response.serverError().entity(new Gson().toJson(map)).build();

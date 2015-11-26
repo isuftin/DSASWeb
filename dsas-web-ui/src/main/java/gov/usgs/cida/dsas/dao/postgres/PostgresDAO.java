@@ -65,15 +65,15 @@ public class PostgresDAO {
 
 	/**
 	 * Get workspace names in the workspaces table that have expired.
-	 * 
-	 * @param expireSeconds the time, in seconds, past which a workspace may be 
+	 *
+	 * @param expireSeconds the time, in seconds, past which a workspace may be
 	 * considered expired
 	 * @return the expired workspaces
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public String[] getExpiredWorkspaces(long expireSeconds) throws SQLException {
 		List<String> results = new ArrayList<>();
-		String sql = String.format("select workspace from workspace where create_time < (now() - '%s seconds'::interval)", expireSeconds);
+		String sql = String.format("select workspace from workspace where last_accessed < (now() - '%s seconds'::interval)", expireSeconds);
 		try (Connection connection = getConnection();
 				final PreparedStatement ps = connection.prepareStatement(sql);
 				final ResultSet rs = ps.executeQuery();) {
@@ -82,6 +82,47 @@ public class PostgresDAO {
 			}
 		}
 		return results.toArray(new String[results.size()]);
+	}
+
+	/**
+	 * Checks whether or not a workspace exists in the database
+	 * 
+	 * @param workspace name of the workspace
+	 * @return true if workspace exists, false if not
+	 * @throws SQLException 
+	 */
+	public boolean workspaceExists(String workspace) throws SQLException {
+		String sql = "select count(*) from workspace "
+				+ "where workspace = ?";
+
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspace);
+			try (final ResultSet rs = ps.executeQuery()) {
+				rs.next();
+				return rs.getInt(1) == 1;
+			}
+		}
+	}
+
+	/**
+	 * Updates a workspace last accessed time to now.
+	 *
+	 * @param workspace the workspace id to update
+	 * @return workspace update status
+	 * @throws SQLException
+	 */
+	public boolean updateWorkspaceLastAccessTime(String workspace) throws SQLException {
+		String sql = "UPDATE workspace "
+				+ "SET last_accessed = now() "
+				+ "WHERE workspace = ?";
+		int updated;
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, workspace);
+			updated = ps.executeUpdate();
+		}
+		return updated > 0;
 	}
 
 	/**
