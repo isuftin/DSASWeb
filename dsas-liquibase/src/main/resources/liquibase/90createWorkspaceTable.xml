@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+				   logicalFilePath="path-independent">
+	
+	<changeSet author="isuftin" id="create_workspace_table" logicalFilePath="path-independent">
+		
+		<createTable tableName="workspace">
+			<column name="id" type="BIGSERIAL" autoIncrement="true" />
+			<column name="create_time" type="TIME" defaultValue="now" />
+			<column name="workspace" type="VARCHAR(255)" />
+		</createTable>
+
+		<rollback>
+			<dropTable tableName="workspace" />
+		</rollback>
+		
+	</changeSet>
+	
+	<changeSet author="isuftin" id="add_prikey_workspace_table" logicalFilePath="path-independent">
+		
+		<addPrimaryKey 
+			tableName="workspace" 
+			columnNames="id" 
+			constraintName="pk_workspace"/>
+		
+		<rollback>
+			<dropPrimaryKey tableName="workspace" />
+			<dropTable tableName="workspace" />
+		</rollback>
+		
+	</changeSet>
+</databaseChangeLog>
