@@ -37,7 +37,7 @@ public class ExpiredWorkspaceSweeperProcess implements Runnable {
 		this.pgDao = new PostgresDAO();
 		this.WORKSPACE_MAX_AGE_SECONDS = Long.parseLong(PropertyUtil.getProperty(
 				Property.WORKSPACE_MAX_AGE_SECONDS, 
-				String.valueOf(Weeks.ONE.toStandardSeconds().getSeconds())));
+				String.valueOf(Weeks.TWO.toStandardSeconds().getSeconds())));
 		this.process.setStatus(DSASProcessStatus.CREATED);
 		DSASProcessSingleton.addProcess(this.process);
 	}
