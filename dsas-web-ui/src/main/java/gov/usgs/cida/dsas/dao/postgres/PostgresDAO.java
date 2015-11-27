@@ -37,8 +37,8 @@ public class PostgresDAO {
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PostgresDAO.class);
 	public static final String METADATA_TABLE_NAME = "gt_pk_metadata_table";
 	private final String JNDI_JDBC_NAME;
-        static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
-        
+	static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
+
 	public PostgresDAO() {
 		this.JNDI_JDBC_NAME = PropertyUtil.getProperty(Property.JDBC_NAME);
 	}
@@ -123,7 +123,7 @@ public class PostgresDAO {
 	 * @throws SQLException
 	 */
 	public boolean insertPointsIntoShorelinePointsTable(Connection connection, long shorelineId, int segmentId, double[][] XYuncyArray) throws SQLException {
-		
+
 		StringBuilder sql = new StringBuilder("INSERT INTO shoreline_points (shoreline_id, segment_id, geom, uncy) VALUES");
 		for (double[] XYUncy : XYuncyArray) {
 			sql.append("(").append(shorelineId).append(",").append(segmentId).append(",").append("ST_GeomFromText('POINT(").append(XYUncy[0]).append(" ").append(XYUncy[1]).append(")',").append(ShorelineFileDAO.DATABASE_PROJECTION).append("),").append(XYUncy[2]).append("),");
@@ -134,7 +134,7 @@ public class PostgresDAO {
 		}
 	}
 
-        	/**
+	/**
 	 * Inserts an array of points into the pdb table
 	 *
 	 * @param connection
@@ -143,53 +143,48 @@ public class PostgresDAO {
 	 * @return
 	 * @throws SQLException
 	 */
-	public boolean insertPointsIntoPDBTable(Connection connection, List<Pdb> pdbs) throws SQLException {  
+	public boolean insertPointsIntoPDBTable(Connection connection, List<Pdb> pdbs) throws SQLException {
 		StringBuilder sql = new StringBuilder("INSERT INTO proxy_datum_bias (profile_id, segment_id, xy, bias, uncyb, last_update) VALUES");
-                Timestamp now = getUTCNowAsSQLTimestamp();
-                
-                for (Pdb pdb : pdbs)
-                {
-                    sql.append("(");
-                    sql.append(pdb.getProfileId());
-                    sql.append(",");
-                    sql.append(pdb.getSegmentId());
-                    sql.append(",");
-                    sql.append("ST_GeomFromText('POINT(");
-                    sql.append(pdb.getX()); //  ... ST_GeomFromText('POINT(x y)',4326)
-                    sql.append(" ");                    
-                    sql.append(pdb.getY()); 
-                    sql.append(ShorelineFileDAO.DATABASE_PROJECTION);
-                    sql.append("),");
-                    sql.append(pdb.getBias());
-                    sql.append(",");
-                    sql.append(pdb.getUncyb());
-                    sql.append(",");
-                    sql.append(now);
-                    sql.append(");");  
-                }
-                
-  
+		Timestamp now = getUTCNowAsSQLTimestamp();
+
+		for (Pdb pdb : pdbs) {
+			sql.append("(");
+			sql.append(pdb.getProfileId());
+			sql.append(",");
+			sql.append(pdb.getSegmentId());
+			sql.append(",");
+			sql.append("ST_GeomFromText('POINT(");
+			sql.append(pdb.getX()); //  ... ST_GeomFromText('POINT(x y)',4326)
+			sql.append(" ");
+			sql.append(pdb.getY());
+			sql.append(ShorelineFileDAO.DATABASE_PROJECTION);
+			sql.append("),");
+			sql.append(pdb.getBias());
+			sql.append(",");
+			sql.append(pdb.getUncyb());
+			sql.append(",");
+			sql.append(now);
+			sql.append(");");
+		}
+
 		sql.deleteCharAt(sql.length() - 1);
-                LOGGER.debug("Insert points into Proxy_Datum_Bias : " + sql.toString());
-		try (final Statement st = connection.createStatement()) { 
+		LOGGER.debug("Insert points into Proxy_Datum_Bias : " + sql.toString());
+		try (final Statement st = connection.createStatement()) {
 			return st.execute(sql.toString());
 		} //after an insert, look and see if there is a postgres process to recalibrate the index - vacuum process or trigger based on time if its performance is poor #TODO# 
 	}
-        
-        /**
-         * 
-         * @return Timestamp a current UTC sql timestamp
-         */
-        
-        public static Timestamp getUTCNowAsSQLTimestamp()
-        {
-            Instant now = Instant.now();
-            java.sql.Timestamp currentTimestamp = Timestamp.from(now);
-            return currentTimestamp; 
 
-        }
-     
-        
+	/**
+	 *
+	 * @return Timestamp a current UTC sql timestamp
+	 */
+	public static Timestamp getUTCNowAsSQLTimestamp() {
+		Instant now = Instant.now();
+		java.sql.Timestamp currentTimestamp = Timestamp.from(now);
+		return currentTimestamp;
+
+	}
+
 	/**
 	 * Sets up a view against a given workspace in the shorelines table
 	 *
@@ -518,14 +513,14 @@ public class PostgresDAO {
 	}
 
 	/**
-	 * Get shorelines from database by bounding box.  Note: this is only the
-	 * top level shoreline metadata, and doesn't include info related to uncertainty
+	 * Get shorelines from database by bounding box. Note: this is only the top
+	 * level shoreline metadata, and doesn't include info related to uncertainty
 	 * needed for further calculations.
-	 * 
+	 *
 	 * @param workspace
 	 * @param bbox
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public List<Shoreline> getShorelinesFromBoundingBox(String workspace, double[] bbox) throws SQLException {
 		String sql = "select distinct shoreline_id, to_char(date, 'YYYY-MM-dd') as date, mhw, workspace, source, auxillary_name, auxillary_value, shoreline_name from " + workspace
@@ -533,22 +528,22 @@ public class PostgresDAO {
 				+ " order by date desc, shoreline_id";
 		List<Shoreline> shorelines = new ArrayList<>();
 		try (Connection connection = getConnection()) {
-				ResultSet rs = connection.createStatement().executeQuery(sql);
-				while (rs.next()) {
-					Shoreline shoreline = new Shoreline();
-					shoreline.setId(BigInteger.valueOf(rs.getLong(1)));
-					shoreline.setDate(rs.getString(2));
-					shoreline.setMhw(rs.getBoolean(3));
-					shoreline.setWorkspace(rs.getString(4));
-					shoreline.setSource(rs.getString(5));
-					shoreline.setAuxName(rs.getString(6));
-					shoreline.setAuxValue(rs.getString(7));
-					shoreline.setName(rs.getString(8));
-					shorelines.add(shoreline);
-				}
+			ResultSet rs = connection.createStatement().executeQuery(sql);
+			while (rs.next()) {
+				Shoreline shoreline = new Shoreline();
+				shoreline.setId(BigInteger.valueOf(rs.getLong(1)));
+				shoreline.setDate(rs.getString(2));
+				shoreline.setMhw(rs.getBoolean(3));
+				shoreline.setWorkspace(rs.getString(4));
+				shoreline.setSource(rs.getString(5));
+				shoreline.setAuxName(rs.getString(6));
+				shoreline.setAuxValue(rs.getString(7));
+				shoreline.setName(rs.getString(8));
+				shorelines.add(shoreline);
+			}
 		}
 		return shorelines;
-		
+
 	}
 
 }
