@@ -4,8 +4,10 @@ import com.google.gson.Gson;
 import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.service.util.TokenFileExchanger;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +16,8 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -54,38 +58,59 @@ public class ShapefileResource {
 			@FormDataParam("file") InputStream fileInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDisposition
 	) {
-		Response response;
+		Response response = null;
 		Map<String, String> responseMap = new HashMap<>(1);
 		Gson gson = new Gson();
 		File shapeZip = null;
-
+		String token = null;
+		boolean hasErrorResponse = false;
+		
 		try {
 			shapeZip = Files.createTempFile(uploadDirectory.toPath(), null, ".zip").toFile();
 			IOUtils.copyLarge(fileInputStream, new FileOutputStream(shapeZip));
 			FileHelper.flattenZipFile(shapeZip);
 		} catch (IOException ex) {
-			LOGGER.warn("Could not create token for uploaded shapefile. ", ex);
-		}
-
-		// TODO - Perform some validation on the shapefile
-		String token = UUID.randomUUID().toString();
-		// TODO - Associate token with file in a Singleton
-
-		try {
-			validate(shapeZip);
-
-			response = Response
-					.accepted()
-					.header(HttpHeaders.LOCATION, ServiceURI.SHAPEFILE_SERVICE_ENDPOINT + "/" + token)
-					.build();
-		} catch (ShapefileException ex) {
+			LOGGER.error("Error while attempting upload of shapefile. ", ex);
+			hasErrorResponse = true;
 			responseMap.put("error", ex.getMessage());
 			response = Response
-					.status(Response.Status.PRECONDITION_FAILED)
+					.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.entity(gson.toJson(responseMap, HashMap.class))
 					.build();
 		}
+		if (!hasErrorResponse) {  
 
+			try {
+				token = TokenFileExchanger.getToken(shapeZip);
+			} catch (FileNotFoundException ex) {
+				LOGGER.error("Unable to get token from uploaded zip file: ", ex);
+				hasErrorResponse = true;
+				responseMap.put("error", ex.getMessage());
+				response = Response
+						.status(Response.Status.INTERNAL_SERVER_ERROR)
+						.entity(gson.toJson(responseMap, HashMap.class))
+						.build();
+			}
+		}
+
+		if (!hasErrorResponse) {
+			try {
+				validate(shapeZip);
+
+				response = Response
+						.accepted()
+						.header(HttpHeaders.LOCATION, ServiceURI.SHAPEFILE_SERVICE_ENDPOINT + "/" + token)
+						.build();
+			} catch (ShapefileException ex) {
+				LOGGER.error("Error while attempting to validate shapefile: ", ex);
+				hasErrorResponse = true;
+				responseMap.put("error", ex.getMessage());
+				response = Response
+						.status(Response.Status.PRECONDITION_FAILED)
+						.entity(gson.toJson(responseMap, HashMap.class))
+						.build();
+			}
+		}
 		return response;
 	}
 
@@ -116,7 +141,7 @@ public class ShapefileResource {
 					.entity(new Gson().toJson(map))
 					.build();
 		}
-		
+
 	}
 
 	protected void validate(File shapeFile) throws ShapefileException {
@@ -126,6 +151,7 @@ public class ShapefileResource {
 			throw new ShapefileException(MessageFormat.format("File maximum size: {0}", getMaxFileSize()));
 		} else if (false) {
 			// TODO
+			
 		}
 	}
 
