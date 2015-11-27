@@ -13,7 +13,8 @@ public class ServiceURI {
 	public static final String PROCESS_SERVICE_ENDPOINT = SERVICE_ENDPOINT + "/process";
 	public static final String SESSION_SERVICE_ENDPOINT = SERVICE_ENDPOINT + "/session";
 	public static final String LAYER_SERVICE_ENDPOINT = SERVICE_ENDPOINT + "/layer";
-	public static final String SECURITY_SERVICE_ENDPOINT = UI_ENDPOINT + "/security";
-	public static final String ADMIN_SERVICE_ENDPOINT = UI_ENDPOINT + "/admin";
+	public static final String SECURITY_UI_ENDPOINT = UI_ENDPOINT + "/security";
+	public static final String ADMIN_UI_ENDPOINT = UI_ENDPOINT + "/admin";
+	public static final String SECURITY_SERVICE_ENDPOINT = SERVICE_ENDPOINT + "/security";
 
 }

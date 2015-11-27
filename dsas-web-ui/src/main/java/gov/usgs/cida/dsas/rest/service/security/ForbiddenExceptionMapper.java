@@ -2,8 +2,6 @@ package gov.usgs.cida.dsas.rest.service.security;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -27,8 +25,9 @@ public class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenExcept
 	public Response toResponse(ForbiddenException exception) {
 		String[] pathParts = uriInfo.getAbsolutePath().getPath().split("/");
 		String applicationPath = "/" + (StringUtils.isNotBlank(pathParts[0]) ? pathParts[0] : pathParts[1]);
+		String originalPath = uriInfo.getAbsolutePath().getPath().substring(applicationPath.length());
 		try {
-			return Response.temporaryRedirect(new URI(applicationPath + "/service/security/login")).build();
+			return Response.temporaryRedirect(new URI(applicationPath + "/ui/security/login#" + originalPath)).build();
 		} catch (URISyntaxException ex) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error redirecting to login page").encoding(MediaType.TEXT_PLAIN).build();
 		}

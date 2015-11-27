@@ -198,15 +198,28 @@ public class Intersection {
 	public double getBiasUncertainty() {
 		return this.pdb.getUncyb();
 	}
+	
+	public double getShiftedDistance() {
+		double shifted = distance;
+		if (this.pdb != null) {
+			shifted -= getBias();
+		}
+		return shifted;
+	}
+	
+	public double getUnshiftedDistance() {
+		return distance;
+	}
+	
+	public double getCombinedUncy() {
+		double combinedUncy = uncy;
+		if (this.pdb != null) {
+			double uncyb = getBiasUncertainty();
+			combinedUncy = Math.sqrt(Math.pow(uncy, 2) + Math.pow(uncyb, 2));
+		}
+		return combinedUncy;
+	}
 
-	/**
-	 * Helper function to convert from mm/dd/yyy to yyyy-mm-dd
-	 */
-//    protected static String convertToYYYYMMDD(String t) throws ParseException {
-//        DateTime dateObj = new DateTime(new SimpleDateFormat("MM/dd/yyyy").parse(t));
-//        String outDate = dateObj.toString("yyyy-MM-dd");
-//        return outDate;
-//    }
 	public static SimpleFeatureType buildSimpleFeatureType(SimpleFeatureCollection collection, CoordinateReferenceSystem crs) {
 		SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 
@@ -214,11 +227,13 @@ public class Intersection {
 		builder.add(DEFAULT_GEOM_ATTR, Point.class, crs);
 		builder.add(TRANSECT_ID_ATTR, Integer.class);
 		builder.add(DISTANCE_ATTR, Double.class);
+		builder.add(UNSHIFTED_DISTANCE_ATTR, Double.class);
 		builder.add(MHW_ATTR, Boolean.class);
 		builder.add(DATE_ATTR, Date.class);
 		builder.add(UNCY_ATTR, Double.class);
 		builder.add(BIAS_ATTR, Double.class);
 		builder.add(BIAS_UNCY_ATTR, Double.class);
+		builder.add(COMBINED_UNCY_ATTR, Double.class);
 
 		return builder.buildFeatureType();
 	}
@@ -233,7 +248,9 @@ public class Intersection {
 			} else if (attGet.matches(attrType.getName(), TRANSECT_ID_ATTR)) {
 				featureObjectArr[i] = (long) transectId;
 			} else if (attGet.matches(attrType.getName(), DISTANCE_ATTR)) {
-				featureObjectArr[i] = distance;
+				featureObjectArr[i] = getShiftedDistance();
+			} else if (attGet.matches(attrType.getName(), UNSHIFTED_DISTANCE_ATTR)) {
+				featureObjectArr[i] = getUnshiftedDistance();
 			} else if (attGet.matches(attrType.getName(), MHW_ATTR)) {
 				featureObjectArr[i] = isMeanHighWater;
 			} else if (attGet.matches(attrType.getName(), DATE_ATTR) || attGet.matches(attrType.getName(), DB_DATE_ATTR)) {
@@ -244,6 +261,8 @@ public class Intersection {
 				featureObjectArr[i] = pdb.getBias();
 			} else if (attGet.matches(attrType.getName(), BIAS_UNCY_ATTR)) {
 				featureObjectArr[i] = pdb.getUncyb();
+			} else if (attGet.matches(attrType.getName(), COMBINED_UNCY_ATTR)) {
+				featureObjectArr[i] = getCombinedUncy();
 			}
 		}
 		return SimpleFeatureBuilder.build(type, featureObjectArr, null);
@@ -272,10 +291,6 @@ public class Intersection {
 		return transectId;
 	}
 
-	public double getDistance() {
-		return distance;
-	}
-
 	/**
 	 * Returns the desired intersection
 	 *
@@ -296,7 +311,7 @@ public class Intersection {
 	public static double absoluteFarthest(double min, Collection<Intersection> intersections) {
 		double maxVal = min;
 		for (Intersection intersection : intersections) {
-			double absDist = Math.abs(intersection.distance);
+			double absDist = Math.abs(intersection.getShiftedDistance());
 			if (absDist > maxVal) {
 				maxVal = absDist;
 			}
@@ -386,10 +401,11 @@ public class Intersection {
 	@Override
 	public String toString() {
 		String time = outputFormat.print(getDate());
-		double uncertainty = getUncertainty();
+		double shiftedDist = getShiftedDistance();
+		double uncertainty = getCombinedUncy();
 		double bias = getBias();
 		double biasUncertainty = getBiasUncertainty();
-		String str = time + "\t" + distance + "\t" + uncertainty + "\t" + bias + "\t" + biasUncertainty;
+		String str = time + "\t" + shiftedDist + "\t" + uncertainty + "\t" + bias + "\t" + biasUncertainty;
 		return str;
 	}
 

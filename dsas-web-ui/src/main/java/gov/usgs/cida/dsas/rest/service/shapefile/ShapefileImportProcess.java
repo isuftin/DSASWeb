@@ -1,14 +1,15 @@
 package gov.usgs.cida.dsas.rest.service.shapefile;
 
 import gov.usgs.cida.dsas.DSASProcessSingleton;
+import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.model.DSASProcessStatus;
 import gov.usgs.cida.dsas.shoreline.file.IShorelineFile;
 import gov.usgs.cida.dsas.shoreline.file.TokenToShorelineFileSingleton;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -57,6 +58,14 @@ public class ShapefileImportProcess implements Runnable {
 				String viewName = shorelineFile.importToDatabase(columns);
 				this.process.setPercentCompleted(66);
 				this.process.addProcessInformation("Import to database complete");
+				
+				try {
+					new PostgresDAO().updateWorkspaceLastAccessTime(shorelineFile.getWorkspace());
+					this.process.addProcessInformation("Workspace last access time updated");
+				} catch (SQLException ex) {
+					this.process.addProcessInformation("Workspace last access time could not be updated");
+				}
+				
 				this.process.addProcessInformation("Importing to Geoserver");
 
 				shorelineFile.importToGeoserver(viewName);

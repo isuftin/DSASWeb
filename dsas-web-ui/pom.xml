@@ -26,11 +26,13 @@
 		<version.sugarjs>1.4.1</version.sugarjs>
 		<version.handlebars>4.0.2</version.handlebars>
 		<version.underscore>1.8.3</version.underscore>
-		<version.backbone>1.2.1</version.backbone>
-		<version.require>2.1.18</version.require>
-		<version.require.text>2.0.14</version.require.text>
+		<version.backbone>1.2.3</version.backbone>
+		<version.require>2.1.22</version.require>
+		<version.require.text>2.0.14-1</version.require.text>
 		<version.loglevel>1.3.1</version.loglevel>
 		<version.jersey>2.22.1</version.jersey>
+		<version.jquery.cookie>1.4.1-1</version.jquery.cookie>
+		<version.auth.utils>1.1.2</version.auth.utils>
 	</properties>
 
 	<dependencies>
@@ -62,21 +64,7 @@
 		<dependency>
 			<artifactId>proxy-utils</artifactId>
 			<groupId>gov.usgs.cida</groupId>
-			<exclusions>
-				<exclusion>
-					<artifactId>jcl-over-slf4j</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>commons-lang</artifactId>
-					<groupId>commons-lang</groupId>
-				</exclusion>
-				<exclusion>
-					<groupId>commons-codec</groupId>
-					<artifactId>commons-codec</artifactId>
-				</exclusion>
-			</exclusions>
-			<version>1.0.6</version>
+			<version>1.0.10</version>
 		</dependency>
 		<dependency>
 			<groupId>gov.usgs.cida</groupId>
@@ -183,6 +171,12 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>commons-fileupload</groupId>
@@ -245,12 +239,11 @@
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
 			<scope>test</scope>
-			<version>1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>gov.usgs.cida.owsutils</groupId>
 			<artifactId>cida-owsutils-geoserver</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.6</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-codec</groupId>
@@ -272,7 +265,7 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.9</version>
+			<version>1.10</version>
 		</dependency>
 		<dependency> 
 			<groupId>xml-apis</groupId>
@@ -307,14 +300,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
-			<artifactId>webjars-locator</artifactId>
-			<version>0.1</version>
+			<artifactId>jquery-cookie</artifactId>
+			<version>${version.jquery.cookie}</version>
 		</dependency>
 		<dependency>
 			<groupId>gov.usgs.cida.auth</groupId>
 			<artifactId>auth-client</artifactId>
-			<version>1.1.0</version>
-			<type>jar</type>
+			<version>${version.auth.utils}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
@@ -344,8 +336,14 @@
 		<dependency>
 			<groupId>gov.usgs.cida.auth</groupId>
 			<artifactId>auth-web-utils</artifactId>
-			<version>1.1.0</version>
+			<version>${version.auth.utils}</version>
 		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.9.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

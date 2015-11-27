@@ -125,12 +125,14 @@ public class ShapefileResource {
 		Map<String, String> columns = new HashMap<>();
 		if (StringUtils.isNotBlank(columnsString)) {
 			columns = new Gson().fromJson(columnsString, Map.class);
+			
 			ShapefileImportProcess process = new ShapefileImportProcess(fileToken, columns);
-			String processId = process.getProcessId();
-			process.run();
+			Thread thread = new Thread(process);
+			thread.start();
+			
 			return Response
 					.accepted()
-					.header(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + processId)
+					.header(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + process.getProcessId())
 					.build();
 		} else {
 			Map<String, String> map = new HashMap<>();

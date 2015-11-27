@@ -1,8 +1,5 @@
 package gov.usgs.cida.dsas;
 
-import gov.usgs.cida.auth.client.AuthClientSingleton;
-import gov.usgs.cida.auth.client.CachingAuthClient;
-import gov.usgs.cida.auth.client.NullAuthClient;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineShapefileDAO;
 import gov.usgs.cida.dsas.service.util.Property;
@@ -11,12 +8,15 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import org.joda.time.Hours;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 public class InitListener implements ServletContextListener {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(InitListener.class);
+	private static ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -40,6 +41,8 @@ public class InitListener implements ServletContextListener {
 		createWorkingDirectories();
 
 		createGeoserverWorkspaces();
+
+		createSweeperProcess();
 
 		// TODO- Create file cleanup service for work and upload directories
 		LOGGER.info("DSASWeb UI Application Initialized.");
@@ -89,7 +92,10 @@ public class InitListener implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		LOGGER.info("DSASWeb Application Destroying.");
+		
 		// Do stuff here for application cleanup
+		exec.shutdownNow();
+		
 		LOGGER.info("DSASWeb Application Destroyed.");
 	}
 
@@ -99,5 +105,10 @@ public class InitListener implements ServletContextListener {
 		} catch (IOException ex) {
 			LOGGER.error(MessageFormat.format("** Work application directory ({0}) could not be created -- the application should not be expected to function normally", directory.getPath()), ex);
 		}
+	}
+
+	private void createSweeperProcess() {
+		ExpiredWorkspaceSweeperProcess process = new ExpiredWorkspaceSweeperProcess(null);
+		exec.scheduleAtFixedRate(process, 0, Hours.ONE.toStandardSeconds().getSeconds(), TimeUnit.SECONDS);
 	}
 }
