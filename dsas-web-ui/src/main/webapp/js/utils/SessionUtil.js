@@ -15,7 +15,7 @@ define([
 	var self = {};
 
 	self.MAX_SESSION_ID_LENGTH = 34;
-	self.SESSION_SERVICE_PATH = module.config().SESSION_SERVICE_PATH.substr(1);
+	self.SESSION_SERVICE_PATH = module.config().SESSION_SERVICE_PATH;
 	
 	self.getRandomUUID = function () {
 		"use strict";

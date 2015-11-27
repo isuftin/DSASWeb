@@ -40,16 +40,19 @@
 		<div id="page-content-container" class="container-fluid" role="application"></div>
 		<script type="text/javascript">
 			var require = {
-				config: {
+					config: {
 					'init': {
 						'contextPath': "<%=baseUrl%>/"
 					},
 					'utils/OwsUtil': {
 						'geoserverProxyEndpoint' : 'geoserver/'
 					},
-							'utils/SessionUtil' : {
-								'SESSION_SERVICE_PATH' : '<%= ServiceURI.SESSION_SERVICE_ENDPOINT %>'
-							},
+					'utils/SessionUtil' : {
+						'SESSION_SERVICE_PATH' : '<%= ServiceURI.SESSION_SERVICE_ENDPOINT %>'.substr(1)
+					},
+					'models/FileUploadModel' : {
+						'SHAPEFILE_SERVICE_PATH' : '<%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT %>'.substr(1)
+					},
 					'utils/ShorelineUtil': {
 						columnAttrNames: {
 							'LRR': '<%= Constants.LRR_ATTR%>',
