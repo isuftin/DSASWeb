@@ -1,6 +1,5 @@
 package gov.usgs.cida.dsas.model;
 
-import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,8 +10,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
@@ -45,13 +42,8 @@ public class ShapeFile implements IShapeFile, AutoCloseable {
 
     @Override
     public List<File> getRequiredFiles() {
-        String[] reqTypes = new String[3];
-        reqTypes[0]= "SHP"; //trying this instead of the constant while debugging if the zip test file manifest is the reason behind not getting any files back
-        reqTypes[1]= "SHX";  // /var/folders/5t/600v2yfs7tg2clxswctbl_vm002d30/T/1448655743476   is what the valid_shapezip.zip path is.
-        reqTypes[2]= "DBF";
-        Collection<File> requiredFiles = FileUtils.listFiles(this.shapefileLocation, reqTypes, false);
+        Collection<File> requiredFiles = FileUtils.listFiles(this.shapefileLocation, REQUIRED_FILES, false);
         return new ArrayList<>(requiredFiles);
-        //return new ArrayList<File>(FileUtils.listFiles(this.shapefileLocation, REQUIRED_FILES, false));
     }
 
     @Override
@@ -70,7 +62,7 @@ public class ShapeFile implements IShapeFile, AutoCloseable {
             throw new IOException("Shapefile may not be a zip file. Shapefile must point to a directory.");
         }
 
-        List requiredFiles = getRequiredFiles();
+        List<File> requiredFiles = getRequiredFiles();
             
         if (requiredFiles.size() < 3) {
             throw new IOException("Shapefile does not meet content requirements for a shapefile (.shp, .shx, .dbf). Zip files qty: " + requiredFiles.size());
