@@ -2,13 +2,21 @@
 define([
 	'utils/logger',
 	'utils/OwsUtil',
-	'underscore'
-], function (log, OwsUtil, _) {
+	'underscore',
+	'jquery',
+	'module'
+], function (
+		log,
+		OwsUtil,
+		_,
+		$,
+		module) {
 	"use strict";
 	var self = {};
 
 	self.MAX_SESSION_ID_LENGTH = 34;
-
+	self.SESSION_SERVICE_PATH = module.config().SESSION_SERVICE_PATH.substr(1);
+	
 	self.getRandomUUID = function () {
 		"use strict";
 		var s = [], itoh = '0123456789ABCDEF';
@@ -54,8 +62,7 @@ define([
 							var layerName = l.name;
 							var layerBoundsArray = l.llbbox;
 							var layerStage = l.title.substring(l.title.indexOf('_') + 1);
-							var session = this.session;
-							var sessionStage = session.get(layerStage);
+							var sessionStage = this.session.get(layerStage);
 							var stageBboxArray = sessionStage.bbox;
 							// Check that it's a valid layer by testing the bbox
 							// TODO - Figure out a better way of checking for a valid layer
@@ -81,7 +88,7 @@ define([
 
 								sessionStage.layers.push(layerName);
 							}
-							session.set(layerStage, sessionStage);
+							this.session.set(layerStage, sessionStage);
 						}, this);
 						deferred.resolveWith(this.context, [this.session, capabilities]);
 					})
@@ -90,6 +97,28 @@ define([
 					});
 			return deferred;
 		},
+		removeSession: function (args) {
+			args = args || {};
+			
+			var sessionCollection = args.sessionCollection;
+			var sessionId = args.sessionId;
+			var model = sessionCollection.get(sessionId);
+			model.destroy();
+			
+			return $.ajax(self.SESSION_SERVICE_PATH + "/" + sessionId, {
+				type: 'DELETE'
+			}).done(function () {
+				log.info('Session access time updated for workspace ' + sessionId);
+			}).fail(function () {
+				log.error('Session access time could not be updated for workspace' + sessionId);
+			});
+		},
+		/**
+		 * Creates a workspace on the back-end in both the database and Geoserver
+		 * 
+		 * @param {String} workspace name of new workspace - must not yet exist
+		 * @returns {Object<jQuery.Deferred>} the deferred request
+		 */
 		prepareSession: function (workspace) {
 			// - A session has not yet been created for perm storage. Probably the first
 			// run of the application or a new browser with no imported session. Because 
@@ -100,26 +129,55 @@ define([
 			var workspaceId = workspace || String.fromCharCode(97 + Math.round(Math.random() * 25)) + self.getRandomUUID().replace(/-/g, '').toLowerCase();
 
 			// Prepare the session on the OWS server
-			return $.get('service/session', {
-				action: 'prepare',
-				workspace: workspaceId
+			return $.ajax(self.SESSION_SERVICE_PATH + "/" + workspaceId, {
+				type: 'POST'
 			}).done(function () {
-				log.info('Session.js::init: A workspace has been prepared on the OWS server with the name of ' + workspaceId);
+				log.info('A workspace has been created for id ' + workspaceId);
 			}).fail(function () {
-				log.error('Session.js::init: A workspace could not be created on the OWS server with the name of ' + workspaceId);
+				log.error('A workspace could not be created for id ' + workspaceId);
 			});
 		},
+		/**
+		 * Using session keys, updates the session last-accessed timestamps on the
+		 * back end. Removes the session in the UIif session not found on server.
+		 * 
+		 * @param {String} workspaceId
+		 * @returns {Object<jQuery.Deferred>} the deferred request
+		 */
+		updateSessionAccessTime: function (workspaceId) {
+			return $.ajax(self.SESSION_SERVICE_PATH + "/" + workspaceId, {
+				type: 'PUT'
+			}).done(function () {
+				log.info('Session access time updated for workspace ' + workspaceId);
+			}).fail(function () {
+				log.error('Session access time could not be updated for workspace' + workspaceId);
+			});
+		},
+		/**
+		 * Returns all available session ids
+		 * 
+		 * @returns {Array<String>} session ids
+		 */
+		getAllSessionKeys: function () {
+			var keysString = localStorage.dsas || '';
+			var keysArray = keysString.split(',');
+			return keysArray;
+		},
+		/**
+		 * Gets the session id for the currently active session
+		 * 
+		 * @returns {String} the current session id
+		 */
 		getCurrentSessionKey: function () {
-			var keysString = localStorage.dsas || '',
-				keysArray = keysString.split(','),
-				currentKey;
-				
-				if (keysArray.length) {
-					currentKey = keysArray[0];
-				} else {
-					currentKey = null;
-				}
-				
+			var keysArray = this.getAllSessionKeys();
+			var currentKey;
+
+			if (keysArray.length) {
+				currentKey = keysArray[0];
+			} else {
+				currentKey = null;
+			}
+
 			return currentKey;
 		}
 	};

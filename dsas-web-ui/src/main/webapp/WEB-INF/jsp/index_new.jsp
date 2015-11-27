@@ -1,4 +1,5 @@
 
+<%@page import="gov.usgs.cida.dsas.rest.service.ServiceURI"%>
 <%@page import="gov.usgs.cida.utilities.features.Constants"%>
 <%@page import="gov.usgs.cida.dsas.service.util.Property"%>
 <%@page import="gov.usgs.cida.dsas.service.util.PropertyUtil"%>
@@ -36,64 +37,7 @@
     </head>
 
     <body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		<div id="page-content-container" class="container-fluid" role="application"></div>
-
 		<script type="text/javascript">
 			var require = {
 				config: {
@@ -103,6 +47,9 @@
 					'utils/OwsUtil': {
 						'geoserverProxyEndpoint' : 'geoserver/'
 					},
+							'utils/SessionUtil' : {
+								'SESSION_SERVICE_PATH' : '<%= ServiceURI.SESSION_SERVICE_ENDPOINT %>'
+							},
 					'utils/ShorelineUtil': {
 						columnAttrNames: {
 							'LRR': '<%= Constants.LRR_ATTR%>',
@@ -157,32 +104,5 @@
 			};
 		</script>
 		<script data-main="init" src="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("require" + (development ? "" : ".min") + ".js")%>"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	</body>
 </html>

@@ -1,6 +1,5 @@
 /*jslint browser: true*/
 /*global define*/
-/*global session*/
 define([
 	'jquery',
 	'controller/AppRouter',
@@ -34,11 +33,12 @@ define([
 		log.info("DSASweb inititialized");
 	};
 
-	this.prepareSession = function (workspaceId) {
+	this.createNewSession = function (workspaceId) {
 		SessionUtil
 				.prepareSession(workspaceId)
-				.done($.proxy(function (response) {
-					var workspace = response.workspace;
+				.done($.proxy(function (response, status, respObj) {
+					var sessionLocation = respObj.getResponseHeader('Location');
+					var workspace = sessionLocation.split('/').slice(-1);
 
 					this.session.create(new SessionModel({
 						id: workspace
@@ -49,7 +49,7 @@ define([
 						context: this
 					}).done(this.sessionUpdateComplete);
 				}, this))
-				.error(function (response) {
+				.error(function () {
 					// TODO - What happens if I can't create a session on
 					// the server? If I can't do that, I have to bail out 
 					// of the application because the user can't upload
@@ -64,32 +64,35 @@ define([
 	// for this session and then create the session based on the workspace name. 
 	this.session = new SessionCollection();
 	this.session.fetch();
+
 	if (this.session.models.length === 0) {
 		// There has not been a session created yet. Do so now. 
-		this.prepareSession();
+		this.createNewSession();
 	} else {
-		// There is one or more sessions in localStorage
 		SessionUtil
-				.updateSessionUsingWMSGetCapabilitiesResponse({
-					session: this.session.get(SessionUtil.getCurrentSessionKey()),
-					context: this
-				})
-				// The WMS GetCapabilities call for this workspace came back 
-				.done(this.sessionUpdateComplete)
-				// This workspace probably doesn't exist on the server. Use the 
-				// workspace ID to (re)create it. 
-				.fail(function (response) {
-					// The server actually did not have this session created. It may
-					// have been wiped. A new session should be created. 
-					var responseCode = response.status;
-
-					switch (responseCode) {
-						case 404:
-							this.prepareSession(SessionUtil.getCurrentSessionKey());
-							break;
-						default:
-							break;
-					}
+				.updateSessionAccessTime(SessionUtil.getCurrentSessionKey())
+				.done($.proxy(function () {
+					SessionUtil
+							.updateSessionUsingWMSGetCapabilitiesResponse({
+								session: this.session.get(SessionUtil.getCurrentSessionKey())
+							})
+							.done($.proxy(function () {
+								this.sessionUpdateComplete();
+							}, this))
+							.fail($.proxy(function () {
+								SessionUtil.removeSession({
+									sessionCollection: this.session,
+									sessionId: SessionUtil.getCurrentSessionKey()
+								});
+								this.createNewSession();
+							}, this));
+				}, this))
+				.error(function () {
+					SessionUtil.removeSession({
+						sessionCollection: this.session,
+						sessionId: SessionUtil.getCurrentSessionKey()
+					});
+					this.createNewSession();
 				});
 	}
 
