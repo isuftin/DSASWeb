@@ -1,6 +1,5 @@
 package gov.usgs.cida.dsas.service.util;
 
-import gov.usgs.cida.utilities.file.TokenToFileSingleton;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
@@ -19,9 +18,9 @@ import org.slf4j.LoggerFactory;
  * @author smlarson
  */
 public class TokenFileExchanger {
-	// private constructor prevents instantiation from external classes
 
 	private TokenFileExchanger() {
+		// private constructor prevents instantiation from external classes
 	}
 
 	/**
@@ -49,6 +48,7 @@ public class TokenFileExchanger {
 	 *
 	 * @param file
 	 * @return token
+	 * @throws java.io.FileNotFoundException
 	 */
 	public static String getToken(File file) throws FileNotFoundException {
 		if (file.exists()) {
@@ -68,8 +68,9 @@ public class TokenFileExchanger {
 
 			tokenToFileMap.put(token, file);
 			return token;
+		} else {
+			throw new FileNotFoundException("File could not be found - was not added to Token-To-File Map");
 		}
-		throw new FileNotFoundException("File could not be found - was not added to Token-To-File Map");
 	}
 
 	/**
