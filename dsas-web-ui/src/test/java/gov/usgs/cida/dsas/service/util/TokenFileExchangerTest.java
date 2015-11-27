@@ -13,6 +13,8 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.*;
@@ -93,7 +95,13 @@ public class TokenFileExchangerTest {
         public void testRemoveTokenAndDeleteFile() {
         LOGGER.info("testRemoveTokenAndDeleteFile");
 
-        String token = TokenFileExchanger.getToken(fileshp);
+        String token = null;
+		try {
+			token = TokenFileExchanger.getToken(fileshp);
+			assertNotNull(fileshp);
+		} catch (FileNotFoundException ex) {
+			LOGGER.info("Unable to get token.", ex);
+		}
         assertNotNull("Token should not be null", token);
         assertNotEquals("Token should not be blank", token, "");
 
