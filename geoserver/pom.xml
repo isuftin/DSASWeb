@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>gov.usgs.cida.dsas</groupId>
+		<artifactId>dsas-web</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>geoserver</artifactId>
+	<packaging>pom</packaging>
+	<name>Geoserver</name>
+	<modules>
+		<module>dsas-wps</module>
+		<module>dsas-geoserver</module>
+	</modules>
+	<properties>
+		<gs.version>2.4.8</gs.version>
+		<gt.version>10.8</gt.version>
+	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.geoserver</groupId>
+				<artifactId>geoserver</artifactId>
+				<version>${gs.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.geoserver</groupId>
+				<artifactId>main</artifactId>
+				<classifier>tests</classifier>
+				<version>${gs.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>gov.usgs.cida.dsas</groupId>
-		<artifactId>dsas-web</artifactId>
+		<artifactId>geoserver</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
     
