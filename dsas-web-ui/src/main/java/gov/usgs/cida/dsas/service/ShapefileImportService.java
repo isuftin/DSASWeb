@@ -51,7 +51,6 @@ public class ShapefileImportService extends HttpServlet {
 
 	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ShapefileImportService.class);
 	private static final long serialVersionUID = -4228098450640162920L;
-	private static final String PTS_SUFFIX = gov.usgs.cida.dsas.uncy.Xploder.PTS_SUFFIX;
 	private String uploadDirectory = null;
 	private String geoserverEndpoint = null;
 	private String geoserverUsername = null;
@@ -186,7 +185,7 @@ public class ShapefileImportService extends HttpServlet {
 		File pts_File = null;
 		shapeFile = null;
 		for (File file : zipFiles) {
-			if (file.getName().endsWith(PTS_SUFFIX + ".zip")) {
+			if (file.getName().endsWith(gov.usgs.cida.dsas.uncy.ShapefileOutputXploder.PTS_SUFFIX + ".zip")) {
 				pts_File = file;
 			} else {
 				shapeFile = file;
@@ -219,7 +218,7 @@ public class ShapefileImportService extends HttpServlet {
 		name = StringUtils.isBlank(featureName) ? FilenameUtils.removeExtension(shapeFile.getName()) : featureName;
 
 		if (pts_File != null) {
-			String pts_name = name + PTS_SUFFIX;
+			String pts_name = name + gov.usgs.cida.dsas.uncy.ShapefileOutputXploder.PTS_SUFFIX;
 			HttpResponse pts_importResponse = geoserverHandler.importFeaturesFromFile(pts_File, workspace, store, pts_name);
 			String pts_responseText = IOUtils.toString(pts_importResponse.getEntity().getContent());
 
