@@ -82,7 +82,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<cida.maven.url.internal>https://internal.cida.usgs.gov/maven</cida.maven.url.internal>
-		<gt.version>13.2</gt.version>
+		<gt.version>14.1</gt.version>
 	</properties>
 	
 	<scm>
