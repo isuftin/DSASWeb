@@ -5,16 +5,19 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
+import static gov.usgs.cida.dsas.uncy.ShapefileOutputXploder.PTS_SUFFIX;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.PointIterator;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.ShapeAndAttributes;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.XploderMultiLineHandler;
+import gov.usgs.cida.utilities.features.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DefaultTransaction;
@@ -27,9 +30,13 @@ import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.data.shapefile.shp.ShapeType;
 import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.simple.SimpleFeatureSource;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.feature.type.AttributeDescriptor;
+import org.opengis.feature.type.AttributeType;
+import org.opengis.feature.type.GeometryType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +61,18 @@ public abstract class Xploder {
 	protected String inputFileName;
 	protected String uncyColumnName;
 
+	protected Xploder(Map<String, String> config) {
+		if (config == null || config.isEmpty()) {
+			throw new IllegalArgumentException("Configuration map for ShapefileOutputExploder may not be null or empty");
+		}
+
+		if (!config.containsKey(UNCERTAINTY_COLUMN_PARAM) || StringUtils.isBlank(config.get(UNCERTAINTY_COLUMN_PARAM))) {
+			throw new IllegalArgumentException(String.format("Configuration map for Xploder must include parameter %s", UNCERTAINTY_COLUMN_PARAM));
+		}
+
+		this.uncyColumnName = config.get(UNCERTAINTY_COLUMN_PARAM);
+	}
+
 	public static int locateField(DbaseFileHeader fileHeader, String fieldName) {
 		int fieldPositionIndex = -1;
 
@@ -77,7 +96,7 @@ public abstract class Xploder {
 			Map<String, Serializable> fileMap = new HashMap<>();
 			fileMap.put("url", inputFile.toURI().toURL());
 			inputStore = DataStoreFinder.getDataStore(fileMap);
-			
+
 			String[] typeNames = inputStore.getTypeNames();
 			SimpleFeatureSource featureSource = inputStore.getFeatureSource(typeNames[0]);
 			sourceSchema = featureSource.getSchema();
@@ -152,6 +171,57 @@ public abstract class Xploder {
 		writeFeature.setAttribute(i + 2, segmentId);
 
 		featureWriter.write();
+	}
+	
+	/**
+	 * Will use the source schema name to set the output schema name
+	 * 
+	 * @see Xploder#createOutputFeatureType(java.lang.String) 
+	 * @return
+	 * @throws IOException 
+	 */
+	protected SimpleFeatureType createOutputFeatureType() throws IOException {
+		return createOutputFeatureType(null);
+	}
+	
+	/**
+	 * 
+	 * @param outputTypeName
+	 * @return
+	 * @throws IOException 
+	 */
+	protected SimpleFeatureType createOutputFeatureType(String outputTypeName) throws IOException {
+		// read input to get attributes
+		SimpleFeatureType sourceSchema = readSourceSchema(inputFileName);
+
+		// duplicate input schema, except replace geometry with Point
+		SimpleFeatureTypeBuilder typeBuilder = new SimpleFeatureTypeBuilder();
+		if (StringUtils.isBlank(outputTypeName)) {
+			typeBuilder.setName(sourceSchema.getName() + PTS_SUFFIX);
+		} else {
+			typeBuilder.setName(outputTypeName);
+		}
+		typeBuilder.setCRS(sourceSchema.getCoordinateReferenceSystem());
+
+		geomIdx = -1;
+		int idx = 0;
+		for (AttributeDescriptor ad : sourceSchema.getAttributeDescriptors()) {
+			AttributeType at = ad.getType();
+			if (at instanceof GeometryType) {
+				typeBuilder.add(ad.getLocalName(), Point.class);
+				geomIdx = idx;
+			} else {
+				typeBuilder.add(ad.getLocalName(), ad.getType().getBinding());
+			}
+			idx++;
+		}
+		typeBuilder.add(Constants.RECORD_ID_ATTR, Integer.class);
+		typeBuilder.add(Constants.SEGMENT_ID_ATTR, Integer.class);
+		SimpleFeatureType outputFeatureType = typeBuilder.buildFeatureType();
+		
+		LOGGER.debug("Output feature type is {}", outputFeatureType);
+		
+		return outputFeatureType;
 	}
 
 	abstract FeatureWriter<SimpleFeatureType, SimpleFeature> createFeatureWriter(Transaction tx) throws IOException;

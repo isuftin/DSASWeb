@@ -6,38 +6,60 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.attribute.FileAttribute;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
+import org.h2.engine.SysProperties;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.slf4j.LoggerFactory;
 
-public class ShapefileOutputXploderTest {
-	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ShapefileOutputXploderTest.class);
+/**
+ * Tests the integration of the exploder using a database feature writer
+ *
+ * @author isuftin
+ */
+@Category(XploderIntegrationTest.class)
+public class XploderH2IntegrationTest implements XploderIntegrationTest {
+	
+	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(XploderH2IntegrationTest.class);
 	private static final String tempDir = System.getProperty("java.io.tmpdir");
 	private static File workDir;
 	private static final String capeCodName = "OuterCapeCod_shorelines_ghost";
 	private static final String testShorelinesName = "test_shorelines";
 	private static File capeCodShapefile;
 	private static File testShorelinesShapefile;
-
+	private static Connection conn;
+	
 	@BeforeClass
-	public static void setUpClass() throws IOException {
+	public static void setUpClass() throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+		Class.forName("org.h2.Driver").newInstance();
+		
+		conn = DriverManager.getConnection("jdbc:h2:tcp://localhost:" 
+				+ System.getProperty("db.h2.integration-test.port") 
+				+ "/mem:" + System.getProperty("db.h2.integration-test.dbname") 
+				+ ";create=false", 
+				System.getProperty("db.h2.integration-test.username"), 
+				System.getProperty("db.h2.integration-test.password"));
+		
 		workDir = new File(tempDir, String.valueOf(new Date().getTime()));
 		FileUtils.deleteQuietly(workDir);
 		FileUtils.forceMkdir(workDir);
 	}
 
 	@AfterClass
-	public static void tearDownClass() {
+	public static void tearDownClass() throws SQLException {
 		FileUtils.deleteQuietly(workDir);
+		conn.close();
 	}
 
 	@Before
@@ -58,39 +80,24 @@ public class ShapefileOutputXploderTest {
 	}
 
 	@Test
-	public void testExplodeUsingTestShorelines() throws Exception {
-		LOG.info("testExplodeUsingTestShorelines()");
+	public void testCreateXploder() throws IOException, SQLException {
+		LOG.info("testCreateXploder()");
+		
 		File tempFile = Files.createTempFile(new File(tempDir).toPath(), "tempFile", ".shp", new FileAttribute<?>[0]).toFile();
 		tempFile.deleteOnExit();
+		
 		Map<String, String> config = new HashMap<>(3);
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "ACCURACY");
 		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, workDir + "/" + testShorelinesName);
-		config.put(ShapefileOutputXploder.OUTPUT_FILENAME_PARAM, tempFile.getAbsolutePath());
+		config.put(H2DatabaseOutputExplorer.HOST_PARAM, "localhost");
+		config.put(H2DatabaseOutputExplorer.PORT_PARAM, System.getProperty("db.h2.integration-test.port"));
+		config.put(H2DatabaseOutputExplorer.DATABASE_PARAM, System.getProperty("db.h2.integration-test.dbname"));
+		config.put(H2DatabaseOutputExplorer.USERNAME_PARAM, System.getProperty("db.h2.integration-test.username"));
+		config.put(H2DatabaseOutputExplorer.PASSWORD_PARAM, System.getProperty("db.h2.integration-test.password"));
 		
-		
-		Xploder x = new ShapefileOutputXploder(config);
-		int pointsCreated = x.explode();
-		assertTrue(pointsCreated > 0);
-		assertTrue(tempFile.exists());
-		assertEquals(tempFile.length(), 94712l);
+		H2DatabaseOutputExplorer exploder = new H2DatabaseOutputExplorer(config);
+		assertTrue(true);
+//		exploder.explode();
 	}
 	
-	@Test
-	public void testExplodeUsingCapeCodhorelines() throws Exception {
-		LOG.info("testExplodeUsingCapeCodhorelines()");
-		
-		File tempFile = Files.createTempFile(new File(tempDir).toPath(), "tempFile", ".shp", new FileAttribute<?>[0]).toFile();
-		tempFile.deleteOnExit();
-		Map<String, String> config = new HashMap<>(3);
-		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "laser_u");
-		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, workDir + "/" + capeCodName);
-		config.put(ShapefileOutputXploder.OUTPUT_FILENAME_PARAM, tempFile.getAbsolutePath());
-		
-		Xploder x = new ShapefileOutputXploder(config);
-		int pointsCreated = x.explode();
-		assertTrue(tempFile.exists());
-		assertTrue(pointsCreated > 0);
-		assertEquals(tempFile.length(), 3061368l);
-	}
-
 }
