@@ -5,6 +5,7 @@ import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.file.ShorelineFile;
+import gov.usgs.cida.dsas.uncy.ShapefileOutputXploder;
 import gov.usgs.cida.dsas.uncy.Xploder;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
@@ -99,22 +100,27 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 			LOGGER.debug("Could not open shapefile for reading. Auxillary attributes will not be persisted to the database", ex);
 		}
 
+		//TODO- Check if incoming shapefile is not already a points shapefile
+		Map<String, String> config = new HashMap<>(3);
+		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, uncertaintyFieldName);
+		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, parentDirectory + File.separator + baseFileName);
+		ShapefileOutputXploder xploder = new ShapefileOutputXploder(config);
+
+		LOGGER.debug("Exploding shapefile at {}", shpFile.getAbsolutePath());
+		updateProcessInformation("Exploding shapefile");
+		int pointCount = xploder.explode();
+		File pointsShapefile = xploder.getOutputFile();
+
+		LOGGER.debug("Shapefile exploded");
+		updateProcessInformation(String.format("Shapefile exploded to %s points", pointCount));
+
+		FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(pointsShapefile.toURI().toURL());
+		int fcSize = fc.size();
+		updateProcessInformation(String.format("Will attempt to enter %s features into the database", fcSize));
+		Class<?> dateType = fc.getSchema().getDescriptor(dateFieldName).getType().getBinding();
+		List<double[]> xyUncies = new ArrayList<>();
+
 		try (Connection connection = getConnection()) {
-			//TODO- Check if incoming shapefile is not already a points shapefile
-			Xploder xploder = new Xploder(uncertaintyFieldName);
-			File pointsShapefile;
-			LOGGER.debug("Exploding shapefile at {}", shpFile.getAbsolutePath());
-			updateProcessInformation("Exploding shapefile");
-			pointsShapefile = xploder.explode(parentDirectory + File.separator + baseFileName);
-			LOGGER.debug("Shapefile exploded");
-			updateProcessInformation("Shapefile exploded");
-
-			FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(pointsShapefile.toURI().toURL());
-			int fcSize = fc.size();
-			updateProcessInformation(String.format("Will attempt to enter %s features into the database", fcSize));
-			Class<?> dateType = fc.getSchema().getDescriptor(dateFieldName).getType().getBinding();
-			List<double[]> xyUncies = new ArrayList<>();
-
 			if (!fc.isEmpty()) {
 				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
 
