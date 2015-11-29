@@ -1,6 +1,5 @@
 package gov.usgs.cida.dsas.uncy;
 
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
@@ -8,8 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.attribute.FileAttribute;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -30,7 +27,6 @@ import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -64,7 +60,7 @@ public class XploderH2IntegrationTest implements XploderIntegrationTest {
 		conn = DriverManager.getConnection("jdbc:h2:tcp://localhost:"
 				+ System.getProperty("db.h2.integration-test.port")
 				+ "/mem:" + System.getProperty("db.h2.integration-test.dbname")
-				+ ";create=false",
+				+ ";create=false",//;TRACE_LEVEL_FILE=3;TRACE_LEVEL_SYSTEM_OUT=3",
 				System.getProperty("db.h2.integration-test.username"),
 				System.getProperty("db.h2.integration-test.password"));
 
@@ -118,11 +114,11 @@ public class XploderH2IntegrationTest implements XploderIntegrationTest {
 		config.put(H2DatabaseOutputXploder.DATABASE_PARAM, "mem:" + System.getProperty("db.h2.integration-test.dbname"));
 		config.put(H2DatabaseOutputXploder.USERNAME_PARAM, System.getProperty("db.h2.integration-test.username"));
 		config.put(H2DatabaseOutputXploder.PASSWORD_PARAM, System.getProperty("db.h2.integration-test.password"));
-		
+
 		SimpleFeatureTypeBuilder ftb = new SimpleFeatureTypeBuilder();
 		ftb.setName("POINTS");
 		ftb.setSRS("EPSG:4326");
-		ftb.add("GEOM", Point.class);
+		ftb.add("GEOM", Point.class, DefaultGeographicCRS.WGS84);
 		ftb.add("SHORELINE_ID", BigInteger.class);
 		ftb.add("SEGMENT_ID", BigInteger.class);
 		ftb.add("UNCY", Double.class);

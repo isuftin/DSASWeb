@@ -6,7 +6,6 @@ import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.file.ShorelineFile;
 import gov.usgs.cida.dsas.uncy.ShapefileOutputXploder;
-import gov.usgs.cida.dsas.uncy.Xploder;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import gov.usgs.cida.utilities.features.AttributeGetter;
@@ -25,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
@@ -34,17 +31,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.apache.commons.lang.StringUtils;
-import org.geotools.data.crs.ReprojectFeatureResults;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
-import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
-import org.geotools.feature.SchemaException;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -122,9 +114,7 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 
 		try (Connection connection = getConnection()) {
 			if (!fc.isEmpty()) {
-				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
-
-				try (SimpleFeatureIterator iter = rfc.features()) {
+				try (FeatureIterator<SimpleFeature> iter = fc.features()) {
 					connection.setAutoCommit(false);
 					int lastSegmentId = -1;
 					long shorelineId = -1;
@@ -193,8 +183,6 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 					throw ex;
 				}
 			}
-		} catch (SchemaException | TransformException | FactoryException ex) {
-			Logger.getLogger(ShorelineShapefileDAO.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
 		return viewName;

@@ -51,11 +51,6 @@ public class H2DatabaseOutputXploder extends DatabaseOutputXploder {
 		dbConfig.put(JDBCDataStoreFactory.DBTYPE.key, dbType);
 		dbConfig.putAll(config);
 		dbConfig.put(PORT_PARAM, Integer.parseInt(config.get(PORT_PARAM), 10));
-
-		for (Map.Entry<String, Object> entry : dbConfig.entrySet()) {
-			System.out.println(entry.getKey() + "/" + entry.getValue());
-		}
-
 	}
 
 	@Override

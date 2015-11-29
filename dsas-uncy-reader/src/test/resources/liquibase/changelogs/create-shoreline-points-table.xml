@@ -32,12 +32,12 @@
 				type="java.sql.Types.BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column 
+<!--			<column 
 				name="GEOM" 
 				type="GEOMETRY"
 				remarks="POINT">
 				<constraints nullable="false"/>
-			</column>
+			</column>-->
 			<column 
 				name="UNCY" 
 				type="DOUBLE">
@@ -45,7 +45,7 @@
 			</column>
 		</createTable>
 		
-		<!--<sql dbms="h2">ALTER TABLE POINTS ADD COLUMN GEOM GEOMETRY COMMENT '4326' BEFORE ID</sql>-->
+		<sql dbms="h2">ALTER TABLE POINTS ADD COLUMN GEOM GEOMETRY COMMENT 'POINT' BEFORE ID</sql>
 		
 		<createIndex 
 			tableName="POINTS" 
