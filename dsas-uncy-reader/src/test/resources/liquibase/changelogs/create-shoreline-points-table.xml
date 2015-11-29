@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	
+	<changeSet id="tag-integration-test-database-before-creation" author="Ivan Suftin" context="integration-test">
+		<tagDatabase tag="pre-points-table-created" />
+	</changeSet>
+	
+	<changeSet id="create-shoreline-points-table" author="Ivan Suftin (isuftin@usgs.gov)"  context="update,integration-test">
+		<createTable tableName="POINTS">
+			<!-- Primary key column -->
+			<column 
+				name="ID" 
+				type="java.sql.Types.BIGINT"
+				autoIncrement="true">
+				<constraints 
+					nullable="false" 
+					primaryKey="true" 
+					primaryKeyName="pk_ID" />
+			</column>
+			<column 
+				name="SHORELINE_ID" 
+				type="java.sql.Types.BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column 
+				name="SEGMENT_ID" 
+				type="java.sql.Types.BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column 
+				name="GEOM" 
+				type="GEOMETRY"
+				remarks="POINT">
+				<constraints nullable="false"/>
+			</column>
+			<column 
+				name="UNCY" 
+				type="DOUBLE">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		
+		<!--<sql dbms="h2">ALTER TABLE POINTS ADD COLUMN GEOM GEOMETRY COMMENT '4326' BEFORE ID</sql>-->
+		
+		<createIndex 
+			tableName="POINTS" 
+			indexName="idx_ID" 
+			unique="true">
+			<column name="id" type="java.sql.Types.BIGINT" />
+		</createIndex>
+		<rollback>
+			<delete tableName="POINTS"/>
+		</rollback>
+	</changeSet>
+	
+	<changeSet id="tag-integration-test-database-after-creation" author="Ivan Suftin" context="integration-test">
+		<tagDatabase tag="post-points-table-created" />
+	</changeSet>
+</databaseChangeLog>

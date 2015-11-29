@@ -65,6 +65,13 @@
 			<version>1.4.190</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>3.4.2</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 	
 	<build>
@@ -100,7 +107,7 @@
 					<daemon>true</daemon>
 					<port>${db.h2.integration-test.port}</port>
 					<type>h2</type>
-					<database>${db.h2.integration-test.dbname}</database>
+					<database>${db.h2.integration-test.dbname};TRACE_LEVEL_FILE=3;TRACE_LEVEL_SYSTEM_OUT=3</database>
 					<username>${db.h2.integration-test.username}</username>
 					<password>${db.h2.integration-test.password}</password>
 				</configuration>

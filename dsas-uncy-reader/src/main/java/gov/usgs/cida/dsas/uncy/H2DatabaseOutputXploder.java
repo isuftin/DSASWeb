@@ -12,22 +12,25 @@ import org.geotools.data.Transaction;
 import org.geotools.jdbc.JDBCDataStoreFactory;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author isuftin
  */
-public class H2DatabaseOutputExplorer extends DatabaseOutputXploder {
+public class H2DatabaseOutputXploder extends DatabaseOutputXploder {
 
-	public final static String HOST_PARAM = JDBCDataStoreFactory.HOST.getName();
-	public final static String PORT_PARAM = JDBCDataStoreFactory.PORT.getName();
-	public final static String DATABASE_PARAM = JDBCDataStoreFactory.DATABASE.getName();
-	public final static String USERNAME_PARAM = JDBCDataStoreFactory.USER.getName();
-	public final static String PASSWORD_PARAM = JDBCDataStoreFactory.PASSWD.getName();
+	private static final Logger LOGGER = LoggerFactory.getLogger(H2DatabaseOutputXploder.class);
+	public final static String HOST_PARAM = JDBCDataStoreFactory.HOST.key;
+	public final static String PORT_PARAM = JDBCDataStoreFactory.PORT.key;
+	public final static String DATABASE_PARAM = JDBCDataStoreFactory.DATABASE.key;
+	public final static String USERNAME_PARAM = JDBCDataStoreFactory.USER.key;
+	public final static String PASSWORD_PARAM = JDBCDataStoreFactory.PASSWD.key;
 	private final Map<String, Object> dbConfig = new HashMap<>();
 
-	public H2DatabaseOutputExplorer(Map<String, String> config) {
-		super(mergeMaps(config, ImmutableMap.of("dbtype", "h2")));
+	public H2DatabaseOutputXploder(Map<String, String> config) {
+		super(mergeMaps(config, ImmutableMap.of(JDBCDataStoreFactory.DBTYPE.key, "h2")));
 
 		String[] requiredConfigs = new String[]{
 			HOST_PARAM,
@@ -45,16 +48,26 @@ public class H2DatabaseOutputExplorer extends DatabaseOutputXploder {
 				throw new IllegalArgumentException(String.format("Configuration map for H2DatabaseOutputExplorer must include value for parameter %s", requiredConfig));
 			}
 		}
+		dbConfig.put(JDBCDataStoreFactory.DBTYPE.key, dbType);
 		dbConfig.putAll(config);
 		dbConfig.put(PORT_PARAM, Integer.parseInt(config.get(PORT_PARAM), 10));
+
+		for (Map.Entry<String, Object> entry : dbConfig.entrySet()) {
+			System.out.println(entry.getKey() + "/" + entry.getValue());
+		}
+
 	}
 
 	@Override
 	FeatureWriter<SimpleFeatureType, SimpleFeature> createFeatureWriter(Transaction tx) throws IOException {
-		SimpleFeatureType outputFeatureType = createOutputFeatureType();
-		DataStore outputStore = DataStoreFinder.getDataStore(dbConfig);
-		outputStore.createSchema(outputFeatureType);
-		FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter = outputStore.getFeatureWriterAppend(outputFeatureType.getTypeName(), tx);
+		if (outputFeatureType == null) {
+			outputFeatureType = createOutputFeatureType();
+		}
+		DataStore ds = DataStoreFinder.getDataStore(dbConfig);
+		
+		LOGGER.debug(ds.getSchema(outputFeatureType.getName().getLocalPart()).getAttributeCount() + "");
+		FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter = ds.getFeatureWriterAppend(outputFeatureType.getName().getLocalPart(), tx);
+
 		return featureWriter;
 	}
 

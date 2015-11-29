@@ -30,21 +30,7 @@ public class ShapefileOutputXploder extends Xploder {
 	public ShapefileOutputXploder(Map<String, String> config) {
 		super(config);
 		
-		String[] requiredConfigs = new String[] {
-			INPUT_FILENAME_PARAM
-		};
-		
-		for (String requiredConfig : requiredConfigs) {
-			if (!config.containsKey(requiredConfig)) {
-				throw new IllegalArgumentException(String.format("Configuration map for ShapefileOutputExploder must include parameter %s", requiredConfig));
-			}
-			if (StringUtils.isBlank(config.get(requiredConfig))) {
-				throw new IllegalArgumentException(String.format("Configuration map for ShapefileOutputExploder must include value for parameter %s", requiredConfig));
-			}
-		}
-		
 		this.outputFileName = config.get(OUTPUT_FILENAME_PARAM);
-		this.inputFileName = config.get(INPUT_FILENAME_PARAM);
 	}
 	
 	@Override
