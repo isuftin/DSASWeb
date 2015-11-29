@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author isuftin
  */
-public class H2DatabaseOutputXploder extends DatabaseOutputXploder {
+public class H2DBOutputXploder extends DatabaseOutputXploder {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(H2DatabaseOutputXploder.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(H2DBOutputXploder.class);
 	public final static String HOST_PARAM = JDBCDataStoreFactory.HOST.key;
 	public final static String PORT_PARAM = JDBCDataStoreFactory.PORT.key;
 	public final static String DATABASE_PARAM = JDBCDataStoreFactory.DATABASE.key;
@@ -29,7 +29,7 @@ public class H2DatabaseOutputXploder extends DatabaseOutputXploder {
 	public final static String PASSWORD_PARAM = JDBCDataStoreFactory.PASSWD.key;
 	private final Map<String, Object> dbConfig = new HashMap<>();
 
-	public H2DatabaseOutputXploder(Map<String, String> config) {
+	public H2DBOutputXploder(Map<String, String> config) {
 		super(mergeMaps(config, ImmutableMap.of(JDBCDataStoreFactory.DBTYPE.key, "h2")));
 
 		String[] requiredConfigs = new String[]{
@@ -59,8 +59,6 @@ public class H2DatabaseOutputXploder extends DatabaseOutputXploder {
 			outputFeatureType = createOutputFeatureType();
 		}
 		DataStore ds = DataStoreFinder.getDataStore(dbConfig);
-		
-		LOGGER.debug(ds.getSchema(outputFeatureType.getName().getLocalPart()).getAttributeCount() + "");
 		FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter = ds.getFeatureWriterAppend(outputFeatureType.getName().getLocalPart(), tx);
 
 		return featureWriter;

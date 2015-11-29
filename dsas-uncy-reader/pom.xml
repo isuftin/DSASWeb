@@ -58,6 +58,12 @@
 			<artifactId>gt-jdbc-h2</artifactId>
 			<version>${gt.version}</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -106,7 +112,7 @@
 					<daemon>true</daemon>
 					<port>${db.h2.integration-test.port}</port>
 					<type>h2</type>
-					<database>${db.h2.integration-test.dbname};TRACE_LEVEL_FILE=3;TRACE_LEVEL_SYSTEM_OUT=3</database>
+					<database>${db.h2.integration-test.dbname}</database>
 					<username>${db.h2.integration-test.username}</username>
 					<password>${db.h2.integration-test.password}</password>
 				</configuration>

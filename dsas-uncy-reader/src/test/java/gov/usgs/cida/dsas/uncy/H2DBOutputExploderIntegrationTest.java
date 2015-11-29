@@ -29,7 +29,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.LoggerFactory;
@@ -40,9 +39,9 @@ import org.slf4j.LoggerFactory;
  * @author isuftin
  */
 @Category(XploderIntegrationTest.class)
-public class XploderH2IntegrationTest implements XploderIntegrationTest {
+public class H2DBOutputExploderIntegrationTest implements XploderIntegrationTest {
 
-	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(XploderH2IntegrationTest.class);
+	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(H2DBOutputExploderIntegrationTest.class);
 	private static final String tempDir = System.getProperty("java.io.tmpdir");
 	private static File workDir;
 	private static final String capeCodName = "OuterCapeCod_shorelines_ghost";
@@ -60,7 +59,7 @@ public class XploderH2IntegrationTest implements XploderIntegrationTest {
 		conn = DriverManager.getConnection("jdbc:h2:tcp://localhost:"
 				+ System.getProperty("db.h2.integration-test.port")
 				+ "/mem:" + System.getProperty("db.h2.integration-test.dbname")
-				+ ";create=false",//;TRACE_LEVEL_FILE=3;TRACE_LEVEL_SYSTEM_OUT=3",
+				+ ";create=false;TRACE_LEVEL_FILE=1;TRACE_LEVEL_SYSTEM_OUT=1",
 				System.getProperty("db.h2.integration-test.username"),
 				System.getProperty("db.h2.integration-test.password"));
 
@@ -102,18 +101,18 @@ public class XploderH2IntegrationTest implements XploderIntegrationTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void testCreateXploder() throws IOException, SQLException {
 		LOG.info("testCreateXploder()");
 
 		Map<String, String> config = new HashMap<>();
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "ACCURACY");
 		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, workDir + "/" + testShorelinesName);
-		config.put(H2DatabaseOutputXploder.HOST_PARAM, "localhost");
-		config.put(H2DatabaseOutputXploder.PORT_PARAM, System.getProperty("db.h2.integration-test.port"));
-		config.put(H2DatabaseOutputXploder.DATABASE_PARAM, "mem:" + System.getProperty("db.h2.integration-test.dbname"));
-		config.put(H2DatabaseOutputXploder.USERNAME_PARAM, System.getProperty("db.h2.integration-test.username"));
-		config.put(H2DatabaseOutputXploder.PASSWORD_PARAM, System.getProperty("db.h2.integration-test.password"));
+		config.put(H2DBOutputXploder.HOST_PARAM, "localhost");
+		config.put(H2DBOutputXploder.PORT_PARAM, System.getProperty("db.h2.integration-test.port"));
+		config.put(H2DBOutputXploder.DATABASE_PARAM, "mem:" + System.getProperty("db.h2.integration-test.dbname"));
+		config.put(H2DBOutputXploder.USERNAME_PARAM, System.getProperty("db.h2.integration-test.username"));
+		config.put(H2DBOutputXploder.PASSWORD_PARAM, System.getProperty("db.h2.integration-test.password"));
 
 		SimpleFeatureTypeBuilder ftb = new SimpleFeatureTypeBuilder();
 		ftb.setName("POINTS");
@@ -123,7 +122,7 @@ public class XploderH2IntegrationTest implements XploderIntegrationTest {
 		ftb.add("SEGMENT_ID", BigInteger.class);
 		ftb.add("UNCY", Double.class);
 
-		H2DatabaseOutputXploder exploder = new H2DatabaseOutputXploder(config);
+		H2DBOutputXploder exploder = new H2DBOutputXploder(config);
 		exploder.setOutputFeatureType(ftb.buildFeatureType());
 		exploder.explode();
 	}
