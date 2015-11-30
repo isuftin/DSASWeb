@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.nio.file.attribute.FileAttribute;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -75,7 +74,7 @@ public class ShapeFileUtilTest {
 			ZipEntry entry = (ZipEntry) e.nextElement();
 			LOGGER.info("Zip file entry name: " + entry.getName());
 		}
-		
+
 		assertEquals(6, zip.size());
 	}
 
@@ -132,7 +131,7 @@ public class ShapeFileUtilTest {
 		}
 	}
 
-	@Test  
+	@Test
 	public void testGetDbfColumnNames() throws IOException {
 		File tempDir = null;
 		File tempShapeFile = null;

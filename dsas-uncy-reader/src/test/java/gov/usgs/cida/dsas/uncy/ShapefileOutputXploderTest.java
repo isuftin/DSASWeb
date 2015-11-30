@@ -1,25 +1,26 @@
 package gov.usgs.cida.dsas.uncy;
 
-import gov.usgs.cida.dsas.uncy.Xploder;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.attribute.FileAttribute;
 import java.util.Date;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class XploderTest {
-
-	private static final Logger LOG = Logger.getLogger(XploderTest.class.getName());
+public class ShapefileOutputXploderTest {
+	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ShapefileOutputXploderTest.class);
 	private static final String tempDir = System.getProperty("java.io.tmpdir");
 	private static File workDir;
 	private static final String capeCodName = "OuterCapeCod_shorelines_ghost";
@@ -59,22 +60,37 @@ public class XploderTest {
 	@Test
 	public void testExplodeUsingTestShorelines() throws Exception {
 		LOG.info("testExplodeUsingTestShorelines()");
-		Xploder x = new Xploder("ACCURACY");
-		File result = x.explode(workDir + "/" + testShorelinesName);
-		assertTrue("survived", true);
-		assertTrue(result.exists());
-		assertEquals(result.length(), 94712l);
+		File tempFile = Files.createTempFile(new File(tempDir).toPath(), "tempFile", ".shp", new FileAttribute<?>[0]).toFile();
+		tempFile.deleteOnExit();
+		Map<String, String> config = new HashMap<>(3);
+		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "ACCURACY");
+		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, workDir + "/" + testShorelinesName);
+		config.put(ShapefileOutputXploder.OUTPUT_FILENAME_PARAM, tempFile.getAbsolutePath());
+		
+		
+		Xploder x = new ShapefileOutputXploder(config);
+		int pointsCreated = x.explode();
+		assertTrue(pointsCreated > 0);
+		assertTrue(tempFile.exists());
+		assertEquals(tempFile.length(), 94712l);
 	}
 	
 	@Test
-	@Ignore
 	public void testExplodeUsingCapeCodhorelines() throws Exception {
 		LOG.info("testExplodeUsingCapeCodhorelines()");
-		Xploder x = new Xploder("laser_u");
-		File result = x.explode(workDir + "/" + capeCodName);
-		assertTrue("survived", true);
-		assertTrue(result.exists());
-		assertEquals(result.length(), 3061368l);
+		
+		File tempFile = Files.createTempFile(new File(tempDir).toPath(), "tempFile", ".shp", new FileAttribute<?>[0]).toFile();
+		tempFile.deleteOnExit();
+		Map<String, String> config = new HashMap<>(3);
+		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "laser_u");
+		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, workDir + "/" + capeCodName);
+		config.put(ShapefileOutputXploder.OUTPUT_FILENAME_PARAM, tempFile.getAbsolutePath());
+		
+		Xploder x = new ShapefileOutputXploder(config);
+		int pointsCreated = x.explode();
+		assertTrue(tempFile.exists());
+		assertTrue(pointsCreated > 0);
+		assertEquals(tempFile.length(), 3061368l);
 	}
 
 }

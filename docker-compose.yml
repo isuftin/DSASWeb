@@ -31,7 +31,7 @@ dsas_geoserver_vol_container:
     container_name: DSAS_Geoserver_Volume
 dsas_geoserver:
   extends:
-    file: ./dsas-geoserver/docker-compose.yml
+    file: ./geoserver/dsas-geoserver/docker-compose.yml
     service: dsas_geoserver
   volumes_from:
     - dsas_geoserver_vol_container

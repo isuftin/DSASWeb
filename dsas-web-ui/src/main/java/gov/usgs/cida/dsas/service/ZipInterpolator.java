@@ -1,5 +1,6 @@
 package gov.usgs.cida.dsas.service;
 
+import gov.usgs.cida.dsas.uncy.ShapefileOutputXploder;
 import gov.usgs.cida.dsas.uncy.Xploder;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +11,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -31,14 +33,20 @@ public class ZipInterpolator {
 	 * @throws java.io.IOException
 	 */
 	public File explode(File uploadDestinationFile) throws IOException {
+		
 		// unpack
 		File tmpDir = Files.createTempDirectory("xplode").toFile();
 		File shpFile = unpack(tmpDir, uploadDestinationFile);
 		String shapefileWithoutSuffix = shpFile.getAbsolutePath().replace(".shp", "");
-		Xploder x = new Xploder();
-		File ptFile = x.explode(shapefileWithoutSuffix);
+		
+		Map<String, String> config = new HashMap<>(3);
+		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "xplode");
+		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, shapefileWithoutSuffix);
+		ShapefileOutputXploder xploder = new ShapefileOutputXploder(config);
+		
+		xploder.explode();
 
-		File newZip = repack(tmpDir, ptFile);
+		File newZip = repack(tmpDir, xploder.getOutputFile());
 		return newZip;
 	}
 
