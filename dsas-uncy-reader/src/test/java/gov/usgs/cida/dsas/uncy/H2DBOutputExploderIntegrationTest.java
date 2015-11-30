@@ -29,6 +29,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,7 @@ public class H2DBOutputExploderIntegrationTest implements XploderIntegrationTest
 		conn = DriverManager.getConnection("jdbc:h2:tcp://localhost:"
 				+ System.getProperty("db.h2.integration-test.port")
 				+ "/mem:" + System.getProperty("db.h2.integration-test.dbname")
-				+ ";create=false;TRACE_LEVEL_FILE=1;TRACE_LEVEL_SYSTEM_OUT=1",
+				+ ";create=false",//;TRACE_LEVEL_FILE=1;TRACE_LEVEL_SYSTEM_OUT=1",
 				System.getProperty("db.h2.integration-test.username"),
 				System.getProperty("db.h2.integration-test.password"));
 
@@ -101,7 +102,7 @@ public class H2DBOutputExploderIntegrationTest implements XploderIntegrationTest
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void testCreateXploder() throws IOException, SQLException {
 		LOG.info("testCreateXploder()");
 
