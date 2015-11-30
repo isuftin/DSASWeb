@@ -1,7 +1,5 @@
 package gov.usgs.cida.dsas.uncy;
 
-import com.vividsolutions.jts.geom.Point;
-import gov.usgs.cida.utilities.features.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -12,12 +10,8 @@ import org.geotools.data.FeatureWriter;
 import org.geotools.data.Transaction;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
-import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.AttributeDescriptor;
-import org.opengis.feature.type.AttributeType;
-import org.opengis.feature.type.GeometryType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,58 +27,16 @@ public class ShapefileOutputXploder extends Xploder {
 	private final String outputFileName;
 	private File outputFile;
 	
-	public ShapefileOutputXploder(Map<String, String> config) throws IOException {
-		
-		if (config == null) {
-			throw new NullPointerException("Configuration map for ShapefileOutputExploder may not be null");
-		}
-		
-		String[] requiredConfigs = new String[] {
-			UNCERTAINTY_COLUMN_PARAM,
-			INPUT_FILENAME_PARAM
-		};
-		
-		for (String requiredConfig : requiredConfigs) {
-			if (!config.containsKey(requiredConfig)) {
-				throw new IllegalArgumentException(String.format("Configuration map for ShapefileOutputExploder must include parameter %s", requiredConfig));
-			}
-			if (StringUtils.isBlank(config.get(requiredConfig))) {
-				throw new IllegalArgumentException(String.format("Configuration map for ShapefileOutputExploder must include value for parameter %s", requiredConfig));
-			}
-		}
+	public ShapefileOutputXploder(Map<String, String> config) {
+		super(config);
 		
 		this.outputFileName = config.get(OUTPUT_FILENAME_PARAM);
-		this.uncyColumnName = config.get(UNCERTAINTY_COLUMN_PARAM);
-		this.inputFileName = config.get(INPUT_FILENAME_PARAM);
 	}
 	
 	@Override
 	FeatureWriter<SimpleFeatureType, SimpleFeature> createFeatureWriter(Transaction tx) throws IOException {
-		// read input to get attributes
-		SimpleFeatureType sourceSchema = readSourceSchema(inputFileName);
-
-		// duplicate input schema, except replace geometry with Point
-		SimpleFeatureTypeBuilder typeBuilder = new SimpleFeatureTypeBuilder();
-		typeBuilder.setName(sourceSchema.getName() + PTS_SUFFIX);
-		typeBuilder.setCRS(sourceSchema.getCoordinateReferenceSystem());
-
-		geomIdx = -1;
-		int idx = 0;
-		for (AttributeDescriptor ad : sourceSchema.getAttributeDescriptors()) {
-			AttributeType at = ad.getType();
-			if (at instanceof GeometryType) {
-				typeBuilder.add(ad.getLocalName(), Point.class);
-				geomIdx = idx;
-			} else {
-				typeBuilder.add(ad.getLocalName(), ad.getType().getBinding());
-			}
-			idx++;
-		}
-		typeBuilder.add(Constants.RECORD_ID_ATTR, Integer.class);
-		typeBuilder.add(Constants.SEGMENT_ID_ATTR, Integer.class);
-		SimpleFeatureType outputFeatureType = typeBuilder.buildFeatureType();
-
-		LOGGER.debug("Output feature type is {}", outputFeatureType);
+		SimpleFeatureType outputFeatureType = createOutputFeatureType();
+		
 		String shpExtension = ".shp";
 		String _outputFileName = StringUtils.isNotBlank(this.outputFileName) ? 
 				this.outputFileName : 

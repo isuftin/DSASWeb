@@ -1,7 +1,7 @@
 package gov.usgs.cida.dsas.service;
 
-import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import com.google.gson.Gson;
+import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import gov.usgs.cida.dsas.rest.service.shapefile.ShapefileImportProcess;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.shoreline.file.IShorelineFile;
