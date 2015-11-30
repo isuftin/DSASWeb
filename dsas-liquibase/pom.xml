@@ -13,7 +13,7 @@
 	<name>DSASWeb Liquibase Changesets</name>
 
 	<properties>
-		<dsas.liquibase.version>3.4.1</dsas.liquibase.version>
+		<dsas.liquibase.version>3.4.2</dsas.liquibase.version>
 		<dsas.db.schema>public</dsas.db.schema>
 		<dsas.db.driver>org.postgresql.Driver</dsas.db.driver>
 		<dsas.db.driver.version>9.4-1203-jdbc42</dsas.db.driver.version>
@@ -52,7 +52,7 @@
 			Docker using Docker-Machine (Windows/MacOS):
 			$ mvn liquibase:update -P docker -Ddsas.liquibase.hostname=$(docker-machine ip <machine name>)
 			
-			Example:
+			Example (if the machine name for docker-machine was "dev") :
 			$ mvn liquibase:update -P docker -Ddsas.liquibase.hostname=$(docker-machine ip dev)
 			--> 
 			<id>docker</id>
@@ -74,6 +74,7 @@
 							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
 							<schemas>${dsas.db.schema}</schemas>
 							<contexts>default</contexts>
+							<verbose>true</verbose>
 						</configuration>
 					</plugin>
 				</plugins>

@@ -29,6 +29,7 @@ public enum Property {
 	FILE_UPLOAD_FILENAME_PARAM("dsas.filename.param"),
 	JDBC_NAME("jndi.jdbc.name"),
 	DB_SCHEMA_NAME("dsas.schema.name"),
+	WORKSPACE_MAX_AGE_SECONDS("dsas.workspace.max.age"),
 	DEVELOPMENT("development");
 
 	private final String key;

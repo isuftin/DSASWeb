@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+				   logicalFilePath="path-independent">
+	
+	<changeSet author="isuftin" id="create_workspace_table" logicalFilePath="path-independent">
+		<comment>
+			Creates a "workspace" table which allows us to have a single table to 
+			reference points in a workspace. Other tables should have a foreign
+			key to the workspace column with an ON DELETE CASCADE.
+		</comment>
+		
+		<createTable tableName="workspace">
+			<column name="workspace" type="VARCHAR(255)">
+				<constraints 
+					unique="true"
+					uniqueConstraintName="unique_workspace_name"
+					nullable="false"
+				/>
+			</column>
+			<column name="last_accessed" type="DATETIME" defaultValue="now" />
+		</createTable>
+
+		<rollback>
+			<dropTable tableName="workspace" />
+		</rollback>
+		
+	</changeSet>
+	
+	<changeSet author="isuftin" id="add_prikey_workspace_table" logicalFilePath="path-independent">
+		<comment>
+			Creates a primary key on the workspace column
+		</comment>
+		<addPrimaryKey 
+			tableName="workspace" 
+			columnNames="workspace" 
+			constraintName="pk_workspace"/>
+		
+		<rollback>
+			<dropPrimaryKey tableName="workspace" />
+		</rollback>
+		
+	</changeSet>
+</databaseChangeLog>

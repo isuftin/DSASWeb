@@ -14,3 +14,5 @@
 /dsas-liquibase/nbactions.xml
 /dsas-web-ui/src/main/webapp/css/custom.css.map
 /dsas-web-ui/src/main/webapp/css/custom.css
+/geoserver/dsas-wps/target/
+/geoserver/dsas-geoserver/target/

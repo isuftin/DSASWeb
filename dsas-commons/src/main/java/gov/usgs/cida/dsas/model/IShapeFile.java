@@ -54,4 +54,10 @@ public interface IShapeFile {
 	 * @return the required files
 	 */
 	public List<File> getOptionalFiles();
+        
+	/**
+	 * Gets the attribute names from the dbf file
+	 * @return the list of names
+	 */
+        public List<String> getDbfColumnNames();
 }

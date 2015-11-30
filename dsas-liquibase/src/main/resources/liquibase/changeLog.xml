@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
-	logicalFilePath="path-independent">
+				   logicalFilePath="path-independent">
 
 	<include file="00setupDatabase.xml" relativeToChangelogFile="true"/>
 	<include file="10addShorelineTables.xml" relativeToChangelogFile="true"/>
@@ -14,6 +14,8 @@
 	<include file="50createGSMetadataTable.xml" relativeToChangelogFile="true"/>
 	<include file="60updateShorelineView.xml" relativeToChangelogFile="true"/>
 	<include file="70addShorelineNameToWorkspaceView.xml" relativeToChangelogFile="true"/>
-        <include file="80addPDBTables.xml" relativeToChangelogFile="true"/>
+	<include file="80addPDBTables.xml" relativeToChangelogFile="true"/>
+	<include file="90createWorkspaceTable.xml" relativeToChangelogFile="true"/>
+	<include file="100createForeignKeyFromShorelineTableToWorkspaceTable.xml" relativeToChangelogFile="true"/>
 	
 </databaseChangeLog>
