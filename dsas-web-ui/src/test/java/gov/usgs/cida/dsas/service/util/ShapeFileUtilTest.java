@@ -8,9 +8,12 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.attribute.FileAttribute;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.*;
 
@@ -129,13 +132,22 @@ public class ShapeFileUtilTest {
 		}
 	}
 
-	@Test  //<--- this test is failing @IVAN 
+	@Test  
 	public void testGetDbfColumnNames() throws IOException {
-		ShapeFile instance = new ShapeFile(validShapeZip);
-	
+		File tempDir = null;
+		File tempShapeFile = null;
+		
+		tempDir = Files.createTempDirectory("temp-shapefile-dir").toFile();
+		tempDir.deleteOnExit();
+		tempShapeFile = Files.createTempFile("tempshapefile", ".zip").toFile();
+		tempShapeFile.deleteOnExit();
+		FileUtils.copyFile(validShapeZip, tempShapeFile);
+		FileHelper.unzipFile(tempDir.getAbsolutePath(), tempShapeFile);
+		ShapeFile instance = new ShapeFile(tempDir.listFiles()[0]);
+		
 		List<String> columns = instance.getDbfColumnNames();
-		for (String column : columns) {
-			System.out.println("Column Name:" + column);
+ 		for (String column : columns) {
+ 			System.out.println("Column Name:" + column);
 		}
 	}
 
