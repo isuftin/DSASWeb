@@ -22,14 +22,20 @@ if (ci>=1 || ci<=0.5){
 
 statLongNames  <-  data.frame("LRR"="Linear regression rate",
                          "LCI"="Linear regression rate CI",
+                         "LR2"="Linear regression rate r-squared",
+                         "LSE"="Linear regression rate std. error",
                          "WLR"="Weighted linear regression rate",
                          "WCI"="Weighted linear regression rate CI",
+                         "WR2"="Weighted linear regression rate r-squared",
+                         "WSE"="Weighted linear regression rate std. error",
                          "SCE"="Shoreline change envelope",
                          "NSM"="Net shoreline movement",
                          "EPR"="End point rate",
-                         "ECI"="End point rate uncertainty")
-statUnits <-  data.frame("LRR"="m yr^-1","LCI"="m yr^-1","WLR"="m yr^-1",
-                         "WCI"="m yr^-1","SCE"="m","NSM"="m","EPR"="m yr^-1","ECI"="m yr^-1")
+                         "ECI"="End point rate CI")
+statUnits <-  data.frame("LRR"="m yr^-1","LCI"="m yr^-1","LR2"="","LSE"="m yr^-1",
+                         "WLR"="m yr^-1","WCI"="m yr^-1","WR2"="","WSE"="m yr^-1",
+                         "SCE"="m","NSM"="m","EPR"="m yr^-1","ECI"="m yr^-1")
+
 fileN    <- input # will have input as a string (long string read in)
 conLevel <- ci
 zRepV    <- 0.01 #replace value for when the uncertainty is zero
@@ -74,9 +80,11 @@ calcLRR <- function(dates,dist){
     
     LRR_rates <- rate*rateConv 
     LCI <- (CI[2]-CI[1])/2 # LCI
-    return(c(LRR_rates,LCI))
+    LR2 <- summary(mdl)$r.squared
+    LSE <- summary(mdl)$coefficients["rate", "Std. Error"]
+    return(c(LRR_rates,LCI,LR2,LSE))
   }
-  else{return(c(NA,NA))}
+  else{return(c(NA,NA,NA,NA))}
 }
 
 calcWLR <- function(dates,dist,uncy){
@@ -89,9 +97,11 @@ calcWLR <- function(dates,dist,uncy){
     rate <- coef["rate"]
     WLR_rates <- rate*rateConv 
     WCI  <- (CI[2]-CI[1])/2 # WCI
-    return(c(WLR_rates,WCI))
+    WR2 <- summary(mdl)$r.squared
+    WSE <- summary(mdl)$coefficients["rate", "Std. Error"]
+    return(c(WLR_rates,WCI,WR2,WSE))
   }
-  else{return(c(NA,NA))}
+  else{return(c(NA,NA,NA,NA))}
 }
 calcNSM <- function(dates,dist,uncy){
   mnN <-  2
@@ -119,8 +129,12 @@ calcSCE <- function(dist){
 
 LRR <-  rep(NA,numBlck)
 LCI <-  rep(NA,numBlck)
+LR2 <-  rep(NA,numBlck)
+LSE <-  rep(NA,numBlck)
 WLR <-  rep(NA,numBlck)
 WCI <-  rep(NA,numBlck)
+WR2 <-  rep(NA,numBlck)
+WSE <-  rep(NA,numBlck)
 SCE <-  rep(NA,numBlck)
 NSM <-  rep(NA,numBlck)
 EPR <-  rep(NA,numBlck)
@@ -179,19 +193,23 @@ for (p in 1:numPar){
     DSASstats = DSASstatsPar[[dsI]]
     LRR[b] <- DSASstats[1]
     LCI[b] <- DSASstats[2]
-    WLR[b] <- DSASstats[3]
-    WCI[b] <- DSASstats[4]
-    SCE[b] <- DSASstats[5]
-    NSM[b] <- DSASstats[6]
-    EPR[b] <- DSASstats[7]
-    ECI[b] <- DSASstats[8]
+    LR2[b] <- DSASstats[3]
+    LSE[b] <- DSASstats[4]
+    WLR[b] <- DSASstats[5]
+    WCI[b] <- DSASstats[6]
+    WR2[b] <- DSASstats[7]
+    WSE[b] <- DSASstats[8]
+    SCE[b] <- DSASstats[9]
+    NSM[b] <- DSASstats[10]
+    EPR[b] <- DSASstats[11]
+    ECI[b] <- DSASstats[12]
     b = b + 1
   }
 }
 
 stopCluster(c1)
 
-statsout <- data.frame("transect_ID"=blckNm,LRR,LCI,WLR,WCI,SCE,NSM,EPR,ECI)
+statsout <- data.frame("transect_ID"=blckNm,LRR,LCI,LR2,LSE,WLR,WCI,WR2,WSE,SCE,NSM,EPR,ECI)
 
 if (localRun){
   Rprof(NULL)

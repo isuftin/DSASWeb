@@ -54,39 +54,43 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  * @author Jordan Walker <jiwalker@usgs.gov>
  */
 public class Constants {
-    
-    public static final CoordinateReferenceSystem REQUIRED_CRS_WGS84 = DefaultGeographicCRS.WGS84;
-    public static final String DEFAULT_GEOM_ATTR = "the_geom";
-    public static final String BASELINE_ORIENTATION_ATTR = "Orient";
-    public static final String TRANSECT_ID_ATTR = "TransectID";
-    public static final String DISTANCE_ATTR = "Distance";
-    public static final String UNSHIFTED_DISTANCE_ATTR = "orig_dist";
-    public static final String DATE_ATTR = "Date_";
-    public static final String DB_DATE_ATTR = "date";
-    public static final String UNCY_ATTR = "uncy";
-    public static final String BASELINE_DIST_ATTR = "base_dist";
-    public static final String BASELINE_ID_ATTR = "BaselineID";
+
+	public static final CoordinateReferenceSystem REQUIRED_CRS_WGS84 = DefaultGeographicCRS.WGS84;
+	public static final String DEFAULT_GEOM_ATTR = "the_geom";
+	public static final String BASELINE_ORIENTATION_ATTR = "Orient";
+	public static final String TRANSECT_ID_ATTR = "TransectID";
+	public static final String DISTANCE_ATTR = "Distance";
+	public static final String UNSHIFTED_DISTANCE_ATTR = "orig_dist";
+	public static final String DATE_ATTR = "Date_";
+	public static final String DB_DATE_ATTR = "date";
+	public static final String UNCY_ATTR = "uncy";
+	public static final String BASELINE_DIST_ATTR = "base_dist";
+	public static final String BASELINE_ID_ATTR = "BaselineID";
 	public static final String SURVEY_ID_ATTR = "survey_id";
 	public static final String RECORD_ID_ATTR = "recordId";
 	public static final String SOURCE_ATTR = "source";
 	public static final String SOURCE_ABBRV_ATTR = "src";
-    public static final String LRR_ATTR = "LRR";
-    public static final String LCI_ATTR = "LCI";
-    public static final String SCE_ATTR = "SCE";
-    public static final String NSD_ATTR = "NSD";
-    public static final String WLR_ATTR = "WLR";
-    public static final String WCI_ATTR = "WCI";
-    public static final String ECI_ATTR = "ECI";
-    public static final String NSM_ATTR = "NSM";
-    public static final String EPR_ATTR = "EPR";
-    public static final String MHW_ATTR = "MHW";
-    public static final String NAME_ATTR = "name";
-    public static final String DEFAULT_D_ATTR = "defaultd";
-    public static final String AVG_SLOPE_ATTR = "avg_slope";
-    public static final String BIAS_ATTR = "BIAS";
-    public static final String BIAS_UNCY_ATTR = "UNCYB";
-    public static final String COMBINED_UNCY_ATTR = "total_uncy";
-    public static final String PROFILE_ID = "profileID"; 
+	public static final String LRR_ATTR = "LRR";
+	public static final String LCI_ATTR = "LCI";
+	public static final String LR2_ATTR = "LR2";
+	public static final String LSE_ATTR = "LSE";
+	public static final String SCE_ATTR = "SCE";
+	public static final String NSD_ATTR = "NSD";
+	public static final String WLR_ATTR = "WLR";
+	public static final String WCI_ATTR = "WCI";
+	public static final String WR2_ATTR = "WR2";
+	public static final String WSE_ATTR = "WSE";
+	public static final String ECI_ATTR = "ECI";
+	public static final String NSM_ATTR = "NSM";
+	public static final String EPR_ATTR = "EPR";
+	public static final String MHW_ATTR = "MHW";
+	public static final String NAME_ATTR = "name";
+	public static final String DEFAULT_D_ATTR = "defaultd";
+	public static final String AVG_SLOPE_ATTR = "avg_slope";
+	public static final String BIAS_ATTR = "BIAS";
+	public static final String BIAS_UNCY_ATTR = "UNCYB";
+	public static final String COMBINED_UNCY_ATTR = "total_uncy";
+	public static final String PROFILE_ID = "profileID"; 
 
 	// new constants tied to point features
 	public static final String SHORELINE_ID_ATTR = "shoreline_id";
