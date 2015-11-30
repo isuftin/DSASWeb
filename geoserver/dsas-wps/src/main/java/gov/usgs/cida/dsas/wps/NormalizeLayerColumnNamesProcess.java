@@ -3,6 +3,7 @@ package gov.usgs.cida.dsas.wps;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import gov.usgs.cida.dsas.util.GeoserverUtils;
+import gov.usgs.cida.utilities.features.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +40,7 @@ public class NormalizeLayerColumnNamesProcess implements GeoServerProcess {
 	 */
 	public static final ImmutableSet<String> COLUMN_NAMES_TO_IGNORE = (new ImmutableSortedSet.Builder<>(String.CASE_INSENSITIVE_ORDER)
 			.add(
-					"the_geom",
+					Constants.DEFAULT_GEOM_ATTR,
 					"id"
 			)).build();
 

@@ -8,6 +8,7 @@ package gov.usgs.cida.dsas.wps;
  */
 
 import com.google.common.io.Files;
+import gov.usgs.cida.utilities.features.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.jxpath.ri.compiler.Constant;
 
 import org.geoserver.catalog.Catalog;
 import org.geoserver.catalog.CatalogBuilder;
@@ -394,9 +396,9 @@ public class AutoImportProcess  extends ImportProcess{
 
         // consider the shapefile geometry descriptor mangling
         if (targetType.getGeometryDescriptor() != null
-                && "the_geom".equals(targetType.getGeometryDescriptor().getLocalName())
-                && !"the_geom".equalsIgnoreCase(sourceType.getGeometryDescriptor().getLocalName())) {
-            result.put(sourceType.getGeometryDescriptor().getLocalName(), "the_geom");
+                && Constants.DEFAULT_GEOM_ATTR.equals(targetType.getGeometryDescriptor().getLocalName())
+                && !Constants.DEFAULT_GEOM_ATTR.equalsIgnoreCase(sourceType.getGeometryDescriptor().getLocalName())) {
+            result.put(sourceType.getGeometryDescriptor().getLocalName(), Constants.DEFAULT_GEOM_ATTR);
         }
 
         // and finally we return with as much as we can match
