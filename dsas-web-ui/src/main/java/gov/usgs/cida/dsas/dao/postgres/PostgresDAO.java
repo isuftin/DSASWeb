@@ -213,23 +213,24 @@ public class PostgresDAO {
 		Timestamp now = getUTCNowAsSQLTimestamp();
 		
 		for (Pdb pdb : pdbs) {
-			values.append("(");
-			values.append(pdb.getProfileId());
-			values.append(",");
-			values.append(pdb.getSegmentId());
-			values.append(",");
-			values.append("ST_GeomFromText('POINT(");
-			values.append(pdb.getX()); //  ... ST_GeomFromText('POINT(x y)',4326)
-			values.append(" ");
-			values.append(pdb.getY());
-			values.append(ShorelineFileDAO.DATABASE_PROJECTION);
-			values.append("),");
-			values.append(pdb.getBias());
-			values.append(",");
-			values.append(pdb.getUncyb());
-			values.append(",");
-			values.append(now);
-			values.append(");");
+			values.append("(")
+			.append(pdb.getProfileId())
+			.append(",")
+			.append(pdb.getSegmentId())
+			.append(",")
+			.append("ST_GeomFromText('POINT(")
+			.append(pdb.getX()) //  ... ST_GeomFromText('POINT(x y)',4326)
+			.append(" ")
+			.append(pdb.getY())
+			.append(")',")
+			.append(ShorelineFileDAO.DATABASE_PROJECTION)
+			.append("),")
+			.append(pdb.getBias())
+			.append(",")
+			.append(pdb.getUncyb())
+			.append(",")
+			.append(now)
+			.append(");");
 		}
 		values.deleteCharAt(sql.length() - 1);
 		
