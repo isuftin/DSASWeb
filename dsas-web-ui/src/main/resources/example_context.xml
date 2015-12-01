@@ -12,6 +12,15 @@ the server - Set to 0 to disable size checking -->
 <Environment name="dsas.files.upload.max-size" type="java.lang.String" value="15728640" />
 
 <!--
+dsas.public.url: Used for mapping service calls requested by 
+application services -->
+<Environment name="dsas.public.url" type="java.lang.String" value="http://cida-test.er.usgs.gov/dev/DSASweb" />
+
+<!-- 
+dsas.base.url: Useful for BackboneJS of we have nested app paths that don't get  -->
+<Environment name="dsas.base.url" type="java.lang.String" value="/dev/DSASWeb" />
+
+<!--
 cida.auth.service.endpoint: The service endpoint that the authentication client
 uses to check for valid logins
 -->

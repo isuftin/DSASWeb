@@ -31,7 +31,7 @@ public class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenExcept
 			pathIndexOfResource = path.indexOf("/service");
 		}
 		String[] pathParts = path.split("/");
-		String applicationPath = PropertyUtil.getProperty("dsas.base.url", String.format("/%s", StringUtils.isNotBlank(pathParts[0]) ? pathParts[0] : pathParts[1]));
+		String applicationPath = PropertyUtil.getProperty("dsas.public.url", String.format("/%s", StringUtils.isNotBlank(pathParts[0]) ? pathParts[0] : pathParts[1]));
 		String originalPath = path.substring(pathIndexOfResource);
 		try {
 			return Response.temporaryRedirect(new URI(applicationPath + "/ui/security/login#" + originalPath)).build();
