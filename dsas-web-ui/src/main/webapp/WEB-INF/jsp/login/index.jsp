@@ -36,6 +36,9 @@
 						'contextPath': "<%=baseUrl%>",
 						'SECURITY_SERVICE_PATH': "<%= ServiceURI.SECURITY_SERVICE_ENDPOINT%>",
 						'authTokenLabel': "<%= AuthTokenResource.AUTH_TOKEN_LABEL %>"
+					},
+					'views/LoginView': {
+						'contextPath': "<%=baseUrl%>"
 					}
 				},
 				baseUrl: "<%=baseUrl%>/js/",
