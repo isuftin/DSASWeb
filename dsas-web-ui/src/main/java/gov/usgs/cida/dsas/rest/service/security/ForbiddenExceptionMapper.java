@@ -1,5 +1,6 @@
 package gov.usgs.cida.dsas.rest.service.security;
 
+import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.ws.rs.ForbiddenException;
@@ -24,7 +25,7 @@ public class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenExcept
 	@Override
 	public Response toResponse(ForbiddenException exception) {
 		String[] pathParts = uriInfo.getAbsolutePath().getPath().split("/");
-		String applicationPath = "/" + (StringUtils.isNotBlank(pathParts[0]) ? pathParts[0] : pathParts[1]);
+		String applicationPath = PropertyUtil.getProperty("dsas.base.url", String.format("/%s", StringUtils.isNotBlank(pathParts[0]) ? pathParts[0] : pathParts[1]));
 		String originalPath = uriInfo.getAbsolutePath().getPath().substring(applicationPath.length());
 		try {
 			return Response.temporaryRedirect(new URI(applicationPath + "/ui/security/login#" + originalPath)).build();
