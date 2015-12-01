@@ -20,8 +20,13 @@ define([
 	
 	$.removeCookie(module.config().authTokenLabel, { path: '/' });
 	
+	var contextPath = module.config().contextPath;
+	if (!contextPath.slice(-1) === '/') {
+		contextPath += '/';
+	}
+	
 	Backbone.history.start({
-		root: module.config().contextPath
+		root: contextPath
 	});
 	log.info("DSASweb inititialized");
 
