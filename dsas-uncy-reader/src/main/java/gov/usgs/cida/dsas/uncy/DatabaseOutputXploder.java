@@ -14,6 +14,7 @@ public abstract class DatabaseOutputXploder extends Xploder {
 
 	public final static String DB_TYPE_PARAM = "dbtype";
 	public final String dbType;
+	protected final Map<String, Object> dbConfig = new HashMap<>();
 	
 	public DatabaseOutputXploder(Map<String, String> config) {
 		super(config);

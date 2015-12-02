@@ -77,6 +77,12 @@
 			<version>3.4.2</version>
 			<scope>test</scope>
 		</dependency>
+	 <dependency>
+	  <groupId>org.geotools.jdbc</groupId>
+	  <artifactId>gt-jdbc-postgis</artifactId>
+	  <version>14.1</version>
+	  <type>jar</type>
+	 </dependency>
 	</dependencies>
 	
 	<build>

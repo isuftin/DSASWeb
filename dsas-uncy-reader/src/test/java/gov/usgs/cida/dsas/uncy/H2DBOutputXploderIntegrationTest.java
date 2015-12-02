@@ -40,9 +40,9 @@ import org.slf4j.LoggerFactory;
  * @author isuftin
  */
 @Category(XploderIntegrationTest.class)
-public class H2DBOutputExploderIntegrationTest implements XploderIntegrationTest {
+public class H2DBOutputXploderIntegrationTest implements XploderIntegrationTest {
 
-	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(H2DBOutputExploderIntegrationTest.class);
+	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(H2DBOutputXploderIntegrationTest.class);
 	private static final String tempDir = System.getProperty("java.io.tmpdir");
 	private static File workDir;
 	private static final String capeCodName = "OuterCapeCod_shorelines_ghost";
