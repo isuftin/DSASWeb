@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
@@ -70,10 +71,10 @@ public abstract class Xploder {
 	protected SimpleFeatureType outputFeatureType;
 	protected CoordinateReferenceSystem outputCRS = DefaultGeographicCRS.WGS84;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Xploder.class);
-	private static final GeometryFactory GEOMETRY_FACTORY = JTSFactoryFinder.getGeometryFactory(null);
-	private DbaseFileHeader dbfHdr;
-	private int uncertaintyIdIdx;
-	private CoordinateReferenceSystem sourceCRS;
+	protected static final GeometryFactory GEOMETRY_FACTORY = JTSFactoryFinder.getGeometryFactory(null);
+	protected DbaseFileHeader dbfHdr;
+	protected int uncertaintyIdIdx;
+	protected CoordinateReferenceSystem sourceCRS;
 
 	protected Xploder(Map<String, String> config) {
 		if (config == null || config.isEmpty()) {
