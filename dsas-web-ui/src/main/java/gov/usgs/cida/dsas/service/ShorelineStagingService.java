@@ -45,6 +45,7 @@ public class ShorelineStagingService extends HttpServlet {
 	private final static String IMPORT_ACTION_STRING = "import";
 	private final static String READDBF_ACTION_STRING = "read-dbf";
 	private final static String DELETE_TOKEN_ACTION_STRING = "delete-token";
+	private static final String WORKSPACE_PARAM = "workspace";
 
 	/**
 	 * Handles the HTTP <code>POST</code> method.
@@ -87,11 +88,16 @@ public class ShorelineStagingService extends HttpServlet {
 				Map<String, String> columns = new HashMap<>();
 				if (StringUtils.isNotBlank(columnsString)) {
 					columns = new Gson().fromJson(columnsString, Map.class);
-					
-					ShapefileImportProcess process = new ShapefileImportProcess(token, columns);
+
+					String requestWorkspace = request.getParameter(WORKSPACE_PARAM);
+					if (StringUtils.isBlank(requestWorkspace)) {
+						throw new NullPointerException("Request did not contain workspace name");
+					}
+
+					ShapefileImportProcess process = new ShapefileImportProcess(token, columns, requestWorkspace);
 					Thread thread = new Thread(process);
 					thread.start();
-					
+
 					response.addHeader(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + process.getProcessId());
 					response.setStatus(Response.Status.ACCEPTED.getStatusCode());
 					IOUtils.copy(new ByteArrayInputStream(new byte[0]), response.getWriter());
@@ -99,7 +105,7 @@ public class ShorelineStagingService extends HttpServlet {
 				} else {
 					ServiceHelper.sendNotEnoughParametersError(response, new String[]{"columns"}, responseType);
 				}
-				
+
 			} else {
 				ServiceHelper.sendNotEnoughParametersError(response, new String[]{TOKEN_STRING}, responseType);
 			}

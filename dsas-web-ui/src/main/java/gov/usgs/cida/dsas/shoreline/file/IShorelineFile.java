@@ -88,7 +88,7 @@ public interface IShorelineFile {
 	 * @throws org.opengis.referencing.operation.TransformException
 	 * @throws org.opengis.referencing.FactoryException
 	 */
-	public String importToDatabase(HttpServletRequest request) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
+	public String importToDatabase(HttpServletRequest request, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
 
 	/**
 	 * Imports the shoreline file into the database
@@ -105,7 +105,7 @@ public interface IShorelineFile {
 	 * @throws TransformException
 	 * @throws FactoryException
 	 */
-	public String importToDatabase(Map<String, String> columns) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
+	public String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
 
 	/**
 	 * Imports the view as a layer in Geoserver
@@ -113,7 +113,7 @@ public interface IShorelineFile {
 	 * @param viewName
 	 * @throws IOException
 	 */
-	public void importToGeoserver(String viewName) throws IOException;
+	public void importToGeoserver(String viewName, String workspace) throws IOException;
 
 	/**
 	 * Checks if underlying files exist in the file system
@@ -127,7 +127,7 @@ public interface IShorelineFile {
 	 *
 	 * @return
 	 */
-	public String getWorkspace();
+	//public String getWorkspace();
 
 	/**
 	 * Deletes own files in the file system and removes parent directory

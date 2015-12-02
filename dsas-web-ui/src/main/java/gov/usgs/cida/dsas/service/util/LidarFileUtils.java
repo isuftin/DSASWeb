@@ -2,6 +2,7 @@ package gov.usgs.cida.dsas.service.util;
 
 import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
+import gov.usgs.cida.owsutils.commons.shapefile.utils.ProjectionUtils;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +12,7 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.io.IOUtils;
+import org.opengis.referencing.FactoryException;
 
 public class LidarFileUtils {
 
@@ -39,10 +41,12 @@ public class LidarFileUtils {
 	 * gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException
 	 * @throws IOException
 	 */
-	public static void validateLidarFileZip(File lidarZipFile) throws LidarFileFormatException, IOException {
+	public static boolean validateLidarFileZip(File lidarZipFile) throws LidarFileFormatException, IOException {
 		File temporaryDirectory = new File(FileHelper.getTempDirectory(), UUID.randomUUID().toString() + "-deleteme");
+		boolean result = true;
 		try {
 			if (!temporaryDirectory.mkdirs()) {
+				result = false;
 				throw new IOException("Could not create temporary directory (" + temporaryDirectory.getCanonicalPath() + ") for processing");
 			}
 
@@ -66,6 +70,7 @@ public class LidarFileUtils {
 						// so skip this file. Shapefiles inside with arbitrary directory 
 						// depth should first be preprocessed to be single-depth since 
 						// GS will not accept it otherwise
+						result=false;
 					} finally {
 						IOUtils.closeQuietly(fos);
 					}
@@ -74,21 +79,26 @@ public class LidarFileUtils {
 			}
 			IOUtils.closeQuietly(zipInputStream);
 
+
 			File[] csvfiles = FileHelper.listFiles(temporaryDirectory, (new String[]{"csv"}), false).toArray(new File[0]);
 			if (csvfiles.length == 0 || csvfiles.length > 1) {
+				result = false;
 				throw new LidarFileFormatException("Lidar archive needs to contain one csv file");
 			}
 			File[] prjfiles = FileHelper.listFiles(temporaryDirectory, (new String[]{"prj"}), false).toArray(new File[0]);
 			if (prjfiles.length == 0 || prjfiles.length > 1) {
+				result = false;
 				throw new LidarFileFormatException("Lidar archive needs to contain one prj file");
 			}
 			File[] shpfiles = FileHelper.listFiles(temporaryDirectory, (new String[]{"shp"}), false).toArray(new File[0]);
 			if (shpfiles.length != 0) {
+				result = false;
 				throw new LidarFileFormatException("Lidar archive cannot contain an shp file");
 			}
 		} finally {
 			FileHelper.forceDelete(temporaryDirectory);
 		}
+		return result;
 	}
 
 	public static void validateHeaderRow(String[] headerRow) throws LidarFileFormatException {
@@ -117,4 +127,13 @@ public class LidarFileUtils {
 			throw new LidarFileFormatException("Lidar csv file has wrong number of columns in one of the rows");
 		}
 	}
+	
+	    // this is needed to support the LIdar file as it does not have a shp file 
+    public static String getEPSGCode(File prjFile) throws IOException, FactoryException, LidarFileFormatException {
+        String epsg = null;
+		
+        epsg = ProjectionUtils.getDeclaredEPSGFromPrj(prjFile);
+
+        return epsg;
+    }
 }

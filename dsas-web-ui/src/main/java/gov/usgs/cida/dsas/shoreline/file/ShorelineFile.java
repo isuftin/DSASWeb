@@ -58,7 +58,7 @@ public abstract class ShorelineFile implements IShorelineFile {
 	protected ShorelineFileDAO dao;
 	protected String token;
 	protected Map<String, File> fileMap;
-	protected String workspace;
+	//protected String workspace;
 	protected DSASProcess process = null;
 	public static final String[] AUXILLARY_ATTRIBUTES = new String[]{
 		Constants.SURVEY_ID_ATTR,
@@ -152,14 +152,14 @@ public abstract class ShorelineFile implements IShorelineFile {
 	public abstract String[] getColumns() throws IOException;
 
 	@Override
-	public String importToDatabase(HttpServletRequest request) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
+	public String importToDatabase(HttpServletRequest request, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
 		String columnsString = request.getParameter("columns");
 		Map<String, String> columns = new HashMap<>();
 		if (StringUtils.isNotBlank(columnsString)) {
 			columns = new Gson().fromJson(columnsString, Map.class);
 		}
 		
-		String result = importToDatabase(columns);
+		String result = importToDatabase(columns, workspace);
 		
 		new PostgresDAO().optimizeTables();
 		
@@ -167,10 +167,10 @@ public abstract class ShorelineFile implements IShorelineFile {
 	}
 
 	@Override // TODO: This should probably be broken out of this class
-	public abstract String importToDatabase(Map<String, String> columns) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
+	public abstract String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
 
 	@Override
-	public void importToGeoserver(String viewname) throws IOException {
+	public void importToGeoserver(String viewname, String workspace) throws IOException {
 		if (!geoserverHandler.createWorkspaceInGeoserver(workspace, null)) {
 			throw new IOException("Could not create workspace");
 		}
@@ -194,12 +194,12 @@ public abstract class ShorelineFile implements IShorelineFile {
 		throw new UnsupportedOperationException();
 	}
 	
-	@Override
-	public String getWorkspace() {
-		return this.workspace;
-	}
-	
-	
+//	@Override
+//	public String getWorkspace() {
+//		return this.workspace;
+//	}
+//	
+	// moving to shapefile
 	@Override
 	public File saveZipFile(File zipFile) throws IOException {
 		File workLocation = createWorkLocationForZip(zipFile);

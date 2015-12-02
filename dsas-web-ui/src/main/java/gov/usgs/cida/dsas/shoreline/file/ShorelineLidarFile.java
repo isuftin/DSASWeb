@@ -83,13 +83,12 @@ public class ShorelineLidarFile extends ShorelineFile {
 	 * 
 	 * @param gsHandler
 	 * @param dao
-	 * @param workspace 
 	 */
-	public ShorelineLidarFile(GeoserverDAO gsHandler, ShorelineFileDAO dao, String workspace) {
-		this(gsHandler, dao, workspace, null);
+	public ShorelineLidarFile(GeoserverDAO gsHandler, ShorelineFileDAO dao) {
+		this(gsHandler, dao, null);
 	}
 	
-	public ShorelineLidarFile(GeoserverDAO gsHandler, ShorelineFileDAO dao, String workspace, DSASProcess process) {
+	public ShorelineLidarFile(GeoserverDAO gsHandler, ShorelineFileDAO dao, DSASProcess process) {
 		this.process = process;
 		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, System.getProperty("java.io.tmpdir")));
 		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
@@ -97,7 +96,6 @@ public class ShorelineLidarFile extends ShorelineFile {
 		this.geoserverHandler = gsHandler;
 		this.dao = dao;
 		this.fileMap = new HashMap<>(fileParts.length);
-		this.workspace = workspace;
 		if (this.process != null) {
 			dao.setDSASProcess(process);
 		}
@@ -111,7 +109,7 @@ public class ShorelineLidarFile extends ShorelineFile {
 	}
 
 	@Override
-	public String importToDatabase(Map<String, String> columns) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
+	public String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
 		return dao.importToDatabase(fileMap.get(CSV), columns, workspace, getEPSGCode());
 	}
 

@@ -68,12 +68,16 @@ public class TokenFileExchangerTest {
 
         assertNotNull(fileshp);
         assertNotEquals(fileshp, "");
-        LOGGER.info("files absolute path: " + fileshp.getAbsolutePath());
-
+        LOGGER.info("files absolute path:  " + fileshp.getAbsolutePath());
+		LOGGER.info("Files path:           " + fileshp.getPath());
+		LOGGER.info("Files canonical path: " + fileshp.getCanonicalPath());
+		LOGGER.info("Files Parent -        " + fileshp.getParent());
+		
         String token = TokenFileExchanger.getToken(fileshp);
         assertNotNull(token);
 
         LOGGER.info("Token string is: " + token);
+
     }
 
     @Test

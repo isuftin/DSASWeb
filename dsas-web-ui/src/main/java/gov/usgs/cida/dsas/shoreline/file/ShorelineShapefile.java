@@ -74,17 +74,17 @@ public class ShorelineShapefile extends ShorelineFile {
 		}
 	}
 
-	public ShorelineShapefile(GeoserverDAO gsHandler, ShorelineFileDAO dao, String workspace) {
+	public ShorelineShapefile(GeoserverDAO gsHandler, ShorelineFileDAO dao) {
 		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, System.getProperty("java.io.tmpdir")));
 		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
 		this.workDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_WORK));
 		this.geoserverHandler = gsHandler;
 		this.dao = dao;
 		this.fileMap = new HashMap<>(fileParts.length);
-		this.workspace = workspace;
+//		this.workspace = workspace;
 	}
 	
-	public ShorelineShapefile(GeoserverDAO gsHandler, ShorelineFileDAO dao, String workspace, DSASProcess process) {
+	public ShorelineShapefile(GeoserverDAO gsHandler, ShorelineFileDAO dao, DSASProcess process) {
 		this.process = process;
 		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, System.getProperty("java.io.tmpdir")));
 		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
@@ -92,7 +92,7 @@ public class ShorelineShapefile extends ShorelineFile {
 		this.geoserverHandler = gsHandler;
 		this.dao = dao;
 		this.fileMap = new HashMap<>(fileParts.length);
-		this.workspace = workspace;
+//		this.workspace = workspace;
 		if (this.process != null) {
 			this.dao.setDSASProcess(process);
 		}
@@ -129,7 +129,7 @@ public class ShorelineShapefile extends ShorelineFile {
 	}
 
 	@Override
-	public String importToDatabase(Map<String, String> columns) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
+	public String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
 		updateProcessInformation("Getting EPSG Code");
 		String projection = getEPSGCode();
 		File shpFile = fileMap.get(SHP);

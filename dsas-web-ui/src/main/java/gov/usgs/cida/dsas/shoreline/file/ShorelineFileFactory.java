@@ -27,22 +27,22 @@ import org.slf4j.LoggerFactory;
 public class ShorelineFileFactory {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShorelineFileFactory.class);
-	private static final String WORKSPACE_PARAM = "workspace";
+	//private static final String WORKSPACE_PARAM = "workspace";
 	private static final String FILENAME_PARAM = "filename.param";
 	private File zipFile;
 	private HttpServletRequest request;
 	private File baseDirectory;
 	private File uploadDirectory;
-	private String workspace;
+//	private String workspace;
 
 	public ShorelineFileFactory(File zipFile, String workspace) throws IOException {
 		if (zipFile == null) {
 			throw new NullPointerException("Zip file may not be null");
 		}
 
-		if (StringUtils.isBlank(workspace)) {
-			throw new NullPointerException("Workspace name may not be null or blank");
-		}
+//		if (StringUtils.isBlank(workspace)) {
+//			throw new NullPointerException("Workspace name may not be null or blank");
+//		}
 
 		if (!zipFile.exists()) {
 			throw new FileNotFoundException("Zip file can not be found");
@@ -53,7 +53,7 @@ public class ShorelineFileFactory {
 		}
 
 		this.zipFile = zipFile;
-		init(workspace);
+		init();
 	}
 
 	public ShorelineFileFactory(HttpServletRequest request) {
@@ -62,18 +62,18 @@ public class ShorelineFileFactory {
 		}
 
 		this.request = request;
-		String requestWorkspace = this.request.getParameter(WORKSPACE_PARAM);
-		if (StringUtils.isBlank(requestWorkspace)) {
-			throw new NullPointerException("Request did not contain workspace name");
-		}
+	//	String requestWorkspace = this.request.getParameter(WORKSPACE_PARAM);
+//		if (StringUtils.isBlank(requestWorkspace)) {
+//			throw new NullPointerException("Request did not contain workspace name");
+//		}
 
-		init(requestWorkspace);
+		init();
 	}
 
-	private void init(String workspace) {
+	private void init() {
 		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
 		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-		this.workspace = workspace;
+	//	this.workspace = workspace;
 	}
 
 	public ShorelineFile buildShorelineFile() throws ShorelineFileFormatException, IOException, FileUploadException {
@@ -108,10 +108,10 @@ public class ShorelineFileFactory {
 		GeoserverDAO geoserverHandler = new GeoserverDAO(geoserverEndpoint, geoserverUsername, geoserverPassword);
 		switch (type) {
 			case LIDAR:
-				result = new ShorelineLidarFile(geoserverHandler, new ShorelineLidarFileDAO(), this.workspace);
+				result = new ShorelineLidarFile(geoserverHandler, new ShorelineLidarFileDAO());
 				break;
 			case SHAPEFILE:
-				result = new ShorelineShapefile(geoserverHandler, new ShorelineShapefileDAO(), this.workspace);
+				result = new ShorelineShapefile(geoserverHandler, new ShorelineShapefileDAO());
 				break;
 			case OTHER:
 			default:
