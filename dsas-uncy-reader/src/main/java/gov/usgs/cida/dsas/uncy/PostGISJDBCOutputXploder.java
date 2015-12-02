@@ -34,7 +34,7 @@ public class PostGISJDBCOutputXploder extends DatabaseOutputXploder {
 	public final static String PASSWORD_PARAM = JDBCDataStoreFactory.PASSWD.key;
 	public final static String TABLENAME_PARAM = "table";
 
-	public PostGISJDBCOutputXploder(Map<String, String> config) {
+	public PostGISJDBCOutputXploder(Map<String, String> config) throws IOException {
 		super(mergeMaps(config, ImmutableMap.of(JDBCDataStoreFactory.DBTYPE.key, "postgis")));
 
 		String[] requiredConfigs = new String[]{
@@ -49,10 +49,10 @@ public class PostGISJDBCOutputXploder extends DatabaseOutputXploder {
 
 		for (String requiredConfig : requiredConfigs) {
 			if (!config.containsKey(requiredConfig)) {
-				throw new IllegalArgumentException(String.format("Configuration map for H2JDBCOutputXploder must include parameter %s", requiredConfig));
+				throw new IllegalArgumentException(String.format("Configuration map for PostGISJDBCOutputXploder must include parameter %s", requiredConfig));
 			}
 			if (StringUtils.isBlank(config.get(requiredConfig))) {
-				throw new IllegalArgumentException(String.format("Configuration map for H2JDBCOutputXploder must include value for parameter %s", requiredConfig));
+				throw new IllegalArgumentException(String.format("Configuration map for PostGISJDBCOutputXploder must include value for parameter %s", requiredConfig));
 			}
 		}
 		dbConfig.put(JDBCDataStoreFactory.DBTYPE.key, dbType);
@@ -88,14 +88,4 @@ public class PostGISJDBCOutputXploder extends DatabaseOutputXploder {
 		featureWriter.write();
 	}
 
-	@Override
-	FeatureWriter<SimpleFeatureType, SimpleFeature> createFeatureWriter(Transaction tx) throws IOException {
-		if (outputFeatureType == null) {
-			outputFeatureType = createOutputFeatureType();
-		}
-		DataStore ds = DataStoreFinder.getDataStore(dbConfig);
-		FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter = ds.getFeatureWriterAppend(outputFeatureType.getName().getLocalPart(), tx);
-
-		return featureWriter;
-	}
 }

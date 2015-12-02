@@ -1,6 +1,6 @@
 
-<%@page import="gov.usgs.cida.dsas.service.util.Property"%>
-<%@page import="gov.usgs.cida.dsas.service.util.PropertyUtil"%>
+<%@page import="gov.usgs.cida.dsas.utilities.properties.Property"%>
+<%@page import="gov.usgs.cida.dsas.utilities.properties.PropertyUtil"%>
 <%@page import="java.io.File"%>
 <%@page import="java.net.URL"%>
 <%@page import="org.slf4j.Logger"%>

@@ -1,8 +1,8 @@
 
+<%@page import="gov.usgs.cida.dsas.utilities.properties.Property"%>
+<%@page import="gov.usgs.cida.dsas.utilities.properties.PropertyUtil"%>
 <%@page import="gov.usgs.cida.dsas.rest.service.ServiceURI"%>
 <%@page import="gov.usgs.cida.dsas.rest.service.security.AuthTokenResource"%>
-<%@page import="gov.usgs.cida.dsas.service.util.PropertyUtil"%>
-<%@page import="gov.usgs.cida.dsas.service.util.Property"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 

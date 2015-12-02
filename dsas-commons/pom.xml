@@ -80,7 +80,6 @@
 		<dependency>
 			<groupId>gov.usgs.cida.owsutils</groupId>
 			<artifactId>cida-owsutils-commons</artifactId>
-			<version>1.0.8-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>

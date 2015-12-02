@@ -2,8 +2,8 @@ package gov.usgs.cida.dsas.rest.service.shapefile;
 
 import com.google.gson.Gson;
 import gov.usgs.cida.dsas.rest.service.ServiceURI;
-import gov.usgs.cida.dsas.service.util.Property;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.utilities.properties.Property;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.dsas.service.util.TokenFileExchanger;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;

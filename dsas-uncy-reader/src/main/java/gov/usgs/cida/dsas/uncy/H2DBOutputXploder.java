@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Point;
 import static gov.usgs.cida.dsas.uncy.Xploder.GEOMETRY_FACTORY;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.DataStore;
@@ -31,7 +30,7 @@ public class H2DBOutputXploder extends DatabaseOutputXploder {
 	public final static String USERNAME_PARAM = JDBCDataStoreFactory.USER.key;
 	public final static String PASSWORD_PARAM = JDBCDataStoreFactory.PASSWD.key;
 
-	public H2DBOutputXploder(Map<String, String> config) {
+	public H2DBOutputXploder(Map<String, String> config) throws IOException {
 		super(mergeMaps(config, ImmutableMap.of(JDBCDataStoreFactory.DBTYPE.key, "h2")));
 
 		String[] requiredConfigs = new String[]{

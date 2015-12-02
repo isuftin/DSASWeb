@@ -1,7 +1,7 @@
 package gov.usgs.cida.dsas.rest.service.security;
 
 import gov.usgs.cida.dsas.rest.service.admin.AdminResource;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.ws.rs.ForbiddenException;

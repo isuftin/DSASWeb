@@ -27,7 +27,7 @@ public class ShapefileOutputXploder extends Xploder {
 	private final String outputFileName;
 	private File outputFile;
 	
-	public ShapefileOutputXploder(Map<String, String> config) {
+	public ShapefileOutputXploder(Map<String, String> config) throws IOException {
 		super(config);
 		
 		this.outputFileName = config.get(OUTPUT_FILENAME_PARAM);
@@ -40,7 +40,7 @@ public class ShapefileOutputXploder extends Xploder {
 		String shpExtension = ".shp";
 		String _outputFileName = StringUtils.isNotBlank(this.outputFileName) ? 
 				this.outputFileName : 
-				inputFileName + PTS_SUFFIX + shpExtension;
+				shapeFiles.getTypeName() + PTS_SUFFIX + shpExtension;
 		if (!_outputFileName.endsWith(shpExtension)) {
 			_outputFileName += shpExtension;
 		}
