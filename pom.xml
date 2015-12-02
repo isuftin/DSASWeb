@@ -8,9 +8,9 @@
 	<name>DSAS Web</name>
 	
 	<modules>
+		<module>dsas-commons</module>
 		<module>dsas-liquibase</module>
 		<module>dsas-uncy-reader</module>
-		<module>dsas-commons</module>
 		<module>dsas-n52</module>
 		<module>dsas-web-ui</module>
 		<module>geoserver</module>

@@ -1,7 +1,7 @@
 package gov.usgs.cida.dsas.metadata;
 
 import java.io.File;
-import gov.usgs.cida.utilities.xml.XMLUtils;
+import gov.usgs.cida.dsas.utilities.xml.XMLUtils;
 import java.io.IOException;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.IOUtils;

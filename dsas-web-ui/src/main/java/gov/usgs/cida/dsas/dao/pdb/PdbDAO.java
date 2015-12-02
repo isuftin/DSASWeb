@@ -1,20 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gov.usgs.cida.dsas.dao.pdb;
 
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineShapefileDAO;
-import gov.usgs.cida.dsas.service.util.Property;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
-//import gov.usgs.cida.dsas.uncy.Xploder;
+import gov.usgs.cida.dsas.utilities.features.Constants;
+import gov.usgs.cida.dsas.utilities.properties.Property;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
-import gov.usgs.cida.utilities.features.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -22,7 +16,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -35,6 +28,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.crs.ReprojectFeatureResults;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
+import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.SchemaException;
@@ -79,7 +73,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		int MAX_POINTS_AT_ONCE = 500;
 
                 // the header and fieldnames below pertain to the file names (not the DB)
-		try (IterableShapefileReader isfr = new IterableShapefileReader(shpFile)) {
+		try (IterableShapefileReader isfr = new IterableShapefileReader(new ShpFiles(shpFile))) {
 			DbaseFileHeader dbfHeader = isfr.getDbfHeader();
 			fieldNames = new String[dbfHeader.getNumFields()][2];
 			for (int fIdx = 0; fIdx < fieldNames.length; fIdx++) {

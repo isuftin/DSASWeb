@@ -25,8 +25,8 @@ public interface IShapeFile {
 	static final String CPG = "cpg";
 	static final String CST = "cst";
 	static final String CSV = "csv";
-	static final String[] REQUIRED_FILES = new String[]{SHP, SHX, DBF};
-	static final String[] OPTIONAL_FILES = new String[]{PRJ, FBX, SBX, AIH, IXS, MXS, ATX, SHP_XML, CPG, CST, CSV};
+	public static final String[] REQUIRED_FILES = new String[]{SHP, SHX, DBF};
+	public static final String[] OPTIONAL_FILES = new String[]{PRJ, FBX, SBX, AIH, IXS, MXS, ATX, SHP_XML, CPG, CST, CSV};
 
 	/**
 	 * Gets the EPSG code that the shapefile is encoded in

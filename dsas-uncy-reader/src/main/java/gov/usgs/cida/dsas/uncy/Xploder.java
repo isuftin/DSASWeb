@@ -5,19 +5,24 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
+import gov.usgs.cida.dsas.model.IShapeFile;
 import static gov.usgs.cida.dsas.uncy.ShapefileOutputXploder.PTS_SUFFIX;
+import gov.usgs.cida.dsas.utilities.features.Constants;
+import gov.usgs.cida.dsas.utilities.properties.Property;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
+import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.PointIterator;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.ShapeAndAttributes;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.XploderMultiLineHandler;
-import gov.usgs.cida.utilities.features.Constants;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
@@ -65,27 +70,27 @@ public abstract class Xploder {
 	public static final String INPUT_FILENAME_PARAM = "inputFilename";
 	public static final String OUTPUT_CRS_PARAM = "outputCrs"; // Should be WKT
 	protected static final String DEFAULT_UNCY_COLUMN_NAME = "uncy";
-	protected int geomIdx = -1;
-	protected String inputFileName;
+	protected static final GeometryFactory GEOMETRY_FACTORY = JTSFactoryFinder.getGeometryFactory(null);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Xploder.class);
 	protected String uncyColumnName;
 	protected SimpleFeatureType outputFeatureType;
 	protected CoordinateReferenceSystem outputCRS = DefaultGeographicCRS.WGS84;
-	private static final Logger LOGGER = LoggerFactory.getLogger(Xploder.class);
-	protected static final GeometryFactory GEOMETRY_FACTORY = JTSFactoryFinder.getGeometryFactory(null);
 	protected DbaseFileHeader dbfHdr;
 	protected int uncertaintyIdIdx;
+	protected ShpFiles shapeFiles;
 	protected CoordinateReferenceSystem sourceCRS;
+	private int geomIdx = -1;
 
-	protected Xploder(Map<String, String> config) {
+	protected Xploder(Map<String, String> config) throws IOException {
 		if (config == null || config.isEmpty()) {
 			throw new IllegalArgumentException("Configuration map for ShapefileOutputExploder may not be null or empty");
 		}
-		
-		String[] requiredConfigs = new String[] {
+
+		String[] requiredConfigs = new String[]{
 			INPUT_FILENAME_PARAM,
 			UNCERTAINTY_COLUMN_PARAM
 		};
-		
+
 		for (String requiredConfig : requiredConfigs) {
 			if (!config.containsKey(requiredConfig)) {
 				throw new IllegalArgumentException(String.format("Configuration map for Xploder must include parameter %s", requiredConfig));
@@ -95,19 +100,47 @@ public abstract class Xploder {
 			}
 		}
 
-		this.inputFileName = config.get(INPUT_FILENAME_PARAM);
+		String inputFileName = config.get(INPUT_FILENAME_PARAM);
+		File inputFile = new File(inputFileName);
+		if (!inputFile.exists()) {
+			throw new IOException(String.format("%s does not exist", inputFile.getAbsolutePath()));
+		}
+
+		// Ensure that we have a place to do work
+		String baseDir = PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectoryPath() + "/DSASWeb");
+		String workDir = PropertyUtil.getProperty(Property.DIRECTORIES_WORK, "/work");
+		String inputFileWorkDir = String.format("%s%s/%s.%s", baseDir, workDir, inputFile.getName(), new Date().getTime());
+		File inputFileTempWorkdir = new File(inputFileWorkDir);
+		FileUtils.forceMkdir(new File(inputFileWorkDir));
+		inputFileTempWorkdir.deleteOnExit();
+
+		if (FileHelper.isZipFile(inputFile)) {
+			FileHelper.unzipFile(inputFileTempWorkdir.getAbsolutePath(), inputFile);
+		} else if (inputFile.isFile()) {
+			File parentDirectory = inputFile.getParentFile();
+			FileHelper.copyDirectory(parentDirectory, inputFileTempWorkdir);
+		} else {
+			FileHelper.copyDirectory(inputFile, inputFileTempWorkdir);
+		}
+
+		Collection<File> shapeFileColl = FileHelper.listFiles(inputFileTempWorkdir, IShapeFile.REQUIRED_FILES, false);
+		if (shapeFileColl.isEmpty()) {
+			throw new IOException(String.format("Shapefile is missing one or more required file types %s", String.join(",", IShapeFile.REQUIRED_FILES)));
+		}
+		shapeFiles = new ShpFiles(shapeFileColl.iterator().next());
+
 		this.uncyColumnName = config.get(UNCERTAINTY_COLUMN_PARAM);
 		if (config.containsKey(OUTPUT_CRS_PARAM) && StringUtils.isNotBlank(config.get(OUTPUT_CRS_PARAM))) {
 			try {
 				outputCRS = ReferencingFactoryFinder.getCRSFactory(null).createFromWKT(config.get(OUTPUT_CRS_PARAM));
 			} catch (FactoryException | FactoryRegistryException ex) {
-				LOGGER.warn(String.format("Could not create output CRS. Output will default to %s", DefaultGeographicCRS.WGS84.getName().getCode()));
+				LOGGER.warn(String.format("Could not create output CRS. Output will default to %s", DefaultGeographicCRS.WGS84.getName().getCode()), ex);
 			}
 		}
-		
+
 	}
 
-	public static int locateField(DbaseFileHeader fileHeader, String fieldName) {
+	protected static int locateField(DbaseFileHeader fileHeader, String fieldName) {
 		int fieldPositionIndex = -1;
 
 		for (int headerIndex = 0; headerIndex < fileHeader.getNumFields(); headerIndex++) {
@@ -120,43 +153,27 @@ public abstract class Xploder {
 		return fieldPositionIndex;
 	}
 
-	static CoordinateReferenceSystem getInputCrs(String inputFilename) throws IOException {
-		return readSourceSchema(inputFilename).getCoordinateReferenceSystem();
+	CoordinateReferenceSystem getInputCrs() throws IOException {
+		return readSourceSchema().getCoordinateReferenceSystem();
 	}
 
-	static SimpleFeatureType readSourceSchema(String inputFileName) throws MalformedURLException, IOException {
-		File inputFile = new File(inputFileName + ".shp");
-		LOGGER.debug("Reading source schema from {}", inputFile);
-
+	SimpleFeatureType readSourceSchema() throws MalformedURLException, IOException {
 		DataStore inputStore = null;
 		SimpleFeatureType sourceSchema = null;
 		try {
-			Map<String, Serializable> fileMap = new HashMap<>();
-			fileMap.put("url", inputFile.toURI().toURL());
-			inputStore = DataStoreFinder.getDataStore(fileMap);
+			inputStore = DataStoreFinder.getDataStore(
+					Collections.singletonMap("url", shapeFiles.getFileNames().get(ShpFileType.SHP))
+			);
 
 			String[] typeNames = inputStore.getTypeNames();
 			SimpleFeatureSource featureSource = inputStore.getFeatureSource(typeNames[0]);
 			sourceSchema = featureSource.getSchema();
-
-			LOGGER.debug("Source schema is {}", sourceSchema);
 		} finally {
 			if (inputStore != null) {
 				inputStore.dispose();
 			}
 		}
 		return sourceSchema;
-	}
-
-	private static String shapefileNames(ShpFiles shapefiles) {
-		StringBuilder sb = new StringBuilder();
-
-		Map<ShpFileType, String> m = shapefiles.getFileNames();
-		m.entrySet().stream().forEach((me) -> {
-			sb.append(me.getKey()).append("\t").append(me.getValue()).append("\n");
-		});
-
-		return sb.toString();
 	}
 
 	public int processShape(ShapeAndAttributes sap, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException, MismatchedDimensionException, TransformException, FactoryException {
@@ -230,7 +247,7 @@ public abstract class Xploder {
 	 */
 	protected SimpleFeatureType createOutputFeatureType(String outputTypeName) throws IOException {
 		// read input to get attributes
-		SimpleFeatureType sourceSchema = readSourceSchema(inputFileName);
+		SimpleFeatureType sourceSchema = readSourceSchema();
 
 		// duplicate input schema, except replace geometry with Point
 		SimpleFeatureTypeBuilder typeBuilder = new SimpleFeatureTypeBuilder();
@@ -266,12 +283,17 @@ public abstract class Xploder {
 
 	public int explode() throws IOException {
 		int ptTotal = 0;
-		try (IterableShapefileReader rdr = initReader(inputFileName);
+		try (IterableShapefileReader rdr = initReader();
 				Transaction tx = new DefaultTransaction();
 				FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter = createFeatureWriter(tx)) {
-			LOGGER.debug("Input files from {}\n{}", inputFileName, shapefileNames(rdr.getShpFiles()));
-
-			// Too bad that the reader classes don't expose the ShpFiles.
+			
+			LOGGER.debug("Input files from {}\n{}",
+					shapeFiles.getTypeName(),
+					String.join(",",
+							shapeFiles.getFileNames().values().toArray(new String[shapeFiles.getFileNames().size()])
+					)
+			);
+			
 			int shpCt = 0;
 			LOGGER.debug(geomIdx + "");
 			if (geomIdx != 0) {
@@ -293,16 +315,16 @@ public abstract class Xploder {
 		return ptTotal;
 	}
 
-	protected IterableShapefileReader initReader(String inputFilename) throws ShapefileException, IOException {
+	protected IterableShapefileReader initReader() throws ShapefileException, IOException {
 		CoordinateSequenceFactory csf = com.vividsolutions.jtsexample.geom.ExtendedCoordinateSequenceFactory.instance();
 		GeometryFactory gf = new GeometryFactory(csf);
-		XploderMultiLineHandler mlh = new XploderMultiLineHandler(ShapeType.ARCM, gf);
-		IterableShapefileReader shapefileReader = new IterableShapefileReader(inputFilename, mlh);
+		XploderMultiLineHandler shapeHandler = new XploderMultiLineHandler(ShapeType.ARCM, gf);
+		IterableShapefileReader shapefileReader = new IterableShapefileReader(shapeFiles, shapeHandler);
 
 		dbfHdr = shapefileReader.getDbfHeader();
 		uncertaintyIdIdx = locateField(dbfHdr, uncyColumnName);
-		sourceCRS = getInputCrs(inputFilename);
-		
+		sourceCRS = getInputCrs();
+
 		return shapefileReader;
 	}
 

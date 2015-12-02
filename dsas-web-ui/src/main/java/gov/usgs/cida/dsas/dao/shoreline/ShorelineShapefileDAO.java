@@ -2,14 +2,14 @@ package gov.usgs.cida.dsas.dao.shoreline;
 
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
-import gov.usgs.cida.dsas.service.util.Property;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.file.ShorelineFile;
 import gov.usgs.cida.dsas.uncy.ShapefileOutputXploder;
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
+import gov.usgs.cida.dsas.utilities.features.Constants;
+import gov.usgs.cida.dsas.utilities.properties.Property;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
-import gov.usgs.cida.utilities.features.AttributeGetter;
-import gov.usgs.cida.utilities.features.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -32,6 +32,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
+import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.simple.SimpleFeature;
@@ -81,7 +82,7 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 		String[][] fieldNames = null;
 		int MAX_POINTS_AT_ONCE = 500;
 
-		try (IterableShapefileReader isfr = new IterableShapefileReader(shpFile)) {
+		try (IterableShapefileReader isfr = new IterableShapefileReader(new ShpFiles(shpFile))) {
 			DbaseFileHeader dbfHeader = isfr.getDbfHeader();
 			fieldNames = new String[dbfHeader.getNumFields()][2];
 			for (int fIdx = 0; fIdx < fieldNames.length; fIdx++) {
@@ -95,7 +96,7 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 		//TODO- Check if incoming shapefile is not already a points shapefile
 		Map<String, String> config = new HashMap<>(3);
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, uncertaintyFieldName);
-		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, parentDirectory + File.separator + baseFileName);
+		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, shpFile.getAbsolutePath());
 		ShapefileOutputXploder xploder = new ShapefileOutputXploder(config);
 
 		LOGGER.debug("Exploding shapefile at {}", shpFile.getAbsolutePath());

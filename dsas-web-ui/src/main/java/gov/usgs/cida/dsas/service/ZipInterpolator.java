@@ -37,11 +37,10 @@ public class ZipInterpolator {
 		// unpack
 		File tmpDir = Files.createTempDirectory("xplode").toFile();
 		File shpFile = unpack(tmpDir, uploadDestinationFile);
-		String shapefileWithoutSuffix = shpFile.getAbsolutePath().replace(".shp", "");
 		
 		Map<String, String> config = new HashMap<>(3);
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "xplode");
-		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, shapefileWithoutSuffix);
+		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, shpFile.getAbsolutePath());
 		ShapefileOutputXploder xploder = new ShapefileOutputXploder(config);
 		
 		xploder.explode();

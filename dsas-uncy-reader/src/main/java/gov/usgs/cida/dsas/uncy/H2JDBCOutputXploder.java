@@ -32,7 +32,7 @@ public class H2JDBCOutputXploder extends DatabaseOutputXploder {
 	public final static String USERNAME_PARAM = JDBCDataStoreFactory.USER.key;
 	public final static String PASSWORD_PARAM = JDBCDataStoreFactory.PASSWD.key;
 
-	public H2JDBCOutputXploder(Map<String, String> config) {
+	public H2JDBCOutputXploder(Map<String, String> config) throws IOException {
 		super(mergeMaps(config, ImmutableMap.of(JDBCDataStoreFactory.DBTYPE.key, "h2")));
 
 		String[] requiredConfigs = new String[]{
