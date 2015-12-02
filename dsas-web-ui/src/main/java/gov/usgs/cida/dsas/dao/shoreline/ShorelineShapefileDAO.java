@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.NamingException;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
@@ -97,17 +99,21 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 		Map<String, String> config = new HashMap<>(3);
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, uncertaintyFieldName);
 		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, shpFile.getAbsolutePath());
-		ShapefileOutputXploder xploder = new ShapefileOutputXploder(config);
-
 		LOGGER.debug("Exploding shapefile at {}", shpFile.getAbsolutePath());
 		updateProcessInformation("Exploding shapefile");
-		int pointCount = xploder.explode();
-		File pointsShapefile = xploder.getOutputFile();
+		File outputFile = null;
+		int pointCount = 0;
+		try (ShapefileOutputXploder xploder = new ShapefileOutputXploder(config)) {
+			pointCount = xploder.explode();
+			outputFile = xploder.getOutputFile();
+		} catch (Exception ex) {
+			LOGGER.warn("There was an issue during exploding the Shapefile to points", ex);
+		}
 
 		LOGGER.debug("Shapefile exploded");
 		updateProcessInformation(String.format("Shapefile exploded to %s points", pointCount));
 
-		FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(pointsShapefile.toURI().toURL());
+		FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(outputFile.toURI().toURL());
 		int fcSize = fc.size();
 		updateProcessInformation(String.format("Will attempt to enter %s features into the database", fcSize));
 		Class<?> dateType = fc.getSchema().getDescriptor(dateFieldName).getType().getBinding();

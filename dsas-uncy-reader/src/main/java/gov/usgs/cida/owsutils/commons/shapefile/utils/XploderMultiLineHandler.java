@@ -14,7 +14,7 @@ import org.geotools.data.shapefile.shp.ShapefileException;
  */
 public class XploderMultiLineHandler extends MultiLineZHandler {
 
-	public XploderMultiLineHandler(ShapeType type, GeometryFactory gf) throws ShapefileException {
+	public XploderMultiLineHandler(ShapeType type, GeometryFactory gf) throws ShapefileException  {
 		super(type, gf);
 	}
 
