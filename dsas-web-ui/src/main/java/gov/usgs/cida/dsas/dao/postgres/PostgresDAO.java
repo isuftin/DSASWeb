@@ -208,30 +208,47 @@ public class PostgresDAO {
 	 * @throws SQLException
 	 */
 	public boolean insertPointsIntoPDBTable(Connection connection, List<Pdb> pdbs) throws SQLException {
-		StringBuilder sql = new StringBuilder("INSERT INTO proxy_datum_bias (profile_id, segment_id, xy, bias, uncyb, last_update) VALUES");
+		StringBuilder sql = new StringBuilder();
+		StringBuilder values = new StringBuilder();
 		Timestamp now = getUTCNowAsSQLTimestamp();
-
+		
 		for (Pdb pdb : pdbs) {
-			sql.append("(");
-			sql.append(pdb.getProfileId());
-			sql.append(",");
-			sql.append(pdb.getSegmentId());
-			sql.append(",");
-			sql.append("ST_GeomFromText('POINT(");
-			sql.append(pdb.getX()); //  ... ST_GeomFromText('POINT(x y)',4326)
-			sql.append(" ");
-			sql.append(pdb.getY());
-			sql.append(ShorelineFileDAO.DATABASE_PROJECTION);
-			sql.append("),");
-			sql.append(pdb.getBias());
-			sql.append(",");
-			sql.append(pdb.getUncyb());
-			sql.append(",");
-			sql.append(now);
-			sql.append(");");
+			values.append("(")
+			.append(pdb.getProfileId())
+			.append(",")
+			.append(pdb.getSegmentId())
+			.append(",")
+			.append("ST_GeomFromText('POINT(")
+			.append(pdb.getX()) //  ... ST_GeomFromText('POINT(x y)',4326)
+			.append(" ")
+			.append(pdb.getY())
+			.append(")',")
+			.append(ShorelineFileDAO.DATABASE_PROJECTION)
+			.append("),")
+			.append(pdb.getBias())
+			.append(",")
+			.append(pdb.getUncyb())
+			.append(",")
+			.append(now)
+			.append(");");
 		}
-
-		sql.deleteCharAt(sql.length() - 1);
+		values.deleteCharAt(sql.length() - 1);
+		
+		sql.append("WITH new_vals (profile_id, segment_id, xy, bias, uncyb, last_update) AS (")
+				.append("values ")
+					.append(values)
+				.append("), upsert AS (UPDATE proxy_datum_bias p")
+					.append("profile_id = nv.profile_id, ")
+					.append("segment_id = nv.profile_id, ")
+					.append("xy = nv.xy, ")
+					.append("bias = nv.bias, ")
+					.append("uncyb = nv.uncyb, ")
+					.append("last_update = nv.last_update ")
+				.append("FROM new_vals WHERE nv.profile_id = p.profile_id RETURNING p.*) ")
+				.append("INSERT INTO proxy_datum_bias (profile_id, segment_id, xy, bias, uncyb, last_update) ")
+				.append("SELECT profile_id, segment_id, xy, bias, uncyb, last_update ")
+				.append("FROM new_vals WHERE NOT EXISTS (SELECT 1 FROM upsert WHERE upsert.id = new_vals.id)");
+		
 		LOGGER.debug("Insert points into Proxy_Datum_Bias : " + sql.toString());
 		try (final Statement st = connection.createStatement()) {
 			return st.execute(sql.toString());
