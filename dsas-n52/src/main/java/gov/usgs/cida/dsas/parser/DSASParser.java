@@ -2,35 +2,32 @@ package gov.usgs.cida.dsas.parser;
 
 import com.google.common.collect.Lists;
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BASELINE_DIST_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BASELINE_ID_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.DATE_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.DISTANCE_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.ECI_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.EPR_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.LCI_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.LRR_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.NSM_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.SCE_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.TRANSECT_ID_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.UNCY_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.WCI_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.WLR_ATTR;
 import gov.usgs.cida.dsas.wps.geom.Intersection;
-import gov.usgs.cida.utilities.features.AttributeGetter;
-
-import static gov.usgs.cida.utilities.features.Constants.BASELINE_DIST_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.BASELINE_ID_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.DATE_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.DISTANCE_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.EPR_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.LCI_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.LRR_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.NSM_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.SCE_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.TRANSECT_ID_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.UNCY_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.WCI_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.WLR_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.ECI_ATTR;
-
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.feature.FeatureCollection;
@@ -64,8 +61,7 @@ public class DSASParser extends AbstractParser {
             buf = new BufferedWriter(new FileWriter(outfile));
 
             xmlFile = File.createTempFile(getClass().getSimpleName(), ".xml");
-            //FileUtils.copyInputStreamToFile(input, tempFile);
-            consumeInputStreamToFile(input, xmlFile);
+			FileUtils.copyInputStreamToFile(input, xmlFile);
             FeatureCollection collection = new GMLStreamingFeatureCollection(xmlFile);
             FeatureType type = collection.getSchema();
             AttributeGetter getter = new AttributeGetter(type);
@@ -147,19 +143,5 @@ public class DSASParser extends AbstractParser {
     @Override
     public boolean isSupportedSchema(String schema) {
         return schema == null || super.isSupportedSchema(schema);
-    }
-
-    private void consumeInputStreamToFile(InputStream input, File file) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        String line;
-        try {
-            while (null != (line = reader.readLine())) {
-                writer.write(line);
-            }
-        } finally {
-            IOUtils.closeQuietly(reader);
-            IOUtils.closeQuietly(writer);
-        }
     }
 }
