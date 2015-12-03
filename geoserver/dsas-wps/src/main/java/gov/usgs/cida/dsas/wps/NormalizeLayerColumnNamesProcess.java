@@ -3,7 +3,7 @@ package gov.usgs.cida.dsas.wps;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import gov.usgs.cida.dsas.util.GeoserverUtils;
-import gov.usgs.cida.utilities.features.Constants;
+import gov.usgs.cida.dsas.utilities.features.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

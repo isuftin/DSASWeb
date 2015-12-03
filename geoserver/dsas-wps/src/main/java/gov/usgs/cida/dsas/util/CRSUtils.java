@@ -12,12 +12,10 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
-import gov.usgs.cida.utilities.features.AttributeGetter;
-import gov.usgs.cida.utilities.features.Constants;
-
-import static gov.usgs.cida.utilities.features.Constants.SEGMENT_ID_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.SHORELINE_ID_ATTR;
-
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
+import gov.usgs.cida.dsas.utilities.features.Constants;
+import static gov.usgs.cida.dsas.utilities.features.Constants.SEGMENT_ID_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.SHORELINE_ID_ATTR;
 import java.util.LinkedList;
 import java.util.List;
 import org.geotools.data.DataUtilities;
@@ -80,7 +78,7 @@ public class CRSUtils {
 	public static SimpleFeatureCollection transformFeatureCollection(FeatureCollection<SimpleFeatureType, SimpleFeature> featureCollection,
 			CoordinateReferenceSystem sourceCrs,
 			CoordinateReferenceSystem targetCrs) {
-		List<SimpleFeature> sfList = new LinkedList<SimpleFeature>();
+		List<SimpleFeature> sfList = new LinkedList<>();
 		MathTransform transform = null;
 		try {
 			transform = CRS.findMathTransform(sourceCrs, targetCrs, true);

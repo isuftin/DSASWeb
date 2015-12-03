@@ -279,7 +279,7 @@ public abstract class Xploder implements AutoCloseable {
 		}
 		typeBuilder.add(Constants.RECORD_ID_ATTR, Integer.class);
 		typeBuilder.add(Constants.SEGMENT_ID_ATTR, Integer.class);
-		SimpleFeatureType outputFeatureType = typeBuilder.buildFeatureType();
+		outputFeatureType = typeBuilder.buildFeatureType();
 
 		LOGGER.debug("Output feature type is {}", outputFeatureType);
 

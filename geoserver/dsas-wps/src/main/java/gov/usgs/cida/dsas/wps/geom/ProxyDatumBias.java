@@ -1,8 +1,8 @@
 package gov.usgs.cida.dsas.wps.geom;
 
 import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
-import gov.usgs.cida.utilities.features.AttributeGetter;
-import gov.usgs.cida.utilities.features.Constants;
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
+import gov.usgs.cida.dsas.utilities.features.Constants;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 

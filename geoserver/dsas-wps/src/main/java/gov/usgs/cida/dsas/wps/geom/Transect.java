@@ -54,21 +54,22 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
-
 import gov.usgs.cida.dsas.util.CRSUtils;
-
-import static gov.usgs.cida.utilities.features.Constants.*;
-
-import gov.usgs.cida.utilities.features.AttributeGetter;
-import gov.usgs.cida.utilities.features.Constants.Orientation;
-
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
+import static gov.usgs.cida.dsas.utilities.features.Constants.AVG_SLOPE_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BASELINE_DIST_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BASELINE_ID_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BASELINE_ORIENTATION_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BIAS_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BIAS_UNCY_ATTR;
+import gov.usgs.cida.dsas.utilities.features.Constants.Orientation;
+import static gov.usgs.cida.dsas.utilities.features.Constants.TRANSECT_ID_ATTR;
+import static java.lang.Double.NaN;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import static java.lang.Double.NaN;
 
 /**
  * Transect.
