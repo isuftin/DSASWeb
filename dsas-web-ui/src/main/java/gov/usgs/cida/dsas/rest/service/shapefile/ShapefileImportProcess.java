@@ -5,6 +5,7 @@ import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.model.DSASProcessStatus;
 import gov.usgs.cida.dsas.service.util.TokenFileExchanger;
+import gov.usgs.cida.dsas.featureType.file.FeatureTypeFile;
 import gov.usgs.cida.dsas.shoreline.file.IShorelineFile;
 import gov.usgs.cida.dsas.shoreline.file.TokenToShorelineFileSingleton;
 import java.io.FileNotFoundException;

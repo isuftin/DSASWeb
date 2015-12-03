@@ -181,11 +181,12 @@ public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 		return pgDao.getShorelineCountInShorelineView(workspace);
 	}
 
-
+	@Override
 	public void setDSASProcess(DSASProcess process) {
 		this.process = process;
 	}
 
+	@Override
 	protected void updateProcessInformation(String string) {
 		if (this.process != null) {
 			this.process.addProcessInformation(string);

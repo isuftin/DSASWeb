@@ -83,7 +83,7 @@ public class ShorelineShapefile extends ShorelineFile {
 		this.fileMap = new HashMap<>(fileParts.length);
 //		this.workspace = workspace;
 	}
-	
+
 	public ShorelineShapefile(GeoserverDAO gsHandler, ShorelineFileDAO dao, DSASProcess process) {
 		this.process = process;
 		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, System.getProperty("java.io.tmpdir")));

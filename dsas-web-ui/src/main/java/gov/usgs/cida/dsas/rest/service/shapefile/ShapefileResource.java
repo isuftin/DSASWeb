@@ -2,7 +2,7 @@ package gov.usgs.cida.dsas.rest.service.shapefile;
 
 import com.google.gson.Gson;
 //import gov.usgs.cida.dsas.model.IShapeFile;
-import gov.usgs.cida.dsas.shapefile.ShapeFile;
+import gov.usgs.cida.dsas.featureType.file.FeatureTypeFile;
 import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import gov.usgs.cida.dsas.rest.service.security.TokenBasedSecurityFilter;
 import gov.usgs.cida.dsas.service.util.Property;
@@ -181,7 +181,7 @@ public class ShapefileResource {
 	public Response importPdbShapefile(
 			@Context HttpServletRequest req,
 			@PathParam("token") String fileToken,
-			@PathParam("workspace") String workspace
+			@PathParam("workspace") String workspace //#TODO# add null checks ? workspace and token
 	) {
 		String columnsString = req.getParameter("columns");  // #TODO# make this pdb specific
 		Map<String, String> columns = new HashMap<>();

@@ -29,7 +29,7 @@ import org.geotools.feature.SchemaException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import org.slf4j.LoggerFactory;
-
+import gov.usgs.cida.dsas.featureType.file.FeatureTypeFile;
 /**
  *
  * @author isuftin

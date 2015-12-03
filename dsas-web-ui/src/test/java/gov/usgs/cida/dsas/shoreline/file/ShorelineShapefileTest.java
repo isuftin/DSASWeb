@@ -1,5 +1,7 @@
 package gov.usgs.cida.dsas.shoreline.file;
 
+import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
+import gov.usgs.cida.dsas.dao.shoreline.ShorelineShapefileDAO;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
