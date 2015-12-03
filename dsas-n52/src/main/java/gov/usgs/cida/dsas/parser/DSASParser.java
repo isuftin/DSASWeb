@@ -43,105 +43,104 @@ import org.opengis.feature.type.FeatureType;
  * @author jiwalker
  */
 public class DSASParser extends AbstractParser {
-    
-    private static List<String> rateColumns = Lists.newArrayList(BASELINE_DIST_ATTR, BASELINE_ID_ATTR, 
-                        LRR_ATTR, LCI_ATTR, WLR_ATTR, WCI_ATTR, SCE_ATTR, NSM_ATTR, EPR_ATTR, ECI_ATTR);
 
-    public DSASParser() {
-        supportedIDataTypes.add(GenericFileDataBinding.class);
-    }
+	private static List<String> rateColumns = Lists.newArrayList(BASELINE_DIST_ATTR, BASELINE_ID_ATTR,
+			LRR_ATTR, LCI_ATTR, WLR_ATTR, WCI_ATTR, SCE_ATTR, NSM_ATTR, EPR_ATTR, ECI_ATTR);
 
-    @Override
-    public GenericFileDataBinding parse(InputStream input, String mimetype, String schema) {
-        BufferedWriter buf = null;
-        File xmlFile = null;
-        GenericFileDataBinding fileBinding = null;
-        try {
-            File outfile = File.createTempFile(getClass().getSimpleName(), ".tsv");
-            buf = new BufferedWriter(new FileWriter(outfile));
+	public DSASParser() {
+		supportedIDataTypes.add(GenericFileDataBinding.class);
+	}
 
-            xmlFile = File.createTempFile(getClass().getSimpleName(), ".xml");
+	@Override
+	public GenericFileDataBinding parse(InputStream input, String mimetype, String schema) {
+		BufferedWriter buf = null;
+		File xmlFile = null;
+		GenericFileDataBinding fileBinding = null;
+		try {
+			File outfile = File.createTempFile(getClass().getSimpleName(), ".tsv");
+			buf = new BufferedWriter(new FileWriter(outfile));
+
+			xmlFile = File.createTempFile(getClass().getSimpleName(), ".xml");
 			FileUtils.copyInputStreamToFile(input, xmlFile);
-            FeatureCollection collection = new GMLStreamingFeatureCollection(xmlFile);
-            FeatureType type = collection.getSchema();
-            AttributeGetter getter = new AttributeGetter(type);
+			FeatureCollection collection = new GMLStreamingFeatureCollection(xmlFile);
+			FeatureType type = collection.getSchema();
+			AttributeGetter getter = new AttributeGetter(type);
 
-            if (getter.exists(TRANSECT_ID_ATTR)
-                    && getter.exists(DISTANCE_ATTR)
-                    && getter.exists(DATE_ATTR)
-                    && getter.exists(UNCY_ATTR)) {
-                Map<Integer, List<Intersection>> map = new TreeMap<>();
-                FeatureIterator<SimpleFeature> features = collection.features();
-                while (features.hasNext()) {
-                    SimpleFeature feature = features.next();
+			if (getter.exists(TRANSECT_ID_ATTR)
+					&& getter.exists(DISTANCE_ATTR)
+					&& getter.exists(DATE_ATTR)
+					&& getter.exists(UNCY_ATTR)) {
+				Map<Integer, List<Intersection>> map = new TreeMap<>();
+				FeatureIterator<SimpleFeature> features = collection.features();
+				while (features.hasNext()) {
+					SimpleFeature feature = features.next();
 
-                    Intersection intersection = new Intersection(feature, getter);
-                    int transectId = intersection.getTransectId();
-                    if (map.containsKey(transectId)) {
-                        map.get(transectId).add(intersection);
-                    } else {
-                        List<Intersection> pointList = new LinkedList<>();
-                        pointList.add(intersection);
-                        map.put(transectId, pointList);
-                    }
-                }
+					Intersection intersection = new Intersection(feature, getter);
+					int transectId = intersection.getTransectId();
+					if (map.containsKey(transectId)) {
+						map.get(transectId).add(intersection);
+					} else {
+						List<Intersection> pointList = new LinkedList<>();
+						pointList.add(intersection);
+						map.put(transectId, pointList);
+					}
+				}
 
-                for (int key : map.keySet()) {
-                    List<Intersection> points = map.get(key);
-                    buf.write("# " + key);
-                    buf.newLine();
-                    for (Intersection p : points) {
-                        buf.write(p.toString());
-                        buf.newLine();
-                    }
-                }
-            } else if (getter.exists(TRANSECT_ID_ATTR)
-                    && getter.exists(rateColumns)) {
-                FeatureIterator<SimpleFeature> features = collection.features();
-                Map<Integer, SimpleFeature> featureMap = new TreeMap<>();
+				for (int key : map.keySet()) {
+					List<Intersection> points = map.get(key);
+					buf.write("# " + key);
+					buf.newLine();
+					for (Intersection p : points) {
+						buf.write(p.toString());
+						buf.newLine();
+					}
+				}
+			} else if (getter.exists(TRANSECT_ID_ATTR)
+					&& getter.exists(rateColumns)) {
+				FeatureIterator<SimpleFeature> features = collection.features();
+				Map<Integer, SimpleFeature> featureMap = new TreeMap<>();
 
-                buf.write(StringUtils.join(rateColumns, '\t'));
-                buf.newLine();
-                while (features.hasNext()) {
-                    SimpleFeature feature = features.next();
-                    int transectId = (Integer)getter.getValue(TRANSECT_ID_ATTR, feature);
-                    featureMap.put(transectId, feature);
-                }
-                for (Integer id : featureMap.keySet()) {
-                    SimpleFeature feature = featureMap.get(id);
-                    List<String> values = Lists.newArrayListWithCapacity(rateColumns.size());
-                    for (String column : rateColumns) {
-                        if (column.equals(BASELINE_ID_ATTR)) {
-                            String featureId = (String) getter.getValue(column, feature);
-                            // relies on baselineId being featureId (Is that enforced anywhere?)
-                            values.add(featureId.split("\\.")[1]);
-                        }
-                        else {
-                            values.add(getter.getValue(column, feature).toString());
-                        }
-                    }
-                    buf.write(StringUtils.join(values, '\t'));
-                    buf.newLine();
-                }
-            } else {
-                throw new UnsupportedFeatureTypeException("Feature must have match defined type");
-            }
-            buf.flush();
-            IOUtils.closeQuietly(buf);
-            fileBinding = new GenericFileDataBinding(new GenericFileData(outfile, "text/tsv"));
-        } catch (IOException e) {
-            throw new RuntimeException("Error creating temporary file", e);
-        } catch (Exception e) {
-            // if there is trouble parsing the feature collection (or it isn't one) just pass along the xml
-            fileBinding = new GenericFileDataBinding(new GenericFileData(xmlFile, "text/xml"));
-        } finally {
-            IOUtils.closeQuietly(buf);
-            return fileBinding;
-        }
-    }
+				buf.write(StringUtils.join(rateColumns, '\t'));
+				buf.newLine();
+				while (features.hasNext()) {
+					SimpleFeature feature = features.next();
+					int transectId = (Integer) getter.getValue(TRANSECT_ID_ATTR, feature);
+					featureMap.put(transectId, feature);
+				}
+				for (Integer id : featureMap.keySet()) {
+					SimpleFeature feature = featureMap.get(id);
+					List<String> values = Lists.newArrayListWithCapacity(rateColumns.size());
+					for (String column : rateColumns) {
+						if (column.equals(BASELINE_ID_ATTR)) {
+							String featureId = (String) getter.getValue(column, feature);
+							// relies on baselineId being featureId (Is that enforced anywhere?)
+							values.add(featureId.split("\\.")[1]);
+						} else {
+							values.add(getter.getValue(column, feature).toString());
+						}
+					}
+					buf.write(StringUtils.join(values, '\t'));
+					buf.newLine();
+				}
+			} else {
+				throw new UnsupportedFeatureTypeException("Feature must have match defined type");
+			}
+			buf.flush();
+			IOUtils.closeQuietly(buf);
+			fileBinding = new GenericFileDataBinding(new GenericFileData(outfile, "text/tsv"));
+		} catch (IOException e) {
+			throw new RuntimeException("Error creating temporary file", e);
+		} catch (Exception e) {
+			// if there is trouble parsing the feature collection (or it isn't one) just pass along the xml
+			fileBinding = new GenericFileDataBinding(new GenericFileData(xmlFile, "text/xml"));
+		} finally {
+			IOUtils.closeQuietly(buf);
+			return fileBinding;
+		}
+	}
 
-    @Override
-    public boolean isSupportedSchema(String schema) {
-        return schema == null || super.isSupportedSchema(schema);
-    }
+	@Override
+	public boolean isSupportedSchema(String schema) {
+		return schema == null || super.isSupportedSchema(schema);
+	}
 }
