@@ -46,12 +46,10 @@
 
 package gov.usgs.cida.dsas.r;
 
-import static org.junit.Assert.*;
-import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
-import gov.usgs.cida.utilities.features.AttributeGetter;
-import gov.usgs.cida.utilities.features.Constants;
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
+import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.wps.geom.Intersection;
-
+import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
@@ -59,10 +57,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.junit.After;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.opengis.feature.simple.SimpleFeature;

@@ -1,6 +1,5 @@
 package gov.usgs.cida.dsas.uncy;
 
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiLineString;
@@ -64,13 +63,14 @@ import org.slf4j.LoggerFactory;
  * @author rhayes, isuftin
  *
  */
-public abstract class Xploder {
+public abstract class Xploder implements AutoCloseable {
 
 	public static final String UNCERTAINTY_COLUMN_PARAM = "uncertaintyColumnName";
 	public static final String INPUT_FILENAME_PARAM = "inputFilename";
 	public static final String OUTPUT_CRS_PARAM = "outputCrs"; // Should be WKT
 	protected static final String DEFAULT_UNCY_COLUMN_NAME = "uncy";
 	protected static final GeometryFactory GEOMETRY_FACTORY = JTSFactoryFinder.getGeometryFactory(null);
+	protected static XploderMultiLineHandler shapeHandler = null;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Xploder.class);
 	protected String uncyColumnName;
 	protected SimpleFeatureType outputFeatureType;
@@ -136,6 +136,13 @@ public abstract class Xploder {
 			} catch (FactoryException | FactoryRegistryException ex) {
 				LOGGER.warn(String.format("Could not create output CRS. Output will default to %s", DefaultGeographicCRS.WGS84.getName().getCode()), ex);
 			}
+		}
+
+		if (shapeHandler == null) {
+			shapeHandler = new XploderMultiLineHandler(
+					ShapeType.ARCM,
+					new GeometryFactory(com.vividsolutions.jtsexample.geom.ExtendedCoordinateSequenceFactory.instance())
+			);
 		}
 
 	}
@@ -272,7 +279,7 @@ public abstract class Xploder {
 		}
 		typeBuilder.add(Constants.RECORD_ID_ATTR, Integer.class);
 		typeBuilder.add(Constants.SEGMENT_ID_ATTR, Integer.class);
-		SimpleFeatureType outputFeatureType = typeBuilder.buildFeatureType();
+		outputFeatureType = typeBuilder.buildFeatureType();
 
 		LOGGER.debug("Output feature type is {}", outputFeatureType);
 
@@ -286,14 +293,14 @@ public abstract class Xploder {
 		try (IterableShapefileReader rdr = initReader();
 				Transaction tx = new DefaultTransaction();
 				FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter = createFeatureWriter(tx)) {
-			
+
 			LOGGER.debug("Input files from {}\n{}",
 					shapeFiles.getTypeName(),
 					String.join(",",
 							shapeFiles.getFileNames().values().toArray(new String[shapeFiles.getFileNames().size()])
 					)
 			);
-			
+
 			int shpCt = 0;
 			LOGGER.debug(geomIdx + "");
 			if (geomIdx != 0) {
@@ -316,9 +323,6 @@ public abstract class Xploder {
 	}
 
 	protected IterableShapefileReader initReader() throws ShapefileException, IOException {
-		CoordinateSequenceFactory csf = com.vividsolutions.jtsexample.geom.ExtendedCoordinateSequenceFactory.instance();
-		GeometryFactory gf = new GeometryFactory(csf);
-		XploderMultiLineHandler shapeHandler = new XploderMultiLineHandler(ShapeType.ARCM, gf);
 		IterableShapefileReader shapefileReader = new IterableShapefileReader(shapeFiles, shapeHandler);
 
 		dbfHdr = shapefileReader.getDbfHeader();
@@ -331,4 +335,13 @@ public abstract class Xploder {
 	public void setOutputFeatureType(SimpleFeatureType outputFeatureType) {
 		this.outputFeatureType = outputFeatureType;
 	}
+
+	@Override
+	public void close() throws Exception {
+		if (this.shapeFiles != null) {
+			this.shapeFiles.dispose();
+			this.shapeFiles.delete();
+		}
+	}
+
 }

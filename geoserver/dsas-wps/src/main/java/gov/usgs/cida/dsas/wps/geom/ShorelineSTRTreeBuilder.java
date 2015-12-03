@@ -56,11 +56,9 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.index.strtree.STRtree;
-
-import gov.usgs.cida.dsas.util.CRSUtils;
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
-import gov.usgs.cida.utilities.features.AttributeGetter;
-
+import gov.usgs.cida.dsas.util.CRSUtils;
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.geometry.jts.Geometries;
@@ -154,7 +152,6 @@ public class ShorelineSTRTreeBuilder {
             for (Coordinate coord : line.getCoordinates()) {
                 if (prevCoord == null) {
                     prevCoord = coord;
-                    continue;
                 }
                 else {
                     LineSegment segment = new LineSegment(prevCoord, coord);

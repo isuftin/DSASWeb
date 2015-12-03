@@ -2,14 +2,8 @@ package gov.usgs.cida.dsas.wps.geom;
 
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.index.strtree.STRtree;
 import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
-
-import gov.usgs.cida.utilities.features.AttributeGetter;
-
-import java.util.LinkedList;
-import java.util.List;
-
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
 import org.opengis.feature.simple.SimpleFeature;
 
 /**

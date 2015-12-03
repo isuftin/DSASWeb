@@ -45,18 +45,14 @@
  */
 package gov.usgs.cida.dsas.wps.geom;
 
-import gov.usgs.cida.dsas.wps.geom.Transect;
 import com.vividsolutions.jts.algorithm.Angle;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
-import gov.usgs.cida.dsas.wps.geom.Transect;
-
-import gov.usgs.cida.utilities.features.Constants.Orientation;
+import gov.usgs.cida.dsas.utilities.features.Constants.Orientation;
 import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 /**
