@@ -3,7 +3,6 @@ package gov.usgs.cida.dsas.uncy;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
 import org.geotools.data.postgis.PostgisNGJNDIDataStoreFactory;
 import org.geotools.jdbc.JDBCDataStore;
 import org.geotools.jdbc.JDBCDataStoreFactory;
@@ -22,7 +21,7 @@ public class PostGISJNDIOutputXploder extends DatabaseOutputXploder {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PostGISJNDIOutputXploder.class);
 	public final static String JNDI_PARAM = JDBCJNDIDataStoreFactory.JNDI_REFNAME.key;
 
-	public PostGISJNDIOutputXploder(Map<String, String> config) throws IOException {
+	public PostGISJNDIOutputXploder(Map<String, Object> config) throws IOException {
 		super(mergeMaps(config, ImmutableMap.of(JDBCDataStoreFactory.DBTYPE.key, "postgis")));
 
 		String[] requiredConfigs = new String[]{
@@ -33,11 +32,8 @@ public class PostGISJNDIOutputXploder extends DatabaseOutputXploder {
 			if (!config.containsKey(requiredConfig)) {
 				throw new IllegalArgumentException(String.format("Configuration map for PostGISJNDIOutputXploder must include parameter %s", requiredConfig));
 			}
-			if (StringUtils.isBlank(config.get(requiredConfig))) {
-				throw new IllegalArgumentException(String.format("Configuration map for PostGISJNDIOutputXploder must include value for parameter %s", requiredConfig));
-			}
 		}
-		
+
 		dbConfig.put(JDBCDataStoreFactory.DBTYPE.key, dbType);
 		dbConfig.putAll(config);
 	}
@@ -53,6 +49,11 @@ public class PostGISJNDIOutputXploder extends DatabaseOutputXploder {
 				createDataStore.dispose();
 			}
 		}
+	}
+
+	@Override
+	protected JDBCDataStore getDataStore() throws IOException {
+		return new PostgisNGJNDIDataStoreFactory().createDataStore(dbConfig);
 	}
 
 }

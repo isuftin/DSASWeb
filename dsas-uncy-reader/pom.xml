@@ -56,8 +56,7 @@
 		<dependency>
 			<groupId>org.geotools.jdbc</groupId>
 			<artifactId>gt-jdbc-h2</artifactId>
-			<version>${gt.version}</version>
-			<scope>test</scope>
+			<version>14.1</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.h2database</groupId>

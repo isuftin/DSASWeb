@@ -1,8 +1,6 @@
 package gov.usgs.cida.dsas.uncy;
 
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
 import gov.usgs.cida.dsas.model.IShapeFile;
 import static gov.usgs.cida.dsas.uncy.ShapefileOutputXploder.PTS_SUFFIX;
@@ -11,7 +9,6 @@ import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
-import gov.usgs.cida.owsutils.commons.shapefile.utils.PointIterator;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.ShapeAndAttributes;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.XploderMultiLineHandler;
 import java.io.File;
@@ -25,7 +22,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
-import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Transaction;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
@@ -37,9 +33,7 @@ import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.FactoryRegistryException;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
-import org.geotools.referencing.CRS;
 import org.geotools.referencing.ReferencingFactoryFinder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
@@ -50,7 +44,6 @@ import org.opengis.feature.type.GeometryType;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,11 +70,12 @@ public abstract class Xploder implements AutoCloseable {
 	protected CoordinateReferenceSystem outputCRS = DefaultGeographicCRS.WGS84;
 	protected DbaseFileHeader dbfHdr;
 	protected int uncertaintyIdIdx;
+	protected int segmentIdx;
 	protected ShpFiles shapeFiles;
 	protected CoordinateReferenceSystem sourceCRS;
-	private int geomIdx = -1;
+	protected int geomIdx = -1;
 
-	protected Xploder(Map<String, String> config) throws IOException {
+	protected Xploder(Map<String, Object> config) throws IOException {
 		if (config == null || config.isEmpty()) {
 			throw new IllegalArgumentException("Configuration map for ShapefileOutputExploder may not be null or empty");
 		}
@@ -95,12 +89,9 @@ public abstract class Xploder implements AutoCloseable {
 			if (!config.containsKey(requiredConfig)) {
 				throw new IllegalArgumentException(String.format("Configuration map for Xploder must include parameter %s", requiredConfig));
 			}
-			if (StringUtils.isBlank(config.get(requiredConfig))) {
-				throw new IllegalArgumentException(String.format("Configuration map for Xploder must include value for parameter %s", requiredConfig));
-			}
 		}
 
-		String inputFileName = config.get(INPUT_FILENAME_PARAM);
+		String inputFileName = (String) config.get(INPUT_FILENAME_PARAM);
 		File inputFile = new File(inputFileName);
 		if (!inputFile.exists()) {
 			throw new IOException(String.format("%s does not exist", inputFile.getAbsolutePath()));
@@ -129,10 +120,11 @@ public abstract class Xploder implements AutoCloseable {
 		}
 		shapeFiles = new ShpFiles(shapeFileColl.iterator().next());
 
-		this.uncyColumnName = config.get(UNCERTAINTY_COLUMN_PARAM);
-		if (config.containsKey(OUTPUT_CRS_PARAM) && StringUtils.isNotBlank(config.get(OUTPUT_CRS_PARAM))) {
+		this.uncyColumnName = (String) config.get(UNCERTAINTY_COLUMN_PARAM);
+		
+		if (config.containsKey(OUTPUT_CRS_PARAM) && StringUtils.isNotBlank((String) config.get(OUTPUT_CRS_PARAM))) {
 			try {
-				outputCRS = ReferencingFactoryFinder.getCRSFactory(null).createFromWKT(config.get(OUTPUT_CRS_PARAM));
+				outputCRS = ReferencingFactoryFinder.getCRSFactory(null).createFromWKT((String) config.get(OUTPUT_CRS_PARAM));
 			} catch (FactoryException | FactoryRegistryException ex) {
 				LOGGER.warn(String.format("Could not create output CRS. Output will default to %s", DefaultGeographicCRS.WGS84.getName().getCode()), ex);
 			}
@@ -183,32 +175,8 @@ public abstract class Xploder implements AutoCloseable {
 		return sourceSchema;
 	}
 
-	public int processShape(ShapeAndAttributes sap, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException, MismatchedDimensionException, TransformException, FactoryException {
-		Double uncertainty = ((Number) sap.row.read(uncertaintyIdIdx)).doubleValue();
-
-		int ptCt = 0;
-		MultiLineString shape = (MultiLineString) sap.record.shape();
-		int recordNum = sap.record.number;
-		int numGeom = shape.getNumGeometries();
-		MathTransform mathTransform = CRS.findMathTransform(sourceCRS, outputCRS, true);
-		for (int segmentIndex = 0; segmentIndex < numGeom; segmentIndex++) {
-			Geometry geometry = JTS.transform(shape.getGeometryN(segmentIndex), mathTransform);
-			PointIterator pIterator = new PointIterator(geometry);
-			while (pIterator.hasNext()) {
-				Point p = pIterator.next();
-
-				// write new point-thing-with-uncertainty
-				writePoint(p, sap.row, uncertainty, recordNum, segmentId, featureWriter);
-
-				ptCt++;
-
-			}
-		}
-
-		return ptCt;
-
-	}
-
+	public abstract int processShape(ShapeAndAttributes sap, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException, MismatchedDimensionException, TransformException, FactoryException;
+	
 	public void writePoint(Point p, DbaseFileReader.Row row, double uncy, int recordId, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException {
 
 		SimpleFeature writeFeature = featureWriter.next();
@@ -286,47 +254,17 @@ public abstract class Xploder implements AutoCloseable {
 		return outputFeatureType;
 	}
 
-	abstract FeatureWriter<SimpleFeatureType, SimpleFeature> createFeatureWriter(Transaction tx) throws IOException;
+	
+	abstract FeatureWriter<SimpleFeatureType, SimpleFeature> createFeatureWriter(Transaction tx, String typeName) throws IOException;
 
-	public int explode() throws IOException {
-		int ptTotal = 0;
-		try (IterableShapefileReader rdr = initReader();
-				Transaction tx = new DefaultTransaction();
-				FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter = createFeatureWriter(tx)) {
-
-			LOGGER.debug("Input files from {}\n{}",
-					shapeFiles.getTypeName(),
-					String.join(",",
-							shapeFiles.getFileNames().values().toArray(new String[shapeFiles.getFileNames().size()])
-					)
-			);
-
-			int shpCt = 0;
-			LOGGER.debug(geomIdx + "");
-			if (geomIdx != 0) {
-				throw new RuntimeException("This program only supports input that has the geometry as attribute 0");
-			}
-
-			for (ShapeAndAttributes saa : rdr) {
-				int ptCt = processShape(saa, shpCt + 1, featureWriter);
-				LOGGER.debug("Wrote {} points for shape {}", ptCt, saa.record.toString());
-				ptTotal += ptCt;
-				shpCt++;
-			}
-
-			tx.commit();
-			LOGGER.info("Wrote {} points in {} shapes", ptTotal, shpCt);
-		} catch (MismatchedDimensionException | TransformException | FactoryException ex) {
-			throw new IOException(ex);
-		}
-		return ptTotal;
-	}
+	public abstract int explode() throws IOException;
 
 	protected IterableShapefileReader initReader() throws ShapefileException, IOException {
 		IterableShapefileReader shapefileReader = new IterableShapefileReader(shapeFiles, shapeHandler);
 
 		dbfHdr = shapefileReader.getDbfHeader();
 		uncertaintyIdIdx = locateField(dbfHdr, uncyColumnName);
+		segmentIdx = locateField(dbfHdr, Constants.SEGMENT_ID_ATTR);
 		sourceCRS = getInputCrs();
 
 		return shapefileReader;

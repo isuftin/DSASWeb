@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
@@ -96,10 +94,10 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 		}
 
 		//TODO- Check if incoming shapefile is not already a points shapefile
-		Map<String, String> config = new HashMap<>(3);
+		Map<String, Object> config = new HashMap<>(3);
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, uncertaintyFieldName);
 		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, shpFile.getAbsolutePath());
-		LOGGER.debug("Exploding shapefile at {}", shpFile.getAbsolutePath());
+		LOGGER.debug("Exploding shapefile at {}",config.get(ShapefileOutputXploder.INPUT_FILENAME_PARAM));
 		updateProcessInformation("Exploding shapefile");
 		File outputFile = null;
 		int pointCount = 0;

@@ -5,7 +5,7 @@ import com.vividsolutions.jts.geom.Point;
 import static gov.usgs.cida.dsas.uncy.Xploder.GEOMETRY_FACTORY;
 import java.io.IOException;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
+import java.util.logging.Level;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.postgis.PostgisNGDataStoreFactory;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
@@ -31,7 +31,7 @@ public class PostGISJDBCOutputXploder extends DatabaseOutputXploder {
 	public final static String PASSWORD_PARAM = JDBCDataStoreFactory.PASSWD.key;
 	public final static String TABLENAME_PARAM = "table";
 
-	public PostGISJDBCOutputXploder(Map<String, String> config) throws IOException {
+	public PostGISJDBCOutputXploder(Map<String, Object> config) throws IOException {
 		super(mergeMaps(config, ImmutableMap.of(JDBCDataStoreFactory.DBTYPE.key, "postgis")));
 
 		String[] requiredConfigs = new String[]{
@@ -48,13 +48,10 @@ public class PostGISJDBCOutputXploder extends DatabaseOutputXploder {
 			if (!config.containsKey(requiredConfig)) {
 				throw new IllegalArgumentException(String.format("Configuration map for PostGISJDBCOutputXploder must include parameter %s", requiredConfig));
 			}
-			if (StringUtils.isBlank(config.get(requiredConfig))) {
-				throw new IllegalArgumentException(String.format("Configuration map for PostGISJDBCOutputXploder must include value for parameter %s", requiredConfig));
-			}
 		}
 		dbConfig.put(JDBCDataStoreFactory.DBTYPE.key, dbType);
 		dbConfig.putAll(config);
-		dbConfig.put(PORT_PARAM, Integer.parseInt(config.get(PORT_PARAM), 10));
+		dbConfig.put(PORT_PARAM, config.get(PORT_PARAM));
 	}
 
 	@Override
@@ -83,6 +80,11 @@ public class PostGISJDBCOutputXploder extends DatabaseOutputXploder {
 		writeFeature.setAttribute(3, row.read(uncertaintyIdIdx));
 
 		featureWriter.write();
+	}
+
+	@Override
+	protected JDBCDataStore getDataStore() throws IOException {
+		return new PostgisNGDataStoreFactory().createDataStore(dbConfig);
 	}
 
 }
