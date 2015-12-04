@@ -14,12 +14,12 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
@@ -86,10 +86,12 @@ public abstract class DatabaseOutputXploder extends Xploder {
 	protected String SHORELINES_TABLE_SHORELINETYPE_FIELD_NAME = "shoreline_type";
 	protected String SHORELINES_TABLE_SHORELINEAUX_FIELD_NAME = "auxillary_name";
 	protected String POINTS_TABLE_NAME = "shoreline_points";
+	protected String WORKSPACE_TABLE_NAME = "workspace";
 	protected String POINT_TABLE_SHORELINED_ID_FIELD_NAME = "shoreline_id";
 	protected String POINT_TABLE_SEGMENT_ID_FIELD_NAME = "segment_id";
 	protected SimpleFeatureType pointOutputFeatureType;
 	protected SimpleFeatureType shorelineOutputFeatureType;
+	protected Connection connection;
 	public final String dbType;
 	protected final Map<String, Object> dbConfig = new HashMap<>();
 
@@ -99,10 +101,6 @@ public abstract class DatabaseOutputXploder extends Xploder {
 		String[] requiredConfigs = new String[]{
 			DB_TYPE_PARAM,
 			INCOMING_DATEFIELD_NAME_PARAM,
-			INCOMING_MHW_NAME_PARAM,
-			INCOMING_SOURCE_NAME_PARAM,
-			INCOMING_NAME_NAME_PARAM,
-			INCOMING_ORIENTATION_NAME_PARAM,
 			WORKSPACE_PARAM
 		};
 
@@ -116,7 +114,7 @@ public abstract class DatabaseOutputXploder extends Xploder {
 		this.WORKSPACE_NAME = (String) config.get(WORKSPACE_PARAM);
 		this.SHAPEFILE_MHW_FIELD_NAME = (String) config.get(INCOMING_MHW_NAME_PARAM);
 		this.SHAPEFILE_SOURCE_FIELD_NAME = (String) config.get(INCOMING_SOURCE_NAME_PARAM);
-		this.SHAPEFILE_NAME_FIELD_NAME = (String) config.get(INCOMING_SOURCE_NAME_PARAM);
+		this.SHAPEFILE_NAME_FIELD_NAME = (String) config.get(INCOMING_NAME_NAME_PARAM);
 		this.SHAPEFILE_ORIENTATION_FIELD_NAME = (String) config.get(INCOMING_ORIENTATION_NAME_PARAM);
 
 		String pointsTableName = (String) config.get(POINTS_TABLE_NAME_PARAM);
@@ -179,7 +177,7 @@ public abstract class DatabaseOutputXploder extends Xploder {
 		if (StringUtils.isNotBlank(shorelinesTableMhwName)) {
 			this.SHORELINES_TABLE_MHW_FIELD_NAME = shorelinesTableMhwName;
 		}
-
+		
 	}
 
 	public static Map<String, Object> mergeMaps(Map<String, Object> m1, Map<String, Object> m2) {
@@ -262,7 +260,7 @@ public abstract class DatabaseOutputXploder extends Xploder {
 
 	@Override
 	FeatureWriter<SimpleFeatureType, SimpleFeature> createFeatureWriter(Transaction tx, String typeName) throws IOException {
-		outputFeatureType = createOutputFeatureType();
+		outputFeatureType = createOutputFeatureType(typeName);
 		DataStore ds = getDataStore();
 		FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter = ds.getFeatureWriterAppend(typeName, tx);
 
@@ -276,15 +274,17 @@ public abstract class DatabaseOutputXploder extends Xploder {
 		this.shorelineOutputFeatureType = createShorelineOutputFeatureType();
 		try (IterableShapefileReader rdr = initReader();
 				Transaction tx = new DefaultTransaction();
+				Connection tryWithResourcesConnection = getDataStore().getConnection(tx);
 				FeatureWriter<SimpleFeatureType, SimpleFeature> pointFeatureWriter = createFeatureWriter(tx, POINTS_TABLE_NAME);) {
-
-			// Figure out the date field index
+			
 			DbaseFileHeader dbfHeader = rdr.getDbfHeader();
-			int dateFieldIdx = locateField(dbfHeader, INCOMING_DATEFIELD_NAME_PARAM);
-			int mhwIdx = locateField(dbfHeader, INCOMING_MHW_NAME_PARAM);
+			int dateFieldIdx = locateField(dbfHeader, SHAPEFILE_DATE_FIELD_NAME);
+			int mhwIdx = locateField(dbfHeader, SHAPEFILE_MHW_FIELD_NAME);
 			int sourceIdx = locateField(dbfHeader, SHAPEFILE_SOURCE_FIELD_NAME);
 			int nameIdx = locateField(dbfHeader, SHAPEFILE_NAME_FIELD_NAME);
 			int orientationIdx = locateField(dbfHeader, SHAPEFILE_ORIENTATION_FIELD_NAME);
+			
+			this.connection = tryWithResourcesConnection;
 
 			LOGGER.debug("Input files from {}\n{}",
 					shapeFiles.getTypeName(),
@@ -293,28 +293,23 @@ public abstract class DatabaseOutputXploder extends Xploder {
 					)
 			);
 
-			int shpCt = 0;
-			if (geomIdx != 0) {
-				throw new RuntimeException("This program only supports input that has the geometry as attribute 0");
-			}
-
+			int shapeCount = 0;
 			for (ShapeAndAttributes saa : rdr) {
 				java.util.Date date = getDateFromRowObject(saa.row.read(dateFieldIdx), dbfHeader.getFieldClass(dateFieldIdx));
-				int segmentId = (int) saa.row.read(segmentIdx);
-				boolean mhw = (boolean) saa.row.read(mhwIdx);
-				String source = (String) saa.row.read(sourceIdx);
-				String name = (String) saa.row.read(nameIdx);
-				String orientation = (String) saa.row.read(orientationIdx);
-				long shorelineId = writeShoreline(WORKSPACE_NAME, date, mhw, source, name, orientation);
+				boolean mhw = mhwIdx == -1 ? false : (boolean) saa.row.read(mhwIdx);
+				String source = sourceIdx == -1 ? shapeFiles.getTypeName() : (String) saa.row.read(sourceIdx);
+				String name = nameIdx == -1 ? shapeFiles.getTypeName() : (String) saa.row.read(nameIdx);
+				String orientation = orientationIdx == -1 ? null : (String) saa.row.read(orientationIdx);
 				
-				int ptCt = processShape(saa, segmentId, pointFeatureWriter);
+				long shorelineId = writeShoreline(WORKSPACE_NAME, date, mhw, source, name, orientation);
+				int ptCt = processShape(saa, ++shapeCount, shorelineId, pointFeatureWriter);
+				
 				LOGGER.debug("Wrote {} points for shape {}", ptCt, saa.record.toString());
 				ptTotal += ptCt;
-				shpCt++;
 			}
 
 			tx.commit();
-			LOGGER.info("Wrote {} points in {} shapes", ptTotal, shpCt);
+			LOGGER.info("Wrote {} points in {} shapes", ptTotal, shapeCount);
 		} catch (MismatchedDimensionException | TransformException | FactoryException | ParseException | SQLException ex) {
 			throw new IOException(ex);
 		}
@@ -322,12 +317,11 @@ public abstract class DatabaseOutputXploder extends Xploder {
 	}
 
 	@Override
-	public int processShape(ShapeAndAttributes sap, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> pointFeatureWriter) throws IOException, MismatchedDimensionException, TransformException, FactoryException {
-		Double uncertainty = ((Number) sap.row.read(uncertaintyIdIdx)).doubleValue();
-
+	public int processShape(ShapeAndAttributes saa, int segmentId, long shorelineId, FeatureWriter<SimpleFeatureType, SimpleFeature> pointFeatureWriter) throws IOException, MismatchedDimensionException, TransformException, FactoryException {
+		Double uncertainty = ((Number) saa.row.read(uncertaintyIdIdx)).doubleValue();
+		
 		int ptCt = 0;
-		MultiLineString shape = (MultiLineString) sap.record.shape();
-		int recordNum = sap.record.number;
+		MultiLineString shape = (MultiLineString) saa.record.shape();
 		int numGeom = shape.getNumGeometries();
 		MathTransform mathTransform = CRS.findMathTransform(sourceCRS, outputCRS, true);
 
@@ -337,9 +331,9 @@ public abstract class DatabaseOutputXploder extends Xploder {
 			while (pIterator.hasNext()) {
 				writePoint(
 						pIterator.next(),
-						sap.row,
+						saa.row,
 						uncertainty,
-						recordNum,
+						shorelineId,
 						segmentId,
 						pointFeatureWriter);
 				ptCt++;
@@ -371,61 +365,50 @@ public abstract class DatabaseOutputXploder extends Xploder {
 		return result;
 	}
 
-	@Override
-	public void writePoint(Point p, DbaseFileReader.Row row, double uncy, int recordId, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> pointFeatureWriter) throws IOException {
-		SimpleFeature writeFeature = pointFeatureWriter.next();
-		Point np = GEOMETRY_FACTORY.createPoint(p.getCoordinate());
-
-		// indexes will match to the featuretype built @ createPointOutputFeatureType()
-		writeFeature.setAttribute(pointOutputFeatureType.getDescriptor(0).getLocalName(), np);
-		writeFeature.setAttribute(pointOutputFeatureType.getDescriptor(1).getLocalName(), uncy);
-		writeFeature.setAttribute(pointOutputFeatureType.getDescriptor(2).getLocalName(), recordId);
-		writeFeature.setAttribute(pointOutputFeatureType.getDescriptor(3).getLocalName(), segmentId);
-		pointFeatureWriter.write();
+	
+	public boolean writePoints(Connection connection, long shorelineId, int segmentId, double[][] XYuncyArray) throws IOException, SQLException {
+		StringBuilder sql = new StringBuilder(String.format("INSERT INTO %s (%s, %s, geom, uncy) VALUES", POINTS_TABLE_NAME, POINT_TABLE_SHORELINED_ID_FIELD_NAME, POINT_TABLE_SEGMENT_ID_FIELD_NAME));
+		for (double[] XYUncy : XYuncyArray) {
+			sql.append("(").append(shorelineId).append(",").append(segmentId).append(",").append("ST_GeomFromText('POINT(").append(XYUncy[0]).append(" ").append(XYUncy[1]).append(")',")
+					.append(CRS.toSRS(pointOutputFeatureType.getCoordinateReferenceSystem(), true)).append("),").append(XYUncy[2]).append("),");
+		}
+		sql.deleteCharAt(sql.length() - 1);
+		try (final Statement st = connection.createStatement()) {
+			return st.execute(sql.toString());
+		}
 	}
 
 	protected abstract JDBCDataStore getDataStore() throws IOException;
 
 	protected long writeShoreline(String workspace, java.util.Date date, boolean mhw, String source, String name, String orientation) throws IOException, SQLException {
-		JDBCDataStore ds = null;
-		try {
-			ds = getDataStore();
-			String sql = MessageFormat.format("INSERT INTO {0}({1},{2}, {3}, {4}, {5}, {6}, {7}) VALUES (?,?,?,?,?,?,?)",
-					SHORELINES_TABLE_NAME,
-					SHORELINES_TABLE_DATE_FIELD_NAME,
-					SHORELINES_TABLE_MHW_FIELD_NAME,
-					SHORELINES_TABLE_WORKSPACE_FIELD_NAME,
-					SHORELINES_TABLE_SOURCE_FIELD_NAME,
-					SHORELINES_TABLE_SHORELINENAME_FIELD_NAME,
-					SHORELINES_TABLE_SHORELINETYPE_FIELD_NAME,
-					SHORELINES_TABLE_SHORELINEAUX_FIELD_NAME
-			);
-			try (Transaction tx = new DefaultTransaction();
-					Connection connection = ds.getConnection(tx);
-					PreparedStatement ps = connection.prepareStatement(sql)) {
-				ps.setDate(1, (java.sql.Date) date);
-				ps.setBoolean(2, mhw);
-				ps.setString(3, workspace);
-				ps.setString(4, source);
-				ps.setString(5, name.toLowerCase());
-				ps.setString(6, orientation);
-				ps.setString(7, null);
-				int affectedRows = ps.executeUpdate();
-				if (affectedRows == 0) {
-					throw new SQLException("Inserting a shoreline row failed. No rows affected");
-				}
-				try (final ResultSet generatedKeys = ps.getGeneratedKeys()) {
-					if (generatedKeys.next()) {
-						return generatedKeys.getLong(1);
-					} else {
-						throw new SQLException("Inserting a shoreline row failed. No ID obtained");
-					}
-				}
+		String sql = MessageFormat.format("INSERT INTO {0}({1},{2}, {3}, {4}, {5}, {6}, {7}) VALUES (?,?,?,?,?,?,?)",
+				SHORELINES_TABLE_NAME,
+				SHORELINES_TABLE_DATE_FIELD_NAME,
+				SHORELINES_TABLE_MHW_FIELD_NAME,
+				SHORELINES_TABLE_WORKSPACE_FIELD_NAME,
+				SHORELINES_TABLE_SOURCE_FIELD_NAME,
+				SHORELINES_TABLE_SHORELINENAME_FIELD_NAME,
+				SHORELINES_TABLE_SHORELINETYPE_FIELD_NAME,
+				SHORELINES_TABLE_SHORELINEAUX_FIELD_NAME
+		);
+		try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+			ps.setDate(1, new java.sql.Date(date.getTime()));
+			ps.setBoolean(2, mhw);
+			ps.setString(3, workspace);
+			ps.setString(4, source);
+			ps.setString(5, name.toLowerCase());
+			ps.setString(6, orientation);
+			ps.setString(7, null);
+			int affectedRows = ps.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException("Inserting a shoreline row failed. No rows affected");
 			}
-
-		} finally {
-			if (ds != null) {
-				ds.dispose();
+			try (final ResultSet generatedKeys = ps.getGeneratedKeys()) {
+				if (generatedKeys.next()) {
+					return generatedKeys.getLong(1);
+				} else {
+					throw new SQLException("Inserting a shoreline row failed. No ID obtained");
+				}
 			}
 		}
 	}

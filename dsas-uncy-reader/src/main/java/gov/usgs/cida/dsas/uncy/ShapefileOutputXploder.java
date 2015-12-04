@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Transaction;
@@ -92,7 +91,7 @@ public class ShapefileOutputXploder extends Xploder {
 			}
 
 			for (ShapeAndAttributes saa : rdr) {
-				int ptCt = processShape(saa, shpCt + 1, featureWriter);
+				int ptCt = processShape(saa, shpCt + 1, -1, featureWriter);
 				LOGGER.debug("Wrote {} points for shape {}", ptCt, saa.record.toString());
 				ptTotal += ptCt;
 				shpCt++;
@@ -107,7 +106,7 @@ public class ShapefileOutputXploder extends Xploder {
 	}
 	
 	@Override
-	public int processShape(ShapeAndAttributes sap, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException, MismatchedDimensionException, TransformException, FactoryException {
+	public int processShape(ShapeAndAttributes sap, int segmentId, long shorelineId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException, MismatchedDimensionException, TransformException, FactoryException {
 		Double uncertainty = ((Number) sap.row.read(uncertaintyIdIdx)).doubleValue();
 
 		int ptCt = 0;

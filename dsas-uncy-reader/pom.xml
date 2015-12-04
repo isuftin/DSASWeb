@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>org.geotools.jdbc</groupId>
 			<artifactId>gt-jdbc-h2</artifactId>
-			<version>14.1</version>
+			<version>${gt.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.h2database</groupId>
@@ -84,7 +84,7 @@
 	</dependencies>
 	
 	<build>
-		<plugins>
+<!--		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -188,6 +188,6 @@
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
+		</plugins>-->
 	</build>
 </project>

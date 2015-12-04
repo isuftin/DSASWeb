@@ -121,7 +121,7 @@ public abstract class Xploder implements AutoCloseable {
 		shapeFiles = new ShpFiles(shapeFileColl.iterator().next());
 
 		this.uncyColumnName = (String) config.get(UNCERTAINTY_COLUMN_PARAM);
-		
+
 		if (config.containsKey(OUTPUT_CRS_PARAM) && StringUtils.isNotBlank((String) config.get(OUTPUT_CRS_PARAM))) {
 			try {
 				outputCRS = ReferencingFactoryFinder.getCRSFactory(null).createFromWKT((String) config.get(OUTPUT_CRS_PARAM));
@@ -142,10 +142,12 @@ public abstract class Xploder implements AutoCloseable {
 	protected static int locateField(DbaseFileHeader fileHeader, String fieldName) {
 		int fieldPositionIndex = -1;
 
-		for (int headerIndex = 0; headerIndex < fileHeader.getNumFields(); headerIndex++) {
-			String fileFieldName = fileHeader.getFieldName(headerIndex);
-			if (fieldName.equalsIgnoreCase(fileFieldName)) {
-				fieldPositionIndex = headerIndex;
+		if (StringUtils.isNotBlank(fieldName)) {
+			for (int headerIndex = 0; headerIndex < fileHeader.getNumFields(); headerIndex++) {
+				String fileFieldName = fileHeader.getFieldName(headerIndex);
+				if (fieldName.equalsIgnoreCase(fileFieldName)) {
+					fieldPositionIndex = headerIndex;
+				}
 			}
 		}
 
@@ -175,9 +177,9 @@ public abstract class Xploder implements AutoCloseable {
 		return sourceSchema;
 	}
 
-	public abstract int processShape(ShapeAndAttributes sap, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException, MismatchedDimensionException, TransformException, FactoryException;
-	
-	public void writePoint(Point p, DbaseFileReader.Row row, double uncy, int recordId, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException {
+	public abstract int processShape(ShapeAndAttributes sap, int segmentId, long recordId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException, MismatchedDimensionException, TransformException, FactoryException;
+
+	public void writePoint(Point p, DbaseFileReader.Row row, double uncy, long recordId, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException {
 
 		SimpleFeature writeFeature = featureWriter.next();
 
@@ -254,7 +256,6 @@ public abstract class Xploder implements AutoCloseable {
 		return outputFeatureType;
 	}
 
-	
 	abstract FeatureWriter<SimpleFeatureType, SimpleFeature> createFeatureWriter(Transaction tx, String typeName) throws IOException;
 
 	public abstract int explode() throws IOException;

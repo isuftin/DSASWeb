@@ -5,7 +5,6 @@ import com.vividsolutions.jts.geom.Point;
 import static gov.usgs.cida.dsas.uncy.Xploder.GEOMETRY_FACTORY;
 import java.io.IOException;
 import java.util.Map;
-import java.util.logging.Level;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.postgis.PostgisNGDataStoreFactory;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
@@ -29,7 +28,6 @@ public class PostGISJDBCOutputXploder extends DatabaseOutputXploder {
 	public final static String SCHEMA_PARAM = JDBCDataStoreFactory.SCHEMA.key;
 	public final static String USERNAME_PARAM = JDBCDataStoreFactory.USER.key;
 	public final static String PASSWORD_PARAM = JDBCDataStoreFactory.PASSWD.key;
-	public final static String TABLENAME_PARAM = "table";
 
 	public PostGISJDBCOutputXploder(Map<String, Object> config) throws IOException {
 		super(mergeMaps(config, ImmutableMap.of(JDBCDataStoreFactory.DBTYPE.key, "postgis")));
@@ -40,8 +38,7 @@ public class PostGISJDBCOutputXploder extends DatabaseOutputXploder {
 			DATABASE_PARAM,
 			SCHEMA_PARAM,
 			USERNAME_PARAM,
-			PASSWORD_PARAM,
-			TABLENAME_PARAM
+			PASSWORD_PARAM
 		};
 
 		for (String requiredConfig : requiredConfigs) {
@@ -68,7 +65,7 @@ public class PostGISJDBCOutputXploder extends DatabaseOutputXploder {
 	}
 
 	@Override
-	public void writePoint(Point p, DbaseFileReader.Row row, double uncy, int recordId, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException {
+	public void writePoint(Point p, DbaseFileReader.Row row, double uncy, long recordId, int segmentId, FeatureWriter<SimpleFeatureType, SimpleFeature> featureWriter) throws IOException {
 
 		SimpleFeature writeFeature = featureWriter.next();
 
