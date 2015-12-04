@@ -12,8 +12,14 @@ import com.vividsolutions.jts.index.strtree.STRtree;
 import gov.usgs.cida.dsas.exceptions.PoorlyDefinedBaselineException;
 import gov.usgs.cida.dsas.util.BaselineDistanceAccumulator;
 import gov.usgs.cida.dsas.util.CRSUtils;
-import gov.usgs.cida.utilities.features.AttributeGetter;
-import gov.usgs.cida.utilities.features.Constants.Orientation;
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
+import static gov.usgs.cida.dsas.utilities.features.Constants.AVG_SLOPE_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BASELINE_ORIENTATION_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BIAS_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BIAS_UNCY_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.DEFAULT_BIAS;
+import static gov.usgs.cida.dsas.utilities.features.Constants.DEFAULT_BIAS_UNCY;
+import gov.usgs.cida.dsas.utilities.features.Constants.Orientation;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,12 +34,6 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import static gov.usgs.cida.utilities.features.Constants.AVG_SLOPE_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.BASELINE_ORIENTATION_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.BIAS_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.BIAS_UNCY_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.DEFAULT_BIAS;
-import static gov.usgs.cida.utilities.features.Constants.DEFAULT_BIAS_UNCY;
 
 /**
  *

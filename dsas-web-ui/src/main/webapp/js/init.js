@@ -15,9 +15,15 @@ define([
 	"use strict";
 	this.router = new Router();
 
+	var contextPath = module.config().contextPath;
+	if (!contextPath.slice(-1) === '/') {
+		contextPath += '/';
+	}
+	
 	Backbone.history.start({
-		root: module.config().contextPath
+		root: contextPath
 	});
+	
 	log.info("DSASweb inititialized");
 
 	return this.router;

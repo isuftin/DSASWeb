@@ -1,24 +1,19 @@
 package gov.usgs.cida.dsas.wps.geom;
 
-import gov.usgs.cida.dsas.wps.geom.ShorelineFeature;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
-import gov.usgs.cida.dsas.wps.geom.ShorelineFeature;
-
-import gov.usgs.cida.utilities.features.AttributeGetter;
-
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
+import static gov.usgs.cida.dsas.utilities.features.Constants.UNCY_ATTR;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-
-import static gov.usgs.cida.utilities.features.Constants.UNCY_ATTR;
-import static org.junit.Assert.*;
 
 /**
  *

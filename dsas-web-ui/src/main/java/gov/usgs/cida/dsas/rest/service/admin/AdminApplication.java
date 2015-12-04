@@ -7,7 +7,7 @@ import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import gov.usgs.cida.dsas.rest.service.security.DynamicRolesLoginRedirectFeature;
 import gov.usgs.cida.dsas.rest.service.security.ForbiddenExceptionMapper;
 import gov.usgs.cida.dsas.rest.service.security.TokenBasedSecurityFilter;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import javax.ws.rs.ApplicationPath;
 import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.server.ResourceConfig;

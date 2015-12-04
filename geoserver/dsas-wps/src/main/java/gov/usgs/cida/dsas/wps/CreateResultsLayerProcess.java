@@ -49,16 +49,14 @@ package gov.usgs.cida.dsas.wps;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
-
-import gov.usgs.cida.dsas.util.CRSUtils;
-import gov.usgs.cida.dsas.util.LayerImportUtil;
-import gov.usgs.cida.dsas.util.UTMFinder;
 import gov.usgs.cida.dsas.exceptions.InputFileFormatException;
 import gov.usgs.cida.dsas.exceptions.UnsupportedCoordinateReferenceSystemException;
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
-import gov.usgs.cida.utilities.features.AttributeGetter;
-import gov.usgs.cida.utilities.features.Constants;
-
+import gov.usgs.cida.dsas.util.CRSUtils;
+import gov.usgs.cida.dsas.util.LayerImportUtil;
+import gov.usgs.cida.dsas.util.UTMFinder;
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
+import gov.usgs.cida.dsas.utilities.features.Constants;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,7 +65,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
 import org.apache.commons.lang.StringUtils;
 import org.geoserver.catalog.Catalog;
 import org.geoserver.catalog.ProjectionPolicy;
@@ -82,7 +79,6 @@ import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.process.factory.DescribeParameter;
 import org.geotools.process.factory.DescribeProcess;
 import org.geotools.process.factory.DescribeResult;
-import org.geotools.referencing.crs.AbstractCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;

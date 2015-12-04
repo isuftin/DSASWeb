@@ -1,7 +1,6 @@
 package gov.usgs.cida.dsas.service;
 
 import gov.usgs.cida.dsas.uncy.ShapefileOutputXploder;
-import gov.usgs.cida.dsas.uncy.Xploder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,9 +19,12 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import org.geotools.data.shapefile.files.ShpFileType;
 import org.geotools.data.shapefile.files.ShpFiles;
+import org.slf4j.LoggerFactory;
 
 public class ZipInterpolator {
 
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ZipInterpolator.class);
+	
 	/**
 	 * Unpack a shapefile zip file, expand the shp from MultilineM to Point
 	 * while substituting point-by-point uncertainty values, and return a new
@@ -33,21 +35,22 @@ public class ZipInterpolator {
 	 * @throws java.io.IOException
 	 */
 	public File explode(File uploadDestinationFile) throws IOException {
-		
+
 		// unpack
 		File tmpDir = Files.createTempDirectory("xplode").toFile();
 		File shpFile = unpack(tmpDir, uploadDestinationFile);
-		String shapefileWithoutSuffix = shpFile.getAbsolutePath().replace(".shp", "");
-		
+
 		Map<String, String> config = new HashMap<>(3);
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "xplode");
-		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, shapefileWithoutSuffix);
-		ShapefileOutputXploder xploder = new ShapefileOutputXploder(config);
-		
-		xploder.explode();
-
-		File newZip = repack(tmpDir, xploder.getOutputFile());
-		return newZip;
+		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, shpFile.getAbsolutePath());
+		File outputFile = null;
+		try (ShapefileOutputXploder xploder = new ShapefileOutputXploder(config)) {
+			xploder.explode();
+			outputFile = xploder.getOutputFile();
+		} catch (Exception ex) {
+			LOGGER.warn("There was an issue during exploding the Shapefile to points", ex);
+		}
+		return repack(tmpDir, outputFile);
 	}
 
 	/**

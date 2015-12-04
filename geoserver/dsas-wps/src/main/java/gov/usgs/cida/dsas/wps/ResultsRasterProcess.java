@@ -3,12 +3,10 @@ package gov.usgs.cida.dsas.wps;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineSegment;
-
-import gov.usgs.cida.utilities.colors.AttributeRange;
-import gov.usgs.cida.utilities.colors.ColorMap;
-import gov.usgs.cida.utilities.colors.JetColorMap;
-import gov.usgs.cida.utilities.features.Constants;
-
+import gov.usgs.cida.dsas.utilities.colors.AttributeRange;
+import gov.usgs.cida.dsas.utilities.colors.ColorMap;
+import gov.usgs.cida.dsas.utilities.colors.JetColorMap;
+import gov.usgs.cida.dsas.utilities.features.Constants;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
@@ -24,7 +22,6 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.apache.commons.lang.StringUtils;
 import org.geoserver.wps.gs.GeoServerProcess;
 import org.geotools.coverage.grid.GridCoordinates2D;
@@ -181,7 +178,7 @@ public class ResultsRasterProcess implements GeoServerProcess {
 
 			String featureCollectionId = featureCollection.getSchema().getName().getURI();
 
-			baselineFeaturesMap = new LinkedHashMap<Integer, LinkedList<SimpleFeature>>();
+			baselineFeaturesMap = new LinkedHashMap<>();
 
 			AttributeRange attributeRange = null;
 
@@ -208,7 +205,7 @@ public class ResultsRasterProcess implements GeoServerProcess {
 					Integer baselineId = baselineIdObject instanceof Number ? ((Number) baselineIdObject).intValue() : null;
 					LinkedList<SimpleFeature> baselineFeatures = baselineFeaturesMap.get(baselineId);
 					if (baselineFeatures == null) {
-						baselineFeatures = new LinkedList<SimpleFeature>();
+						baselineFeatures = new LinkedList<>();
 						baselineFeaturesMap.put(baselineId, baselineFeatures);
 					}
 					baselineFeatures.add(feature);

@@ -3,8 +3,8 @@ package gov.usgs.cida.dsas.dao;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.model.DSASProcess;
-import gov.usgs.cida.dsas.service.util.Property;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.utilities.properties.Property;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public abstract class FeatureTypeFileDAO {
 		}
 		return con;
 	}
-
+	
 	public void setDSASProcess(DSASProcess process) {
 		this.process = process;
 	}
@@ -63,7 +63,6 @@ public abstract class FeatureTypeFileDAO {
 			this.process.addProcessInformation(string);
 		}
 	}
-
 	/**
 	 * Imports the shoreline file into the database. Returns the name of the
 	 * view that holds this shoreline

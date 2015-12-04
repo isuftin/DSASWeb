@@ -16,4 +16,8 @@
 /dsas-web-ui/src/main/webapp/css/custom.css
 /geoserver/dsas-wps/target/
 /geoserver/dsas-geoserver/target/
+<<<<<<< HEAD
 /dsas-web-ui/nbproject/
+=======
+/dsas-uncy-reader/trace.db/
+>>>>>>> 5e02cae67cc044e57617188317c8ba6a6fcfa0f7

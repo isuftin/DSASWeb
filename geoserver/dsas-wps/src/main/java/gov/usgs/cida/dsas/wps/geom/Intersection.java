@@ -50,12 +50,25 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.index.strtree.STRtree;
 import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
 
-import static gov.usgs.cida.utilities.features.Constants.*;
 
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
-import gov.usgs.cida.utilities.features.AttributeGetter;
-import gov.usgs.cida.utilities.features.Constants;
 import gov.usgs.cida.dsas.exceptions.PoorlyDefinedBaselineException;
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
+import gov.usgs.cida.dsas.utilities.features.Constants;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BIAS_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BIAS_UNCY_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.COMBINED_UNCY_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.DATE_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.DB_DATE_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.DEFAULT_BIAS;
+import static gov.usgs.cida.dsas.utilities.features.Constants.DEFAULT_BIAS_UNCY;
+import static gov.usgs.cida.dsas.utilities.features.Constants.DEFAULT_GEOM_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.DISTANCE_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.MHW_ATTR;
+import gov.usgs.cida.dsas.utilities.features.Constants.Orientation;
+import static gov.usgs.cida.dsas.utilities.features.Constants.TRANSECT_ID_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.UNCY_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.UNSHIFTED_DISTANCE_ATTR;
 
 import java.util.Collection;
 import java.util.Date;

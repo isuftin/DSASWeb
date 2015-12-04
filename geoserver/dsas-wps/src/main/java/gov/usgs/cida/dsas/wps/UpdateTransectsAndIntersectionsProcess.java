@@ -3,20 +3,18 @@ package gov.usgs.cida.dsas.wps;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
+import gov.usgs.cida.dsas.exceptions.LayerDoesNotExistException;
+import gov.usgs.cida.dsas.exceptions.PoorlyDefinedBaselineException;
+import gov.usgs.cida.dsas.exceptions.UnsupportedCoordinateReferenceSystemException;
 import gov.usgs.cida.dsas.util.BaselineDistanceAccumulator;
 import gov.usgs.cida.dsas.util.CRSUtils;
 import gov.usgs.cida.dsas.util.GeoserverUtils;
 import gov.usgs.cida.dsas.util.UTMFinder;
-import gov.usgs.cida.dsas.exceptions.LayerDoesNotExistException;
-import gov.usgs.cida.dsas.exceptions.PoorlyDefinedBaselineException;
-import gov.usgs.cida.dsas.exceptions.UnsupportedCoordinateReferenceSystemException;
+import static gov.usgs.cida.dsas.utilities.features.Constants.BASELINE_DIST_ATTR;
+import static gov.usgs.cida.dsas.utilities.features.Constants.REQUIRED_CRS_WGS84;
+import static gov.usgs.cida.dsas.utilities.features.Constants.TRANSECT_ID_ATTR;
 import gov.usgs.cida.dsas.wps.geom.IntersectionCalculator;
 import gov.usgs.cida.dsas.wps.geom.Transect;
-
-import static gov.usgs.cida.utilities.features.Constants.BASELINE_DIST_ATTR;
-import static gov.usgs.cida.utilities.features.Constants.REQUIRED_CRS_WGS84;
-import static gov.usgs.cida.utilities.features.Constants.TRANSECT_ID_ATTR;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;

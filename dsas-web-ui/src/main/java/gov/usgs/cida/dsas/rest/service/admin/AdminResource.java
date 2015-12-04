@@ -18,7 +18,7 @@ import org.glassfish.jersey.server.mvc.Viewable;
 @Path("/")
 @PermitAll
 public class AdminResource {
-
+	
 	@RolesAllowed({TokenBasedSecurityFilter.DSAS_AUTHORIZED_ROLE})
 	@GET
 	@Produces(MediaType.TEXT_HTML)

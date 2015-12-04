@@ -3,19 +3,15 @@ package gov.usgs.cida.dsas.dao.shoreline;
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
-import gov.usgs.cida.dsas.model.DSASProcess;
-import gov.usgs.cida.dsas.service.util.Property;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
-import gov.usgs.cida.utilities.features.Constants;
-import java.io.File;
+//import gov.usgs.cida.dsas.model.DSASProcess;
+import gov.usgs.cida.dsas.utilities.features.Constants;
+import gov.usgs.cida.dsas.utilities.properties.Property;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -38,7 +34,6 @@ public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 	public final static String[] PROTECTED_WORKSPACES = new String[]{GeoserverDAO.PUBLISHED_WORKSPACE_NAME};
 	protected String JNDI_NAME;
 	private final PostgresDAO pgDao = new PostgresDAO();
-	protected DSASProcess process = null;
 
 	/**
 	 * Retrieves a connection from the database
@@ -180,17 +175,6 @@ public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 	public int getShorelineCountInShorelineView(String workspace) throws SQLException {
 		return pgDao.getShorelineCountInShorelineView(workspace);
 	}
+}	
 
-	@Override
-	public void setDSASProcess(DSASProcess process) {
-		this.process = process;
-	}
 
-	@Override
-	protected void updateProcessInformation(String string) {
-		if (this.process != null) {
-			this.process.addProcessInformation(string);
-		}
-	}
-
-}

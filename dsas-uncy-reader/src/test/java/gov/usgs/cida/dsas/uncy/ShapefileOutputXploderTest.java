@@ -12,12 +12,12 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ShapefileOutputXploderTest {
 	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ShapefileOutputXploderTest.class);
@@ -52,9 +52,9 @@ public class ShapefileOutputXploderTest {
 	
 	@After
 	public void tearDown() {
-		for (File file : FileUtils.listFiles(workDir, null, true)) {
+		FileUtils.listFiles(workDir, null, true).stream().forEach((file) -> {
 			FileUtils.deleteQuietly(file);
-		}
+		});
 	}
 
 	@Test
@@ -63,8 +63,8 @@ public class ShapefileOutputXploderTest {
 		File tempFile = Files.createTempFile(new File(tempDir).toPath(), "tempFile", ".shp", new FileAttribute<?>[0]).toFile();
 		tempFile.deleteOnExit();
 		Map<String, String> config = new HashMap<>(3);
-		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "ACCURACY");
-		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, workDir + "/" + testShorelinesName);
+		config.put(Xploder.UNCERTAINTY_COLUMN_PARAM, "ACCURACY");
+		config.put(Xploder.INPUT_FILENAME_PARAM, testShorelinesShapefile.getAbsolutePath());
 		config.put(ShapefileOutputXploder.OUTPUT_FILENAME_PARAM, tempFile.getAbsolutePath());
 		
 		
@@ -83,7 +83,7 @@ public class ShapefileOutputXploderTest {
 		tempFile.deleteOnExit();
 		Map<String, String> config = new HashMap<>(3);
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "laser_u");
-		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, workDir + "/" + capeCodName);
+		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, capeCodShapefile.getAbsolutePath());
 		config.put(ShapefileOutputXploder.OUTPUT_FILENAME_PARAM, tempFile.getAbsolutePath());
 		
 		Xploder x = new ShapefileOutputXploder(config);

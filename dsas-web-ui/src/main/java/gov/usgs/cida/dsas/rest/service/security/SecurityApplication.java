@@ -4,7 +4,7 @@ import gov.usgs.cida.auth.client.AuthClientSingleton;
 import gov.usgs.cida.auth.client.CachingAuthClient;
 import gov.usgs.cida.auth.client.NullAuthClient;
 import gov.usgs.cida.dsas.rest.service.ServiceURI;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import javax.ws.rs.ApplicationPath;
 import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.server.ResourceConfig;

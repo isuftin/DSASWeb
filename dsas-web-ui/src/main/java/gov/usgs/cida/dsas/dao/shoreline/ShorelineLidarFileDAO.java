@@ -4,14 +4,12 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
-
 import gov.usgs.cida.dsas.service.util.LidarFileUtils;
-import gov.usgs.cida.dsas.service.util.Property;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
-import gov.usgs.cida.utilities.features.Constants;
-
+import gov.usgs.cida.dsas.utilities.features.Constants;
+import gov.usgs.cida.dsas.utilities.properties.Property;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -25,9 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-
 import javax.naming.NamingException;
-
 import org.apache.commons.io.FilenameUtils;
 import org.geotools.feature.SchemaException;
 import org.geotools.geometry.jts.JTS;

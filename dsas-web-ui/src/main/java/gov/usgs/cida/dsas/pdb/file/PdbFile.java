@@ -5,8 +5,6 @@ import gov.usgs.cida.dsas.dao.pdb.PdbDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.featureType.file.FeatureTypeFile;
 import gov.usgs.cida.dsas.model.DSASProcess;
-import gov.usgs.cida.dsas.service.util.Property;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.service.util.ShapeFileUtil;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
 import java.io.File;

@@ -1,11 +1,7 @@
 package gov.usgs.cida.dsas.rest.service.security.ui;
 
-import gov.usgs.cida.dsas.rest.service.security.*;
-import gov.usgs.cida.dsas.rest.service.ServiceURI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;

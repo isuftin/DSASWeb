@@ -2,14 +2,14 @@ package gov.usgs.cida.dsas.dao.shoreline;
 
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
-import gov.usgs.cida.dsas.service.util.Property;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.file.ShorelineFile;
 import gov.usgs.cida.dsas.uncy.ShapefileOutputXploder;
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
+import gov.usgs.cida.dsas.utilities.features.Constants;
+import gov.usgs.cida.dsas.utilities.properties.Property;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
-import gov.usgs.cida.utilities.features.AttributeGetter;
-import gov.usgs.cida.utilities.features.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -33,18 +33,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.apache.commons.lang.StringUtils;
-import org.geotools.data.crs.ReprojectFeatureResults;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
 import org.geotools.data.shapefile.files.ShpFiles;
-import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
-import org.geotools.feature.SchemaException;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -103,18 +98,22 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 		//TODO- Check if incoming shapefile is not already a points shapefile
 		Map<String, String> config = new HashMap<>(3);
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, uncertaintyFieldName);
-		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, parentDirectory + File.separator + baseFileName);
-		ShapefileOutputXploder xploder = new ShapefileOutputXploder(config);
-
+		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, shpFile.getAbsolutePath());
 		LOGGER.debug("Exploding shapefile at {}", shpFile.getAbsolutePath());
 		updateProcessInformation("Exploding shapefile");
-		int pointCount = xploder.explode();
-		File pointsShapefile = xploder.getOutputFile();
+		File outputFile = null;
+		int pointCount = 0;
+		try (ShapefileOutputXploder xploder = new ShapefileOutputXploder(config)) {
+			pointCount = xploder.explode();
+			outputFile = xploder.getOutputFile();
+		} catch (Exception ex) {
+			LOGGER.warn("There was an issue during exploding the Shapefile to points", ex);
+		}
 
 		LOGGER.debug("Shapefile exploded");
 		updateProcessInformation(String.format("Shapefile exploded to %s points", pointCount));
 
-		FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(pointsShapefile.toURI().toURL());
+		FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(outputFile.toURI().toURL());
 		int fcSize = fc.size();
 		updateProcessInformation(String.format("Will attempt to enter %s features into the database", fcSize));
 		Class<?> dateType = fc.getSchema().getDescriptor(dateFieldName).getType().getBinding();
@@ -122,9 +121,7 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 
 		try (Connection connection = getConnection()) {
 			if (!fc.isEmpty()) {
-				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
-
-				try (SimpleFeatureIterator iter = rfc.features()) {
+				try (FeatureIterator<SimpleFeature> iter = fc.features()) {
 					connection.setAutoCommit(false);
 					int lastSegmentId = -1;
 					long shorelineId = -1;
@@ -193,8 +190,6 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 					throw ex;
 				}
 			}
-		} catch (SchemaException | TransformException | FactoryException ex) {
-			Logger.getLogger(ShorelineShapefileDAO.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
 		return viewName;

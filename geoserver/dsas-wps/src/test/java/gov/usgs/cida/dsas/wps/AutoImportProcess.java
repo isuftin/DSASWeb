@@ -8,7 +8,7 @@ package gov.usgs.cida.dsas.wps;
  */
 
 import com.google.common.io.Files;
-import gov.usgs.cida.utilities.features.Constants;
+import gov.usgs.cida.dsas.utilities.features.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -18,8 +18,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.jxpath.ri.compiler.Constant;
-
 import org.geoserver.catalog.Catalog;
 import org.geoserver.catalog.CatalogBuilder;
 import org.geoserver.catalog.DataStoreInfo;
@@ -45,7 +43,6 @@ import org.geotools.process.ProcessException;
 import org.geotools.process.factory.DescribeParameter;
 import org.geotools.process.factory.DescribeProcess;
 import org.geotools.process.factory.DescribeResult;
-import org.geotools.process.gs.GSProcess;
 import org.geotools.referencing.CRS;
 import org.geotools.util.logging.Logging;
 import org.opengis.feature.simple.SimpleFeature;

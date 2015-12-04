@@ -2,12 +2,12 @@ package gov.usgs.cida.dsas.service;
 
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.metadata.MetadataValidator;
-import gov.usgs.cida.dsas.service.util.Property;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.utilities.communication.CSWHandler;
+import gov.usgs.cida.dsas.utilities.communication.RequestResponseHelper;
+import gov.usgs.cida.dsas.utilities.properties.Property;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
+import gov.usgs.cida.dsas.utilities.xml.XMLUtils;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
-import gov.usgs.cida.utilities.communication.CSWHandler;
-import gov.usgs.cida.utilities.communication.RequestResponseHelper;
-import gov.usgs.cida.utilities.xml.XMLUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;

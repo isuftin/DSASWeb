@@ -1,19 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gov.usgs.cida.dsas.dao.pdb;
 
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineShapefileDAO;
-import gov.usgs.cida.dsas.service.util.Property;
-import gov.usgs.cida.dsas.service.util.PropertyUtil;
+import gov.usgs.cida.dsas.utilities.features.Constants;
+import gov.usgs.cida.dsas.utilities.properties.Property;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
-import gov.usgs.cida.utilities.features.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -66,6 +61,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 
 	public String importToDatabase(File shpFile, Map<String, String> columns, String workspace, String EPSGCode) throws SQLException, NamingException, NoSuchElementException, ParseException, IOException {
 		String viewName = null;
+		updateProcessInformation(String.format("Importing pdb into database %s", shpFile.getName()));
 		BidiMap bm = new DualHashBidiMap(columns);
 		String biasFieldName = (String) bm.getKey(Constants.BIAS_ATTR);  //refer to the shapefile attr (not the geo), dbf file type adds attributes 
 		String biasUncyFieldName = (String) bm.getKey(Constants.BIAS_UNCY_ATTR);
@@ -78,7 +74,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		String[][] fieldNames = null;
 		int MAX_POINTS_AT_ONCE = 500;
 
-		// the header and fieldnames below pertain to the file names (not the DB)
+		updateProcessInformation("Importing pdb into database: Reading PDB column names from Dbase file.");
 		try (IterableShapefileReader isfr = new IterableShapefileReader(new ShpFiles(shpFile))) {
 			DbaseFileHeader dbfHeader = isfr.getDbfHeader();
 			fieldNames = new String[dbfHeader.getNumFields()][2];
@@ -89,7 +85,8 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		} catch (Exception ex) {
 			LOGGER.debug("Could not open shapefile for reading. Auxillary attributes will not be persisted to the database", ex);
 		}
-
+		
+		
 		try (Connection connection = getConnection()) {
 
 			FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(shpFile.toURI().toURL());
@@ -190,6 +187,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 	 * @throws SQLException
 	 */
 	protected boolean insertPointsIntoPdbTable(Connection connection, List<Pdb> pdbs) throws SQLException {
+		updateProcessInformation("Inserting points into Pdb table");
 		return pgDao.insertPointsIntoPDBTable(connection, pdbs);
 	}
 
@@ -202,6 +200,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 	 * @throws SQLException
 	 */
 	protected String createViewAgainstWorkspace(Connection connection, String workspace) throws SQLException {
+		updateProcessInformation(String.format("Creating view against workspace: %s", workspace));
 		return pgDao.createViewAgainstWorkspace(connection, workspace);
 	}
 }
