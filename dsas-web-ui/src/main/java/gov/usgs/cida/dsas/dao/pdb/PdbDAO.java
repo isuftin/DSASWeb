@@ -21,7 +21,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -34,6 +33,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.crs.ReprojectFeatureResults;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
+import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.SchemaException;
@@ -79,7 +79,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		int MAX_POINTS_AT_ONCE = 500;
 
 		// the header and fieldnames below pertain to the file names (not the DB)
-		try (IterableShapefileReader isfr = new IterableShapefileReader(shpFile)) {
+		try (IterableShapefileReader isfr = new IterableShapefileReader(new ShpFiles(shpFile))) {
 			DbaseFileHeader dbfHeader = isfr.getDbfHeader();
 			fieldNames = new String[dbfHeader.getNumFields()][2];
 			for (int fIdx = 0; fIdx < fieldNames.length; fIdx++) {

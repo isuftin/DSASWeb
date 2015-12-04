@@ -6,7 +6,6 @@ import gov.usgs.cida.dsas.service.util.Property;
 import gov.usgs.cida.dsas.service.util.PropertyUtil;
 import gov.usgs.cida.dsas.shoreline.file.ShorelineFile;
 import gov.usgs.cida.dsas.uncy.ShapefileOutputXploder;
-import gov.usgs.cida.dsas.uncy.Xploder;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import gov.usgs.cida.utilities.features.AttributeGetter;
@@ -36,6 +35,7 @@ import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.crs.ReprojectFeatureResults;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
+import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.SchemaException;
@@ -89,7 +89,7 @@ public class ShorelineShapefileDAO extends ShorelineFileDAO {
 		String[][] fieldNames = null;
 		int MAX_POINTS_AT_ONCE = 500;
 
-		try (IterableShapefileReader isfr = new IterableShapefileReader(shpFile)) {
+		try (IterableShapefileReader isfr = new IterableShapefileReader(new ShpFiles(shpFile))) {
 			DbaseFileHeader dbfHeader = isfr.getDbfHeader();
 			fieldNames = new String[dbfHeader.getNumFields()][2];
 			for (int fIdx = 0; fIdx < fieldNames.length; fIdx++) {

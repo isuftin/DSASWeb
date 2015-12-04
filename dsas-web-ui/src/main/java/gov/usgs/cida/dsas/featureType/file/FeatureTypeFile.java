@@ -116,7 +116,7 @@ public abstract class FeatureTypeFile implements AutoCloseable {
 
 	public abstract boolean validate() throws IOException;
 
-	public abstract Map<ShpFileType, String> setFileMap() throws IOException; // contains the unzipped files, the key is the type ie file ext
+	public abstract Map<String, String> setFileMap() throws IOException; // contains the unzipped files, the key is the type ie file ext
 	
 	public abstract String getEPSGCode() throws IOException, FactoryException; 
 

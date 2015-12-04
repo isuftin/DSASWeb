@@ -158,9 +158,18 @@ public class PdbFile extends FeatureTypeFile {
 	}
 
 	@Override
-	public Map<ShpFileType, String> setFileMap() throws IOException {
+	public Map<String, String> setFileMap() throws IOException {
+		Map<ShpFileType, String> geoShapeUrlMap = ShapeFileUtil.getFileMap(featureTypeExplodedZipFileLocation);// this requires the dir to the exploded zip
+		Map<String, String> result = new HashMap<>(); // Returns the URLs (in string form) of all the files for the shapefile datastore.
 		
-		return ShapeFileUtil.getFileMap(featureTypeExplodedZipFileLocation);// this requires the dir to the exploded zip
+		for (ShpFileType key :geoShapeUrlMap.keySet())
+		{
+			String value = geoShapeUrlMap.get(key);
+			result.put((key.extension), value);
+		}
+		//todo refactor later to return the Map<ShpFileType, String> in FeatureTypeFile....
+		
+		return result;
 	}
 
 }

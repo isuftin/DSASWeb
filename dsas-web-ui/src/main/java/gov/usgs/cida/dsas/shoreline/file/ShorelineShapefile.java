@@ -27,6 +27,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
+import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.feature.SchemaException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
@@ -54,7 +55,7 @@ public class ShorelineShapefile extends ShorelineFile {
 		CST,
 		SHP_XML,
 		CPG};
-
+		
 	public static void validate(File zipFile) throws ShorelineFileFormatException, IOException {
 		ZipFile zFile = new ZipFile(zipFile);
 		Enumeration<? extends ZipEntry> entries = zFile.entries();
@@ -115,7 +116,7 @@ public class ShorelineShapefile extends ShorelineFile {
 			throw new IOException(MessageFormat.format("DBF file at {0} not readable", dbfFile));
 		}
 
-		try (IterableShapefileReader reader = new IterableShapefileReader(dbfFile)) {
+		try (IterableShapefileReader reader = new IterableShapefileReader(new ShpFiles(dbfFile))) {
 			DbaseFileHeader dbfHeader = reader.getDbfHeader();
 			int fieldCount = dbfHeader.getNumFields();
 			headers = new String[fieldCount];
