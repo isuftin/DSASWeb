@@ -199,7 +199,7 @@ public abstract class ShorelineFile implements IShorelineFile {
 //		return this.workspace;
 //	}
 //	
-	// moving to shapefile
+
 	@Override
 	public File saveZipFile(File zipFile) throws IOException {
 		File workLocation = createWorkLocationForZip(zipFile);

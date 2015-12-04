@@ -34,8 +34,8 @@ import org.slf4j.LoggerFactory;
 public class PdbFile extends FeatureTypeFile {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PdbFile.class);
-	private static final String[] REQ_FILES = new String[]{FeatureTypeFile.SHP, FeatureTypeFile.SHX, FeatureTypeFile.DBF};
-	private static final String[] OPTIONAL_FILES = new String[]{PRJ, FBX, SBX, AIH, IXS, MXS, ATX, SHP_XML, CPG, CST, CSV}; // #TODO# Jordan - are these correct?
+	private static final String[] REQ_FILES = new String[]{SHP, SHX, DBF, PRJ};
+	private static final String[] OPTIONAL_FILES = new String[]{SHP_XML};
 	private static final String[] FILE_PARTS = new String[]{
 		SHP,
 		SHX,
@@ -67,12 +67,6 @@ public class PdbFile extends FeatureTypeFile {
 		this.fileMap = new HashMap<>(FILE_PARTS.length);
 	}
 	
-//	@Override //uncertain if I will need this yet
-//	public String setDirectory(File directory) throws IOException {
-//		String fileToken = super.setDirectory(directory);
-//		updateFileMapWithDirFile(directory, fileParts);
-//		return fileToken;
-//	}
 	
 	@Override
 	public List<File> getRequiredFiles() {
@@ -140,11 +134,16 @@ public class PdbFile extends FeatureTypeFile {
 		}
 	}
 
+//	@Override
+//	public void close() throws Exception {
+//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//	}
 	@Override
-	public void close() throws Exception {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public String setDirectory(File directory) throws IOException {
+		String fileToken = super.setDirectory(directory);
+		updateFileMapWithDirFile(directory, FILE_PARTS);
+		return fileToken;
 	}
-
 
 	public String getEPSGCode() throws IOException, FactoryException {
 		return ShapeFileUtil.getEPSGCode(this.fileMap.get(SHP));

@@ -7,8 +7,10 @@ import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.dsas.service.util.TokenFileExchanger;
 import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.utilities.file.TokenToFileSingleton;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -30,12 +32,10 @@ import org.slf4j.LoggerFactory;
 /**
  * @author isuftin
  */
-public abstract class FeatureTypeFile implements AutoCloseable {
+public abstract class FeatureTypeFile {// implements AutoCloseable {
 
-//    private DataStore ds = null; 
-//    private DbaseFileReader dbfReader;
+
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(FeatureTypeFile.class);
-
 	protected File featureTypeExplodedZipFileLocation;
 	protected File baseDirectory;
 	protected File uploadDirectory;
@@ -44,6 +44,7 @@ public abstract class FeatureTypeFile implements AutoCloseable {
 	protected GeoserverDAO geoserverHandler = null;
 	protected FeatureTypeFileDAO dao = null;
 	protected DSASProcess process = null;
+	protected String token;
 	protected static final String SHP = "shp";
 	protected static final String SHX = "shx";
 	protected static final String DBF = "dbf";
@@ -69,9 +70,21 @@ public abstract class FeatureTypeFile implements AutoCloseable {
 		this.workDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_WORK));
 		
 		validate();
-
 	}
 
+		/**
+	 * 
+	 * @param zipFile The intact zipFile
+	 * @return the directory location to the exploded zip with its contents all renamed to the dir+shp.shp format
+	 * @throws IOException 
+	 */		
+	public File saveZipFile(File zipFile) throws IOException {
+		File workLocation = createWorkLocationForZip(zipFile);
+		FileHelper.unzipFile(workLocation.getAbsolutePath(), zipFile);
+		FileHelper.renameDirectoryContents(workLocation);
+		return workLocation;
+	}
+	
 	/**
 	 * Moves a zip file into the applications work directory and returns the
 	 * parent directory containing the unzipped collection of files
@@ -93,7 +106,7 @@ public abstract class FeatureTypeFile implements AutoCloseable {
 		return fileWorkDirectory;
 	}
 
-		void updateFileMapWithDirFile(File directory, String[] parts) {
+	protected void updateFileMapWithDirFile(File directory, String[] parts) {
 		Collection<File> fileList = FileUtils.listFiles(directory, parts, false);
 		Iterator<File> listIter = fileList.iterator();
 		while (listIter.hasNext()) {
@@ -107,9 +120,70 @@ public abstract class FeatureTypeFile implements AutoCloseable {
 		}
 	}
 
+	
+	public String setDirectory(File directory) throws IOException {
+		if (!directory.exists()) {
+			throw new FileNotFoundException();
+		}
+
+		if (!directory.isDirectory()) {
+			throw new IOException("File at " + directory.getAbsolutePath() + " is not a directory");
+		}
+
+		return TokenToFileSingleton.addFile(directory);
+	}
+	
+	/*
+	 * Checks if underlying files exist in the file system
+	 *
+	 * @return
+	 */
 	public File getDirectory(String token) {
 		return TokenFileExchanger.getFile(token); // consider returning a FeatureTypeFile
 	}
+	
+		/**
+	 * Deletes the directory associated with this Shoreline File. Typically,
+	 * this would be done when removing the Shoreline file.
+	 *
+	 * @return
+	 */
+	protected boolean deleteDirectory() {
+		return TokenToFileSingleton.removeToken(token, true);
+	}
+	
+	/**
+	 * Deletes own files in the file system and removes parent directory
+	 *
+	 * @return whether parent directory has been removed
+	 */
+	public boolean clear() {
+		boolean success = true;
+		Iterator<File> iterator = this.fileMap.values().iterator();
+		while (iterator.hasNext()) {
+			File parentDirectory = iterator.next().getParentFile();
+			success = FileUtils.deleteQuietly(parentDirectory);
+		}
+		if (success) {
+			this.fileMap.clear();
+		}
+		return success;
+	}
+	
+	/*
+	 * Checks if underlying files exist in the file system
+	 *
+	 * @return
+	 */
+	public boolean exists() {
+		for (File file : this.fileMap.values()) {
+			if (file == null || !file.exists()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public abstract List<File> getRequiredFiles();
 
 	public abstract List<File> getOptionalFiles();
@@ -167,50 +241,5 @@ public abstract class FeatureTypeFile implements AutoCloseable {
 	 * @throws IOException
 	 */
 	public abstract void importToGeoserver(String viewName, String workspace) throws IOException;
-
-	
-	
-	
-	public File saveZipFile(File zipFile) throws IOException {
-		File workLocation = createWorkLocationForZip(zipFile);
-		FileHelper.unzipFile(workLocation.getAbsolutePath(), zipFile);
-		FileHelper.renameDirectoryContents(workLocation);
-		return workLocation;
-	}
-	
-	    
-	/**
-	 * Deletes own files in the file system and removes parent directory
-	 *
-	 * @return whether parent directory has been removed
-	 */
-	public boolean clear() {
-		boolean success = true;
-		Iterator<File> iterator = this.fileMap.values().iterator();
-		while (iterator.hasNext()) {
-			File parentDirectory = iterator.next().getParentFile();
-			success = FileUtils.deleteQuietly(parentDirectory);
-		}
-		if (success) {
-			this.fileMap.clear();
-		}
-		return success;
-	}
-	
-	/*
-	 * Checks if underlying files exist in the file system
-	 *
-	 * @return
-	 */
-	public boolean exists() {
-		for (File file : this.fileMap.values()) {
-			if (file == null || !file.exists()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-
 
 }
