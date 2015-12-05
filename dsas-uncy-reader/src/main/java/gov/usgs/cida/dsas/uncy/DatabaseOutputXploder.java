@@ -309,62 +309,70 @@ public abstract class DatabaseOutputXploder extends Xploder {
 		int ptTotal = 0;
 		this.pointOutputFeatureType = createPointOutputFeatureType();
 		this.shorelineOutputFeatureType = createShorelineOutputFeatureType();
-		try (IterableShapefileReader rdr = initReader();
-				Transaction tx = new DefaultTransaction();
-				Connection tryWithResourcesConnection = getDataStore().getConnection(tx);
-				FeatureWriter<SimpleFeatureType, SimpleFeature> pointFeatureWriter = createFeatureWriter(tx, POINTS_TABLE_NAME);) {
+		
+		JDBCDataStore ds = null;
+		try {
+			ds = getDataStore();
+			try (IterableShapefileReader rdr = initReader();
+					Transaction tx = new DefaultTransaction();
+					Connection tryWithResourcesConnection = getDataStore().getConnection(tx);) {
+				this.connection = tryWithResourcesConnection;
 
-			this.connection = tryWithResourcesConnection;
+				DbaseFileHeader dbfHeader = rdr.getDbfHeader();
+				int dateFieldIdx = locateField(dbfHeader, SHAPEFILE_DATE_FIELD_NAME);
+				int mhwIdx = locateField(dbfHeader, SHAPEFILE_MHW_FIELD_NAME);
+				int sourceIdx = locateField(dbfHeader, SHAPEFILE_SOURCE_FIELD_NAME);
+				int nameIdx = locateField(dbfHeader, SHAPEFILE_NAME_FIELD_NAME);
+				int orientationIdx = locateField(dbfHeader, SHAPEFILE_ORIENTATION_FIELD_NAME);
 
-			DbaseFileHeader dbfHeader = rdr.getDbfHeader();
-			int dateFieldIdx = locateField(dbfHeader, SHAPEFILE_DATE_FIELD_NAME);
-			int mhwIdx = locateField(dbfHeader, SHAPEFILE_MHW_FIELD_NAME);
-			int sourceIdx = locateField(dbfHeader, SHAPEFILE_SOURCE_FIELD_NAME);
-			int nameIdx = locateField(dbfHeader, SHAPEFILE_NAME_FIELD_NAME);
-			int orientationIdx = locateField(dbfHeader, SHAPEFILE_ORIENTATION_FIELD_NAME);
-
-			String[][] fieldNames = new String[dbfHeader.getNumFields()][2];
-			for (int fIdx = 0; fIdx < fieldNames.length; fIdx++) {
-				fieldNames[fIdx][0] = dbfHeader.getFieldName(fIdx);
-				fieldNames[fIdx][1] = String.valueOf(dbfHeader.getFieldType(fIdx));
-			}
-
-			LOGGER.debug("Input files from {}\n{}",
-					shapeFiles.getTypeName(),
-					String.join(",",
-							shapeFiles.getFileNames().values().toArray(new String[shapeFiles.getFileNames().size()])
-					)
-			);
-
-			int shapeCount = 0;
-			long startWriteTime = new java.util.Date().getTime();
-			for (ShapeAndAttributes saa : rdr) {
-				long startLoopTime = new java.util.Date().getTime();
-				java.util.Date date = getDateFromRowObject(saa.row.read(dateFieldIdx), dbfHeader.getFieldClass(dateFieldIdx));
-				boolean mhw = mhwIdx == -1 ? false : (boolean) saa.row.read(mhwIdx);
-				String source = sourceIdx == -1 ? shapeFiles.getTypeName() : (String) saa.row.read(sourceIdx);
-				String name = nameIdx == -1 ? shapeFiles.getTypeName() : (String) saa.row.read(nameIdx);
-				String orientation = orientationIdx == -1 ? null : (String) saa.row.read(orientationIdx);
-
-				long shorelineId = writeShoreline(WORKSPACE_NAME, date, mhw, source, name, orientation);
-				int ptCt = processShape(saa, ++shapeCount, shorelineId, pointFeatureWriter);
-
-				Map<String, String> auxCols = getAuxillaryColumnsFromRow(saa.row, fieldNames);
-				for (Map.Entry<String, String> auxEntry : auxCols.entrySet()) {
-					if (StringUtils.isNotBlank(auxEntry.getValue())) {
-						insertAuxAttribute(shorelineId, auxEntry.getKey(), auxEntry.getValue());
-					}
+				String[][] fieldNames = new String[dbfHeader.getNumFields()][2];
+				for (int fIdx = 0; fIdx < fieldNames.length; fIdx++) {
+					fieldNames[fIdx][0] = dbfHeader.getFieldName(fIdx);
+					fieldNames[fIdx][1] = String.valueOf(dbfHeader.getFieldType(fIdx));
 				}
 
-				LOGGER.debug("Wrote {} points in {}ms for shape {}", ptCt, new java.util.Date().getTime() - startLoopTime, saa.record.toString());
-				ptTotal += ptCt;
-			}
+				LOGGER.debug("Input files from {}\n{}",
+						shapeFiles.getTypeName(),
+						String.join(",",
+								shapeFiles.getFileNames().values().toArray(new String[shapeFiles.getFileNames().size()])
+						)
+				);
 
-			tx.commit();
-			LOGGER.info("Wrote {} points in {}ms in {} shapes", ptTotal, new java.util.Date().getTime() - startWriteTime, shapeCount);
-		} catch (MismatchedDimensionException | TransformException | FactoryException | ParseException | SQLException ex) {
-			throw new IOException(ex);
+				int shapeCount = 0;
+				long startWriteTime = new java.util.Date().getTime();
+				for (ShapeAndAttributes saa : rdr) {
+					long startLoopTime = new java.util.Date().getTime();
+					java.util.Date date = getDateFromRowObject(saa.row.read(dateFieldIdx), dbfHeader.getFieldClass(dateFieldIdx));
+					boolean mhw = mhwIdx == -1 ? false : (boolean) saa.row.read(mhwIdx);
+					String source = sourceIdx == -1 ? shapeFiles.getTypeName() : (String) saa.row.read(sourceIdx);
+					String name = nameIdx == -1 ? shapeFiles.getTypeName() : (String) saa.row.read(nameIdx);
+					String orientation = orientationIdx == -1 ? null : (String) saa.row.read(orientationIdx);
+
+					long shorelineId = writeShoreline(WORKSPACE_NAME, date, mhw, source, name, orientation);
+					int ptCt = processShape(saa, ++shapeCount, shorelineId, null);
+
+					Map<String, String> auxCols = getAuxillaryColumnsFromRow(saa.row, fieldNames);
+					for (Map.Entry<String, String> auxEntry : auxCols.entrySet()) {
+						if (StringUtils.isNotBlank(auxEntry.getValue())) {
+							insertAuxAttribute(shorelineId, auxEntry.getKey(), auxEntry.getValue());
+						}
+					}
+
+					LOGGER.debug("Wrote {} points in {}ms for shape {}", ptCt, new java.util.Date().getTime() - startLoopTime, saa.record.toString());
+					ptTotal += ptCt;
+				}
+
+				tx.commit();
+				LOGGER.info("Wrote {} points in {}ms in {} shapes", ptTotal, new java.util.Date().getTime() - startWriteTime, shapeCount);
+			} catch (MismatchedDimensionException | TransformException | FactoryException | ParseException | SQLException ex) {
+				throw new IOException(ex);
+			}
+		} finally {
+			if (ds != null) {
+				ds.dispose();
+			}
 		}
+
 		return ptTotal;
 	}
 
@@ -552,7 +560,7 @@ public abstract class DatabaseOutputXploder extends Xploder {
 	}
 
 	protected abstract JDBCDataStore getDataStore() throws IOException;
-	
+
 	@Override
 	public void close() throws Exception {
 		super.close();
