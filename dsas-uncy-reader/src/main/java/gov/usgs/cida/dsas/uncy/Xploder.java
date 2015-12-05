@@ -2,6 +2,7 @@ package gov.usgs.cida.dsas.uncy;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
+import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.model.IShapeFile;
 import static gov.usgs.cida.dsas.uncy.ShapefileOutputXploder.PTS_SUFFIX;
 import gov.usgs.cida.dsas.utilities.features.Constants;
@@ -61,6 +62,7 @@ public abstract class Xploder implements AutoCloseable {
 	public static final String UNCERTAINTY_COLUMN_PARAM = "uncertaintyColumnName";
 	public static final String INPUT_FILENAME_PARAM = "inputFilename";
 	public static final String OUTPUT_CRS_PARAM = "outputCrs"; // Should be WKT
+	public static final String DSAS_PROCESS_PARAM = "dsasProcess"; // Should be WKT
 	protected static final String DEFAULT_UNCY_COLUMN_NAME = "uncy";
 	protected static final GeometryFactory GEOMETRY_FACTORY = JTSFactoryFinder.getGeometryFactory(null);
 	protected static XploderMultiLineHandler shapeHandler = null;
@@ -74,6 +76,7 @@ public abstract class Xploder implements AutoCloseable {
 	protected ShpFiles shapeFiles;
 	protected CoordinateReferenceSystem sourceCRS;
 	protected int geomIdx = -1;
+	protected DSASProcess process = null;
 
 	protected Xploder(Map<String, Object> config) throws IOException {
 		if (config == null || config.isEmpty()) {
@@ -135,6 +138,10 @@ public abstract class Xploder implements AutoCloseable {
 					ShapeType.ARCM,
 					new GeometryFactory(com.vividsolutions.jtsexample.geom.ExtendedCoordinateSequenceFactory.instance())
 			);
+		}
+
+		if (config.containsKey(DSAS_PROCESS_PARAM) && config.containsValue(DSAS_PROCESS_PARAM)) {
+			this.process = (DSASProcess) config.get(DSAS_PROCESS_PARAM);
 		}
 
 	}
@@ -280,6 +287,16 @@ public abstract class Xploder implements AutoCloseable {
 		if (this.shapeFiles != null) {
 			this.shapeFiles.dispose();
 			this.shapeFiles.delete();
+		}
+	}
+
+	/**
+	 *
+	 * @param string
+	 */
+	protected final void updateProcessInformation(String string) {
+		if (this.process != null) {
+			this.process.addProcessInformation(string);
 		}
 	}
 

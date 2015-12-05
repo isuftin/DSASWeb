@@ -38,19 +38,6 @@ public class PostGISJNDIOutputXploder extends DatabaseOutputXploder {
 		dbConfig.putAll(config);
 	}
 
-	@Override // TODO- Get this from the database - This is too specific right now 
-	protected SimpleFeatureType createOutputFeatureType(String outputTypeName) throws IOException {
-		JDBCDataStore createDataStore = null;
-		try {
-			createDataStore = new PostgisNGJNDIDataStoreFactory().createDataStore(dbConfig);
-			return createDataStore.getSchema(outputTypeName);
-		} finally {
-			if (createDataStore != null) {
-				createDataStore.dispose();
-			}
-		}
-	}
-
 	@Override
 	protected JDBCDataStore getDataStore() throws IOException {
 		return new PostgisNGJNDIDataStoreFactory().createDataStore(dbConfig);

@@ -18,6 +18,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.LoggerFactory;
@@ -42,13 +43,13 @@ public class PostGISJDBCOutputXploderTest implements XploderIntegrationTest {
 
 	@BeforeClass
 	public static void setUpClass() throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException, DatabaseException, LockException, LiquibaseException {
-		Class.forName("org.postgresql.Driver"); 
+		Class.forName("org.postgresql.Driver");
 
-		config.put(PostGISJDBCOutputXploder.HOST_PARAM, "192.168.99.100");
+		config.put(PostGISJDBCOutputXploder.HOST_PARAM, "localhost");
 		config.put(PostGISJDBCOutputXploder.PORT_PARAM, 5432);
 		config.put(PostGISJDBCOutputXploder.DATABASE_PARAM, "dsas");
-		config.put(PostGISJDBCOutputXploder.USERNAME_PARAM, "dsas");
-		config.put(PostGISJDBCOutputXploder.PASSWORD_PARAM, "dsas");
+		config.put(PostGISJDBCOutputXploder.USERNAME_PARAM, "");
+		config.put(PostGISJDBCOutputXploder.PASSWORD_PARAM, "");
 		config.put(PostGISJDBCOutputXploder.SCHEMA_PARAM, "public");
 
 		conn = DriverManager.getConnection(String.format("jdbc:postgresql://%s:%s/%s",
@@ -87,20 +88,41 @@ public class PostGISJDBCOutputXploderTest implements XploderIntegrationTest {
 	}
 
 	@Test
-	public void testCreateXploder() throws IOException, SQLException {
-		LOG.info("testCreateXploder()");
+	@Ignore
+	public void testXploderWithTestShapefile() throws IOException, SQLException, Exception {
+		LOG.info("testXploderWithTestShapefile()");
 
 		Map<String, Object> testConfig = new HashMap<>();
 		config.put(Xploder.UNCERTAINTY_COLUMN_PARAM, "ACCURACY");
 		config.put(Xploder.INPUT_FILENAME_PARAM, testShorelinesShapefile.getAbsolutePath());
 		config.put(DatabaseOutputXploder.INCOMING_DATEFIELD_NAME_PARAM, "DATE_");
 		config.put(DatabaseOutputXploder.WORKSPACE_PARAM, "mb8d512c803ee41539d3edef1d803e360");
-		
+
 		Map<String, Object> mergedMap = new HashMap<>(testConfig);
 		mergedMap.putAll(config);
 
-		Xploder exploder = new PostGISJDBCOutputXploder(mergedMap);
-		exploder.explode();
+		try (Xploder exploder = new PostGISJDBCOutputXploder(mergedMap)) {
+			exploder.explode();
+		}
+	}
+
+	@Test
+	@Ignore
+	public void testXploderWithCCShapefile() throws IOException, SQLException, Exception {
+		LOG.info("testXploderWithCCShapefile()");
+
+		Map<String, Object> testConfig = new HashMap<>();
+		config.put(Xploder.UNCERTAINTY_COLUMN_PARAM, "laser_u");
+		config.put(Xploder.INPUT_FILENAME_PARAM, capeCodShapefile.getAbsolutePath());
+		config.put(DatabaseOutputXploder.INCOMING_DATEFIELD_NAME_PARAM, "Date_");
+		config.put(DatabaseOutputXploder.WORKSPACE_PARAM, "mb8d512c803ee41539d3edef1d803e360");
+
+		Map<String, Object> mergedMap = new HashMap<>(testConfig);
+		mergedMap.putAll(config);
+
+		try (Xploder exploder = new PostGISJDBCOutputXploder(mergedMap)) {
+			exploder.explode();
+		}
 	}
 
 }

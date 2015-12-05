@@ -3,7 +3,7 @@ package gov.usgs.cida.dsas.uncy;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
-import static gov.usgs.cida.dsas.uncy.Xploder.GEOMETRY_FACTORY;
+import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.PointIterator;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.ShapeAndAttributes;
@@ -18,7 +18,9 @@ import java.sql.Statement;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.DataStore;
@@ -27,7 +29,7 @@ import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureWriter;
 import org.geotools.data.Transaction;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
-import org.geotools.data.shapefile.dbf.DbaseFileReader;
+import org.geotools.data.shapefile.dbf.DbaseFileReader.Row;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.jdbc.JDBCDataStore;
@@ -71,6 +73,9 @@ public abstract class DatabaseOutputXploder extends Xploder {
 	public final static String SHORELINE_TABLE_SHORELINETYPE_NAME_PARAM = "shorelinesTableShorelineTypeName"; // orientation
 	public final static String SHORELINE_TABLE_SHORELINEAUX_NAME_PARAM = "shorelinesTableShorelineAuxName";
 	public final static String SHORELINE_TABLE_MHW_NAME_PARAM = "shorelinesTableMhwName";
+	public final static String AUX_TABLE_SHORELINE_ID_NAME_PARAM = "auxTableShorelineIdName";
+	public final static String AUX_TABLE_ATTR_NAME_NAME_PARAM = "auxTableAttrName";
+	public final static String AUX_TABLE_VALUE_NAME_PARAM = "auxTableValueName";
 	protected final String SHAPEFILE_DATE_FIELD_NAME;
 	protected final String SHAPEFILE_MHW_FIELD_NAME;
 	protected final String SHAPEFILE_SOURCE_FIELD_NAME;
@@ -78,6 +83,8 @@ public abstract class DatabaseOutputXploder extends Xploder {
 	protected final String SHAPEFILE_ORIENTATION_FIELD_NAME;
 	protected final String WORKSPACE_NAME;
 	protected String SHORELINES_TABLE_NAME = "shorelines";
+	protected String WORKSPACE_TABLE_NAME = "workspace";
+	protected String AUX_TABLE_NAME = "shoreline_auxillary_attrs";
 	protected String SHORELINES_TABLE_DATE_FIELD_NAME = "date";
 	protected String SHORELINES_TABLE_MHW_FIELD_NAME = "mhw";
 	protected String SHORELINES_TABLE_WORKSPACE_FIELD_NAME = "workspace";
@@ -86,9 +93,11 @@ public abstract class DatabaseOutputXploder extends Xploder {
 	protected String SHORELINES_TABLE_SHORELINETYPE_FIELD_NAME = "shoreline_type";
 	protected String SHORELINES_TABLE_SHORELINEAUX_FIELD_NAME = "auxillary_name";
 	protected String POINTS_TABLE_NAME = "shoreline_points";
-	protected String WORKSPACE_TABLE_NAME = "workspace";
 	protected String POINT_TABLE_SHORELINED_ID_FIELD_NAME = "shoreline_id";
 	protected String POINT_TABLE_SEGMENT_ID_FIELD_NAME = "segment_id";
+	protected String AUX_TABLE_SHORELINE_ID_FIELD_NAME = "shoreline_id";
+	protected String AUX_TABLE_ATTR_NAME_NAME = "attr_name";
+	protected String AUX_TABLE_VALUE_NAME = "value";
 	protected SimpleFeatureType pointOutputFeatureType;
 	protected SimpleFeatureType shorelineOutputFeatureType;
 	protected Connection connection;
@@ -177,7 +186,22 @@ public abstract class DatabaseOutputXploder extends Xploder {
 		if (StringUtils.isNotBlank(shorelinesTableMhwName)) {
 			this.SHORELINES_TABLE_MHW_FIELD_NAME = shorelinesTableMhwName;
 		}
-		
+
+		String auxTableShorelineIdName = (String) config.get(AUX_TABLE_SHORELINE_ID_NAME_PARAM);
+		if (StringUtils.isNotBlank(auxTableShorelineIdName)) {
+			this.AUX_TABLE_SHORELINE_ID_FIELD_NAME = auxTableShorelineIdName;
+		}
+
+		String auxTableAttrName = (String) config.get(AUX_TABLE_ATTR_NAME_NAME_PARAM);
+		if (StringUtils.isNotBlank(auxTableAttrName)) {
+			this.AUX_TABLE_ATTR_NAME_NAME = auxTableAttrName;
+		}
+
+		String auxTableValueName = (String) config.get(AUX_TABLE_VALUE_NAME_PARAM);
+		if (StringUtils.isNotBlank(auxTableValueName)) {
+			this.AUX_TABLE_VALUE_NAME = auxTableValueName;
+		}
+
 	}
 
 	public static Map<String, Object> mergeMaps(Map<String, Object> m1, Map<String, Object> m2) {
@@ -243,7 +267,7 @@ public abstract class DatabaseOutputXploder extends Xploder {
 			}
 
 			ftb.setName(POINTS_TABLE_NAME);
-			ftb.setSRS(CRS.toSRS(pointsSchema.getGeometryDescriptor().getCoordinateReferenceSystem()));
+			ftb.setSRS(CRS.toSRS(DefaultGeographicCRS.WGS84));
 			ftb.add(geomColumnName, Point.class, DefaultGeographicCRS.WGS84);
 			ftb.add(tableUncyColumnName, Double.class);
 			ftb.add(POINT_TABLE_SHORELINED_ID_FIELD_NAME, BigInteger.class);
@@ -256,6 +280,19 @@ public abstract class DatabaseOutputXploder extends Xploder {
 			}
 		}
 
+	}
+
+	@Override
+	protected SimpleFeatureType createOutputFeatureType(String outputTypeName) throws IOException {
+		DataStore createDataStore = null;
+		try {
+			createDataStore = getDataStore();
+			return createDataStore.getSchema(outputTypeName);
+		} finally {
+			if (createDataStore != null) {
+				createDataStore.dispose();
+			}
+		}
 	}
 
 	@Override
@@ -276,15 +313,21 @@ public abstract class DatabaseOutputXploder extends Xploder {
 				Transaction tx = new DefaultTransaction();
 				Connection tryWithResourcesConnection = getDataStore().getConnection(tx);
 				FeatureWriter<SimpleFeatureType, SimpleFeature> pointFeatureWriter = createFeatureWriter(tx, POINTS_TABLE_NAME);) {
-			
+
+			this.connection = tryWithResourcesConnection;
+
 			DbaseFileHeader dbfHeader = rdr.getDbfHeader();
 			int dateFieldIdx = locateField(dbfHeader, SHAPEFILE_DATE_FIELD_NAME);
 			int mhwIdx = locateField(dbfHeader, SHAPEFILE_MHW_FIELD_NAME);
 			int sourceIdx = locateField(dbfHeader, SHAPEFILE_SOURCE_FIELD_NAME);
 			int nameIdx = locateField(dbfHeader, SHAPEFILE_NAME_FIELD_NAME);
 			int orientationIdx = locateField(dbfHeader, SHAPEFILE_ORIENTATION_FIELD_NAME);
-			
-			this.connection = tryWithResourcesConnection;
+
+			String[][] fieldNames = new String[dbfHeader.getNumFields()][2];
+			for (int fIdx = 0; fIdx < fieldNames.length; fIdx++) {
+				fieldNames[fIdx][0] = dbfHeader.getFieldName(fIdx);
+				fieldNames[fIdx][1] = String.valueOf(dbfHeader.getFieldType(fIdx));
+			}
 
 			LOGGER.debug("Input files from {}\n{}",
 					shapeFiles.getTypeName(),
@@ -294,54 +337,164 @@ public abstract class DatabaseOutputXploder extends Xploder {
 			);
 
 			int shapeCount = 0;
+			long startWriteTime = new java.util.Date().getTime();
 			for (ShapeAndAttributes saa : rdr) {
+				long startLoopTime = new java.util.Date().getTime();
 				java.util.Date date = getDateFromRowObject(saa.row.read(dateFieldIdx), dbfHeader.getFieldClass(dateFieldIdx));
 				boolean mhw = mhwIdx == -1 ? false : (boolean) saa.row.read(mhwIdx);
 				String source = sourceIdx == -1 ? shapeFiles.getTypeName() : (String) saa.row.read(sourceIdx);
 				String name = nameIdx == -1 ? shapeFiles.getTypeName() : (String) saa.row.read(nameIdx);
 				String orientation = orientationIdx == -1 ? null : (String) saa.row.read(orientationIdx);
-				
+
 				long shorelineId = writeShoreline(WORKSPACE_NAME, date, mhw, source, name, orientation);
 				int ptCt = processShape(saa, ++shapeCount, shorelineId, pointFeatureWriter);
-				
-				LOGGER.debug("Wrote {} points for shape {}", ptCt, saa.record.toString());
+
+				Map<String, String> auxCols = getAuxillaryColumnsFromRow(saa.row, fieldNames);
+				for (Map.Entry<String, String> auxEntry : auxCols.entrySet()) {
+					if (StringUtils.isNotBlank(auxEntry.getValue())) {
+						insertAuxAttribute(shorelineId, auxEntry.getKey(), auxEntry.getValue());
+					}
+				}
+
+				LOGGER.debug("Wrote {} points in {}ms for shape {}", ptCt, new java.util.Date().getTime() - startLoopTime, saa.record.toString());
 				ptTotal += ptCt;
 			}
 
 			tx.commit();
-			LOGGER.info("Wrote {} points in {} shapes", ptTotal, shapeCount);
+			LOGGER.info("Wrote {} points in {}ms in {} shapes", ptTotal, new java.util.Date().getTime() - startWriteTime, shapeCount);
 		} catch (MismatchedDimensionException | TransformException | FactoryException | ParseException | SQLException ex) {
 			throw new IOException(ex);
 		}
 		return ptTotal;
 	}
 
+	protected Map<String, String> getAuxillaryColumnsFromRow(Row row, String[][] fieldNames) throws IOException {
+		//TODO - Get this from ShorelineFile which is currently not in commons
+		String[] AUXILLARY_ATTRIBUTES = new String[]{
+			Constants.SURVEY_ID_ATTR,
+			Constants.DISTANCE_ATTR,
+			Constants.DEFAULT_D_ATTR,
+			Constants.NAME_ATTR,
+			Constants.BIAS_UNCY_ATTR,
+			Constants.MHW_ATTR
+		};
+
+		// C (Character)  = String
+		// N (Numeric)   = Integer or Long or Double (depends on field's decimal count and fieldLength)
+		// F (Floating)  = Double
+		// L (Logical)   = Boolean
+		// D (Date)		 = java.util.Date (Without time)
+		// @ (Timestamp) = java.sql.Timestamp (With time)
+		// Unknown		 = String
+		Map<String, String> auxillaryAttributes = new HashMap<>();
+		for (String attribute : AUXILLARY_ATTRIBUTES) {
+			for (int fnIdx = 0; fnIdx < fieldNames.length; fnIdx++) {
+				String fieldName = fieldNames[fnIdx][0];
+				char fieldType = fieldNames[fnIdx][1].charAt(0);
+				String cleanedFieldName = fieldName.trim().replaceAll("_", "");
+				String cleanedAttribute = attribute.trim().replaceAll("_", "");
+				if (cleanedFieldName.equalsIgnoreCase(cleanedAttribute)) {
+					Object attrObj = row.read(fnIdx);
+					if (attrObj != null) {
+						switch (fieldType) {
+							case 'D':
+							case '@':
+								auxillaryAttributes.put(attribute.toLowerCase(), String.valueOf(((java.util.Date) attrObj).getTime()));
+								break;
+							case 'L':
+							case 'N':
+							case 'F':
+							case 'C':
+							default:
+								auxillaryAttributes.put(attribute.toLowerCase(), String.valueOf(attrObj));
+						}
+					}
+				}
+			}
+		}
+		return auxillaryAttributes;
+	}
+
 	@Override
 	public int processShape(ShapeAndAttributes saa, int segmentId, long shorelineId, FeatureWriter<SimpleFeatureType, SimpleFeature> pointFeatureWriter) throws IOException, MismatchedDimensionException, TransformException, FactoryException {
 		Double uncertainty = ((Number) saa.row.read(uncertaintyIdIdx)).doubleValue();
-		
+
 		int ptCt = 0;
 		MultiLineString shape = (MultiLineString) saa.record.shape();
 		int numGeom = shape.getNumGeometries();
+		int MAX_POINTS_SIZE = 500;
 		MathTransform mathTransform = CRS.findMathTransform(sourceCRS, outputCRS, true);
+		String epsgCode = CRS.lookupIdentifier(pointOutputFeatureType.getCoordinateReferenceSystem(), true);
+		epsgCode = epsgCode.substring(5); // I want the code from EPSG:XXXX, not the "EPSG:" part
 
 		for (int segmentIndex = 0; segmentIndex < numGeom; segmentIndex++) {
-			Geometry geometry = JTS.transform(shape.getGeometryN(segmentIndex), mathTransform);
-			PointIterator pIterator = new PointIterator(geometry);
-			while (pIterator.hasNext()) {
-				writePoint(
-						pIterator.next(),
-						saa.row,
-						uncertainty,
-						shorelineId,
-						segmentId,
-						pointFeatureWriter);
-				ptCt++;
+			try {
+				Geometry geometry = JTS.transform(shape.getGeometryN(segmentIndex), mathTransform);
+				PointIterator pIterator = new PointIterator(geometry);
+				List<double[]> xyUncies = new ArrayList<>(geometry.getNumPoints());
+
+				while (pIterator.hasNext()) {
+					Point point = pIterator.next();
+					xyUncies.add(new double[]{
+						point.getX(),
+						point.getY(),
+						uncertainty
+					});
+
+					if (xyUncies.size() == MAX_POINTS_SIZE) {
+						writePoints(
+								shorelineId,
+								segmentId,
+								xyUncies.toArray(new double[MAX_POINTS_SIZE][]),
+								epsgCode
+						);
+						xyUncies.clear();
+					}
+
+					ptCt++;
+				}
+
+				if (xyUncies.size() > 0) {
+					writePoints(
+							shorelineId,
+							segmentId,
+							xyUncies.toArray(new double[xyUncies.size()][]),
+							epsgCode
+					);
+				}
+			} catch (SQLException ex) {
+				throw new IOException(ex);
 			}
 		}
-
 		return ptCt;
+	}
 
+	public int insertAuxAttribute(long shorelineId, String name, String value) throws IOException, SQLException {
+		String sql = String.format("INSERT INTO %s  (%s, %s, %s) VALUES (?,?,?)",
+				AUX_TABLE_NAME,
+				AUX_TABLE_SHORELINE_ID_FIELD_NAME,
+				AUX_TABLE_ATTR_NAME_NAME,
+				AUX_TABLE_VALUE_NAME);
+		try (final PreparedStatement st = connection.prepareStatement(sql)) {
+			st.setLong(1, shorelineId);
+			st.setString(2, name);
+			st.setString(3, value);
+			return st.executeUpdate();
+		}
+	}
+
+	public boolean writePoints(long shorelineId, int segmentId, double[][] XYuncyArray, String epsgCode) throws IOException, SQLException {
+		StringBuilder sql = new StringBuilder(String.format("INSERT INTO %s (%s, %s, geom, uncy) VALUES", POINTS_TABLE_NAME, POINT_TABLE_SHORELINED_ID_FIELD_NAME, POINT_TABLE_SEGMENT_ID_FIELD_NAME));
+
+		for (double[] XYUncy : XYuncyArray) {
+			sql.append("(").append(shorelineId).append(",").append(segmentId).append(",").append("ST_GeomFromText('POINT(").append(XYUncy[0]).append(" ").append(XYUncy[1]).append(")',")
+					.append(epsgCode).append("),").append(XYUncy[2]).append("),");
+		}
+		sql.deleteCharAt(sql.length() - 1);
+
+		try (final Statement st = connection.createStatement()) {
+			return st.execute(sql.toString());
+		}
 	}
 
 	private java.util.Date getDateFromRowObject(Object date, Class<?> fromType) throws ParseException {
@@ -364,21 +517,6 @@ public abstract class DatabaseOutputXploder extends Xploder {
 
 		return result;
 	}
-
-	
-	public boolean writePoints(Connection connection, long shorelineId, int segmentId, double[][] XYuncyArray) throws IOException, SQLException {
-		StringBuilder sql = new StringBuilder(String.format("INSERT INTO %s (%s, %s, geom, uncy) VALUES", POINTS_TABLE_NAME, POINT_TABLE_SHORELINED_ID_FIELD_NAME, POINT_TABLE_SEGMENT_ID_FIELD_NAME));
-		for (double[] XYUncy : XYuncyArray) {
-			sql.append("(").append(shorelineId).append(",").append(segmentId).append(",").append("ST_GeomFromText('POINT(").append(XYUncy[0]).append(" ").append(XYUncy[1]).append(")',")
-					.append(CRS.toSRS(pointOutputFeatureType.getCoordinateReferenceSystem(), true)).append("),").append(XYUncy[2]).append("),");
-		}
-		sql.deleteCharAt(sql.length() - 1);
-		try (final Statement st = connection.createStatement()) {
-			return st.execute(sql.toString());
-		}
-	}
-
-	protected abstract JDBCDataStore getDataStore() throws IOException;
 
 	protected long writeShoreline(String workspace, java.util.Date date, boolean mhw, String source, String name, String orientation) throws IOException, SQLException {
 		String sql = MessageFormat.format("INSERT INTO {0}({1},{2}, {3}, {4}, {5}, {6}, {7}) VALUES (?,?,?,?,?,?,?)",
@@ -413,4 +551,13 @@ public abstract class DatabaseOutputXploder extends Xploder {
 		}
 	}
 
+	protected abstract JDBCDataStore getDataStore() throws IOException;
+	
+	@Override
+	public void close() throws Exception {
+		super.close();
+		if (this.connection != null && !this.connection.isClosed()) {
+			this.connection.close();
+		}
+	}
 }
