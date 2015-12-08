@@ -2,7 +2,7 @@ package gov.usgs.cida.dsas.shoreline.file;
 
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineShapefileDAO;
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;

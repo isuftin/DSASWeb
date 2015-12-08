@@ -1,17 +1,17 @@
-package gov.usgs.cida.dsas.shoreline.exception;
+package gov.usgs.cida.dsas.featureTypeFile.exception;
 
 /**
  * Exception gets thrown when a file does not meet expected format for DSAS
- * defined lidar zip files.
+ * defined pdb zip files.
  *
  * @author thongsav
  *
  */
-public class LidarFileFormatException extends ShorelineFileFormatException {
+public class PdbFileFormatException extends FeatureTypeFileException {
 
-	private static final long serialVersionUID = -5924891879480008637L;
+	private static final long serialVersionUID = -1457152018867679890L;
 
-	public LidarFileFormatException(String message) {
+	public PdbFileFormatException(String message) {
 		super(message);
 	}
 }

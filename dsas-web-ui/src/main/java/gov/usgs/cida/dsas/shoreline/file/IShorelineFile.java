@@ -1,7 +1,7 @@
 package gov.usgs.cida.dsas.shoreline.file;
 
 import gov.usgs.cida.dsas.model.DSASProcess;
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -79,7 +79,7 @@ public interface IShorelineFile {
 	 * @param request
 	 * @return
 	 * @throws
-	 * gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException
+	 * gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException
 	 * @throws java.sql.SQLException
 	 * @throws javax.naming.NamingException
 	 * @throws java.text.ParseException

@@ -3,6 +3,7 @@ package gov.usgs.cida.dsas.service.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.vividsolutions.jts.util.Assert;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShapefileException;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import gov.usgs.cida.owsutils.commons.io.exception.ShapefileFormatException;
 import static org.junit.Assert.*;
@@ -361,20 +362,20 @@ public class ShapeFileUtilTest {
 	}
 
 	@Ignore 
-	@Test(expected = FileNotFoundException.class)
-	public void testIsValidWithInvalidZip() throws IOException {
+	@Test(expected = ShapefileException.class)
+	public void testIsValidWithInvalidZip() throws ShapefileException {
 		boolean result = ShapeFileUtil.isValidShapefile(invalidShapeZip);
 	}
 
 	@Ignore 
 	@Test
-	public void testValidWithValidZip() throws IOException {
+	public void testValidWithValidZip() throws ShapefileException {
 		boolean result = ShapeFileUtil.isValidShapefile(validShapeZip);
 		assertTrue(result);
 	}
 
-	@Test(expected = FileNotFoundException.class)
-	public void testIsValidWithInvalidZipDir() throws IOException {
+	@Test(expected = ShapefileException.class)
+	public void testIsValidWithInvalidZipDir() throws ShapefileException, IOException {
 		
 		File tempDir = Files.createTempDirectory("temp-shapefile-dir").toFile();
 		tempDir.deleteOnExit();
@@ -388,7 +389,7 @@ public class ShapeFileUtilTest {
 	}
 
 	@Test
-	public void testValidWithValidZipDir() throws IOException {
+	public void testValidWithValidZipDir() throws IOException, ShapefileException {
 		
 
 		File tempDir = Files.createTempDirectory("temp-shapefile-dir").toFile();

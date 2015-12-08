@@ -3,8 +3,8 @@ package gov.usgs.cida.dsas.shoreline.file;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.model.DSASProcess;
-import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.LidarFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
@@ -46,7 +46,7 @@ public class ShorelineLidarFile extends ShorelineFile {
 	 *
 	 * @param lidarZipFile
 	 * @throws
-	 * gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException
+	 * gov.usgs.cida.dsas.featureTypeFile.exception.LidarFileFormatException
 	 * @throws IOException
 	 */
 	public static void validate(File lidarZipFile) throws LidarFileFormatException, IOException {

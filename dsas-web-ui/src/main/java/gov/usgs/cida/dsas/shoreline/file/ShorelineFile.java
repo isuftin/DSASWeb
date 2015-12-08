@@ -5,7 +5,7 @@ import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.model.DSASProcess;
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.utilities.file.TokenToFileSingleton;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
@@ -56,7 +56,7 @@ public abstract class ShorelineFile implements IShorelineFile {
 	protected File workDirectory;
 	protected GeoserverDAO geoserverHandler;
 	protected ShorelineFileDAO dao;
-	protected String token;
+	protected String token;  // this token retrieves the directory to the exploded zip
 	protected Map<String, File> fileMap;
 	//protected String workspace;
 	protected DSASProcess process = null;
@@ -133,8 +133,8 @@ public abstract class ShorelineFile implements IShorelineFile {
 		if (!directory.isDirectory()) {
 			throw new IOException("File at " + directory.getAbsolutePath() + " is not a directory");
 		}
-
-		return TokenToFileSingleton.addFile(directory);
+		token = TokenToFileSingleton.addFile(directory); // path to exploded zip dir
+		return token;
 	}
 
 	@Override
@@ -190,7 +190,7 @@ public abstract class ShorelineFile implements IShorelineFile {
 		}
 	}
 
-	public static void validate(File zipFile) throws Exception {
+	public static void validate(File zipFile) throws Exception {  
 		throw new UnsupportedOperationException();
 	}
 	

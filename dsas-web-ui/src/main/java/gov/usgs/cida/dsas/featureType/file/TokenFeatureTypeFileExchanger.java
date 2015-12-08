@@ -1,11 +1,13 @@
-package gov.usgs.cida.dsas.service.util;
+package gov.usgs.cida.dsas.featureType.file;
 
+import gov.usgs.cida.dsas.service.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -17,9 +19,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author smlarson
  */
-public class TokenFileExchanger {
+public class TokenFeatureTypeFileExchanger {
 
-	private TokenFileExchanger() {
+	private TokenFeatureTypeFileExchanger() {
 		// private constructor prevents instantiation from external classes
 	}
 
@@ -32,15 +34,15 @@ public class TokenFileExchanger {
 	 */
 	private static class SingletonHolder {
 
-		private static final TokenFileExchanger INSTANCE = new TokenFileExchanger();
+		private static final TokenFeatureTypeFileExchanger INSTANCE = new TokenFeatureTypeFileExchanger();
 	}
 
-	public static TokenFileExchanger getInstance() {
+	public static TokenFeatureTypeFileExchanger getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 
-	private static final Map<String, File> tokenToFileMap = Collections.synchronizedMap(new HashMap<String, File>());
-	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TokenFileExchanger.class);
+	private static final Map<String, FeatureTypeFile> tokenToFileMap = Collections.synchronizedMap(new HashMap<String, FeatureTypeFile>());
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TokenFeatureTypeFileExchanger.class);
 
 	/**
 	 * Adds the File object to the map. If the file already exists in the map,
@@ -50,27 +52,28 @@ public class TokenFileExchanger {
 	 * @return token
 	 * @throws java.io.FileNotFoundException
 	 */
-	public static String getToken(File file) throws FileNotFoundException {
-		if (file.exists()) {
-			String filePath = file.getAbsolutePath();
-			String token = null;
-			Iterator<Map.Entry<String, File>> iterator = tokenToFileMap.entrySet().iterator();
-
-			while (iterator.hasNext()) {
-				Map.Entry<String, File> entry = iterator.next();
-				if (entry.getValue().getAbsolutePath().equals(filePath)) {
-					token = entry.getKey();
-				}
-			}
-			if (token == null) {
-				token = UUID.randomUUID().toString();
-			}
-
-			tokenToFileMap.put(token, file);  // puts the UUID, full/path/to/file/filename.ext ie: /var/folders/5t/600v2yfs7tg2clxswctbl_vm002d30/T/1449009485618/testFile.shp
-			return token;
-		} else {
-			throw new FileNotFoundException("File could not be found - was not added to Token-To-File Map");
+	public static String getToken(FeatureTypeFile featureTypeFile) throws FileNotFoundException {
+		String token = null;
+		if (featureTypeFile == null) {
+			throw new NullPointerException();
 		}
+
+		Set<String> kSet = tokenToFileMap.keySet();
+
+		Iterator<String> kIter = kSet.iterator();
+		while (kIter.hasNext() && null == token) {
+			String key = kIter.next();
+			if (tokenToFileMap.get(key).equals(featureTypeFile)) {
+				token = key;
+			}
+		}
+
+		if (token == null) {
+			token = UUID.randomUUID().toString();
+		}
+
+		tokenToFileMap.put(token, featureTypeFile);
+		return token;
 	}
 
 	/**
@@ -79,12 +82,12 @@ public class TokenFileExchanger {
 	 * @param token
 	 * @return null if token does not exist
 	 */
-	public static File getFile(String token) {
-		File file = null;
+	public static FeatureTypeFile getFeatureTypeFile(String token) {
+		FeatureTypeFile ftfile = null;
 		if (tokenToFileMap.containsKey(token)) {
-			file = tokenToFileMap.get(token);
+			ftfile = tokenToFileMap.get(token);
 		}
-		return file;
+		return ftfile;
 	}
 
 	/**
@@ -95,19 +98,10 @@ public class TokenFileExchanger {
 	 *
 	 * @return true if the file was deleted
 	 */
-	public static boolean removeToken(String token) {
-		boolean allFilesDeleted = true;
+	public static void removeToken(String token) {
 		if (StringUtils.isNotBlank(token) && tokenToFileMap.containsKey(token)) {
-			File file = tokenToFileMap.get(token);
-			tokenToFileMap.remove(token);
-			if (null != file && file.exists()) {
-				if (!FileUtils.deleteQuietly(file)) {
-					LOGGER.info("Could not delete file " + file.getAbsolutePath() + " for token " + token);
-					allFilesDeleted = false;
-				}
-			}
+			FeatureTypeFile shorelineFile = (FeatureTypeFile) tokenToFileMap.remove(token);
 		}
-		return allFilesDeleted;
 	}
 
 }

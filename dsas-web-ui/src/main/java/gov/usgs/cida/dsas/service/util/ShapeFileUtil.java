@@ -1,5 +1,8 @@
 package gov.usgs.cida.dsas.service.util;
 
+import gov.usgs.cida.dsas.featureTypeFile.exception.FeatureTypeFileException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.PdbFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShapefileException;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +16,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
@@ -174,7 +179,7 @@ public class ShapeFileUtil {
 //		return result;
 //	}
 	
-		public static boolean isValidShapefile(File candidateShapeDir) throws IOException
+		public static boolean isValidShapefile(File candidateShapeDir) throws ShapefileException
 	{
 		boolean result = true;
 
@@ -182,19 +187,26 @@ public class ShapeFileUtil {
 		//find the shp file
 		Collection<File> files = FileUtils.listFiles(candidateShapeDir, DbfType, false);
 		File foundDbfFile = files.iterator().next();
+		ShpFiles sFile = null;
 		
-		// create the geotools shape file by passing in the found shp file
-		ShpFiles sFile = new ShpFiles(foundDbfFile);
+		try {
+			// create the geotools shape file by passing in the found shp file
+			sFile = new ShpFiles(foundDbfFile);
+		} catch (MalformedURLException ex) {
+			Logger.getLogger(ShapeFileUtil.class.getName()).log(Level.SEVERE, null, ex);
+			throw new ShapefileException("Validate of shape file requires dir path to unzipped location. Zip sent instead: " + candidateShapeDir.toString());
+		}
 		boolean booShp = sFile.exists(ShpFileType.SHP);
 		boolean booDbf = sFile.exists(ShpFileType.DBF);
 		boolean booShx = sFile.exists(ShpFileType.SHX);
+		boolean booPrj = sFile.exists(ShpFileType.PRJ);
 		
-		if (!booShp || !booDbf || !booShx)
+		if (!booShp || !booDbf || !booShx )
 		{
 			result = false;
-			throw new FileNotFoundException("Invalid shape file zip does not have required file types: shp, dbf, shx " + booShp + ", " + booDbf + ", " + booShx);
+			throw new ShapefileException("Invalid shape file zip does not have required file. Types required: shp, dbf, shx, prj " + booShp + ", " + booDbf + ", " + booShx + ", " + booPrj);
 		}
-		// TODO add test for max file size ...
+		
 		return result;
 	}
 	/**

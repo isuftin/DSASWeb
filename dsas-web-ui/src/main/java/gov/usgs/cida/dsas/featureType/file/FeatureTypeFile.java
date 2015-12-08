@@ -6,7 +6,7 @@ import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.dsas.service.util.TokenFileExchanger;
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.utilities.file.TokenToFileSingleton;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
@@ -45,6 +45,7 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 	protected FeatureTypeFileDAO dao = null;
 	protected DSASProcess process = null;
 	protected String token;
+	protected FeatureType type = null;
 	protected static final String SHP = "shp";
 	protected static final String SHX = "shx";
 	protected static final String DBF = "dbf";
@@ -69,7 +70,7 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
 		this.workDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_WORK));
 		
-		validate();
+		//validate();
 	}
 
 		/**
@@ -129,8 +130,9 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 		if (!directory.isDirectory()) {
 			throw new IOException("File at " + directory.getAbsolutePath() + " is not a directory");
 		}
-
-		return TokenToFileSingleton.addFile(directory);
+		// set the token with the file that represents the exploded zip path
+		token = TokenToFileSingleton.addFile(directory);
+		return token;
 	}
 	
 	/*
@@ -188,7 +190,7 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 
 	public abstract List<File> getOptionalFiles();
 
-	public abstract boolean validate() throws IOException;
+	//public abstract boolean validate() throws IOException;
 
 	public abstract Map<String, String> setFileMap() throws IOException; // contains the unzipped files, the key is the type ie file ext
 	
@@ -241,5 +243,24 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 	 * @throws IOException
 	 */
 	public abstract void importToGeoserver(String viewName, String workspace) throws IOException;
-
+	
+	/*
+	 * Returns the type of FeatureType this zip is
+	 *
+	 * @return FeatureType
+	 */
+	public FeatureType getType() {
+		return this.type; 
+		
+	}
+	
+	/*
+	 * Returns the type of FeatureType this zip is
+	 *
+	 * @return FeatureType
+	 */
+	protected void setType(FeatureType type) {
+		this.type = type; 
+		
+	}
 }

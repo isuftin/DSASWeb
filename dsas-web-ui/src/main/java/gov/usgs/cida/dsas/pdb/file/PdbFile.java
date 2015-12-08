@@ -2,11 +2,12 @@ package gov.usgs.cida.dsas.pdb.file;
 
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.pdb.PdbDAO;
-import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.featureType.file.FeatureTypeFile;
 import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.service.util.ShapeFileUtil;
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.service.util.TokenFileExchanger;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShapefileException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -50,24 +51,23 @@ public class PdbFile extends FeatureTypeFile {
 		CST,
 		SHP_XML,
 		CPG};
-		
+
 	public PdbFile(File shapefileLocation, GeoserverDAO gsHandler, PdbDAO dao, DSASProcess process) throws IOException {
 		super(shapefileLocation);
 		init(gsHandler, dao);
 	}
-	
+
 	public PdbFile(File shapefileLocation, GeoserverDAO gsHandler, PdbDAO dao) throws IOException {
 		this(shapefileLocation, gsHandler, dao, null);
 	}
-	
+
 	//set up the work structures
 	private void init(GeoserverDAO gsHandler, PdbDAO dao) {
 		this.geoserverHandler = gsHandler;
 		this.dao = dao;
 		this.fileMap = new HashMap<>(FILE_PARTS.length);
 	}
-	
-	
+
 	@Override
 	public List<File> getRequiredFiles() {
 		Collection<File> requiredFiles = FileUtils.listFiles(this.featureTypeExplodedZipFileLocation, REQ_FILES, false);
@@ -80,10 +80,10 @@ public class PdbFile extends FeatureTypeFile {
 		return new ArrayList<>(requiredFiles);
 	}
 
-	@Override
-	public boolean validate() throws IOException {
-		ShapeFileUtil.isValidShapefile(this.featureTypeExplodedZipFileLocation); 
-		return ShapeFileUtil.isValidShapefile(this.featureTypeExplodedZipFileLocation); 
+	public static void validate(File zipFile) throws ShapefileException {
+		// #TODO# get the exploded directory from the zipFile and then pass into the ShapeFileUtil
+		ShapeFileUtil.isValidShapefile(zipFile);
+
 	}
 
 	@Override
@@ -100,14 +100,9 @@ public class PdbFile extends FeatureTypeFile {
 	}
 
 	@Override
-	public void setDSASProcess(DSASProcess process) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
 	public String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
 		updateProcessInformation("Getting EPSG Code");
-		String projection = getEPSGCode(); // TODO Is this reliant on a prj which may not be part of a PdbFile zip?
+		String projection = getEPSGCode();
 		File shpFile = fileMap.get(SHP);
 		updateProcessInformation("Importing to database");
 		return dao.importToDatabase(shpFile, columns, workspace, projection);
@@ -141,6 +136,7 @@ public class PdbFile extends FeatureTypeFile {
 	@Override
 	public String setDirectory(File directory) throws IOException {
 		String fileToken = super.setDirectory(directory);
+		this.token = fileToken;
 		updateFileMapWithDirFile(directory, FILE_PARTS);
 		return fileToken;
 	}
@@ -156,16 +152,18 @@ public class PdbFile extends FeatureTypeFile {
 
 	@Override
 	public Map<String, String> setFileMap() throws IOException {
-		Map<ShpFileType, String> geoShapeUrlMap = ShapeFileUtil.getFileMap(featureTypeExplodedZipFileLocation);// this requires the dir to the exploded zip
+		//Map<ShpFileType, String> geoShapeUrlMap = ShapeFileUtil.getFileMap(featureTypeExplodedZipFileLocation);// this requires the dir to the exploded zip
+		Map<ShpFileType, String> geoShapeUrlMap = ShapeFileUtil.getFileMap(TokenFileExchanger.getFile(token));// this requires the dir to the exploded zip
 		Map<String, String> result = new HashMap<>(); // Returns the URLs (in string form) of all the files for the shapefile datastore.
-		
-		for (ShpFileType key :geoShapeUrlMap.keySet())
-		{
+		// Legacy code takes the name of the zip and applies it to all the files while keeping the original file's ext
+		// Example: nameOfZip.zip .... then would have in its exploded directory nameOfZip.SHP, nameOfZip.CSV...etc
+
+		for (ShpFileType key : geoShapeUrlMap.keySet()) {
 			String value = geoShapeUrlMap.get(key);
 			result.put((key.extension), value);
 		}
 		//todo refactor later to return the Map<ShpFileType, String> in FeatureTypeFile....
-		
+
 		return result;
 	}
 

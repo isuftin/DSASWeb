@@ -223,7 +223,7 @@ public class PostgresDAO {
 			.append(" ")
 			.append(pdb.getY())
 			.append(")',")
-			.append(ShorelineFileDAO.DATABASE_PROJECTION)
+			.append(ShorelineFileDAO.DATABASE_PROJECTION)  // should this be PdbDAO?
 			.append("),")
 			.append(pdb.getBias())
 			.append(",")

@@ -2,7 +2,7 @@ package gov.usgs.cida.dsas.featureType.file;
 
 import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.service.util.ShapeFileUtilTest;
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -161,6 +161,7 @@ public class FeatureTypeFileTest {
 
 		protected File createWorkLocationForZip(File zipFile) throws IOException {
 		String featureTypeFileName = FilenameUtils.getBaseName(zipFile.getName());
+		System.out.println("BaseName of Zip file is: " + featureTypeFileName);
 		File fileWorkDirectory = new File(workDir, featureTypeFileName);
 		if (fileWorkDirectory.exists()) {
 			try {
@@ -289,8 +290,8 @@ public class FeatureTypeFileTest {
 		System.out.println("validate");
 		FeatureTypeFile instance = null;
 		boolean expResult = false;
-		boolean result = instance.validate();
-		assertEquals(expResult, result);
+//		boolean result = instance.validate();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

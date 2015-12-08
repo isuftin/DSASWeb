@@ -5,7 +5,7 @@ import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import java.io.File;
 import java.io.IOException;
@@ -76,13 +76,7 @@ public class ShorelineShapefile extends ShorelineFile {
 	}
 
 	public ShorelineShapefile(GeoserverDAO gsHandler, ShorelineFileDAO dao) {
-		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, System.getProperty("java.io.tmpdir")));
-		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-		this.workDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_WORK));
-		this.geoserverHandler = gsHandler;
-		this.dao = dao;
-		this.fileMap = new HashMap<>(fileParts.length);
-//		this.workspace = workspace;
+		this(gsHandler, dao, null);
 	}
 
 	public ShorelineShapefile(GeoserverDAO gsHandler, ShorelineFileDAO dao, DSASProcess process) {

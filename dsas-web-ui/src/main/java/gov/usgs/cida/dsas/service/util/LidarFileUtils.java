@@ -1,6 +1,6 @@
 package gov.usgs.cida.dsas.service.util;
 
-import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.LidarFileFormatException;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.ProjectionUtils;
 import java.io.BufferedInputStream;
@@ -38,7 +38,7 @@ public class LidarFileUtils {
 	 *
 	 * @param lidarZipFile
 	 * @throws
-	 * gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException
+	 * gov.usgs.cida.dsas.featureTypeFile.exception.LidarFileFormatException
 	 * @throws IOException
 	 */
 	public static boolean validateLidarFileZip(File lidarZipFile) throws LidarFileFormatException, IOException {

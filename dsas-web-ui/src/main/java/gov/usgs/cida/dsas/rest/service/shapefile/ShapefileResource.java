@@ -1,14 +1,25 @@
 package gov.usgs.cida.dsas.rest.service.shapefile;
 
 import com.google.gson.Gson;
+import gov.usgs.cida.dsas.featureType.file.FeatureType;
 //import gov.usgs.cida.dsas.model.IShapeFile;
 import gov.usgs.cida.dsas.featureType.file.FeatureTypeFile;
+import gov.usgs.cida.dsas.featureType.file.FeatureTypeFileFactory;
+import gov.usgs.cida.dsas.featureType.file.TokenFeatureTypeFileExchanger;
+import gov.usgs.cida.dsas.pdb.file.PdbFile;
 import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import gov.usgs.cida.dsas.rest.service.security.TokenBasedSecurityFilter;
+import gov.usgs.cida.dsas.service.util.ImportUtil;
 import gov.usgs.cida.dsas.service.util.ShapeFileUtil;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
-import gov.usgs.cida.dsas.service.util.TokenFileExchanger;
+//import gov.usgs.cida.dsas.service.util.TokenFileExchanger;
+import gov.usgs.cida.dsas.featureTypeFile.exception.FeatureTypeFileException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.LidarFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.shoreline.file.ShorelineFile;
+import gov.usgs.cida.dsas.shoreline.file.ShorelineLidarFile;
+import gov.usgs.cida.dsas.shoreline.file.ShorelineShapefile;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -59,9 +70,9 @@ public class ShapefileResource {
 // In Feb 2016, refactor: create a delegate for this class to control bloat. Consider how Lidar is not truly a shape file. 
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShapefileResource.class);
-	private static final Integer DEFAULT_MAX_FILE_SIZE = Integer.MAX_VALUE;
-	private static final File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
-	private static final File UPLOAD_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
+//	private static final Integer DEFAULT_MAX_FILE_SIZE = Integer.MAX_VALUE;
+//	private static final File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
+//	private static final File UPLOAD_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -73,12 +84,12 @@ public class ShapefileResource {
 		Response response = null;
 		Map<String, String> responseMap = new HashMap<>(1);
 		Gson gson = new Gson();
-		File shapeZip = null;
+		FeatureTypeFile featureTypeFile = null;
 
-		shapeZip = TokenFileExchanger.getFile(fileToken);
-		if (shapeZip == null) {
+		featureTypeFile = TokenFeatureTypeFileExchanger.getFeatureTypeFile(fileToken); // this should return a FeatureTypeFile
+		if ( featureTypeFile == null || !featureTypeFile.exists() ) {
 			LOGGER.error("Unable to get shape file for token: " + fileToken);
-
+			
 			responseMap.put("error", "Unable to retrieve shape file with token: " + fileToken);
 			return Response
 					.serverError()
@@ -87,10 +98,9 @@ public class ShapefileResource {
 					.build();
 		}
 		if (response == null) {
-			try {
-				validate(shapeZip);
-				//shapeZip will the local machines path 
-				List<String> nameList = ShapeFileUtil.getDbfColumnNames(shapeZip);
+			try {				
+				//List<String> nameList = ShapeFileUtil.getDbfColumnNames(featureTypeZip); < this will fail for Lidars
+				List<String> nameList = featureTypeFile.getColumns();
 				String[] names = nameList.toArray(new String[nameList.size()]);
 
 				responseMap.put("headers", gson.toJson(names, String[].class));
@@ -100,7 +110,7 @@ public class ShapefileResource {
 						.entity(gson.toJson(responseMap, HashMap.class))
 						.build();
 			} catch (IOException ex) {
-				LOGGER.error("Error while attempting to get dbf names from shapefile: ", ex);
+				LOGGER.error("Error while attempting to get dbf names from featureTypeFile: ", ex);
 				responseMap.put("error", ex.getLocalizedMessage());
 				response = Response
 						.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -122,14 +132,14 @@ public class ShapefileResource {
 		Response response = null;
 		Map<String, String> responseMap = new HashMap<>(1);
 		Gson gson = new Gson();
-		File shapeZip = null;
+		FeatureTypeFile featureTypeFile = null;
 		String token = null;
 
-		try { //sets the path to the local machines for later internal zip file retrieval
-			shapeZip = Files.createTempFile(UPLOAD_DIRECTORY.toPath(), null, ".zip").toFile();
-			IOUtils.copyLarge(fileInputStream, new FileOutputStream(shapeZip));
-			FileHelper.flattenZipFile(shapeZip);
-		} catch (IOException ex) {
+		try { 
+			//Since an inputstream is sent, the clean of the name is no longer required
+			featureTypeFile = new FeatureTypeFileFactory().createFeatureTypeFile(fileInputStream);
+			
+		} catch (IOException | FeatureTypeFileException ex) {
 			LOGGER.error("Error while attempting upload of shapefile. ", ex);
 			responseMap.put("error", ex.getLocalizedMessage());
 			response = Response
@@ -140,30 +150,17 @@ public class ShapefileResource {
 
 		if (response == null) {
 			try {
-				token = TokenFileExchanger.getToken(shapeZip); 
+				token = TokenFeatureTypeFileExchanger.getToken(featureTypeFile); 
+				
+				response = Response
+						.accepted()
+						.header(HttpHeaders.LOCATION, ServiceURI.SHAPEFILE_SERVICE_ENDPOINT + "/" + token)
+						.build();
 			} catch (FileNotFoundException ex) {
 				LOGGER.error("Unable to get token from uploaded zip file: ", ex);
 				responseMap.put("error", ex.getLocalizedMessage());
 				response = Response
 						.status(Response.Status.INTERNAL_SERVER_ERROR)
-						.entity(gson.toJson(responseMap, HashMap.class))
-						.build();
-			}
-		}
-
-		if (response == null) {
-			try {
-				validate(shapeZip);
-
-				response = Response
-						.accepted()
-						.header(HttpHeaders.LOCATION, ServiceURI.SHAPEFILE_SERVICE_ENDPOINT + "/" + token)
-						.build();
-			} catch (ShapefileException ex) {
-				LOGGER.error("Error while attempting to validate shapefile: ", ex);
-				responseMap.put("error", ex.getLocalizedMessage());
-				response = Response
-						.status(Response.Status.PRECONDITION_FAILED)
 						.entity(gson.toJson(responseMap, HashMap.class))
 						.build();
 			}
@@ -181,11 +178,16 @@ public class ShapefileResource {
 	public Response importPdbShapefile(
 			@Context HttpServletRequest req,
 			@PathParam("token") String fileToken,
-			@PathParam("workspace") String workspace //#TODO# add null checks ? workspace and token
+			@PathParam("workspace") String workspace 
 	) {
 		String columnsString = req.getParameter("columns");  // #TODO# make this pdb specific
 		Map<String, String> columns = new HashMap<>();
-		if (StringUtils.isNotBlank(columnsString)) {
+				
+		boolean isColumnsStringNotBlank = StringUtils.isNotBlank(columnsString);
+		boolean isfileTokenNotBlank = StringUtils.isNotBlank(fileToken);
+		boolean isWorkspaceNotBlank = StringUtils.isNotBlank(workspace);
+		
+		if ((isColumnsStringNotBlank) && (isfileTokenNotBlank) && (isWorkspaceNotBlank)) {
 			columns = new Gson().fromJson(columnsString, Map.class);
 
 			ShapefileImportProcess process = new ShapefileImportProcess(fileToken, columns, workspace);
@@ -198,7 +200,12 @@ public class ShapefileResource {
 					.build();
 		} else {
 			Map<String, String> map = new HashMap<>();
+			if (!isColumnsStringNotBlank)
 			map.put("error", "Parameter \"columns\" missing");
+			else if (!isfileTokenNotBlank)
+				map.put("error", "Parameter \"file token\" missing");
+			else if (!isWorkspaceNotBlank)
+				map.put("error", "Parameter \"workspace\" missing");
 			return Response
 					.serverError()
 					.status(Response.Status.BAD_REQUEST)
@@ -215,11 +222,16 @@ public class ShapefileResource {
 	public Response importShorelineShapefile(
 			@Context HttpServletRequest req,
 			@PathParam("token") String fileToken,
-			@PathParam("workspace") String workspace  //#TODO# add null checks ? workspace and token
+			@PathParam("workspace") String workspace 
 	) {
 		String columnsString = req.getParameter("columns");
 		Map<String, String> columns = new HashMap<>();
-		if (StringUtils.isNotBlank(columnsString)) {
+		
+		boolean isColumnsStringNotBlank = StringUtils.isNotBlank(columnsString);
+		boolean isfileTokenNotBlank = StringUtils.isNotBlank(fileToken);
+		boolean isWorkspaceNotBlank = StringUtils.isNotBlank(workspace);
+		
+		if ( (isColumnsStringNotBlank) && (isfileTokenNotBlank) && (isWorkspaceNotBlank) ) {
 			columns = new Gson().fromJson(columnsString, Map.class);
 
 			ShapefileImportProcess process = new ShapefileImportProcess(fileToken, columns, workspace);
@@ -232,7 +244,12 @@ public class ShapefileResource {
 					.build();
 		} else {
 			Map<String, String> map = new HashMap<>();
+			if (!isColumnsStringNotBlank)
 			map.put("error", "Parameter \"columns\" missing");
+			else if (!isfileTokenNotBlank)
+				map.put("error", "Parameter \"file token\" missing");
+			else if (!isWorkspaceNotBlank)
+				map.put("error", "Parameter \"workspace\" missing");
 			return Response
 					.serverError()
 					.status(Response.Status.BAD_REQUEST)
@@ -241,43 +258,5 @@ public class ShapefileResource {
 		}
 
 	}
-
-	protected void validate(File shapeFile) throws ShapefileException {
-		if (shapeFile == null || !shapeFile.exists()) {
-			throw new ShapefileException("An error occurred attempting to save file");
-		} else if (shapeFile.length() > getMaxFileSize()) {
-			throw new ShapefileException(MessageFormat.format("File maximum size: {0}", getMaxFileSize()));
-		} else if (false) {
-			// TODO
-
-		}
-	}
-
-	protected Integer getMaxFileSize() {
-		Integer maxFSize = DEFAULT_MAX_FILE_SIZE;
-		String mfsJndiProp = PropertyUtil.getProperty(Property.FILE_UPLOAD_MAX_SIZE);
-		if (StringUtils.isNotBlank(mfsJndiProp)) {
-			maxFSize = Integer.parseInt(mfsJndiProp);
-		}
-		return maxFSize;
-	}
-
-	protected String cleanFileName(String input) {
-		String updated = input;
-
-		// Test the first character and if numeric, prepend with underscore
-		if (input.substring(0, 1).matches("[0-9]")) {
-			updated = "_" + input;
-		}
-
-		// Test the rest of the characters and replace anything that's not a 
-		// letter, digit or period with an underscore
-		char[] inputArr = updated.toCharArray();
-		for (int cInd = 0; cInd < inputArr.length; cInd++) {
-			if (!Character.isLetterOrDigit(inputArr[cInd]) && !(inputArr[cInd] == '.')) {
-				inputArr[cInd] = '_';
-			}
-		}
-		return String.valueOf(inputArr);
-	}
+	
 }
