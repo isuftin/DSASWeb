@@ -2,19 +2,16 @@ package gov.usgs.cida.dsas.rest.service.shapefile;
 
 import com.google.gson.Gson;
 import gov.usgs.cida.dsas.featureType.file.FeatureType;
-//import gov.usgs.cida.dsas.model.IShapeFile;
 import gov.usgs.cida.dsas.featureType.file.FeatureTypeFile;
 import gov.usgs.cida.dsas.featureType.file.FeatureTypeFileFactory;
 import gov.usgs.cida.dsas.featureType.file.TokenFeatureTypeFileExchanger;
 import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import gov.usgs.cida.dsas.rest.service.security.TokenBasedSecurityFilter;
-//import gov.usgs.cida.dsas.service.util.TokenFileExchanger;
 import gov.usgs.cida.dsas.featureTypeFile.exception.FeatureTypeFileException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.annotation.MultipartConfig;
@@ -44,9 +41,6 @@ public class ShapefileResource {
 // In Feb 2016, refactor: create a delegate for this class to control bloat. Consider how Lidar is not truly a shape file. 
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShapefileResource.class);
-//	private static final Integer DEFAULT_MAX_FILE_SIZE = Integer.MAX_VALUE;
-//	private static final File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
-//	private static final File UPLOAD_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -97,7 +91,7 @@ public class ShapefileResource {
 	@Path("/pdb")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createToken(
+	public Response createPdbToken(
 			@Context HttpServletRequest req,
 			@FormDataParam("file") InputStream fileInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDisposition
@@ -142,6 +136,54 @@ public class ShapefileResource {
 		return response;
 	}
 
+	@POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createToken(
+			@Context HttpServletRequest req,
+			@FormDataParam("file") InputStream fileInputStream,
+			@FormDataParam("file") FormDataContentDisposition fileDisposition
+	) {  //stages the file - uploads the file
+		Response response = null;
+		Map<String, String> responseMap = new HashMap<>(1);
+		Gson gson = new Gson();
+		FeatureTypeFile featureTypeFile = null;
+		String token = null;
+
+		try { 
+			//Note the additional Path attribute of pdb which determines its type.
+			featureTypeFile = new FeatureTypeFileFactory().createFeatureTypeFile(fileInputStream, FeatureType.SHORELINE);
+			
+		} catch (IOException | FeatureTypeFileException ex) {
+			LOGGER.error("Error while attempting upload of shapefile. ", ex);
+			responseMap.put("error", ex.getLocalizedMessage());
+			response = Response
+					.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(gson.toJson(responseMap, HashMap.class))
+					.build();
+		}
+
+		if (response == null) {
+			try {
+				token = TokenFeatureTypeFileExchanger.getToken(featureTypeFile); 
+				
+				response = Response
+						.accepted()
+						.header(HttpHeaders.LOCATION, ServiceURI.SHAPEFILE_SERVICE_ENDPOINT + "/" + token)
+						.build();
+			} catch (FileNotFoundException ex) {
+				LOGGER.error("Unable to get token from uploaded zip file: ", ex);
+				responseMap.put("error", ex.getLocalizedMessage());
+				response = Response
+						.status(Response.Status.INTERNAL_SERVER_ERROR)
+						.entity(gson.toJson(responseMap, HashMap.class))
+						.build();
+			}
+		}
+
+		return response;
+	}
+	
 	// import pdb shape to the database file
 	// todo move the import to the pdb and shoreline file
 	@POST
@@ -188,7 +230,6 @@ public class ShapefileResource {
 
 	}
 
-	// import Shoreline shape to the database file
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/shoreline/{token}/workspace/{workspace}")
