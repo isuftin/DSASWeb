@@ -86,7 +86,6 @@ public class PdbFile extends FeatureTypeFile {
 	}
 
 	public static void validate(File explodedZipFileDir) throws ShapefileException {
-		// uses the exploded directory from the zipFile and then pass into the ShapeFileUtil
 		ShapeFileUtil.isValidShapefile(explodedZipFileDir);
 	}
 

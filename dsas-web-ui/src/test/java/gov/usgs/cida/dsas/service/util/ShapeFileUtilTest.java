@@ -156,10 +156,9 @@ public class ShapeFileUtilTest {
 		FileUtils.copyFile(validShapeZip, tempShapeFile);
 		FileHelper.unzipFile(tempDir.getAbsolutePath(), tempShapeFile);
 
-		//ShapeFile instance = new ShapeFile(tempDir.listFiles()[0]);
 		List<String> columns = ShapeFileUtil.getDbfColumnNames(tempShapeFile);
 		System.out.println("File passed into ShapefileUtil as dir:" + tempDir);
-		//List<String> columns = instance.getDbfColumnNames();
+	
 		for (String column : columns) {
 			System.out.println("Column Name:" + column);
 		}
@@ -178,10 +177,10 @@ public class ShapeFileUtilTest {
 		FileUtils.copyFile(validShapeZip, tempShapeFile);
 		FileHelper.unzipFile(tempDir.getAbsolutePath(), tempShapeFile);
 
-		//ShapeFile instance = new ShapeFile(tempDir.listFiles()[0]);
+	
 		List<String> columns = ShapeFileUtil.getDbfColumnNames(tempDir);
 		System.out.println("File passed into ShapefileUtil as dir:" + tempDir);
-		//List<String> columns = instance.getDbfColumnNames();
+	
 		for (String column : columns) {
 			System.out.println("Column Name:" + column);
 		}
@@ -259,7 +258,7 @@ public class ShapeFileUtilTest {
 		System.out.println("testShapeFileCreateFromFileInputStream");
 		File tempDirectory = null;
 		File tempDirectory2 = null;
-		//File tempShapeFile = null;
+
 		// get an input stream from the valid shape zip
 		FileInputStream fileInputStream = FileUtils.openInputStream(validShapeZip);
 
@@ -352,26 +351,6 @@ public class ShapeFileUtilTest {
 
 		assertNotNull(stringUrlToShxFile);
 		System.out.println("URL to shx file: " + stringUrlToShxFile);
-	}
-	
-	@Ignore 
-	@Test(expected = FileNotFoundException.class)
-	public void testGetFileNamesWithInvalidZip() throws IOException {
-		Map<ShpFileType, String> map = ShapeFileUtil.getFileMap(invalidShapeZip);
-
-	}
-
-	@Ignore 
-	@Test(expected = ShapefileException.class)
-	public void testIsValidWithInvalidZip() throws ShapefileException {
-		boolean result = ShapeFileUtil.isValidShapefile(invalidShapeZip);
-	}
-
-	@Ignore 
-	@Test
-	public void testValidWithValidZip() throws ShapefileException {
-		boolean result = ShapeFileUtil.isValidShapefile(validShapeZip);
-		assertTrue(result);
 	}
 
 	@Test(expected = ShapefileException.class)

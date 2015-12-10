@@ -1,21 +1,15 @@
 package gov.usgs.cida.dsas.shoreline.file;
 
 import com.google.gson.Gson;
-import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.utilities.features.Constants;
-//import gov.usgs.cida.dsas.utilities.file.TokenToFileSingleton;
-import gov.usgs.cida.owsutils.commons.io.FileHelper;
-import gov.usgs.cida.owsutils.commons.shapefile.utils.ProjectionUtils;
 import java.io.File;
-//import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -23,7 +17,6 @@ import java.util.NoSuchElementException;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.feature.SchemaException;
 import org.opengis.referencing.FactoryException;
@@ -37,29 +30,10 @@ import gov.usgs.cida.dsas.featureType.file.FeatureTypeFile;
 public abstract class ShorelineFile extends FeatureTypeFile implements IShorelineFile {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShorelineFile.class);
-//	static final String SHP = "shp";
-//	static final String SHX = "shx";
-//	static final String DBF = "dbf";
-//	static final String PRJ = "prj";
-//	static final String FBX = "fbx";
-//	static final String SBX = "sbx";
-//	static final String AIH = "aih";
-//	static final String IXS = "ixs";
-//	static final String MXS = "mxs";
-//	static final String ATX = "atx";
-//	static final String SHP_XML = "shp.xml";
-//	static final String CPG = "cpg";
-//	static final String CST = "cst";
-//	static final String CSV = "csv";
 	protected File baseDirectory;
 	protected File uploadDirectory;
 	protected File workDirectory;
-//	protected GeoserverDAO geoserverHandler;
-//	protected ShorelineFileDAO dao;
-	protected String token;  // this token retrieves the directory to the exploded zip
-//	protected Map<String, File> fileMap;
-	//protected String workspace;
-//	protected DSASProcess process = null;
+//	protected String token;  // this token retrieves the directory to the exploded zip
 	public static final String[] AUXILLARY_ATTRIBUTES = new String[]{
 		Constants.SURVEY_ID_ATTR,
 		Constants.DISTANCE_ATTR,
@@ -73,83 +47,6 @@ public abstract class ShorelineFile extends FeatureTypeFile implements IShorelin
 
 		LIDAR, SHAPEFILE, OTHER
 	};
-
-	/**
-	 * Moves a zip file into the applications work directory and returns the
-	 * parent directory containing the unzipped collection of files
-	 *
-	 * @param zipFile
-	 * @return
-	 */
-//	File createWorkLocationForZip(File zipFile) throws IOException {
-//		String shorelineFileName = FilenameUtils.getBaseName(zipFile.getName());
-//		File fileWorkDirectory = new File(this.workDirectory, shorelineFileName);
-//		if (fileWorkDirectory.exists()) {
-//			try {
-//				FileUtils.cleanDirectory(fileWorkDirectory);
-//			} catch (IOException ex) {
-//				LOGGER.debug("Could not clean work directory at " + fileWorkDirectory.getAbsolutePath(), ex);
-//			}
-//		}
-//		FileUtils.forceMkdir(fileWorkDirectory);
-//		return fileWorkDirectory;
-//	}
-
-//	void updateFileMapWithDirFile(File directory, String[] parts) {
-//		Collection<File> fileList = FileUtils.listFiles(directory, parts, false);
-//		Iterator<File> listIter = fileList.iterator();
-//		while (listIter.hasNext()) {
-//			File file = listIter.next();
-//			String filename = file.getName();
-//			for (String part : parts) {
-//				if (filename.contains(part)) {
-//					this.fileMap.put(part, file);
-//				}
-//			}
-//		}
-//	}
-
-//	@Override
-//	public File getDirectory(String token) {
-//		return TokenToFileSingleton.getFile(token);
-//	}
-
-	/**
-	 * Deletes the directory associated with this Shoreline File. Typically,
-	 * this would be done when removing the Shoreline file.
-	 *
-	 * @return
-	 */
-//	protected boolean deleteDirectory() {
-//		return TokenToFileSingleton.removeToken(token, true);
-//	}
-
-//	@Override
-//	public String setDirectory(File directory) throws IOException {
-//		if (!directory.exists()) {
-//			throw new FileNotFoundException();
-//		}
-//
-//		if (!directory.isDirectory()) {
-//			throw new IOException("File at " + directory.getAbsolutePath() + " is not a directory");
-//		}
-//		token = TokenToFileSingleton.addFile(directory); // path to exploded zip dir
-//		return token;
-//	}
-//
-//	@Override
-//	public String getEPSGCode() {
-//		String epsg = null;
-//		try {
-//			epsg = ProjectionUtils.getDeclaredEPSGFromPrj(this.fileMap.get(PRJ));
-//		} catch (IOException | FactoryException ex) {
-//			LOGGER.warn("Could not find EPSG code from file", ex);
-//		}
-//		return epsg;
-//	}
-
-//	@Override
-//	public abstract String[] getColumns() throws IOException;
 
 	@Override
 	public String importToDatabase(HttpServletRequest request, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
@@ -190,16 +87,8 @@ public abstract class ShorelineFile extends FeatureTypeFile implements IShorelin
 		}
 	}
 
-	public static void validate(File zipFile) throws Exception {  
-		throw new UnsupportedOperationException();
-	}
-
-//	@Override
-//	public File saveZipFile(File zipFile) throws IOException {
-//		File workLocation = createWorkLocationForZip(zipFile);
-//		FileHelper.unzipFile(workLocation.getAbsolutePath(), zipFile);
-//		FileHelper.renameDirectoryContents(workLocation);
-//		return workLocation;
+//	public static void validate(File zipFile) throws Exception {  
+//		throw new UnsupportedOperationException();
 //	}
 
 	@Override

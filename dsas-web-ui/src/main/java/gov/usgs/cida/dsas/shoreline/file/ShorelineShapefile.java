@@ -5,36 +5,22 @@ import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.featureType.file.FeatureType;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShapefileException;
 import gov.usgs.cida.dsas.model.DSASProcess;
-import gov.usgs.cida.dsas.utilities.properties.Property;
-import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.service.util.ShapeFileUtil;
-import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import javax.naming.NamingException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.geotools.data.shapefile.dbf.DbaseFileHeader;
-import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.feature.SchemaException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
@@ -64,24 +50,7 @@ public class ShorelineShapefile extends ShorelineFile {
 		SHP_XML,
 		CPG};
 
-	public static void validate(File zipFileDir) throws ShorelineFileFormatException, IOException {
-		
-			//		ZipFile zFile = new ZipFile(zipFile);
-//		Enumeration<? extends ZipEntry> entries = zFile.entries();
-//		List<String> extensions = new ArrayList<>(zFile.size());
-//		List<String> requiredFilesList = Arrays.asList(REQ_FILES);
-//		while (entries.hasMoreElements()) {
-//			ZipEntry ze = entries.nextElement();
-//			extensions.add(FilenameUtils.getExtension(ze.getName()));
-//		}
-//		if (!extensions.containsAll(requiredFilesList)) {
-//			throw new ShorelineFileFormatException("Missing mandatory files within shapefile. One of: .shp, .shx, .dbf");
-//		}
-//		if (Collections.frequency(extensions, SHP) > 1
-//				|| Collections.frequency(extensions, SHX) > 1
-//				|| Collections.frequency(extensions, DBF) > 1) {
-//			throw new ShorelineFileFormatException("Found more than one shapefile in archive. Can only stage one shape file at a time.");
-//		}
+	public static void validate(File zipFileDir) throws ShorelineFileFormatException, IOException {		
 		try {		
 		ShapeFileUtil.isValidShapefile(zipFileDir);
 		} catch (ShapefileException ex) {
@@ -95,17 +64,6 @@ public class ShorelineShapefile extends ShorelineFile {
 
 	public ShorelineShapefile(File featureTypeFileLocation, GeoserverDAO gsHandler, ShorelineFileDAO dao, DSASProcess process) {
 		init(featureTypeFileLocation, gsHandler, dao, process);
-//		this.process = process;
-//		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, System.getProperty("java.io.tmpdir")));
-//		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-//		this.workDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_WORK));
-//		this.geoserverHandler = gsHandler;
-//		this.dao = dao;
-//		this.fileMap = new HashMap<>(fileParts.length);
-////		this.workspace = workspace;
-//		if (this.process != null) {
-//			this.dao.setDSASProcess(process);
-//		}
 	}
 
 	private void init(File featureTypeFileLocation, GeoserverDAO gsHandler, ShorelineFileDAO dao, DSASProcess process) {
@@ -119,12 +77,6 @@ public class ShorelineShapefile extends ShorelineFile {
 		}
 		this.type = FeatureType.SHORELINE_LIDAR;
 	}
-//	@Override
-//	public String setDirectory(File directory) throws IOException {
-//		String fileToken = super.setDirectory(directory);
-//		updateFileMapWithDirFile(directory, fileParts);
-//		return fileToken;
-//	}
 
 	@Override
 	public String getEPSGCode() {
@@ -157,24 +109,6 @@ public class ShorelineShapefile extends ShorelineFile {
 		List<String> dbfColumns = ShapeFileUtil.getDbfColumnNames(this.featureTypeExplodedZipFileLocation);
 		String[] names = dbfColumns.toArray(new String[dbfColumns.size()]);
 		return names;
-//		File dbfFile = this.fileMap.get(DBF);
-//
-//		// getDbfHeader uses the .shp file 
-//		if (null == dbfFile || !dbfFile.exists() || !dbfFile.isFile() || !dbfFile.canRead()) {
-//			throw new IOException(MessageFormat.format("DBF file at {0} not readable", dbfFile));
-//		}
-//
-//		try (IterableShapefileReader reader = new IterableShapefileReader(new ShpFiles(dbfFile))) {
-//			DbaseFileHeader dbfHeader = reader.getDbfHeader();
-//			int fieldCount = dbfHeader.getNumFields();
-//			headers = new String[fieldCount];
-//			for (int headerIndex = 0; headerIndex < fieldCount; headerIndex++) {
-//				headers[headerIndex] = dbfHeader.getFieldName(headerIndex);
-//			}
-//		} catch (Exception ex) {
-//			LOGGER.warn("Error on closing IterableShapefileReader", ex);
-//		}
-//		return headers;
 	}
 
 	@Override

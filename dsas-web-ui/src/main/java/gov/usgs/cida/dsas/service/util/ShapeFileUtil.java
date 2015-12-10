@@ -1,15 +1,11 @@
 package gov.usgs.cida.dsas.service.util;
 
-import gov.usgs.cida.dsas.featureTypeFile.exception.FeatureTypeFileException;
-import gov.usgs.cida.dsas.featureTypeFile.exception.PdbFileFormatException;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShapefileException;
-import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,32 +68,12 @@ public class ShapeFileUtil {
 	/**
 	 * Pass a valid shape zip into the method.
 	 *
-	 * @param validShapeZip a valid shape zip file
+	 * @param validShapeDir a valid shape zip file
 	 * @return A list of attribute names found in the DBF file
-	 */
-//	public static List<String> getDbfColumnNames(File validShapeZip) throws IOException {
-//		List<String> names = new ArrayList<String>();
-//		File tempDirectory = Files.createTempDirectory("temp-shapefile-dir").toFile();
-//		tempDirectory.deleteOnExit();
-//		FileHelper.unzipFile(tempDirectory.toString(), validShapeZip);
-//
-//		DbaseFileReader dbReader = new DbaseFileReader(FileUtils.openInputStream(getDbfFile(tempDirectory)).getChannel(), false, Charset.forName("UTF-8"));
-//		int n = dbReader.getHeader().getNumFields();
-//		for (int i = 0; i < n; i++) {
-//			names.add(dbReader.getHeader().getFieldName(i));
-//		}
-//		closeReader(dbReader);
-//
-//		return names;
-//	}
-	/**
-	 * Pass a valid shape zip into the method.
-	 *
-	 * @param validShapeZip a valid shape zip file
-	 * @return A list of attribute names found in the DBF file
+	 * @throws java.io.IOException
 	 */
 	public static List<String> getDbfColumnNames(File validShapeDir) throws IOException {
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 
 		DbaseFileReader dbReader = new DbaseFileReader(FileUtils.openInputStream(getDbfFile(validShapeDir)).getChannel(), false, Charset.forName("UTF-8"));
 		int n = dbReader.getHeader().getNumFields();
@@ -108,37 +84,15 @@ public class ShapeFileUtil {
 
 		return names;
 	}
+
 	/**
 	 *
-	 * @param validShapeZip the shape file zip Only for files that have a shp
+	 * @param validShapeDir the shape file zip Only for files that have a shp
 	 * file ie not Lidar
 	 * @return A list of attribute names found in the DBF file
+	 * @throws java.io.IOException
 	 */
-//	public static String getEPSGCode(File validShapeZip) throws IOException {
-//		// To control the directory structure, make a copy of the file and unzip its contents into a known directory
-//		File tempDir = Files.createTempDirectory("temp-shapefile-dir").toFile();  //#TODO# will need to get file location from props
-//		tempDir.deleteOnExit();
-//		File tempShapeFile = Files.createTempFile("tempshapefile", ".zip").toFile();
-//		tempShapeFile.deleteOnExit();
-//		FileUtils.copyFile(validShapeZip, tempShapeFile);
-//		FileHelper.unzipFile(tempDir.getAbsolutePath(), validShapeZip);
-//
-//		String eCode = null;
-//		SimpleFeatureSource featureSource = null;
-//		DataStore ds = getDatastore(tempDir);
-//		featureSource = ds.getFeatureSource(ds.getTypeNames()[0]);
-//		eCode = featureSource.getBounds().getCoordinateReferenceSystem().getName().toString();
-//		closeDataStore(ds);
-//
-//		return eCode;
-//	}
-	/**
-	 *
-	 * @param validShapeZip the shape file zip Only for files that have a shp
-	 * file ie not Lidar
-	 * @return A list of attribute names found in the DBF file
-	 */
-	public static String getEPSGCode(File validShapeDir) throws IOException { 
+	public static String getEPSGCode(File validShapeDir) throws IOException {
 
 		String eCode = null;
 		SimpleFeatureSource featureSource = null;
@@ -149,49 +103,19 @@ public class ShapeFileUtil {
 
 		return eCode;
 	}
-//	public static boolean isValidShapeZip(File candidateShapeZip) throws IOException
-//	{
-//		boolean result = true;
-//				// To control the directory structure, make a copy of the file and unzip its contents into a known directory
-//		File tempDir = Files.createTempDirectory("temp-shapefile-dir").toFile();  //#TODO# will need to get file location from props
-//		tempDir.deleteOnExit();
-//		File tempShapeFile = Files.createTempFile("tempshapefile", ".zip").toFile();
-//		tempShapeFile.deleteOnExit();
-//		FileUtils.copyFile(candidateShapeZip, tempShapeFile);
-//		FileHelper.unzipFile(tempDir.getAbsolutePath(), candidateShapeZip);
-//		
-//		String[] DbfType = new String[]{DBF};  // can be any file that is expected to be part of the shape file
-//		//find the shp file
-//		Collection<File> files = FileUtils.listFiles(tempDir, DbfType, false);
-//		File foundDbfFile = files.iterator().next();
-//		
-//		// create the geotools shape file by passing in the found shp file
-//		ShpFiles sFile = new ShpFiles(foundDbfFile);
-//		boolean booShp = sFile.exists(ShpFileType.SHP);
-//		boolean booDbf = sFile.exists(ShpFileType.DBF);
-//		boolean booShx = sFile.exists(ShpFileType.SHX);
-//		
-//		if (!booShp || !booDbf || !booShx)
-//		{
-//			result = false;
-//			throw new FileNotFoundException("Invalid shape file zip does not have required file types: shp, dbf, shx " + booShp + ", " + booDbf + ", " + booShx);
-//		}
-//		// TODO add test for max file size ...
-//		return result;
-//	}
-	
-		public static boolean isValidShapefile(File candidateShapeDir) throws ShapefileException
-	{
+
+	public static boolean isValidShapefile(File candidateShapeDir) throws ShapefileException {
 		boolean result = true;
 
 		String[] ShpType = new String[]{SHP};  // can be any file that is expected to be part of the shape file
 		//find the shp file
 		Collection<File> files = FileUtils.listFiles(candidateShapeDir, ShpType, false);
-		if (files.isEmpty())
+		if (files.isEmpty()) {
 			throw new ShapefileException("Not a valid shape file. SHP file missing.");
+		}
 		File foundShpFile = files.iterator().next();
 		ShpFiles sFile = null;
-		
+
 		try {
 			// create the geotools shape file by passing in the found shp file
 			sFile = new ShpFiles(foundShpFile);
@@ -203,71 +127,38 @@ public class ShapeFileUtil {
 		boolean booDbf = sFile.exists(ShpFileType.DBF);
 		boolean booShx = sFile.exists(ShpFileType.SHX);
 		boolean booPrj = sFile.exists(ShpFileType.PRJ);
-		
-		if (!booShp || !booDbf || !booShx || !booPrj )
-		{
+
+		if (!booShp || !booDbf || !booShx || !booPrj) {
 			result = false;
 			throw new ShapefileException("Invalid shape file zip does not have required file. Types required: shp, dbf, shx, prj " + booShp + ", " + booDbf + ", " + booShx + ", " + booPrj);
 		}
-		
+
 		return result;
 	}
-	/**
-	 *
-	 * @param validShapeZip the shape file dir. Only for files that have a shp
-	 * file ie not Lidar
-	 * @return A list of attribute names found in the DBF file
-	 */
-//	public static Map<ShpFileType, String> getFileMap(File validShapeZip) throws IOException {
-//		// To control the directory structure, make a copy of the file and unzip its contents into a known directory
-//		File tempDir = Files.createTempDirectory("temp-shapefile-dir").toFile();  //#TODO# will need to get file location from props
-//		tempDir.deleteOnExit();
-//		File tempShapeFile = Files.createTempFile("tempshapefile", ".zip").toFile();
-//		tempShapeFile.deleteOnExit();
-//		FileUtils.copyFile(validShapeZip, tempShapeFile);
-//		FileHelper.unzipFile(tempDir.getAbsolutePath(), validShapeZip);
-//		
-//		String[] DbfType = new String[]{DBF};  // can be any file that is expected to be part of the shape file
-//		//find the shp file
-//		Collection<File> files = FileUtils.listFiles(tempDir, DbfType, false);
-//		File foundDbfFile = files.iterator().next();
-//		
-//		// create the geotools shape file by passing in the found shp file
-//		ShpFiles sFile = new ShpFiles(foundDbfFile);
-//		boolean booShp = sFile.exists(ShpFileType.SHP);
-//		boolean booDbf = sFile.exists(ShpFileType.DBF);
-//		boolean booShx = sFile.exists(ShpFileType.SHX);
-//		
-//		if (!booShp || !booDbf || !booShx)
-//			throw new FileNotFoundException("Invalid shape file zip does not have required file types: shp, dbf, shx " + booShp + ", " + booDbf + ", " + booShx);
-//
-//
-//		return sFile.getFileNames();
-//	}
-	
+
 	public static Map<ShpFileType, String> getFileMap(File validShapeDir) throws IOException { // exploded dir
 
 		String[] DbfType = new String[]{DBF};  // can be any file that is expected to be part of the shape file
 		File foundDbfFile = null;
 		//find the shp file
 		Collection<File> files = FileUtils.listFiles(validShapeDir, DbfType, false);
-		if(null != files && !(files.isEmpty()))
-		{
+		if (null != files && !(files.isEmpty())) {
 			foundDbfFile = files.iterator().next();
 		}
-		
+
 		// create the geotools shape file by passing in the found shp file
 		ShpFiles sFile = new ShpFiles(foundDbfFile);
 		boolean booShp = sFile.exists(ShpFileType.SHP);
 		boolean booDbf = sFile.exists(ShpFileType.DBF);
 		boolean booShx = sFile.exists(ShpFileType.SHX);
-		
-		if (!booShp || !booDbf || !booShx)
+
+		if (!booShp || !booDbf || !booShx) {
 			throw new FileNotFoundException("Invalid shape file zip does not have required file types: shp, dbf, shx " + booShp + ", " + booDbf + ", " + booShx);
+		}
 
 		return sFile.getFileNames();
 	}
-	
+
 	public static void closeReader(DbaseFileReader dbfReader) throws IOException {
 		if (dbfReader != null) {
 			dbfReader.close();

@@ -108,7 +108,6 @@ public class ShorelineShapefileTest {
 		FileHelper.unzipFile(tempDirect.getAbsolutePath(), noPRJShapeZip);
 		
 		ShorelineShapefile.validate(tempDirect);
-		//assertTrue("Validated without exception", true);
 	}
 
 }

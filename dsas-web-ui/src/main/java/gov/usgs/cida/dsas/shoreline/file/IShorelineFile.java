@@ -29,35 +29,6 @@ public interface IShorelineFile {
 	public void setDSASProcess(DSASProcess process);
 
 	/**
-	 * Saves a zip file, unpacks it to application work directory of the same
-	 * name.
-	 *
-	 * Unzips the file and returns the directory where file unzipped to
-	 *
-	 * @param file
-	 * @return directory where file unzipped to
-	 * @throws java.io.IOException
-	 */
-	//public File saveZipFile(File file) throws IOException;
-
-	/**
-	 * Sets the directory that contains the Shoreline File set
-	 *
-	 * @param directory
-	 * @return token to directory
-	 * @throws java.io.FileNotFoundException If directory is not found
-	 */
-//	public String setDirectory(File directory) throws IOException;
-
-	/**
-	 * Uses a token to retrieve a the working directory for this ShorelineFile
-	 *
-	 * @param token
-	 * @return
-	 */
-//	public File getDirectory(String token);
-
-	/**
 	 * Gets the projection EPSG of the shoreline file
 	 *
 	 * @return
@@ -123,13 +94,6 @@ public interface IShorelineFile {
 	 * @return
 	 */
 	public boolean exists();
-
-	/**
-	 * Returns the name of the workspace this shoreline file operates under
-	 *
-	 * @return
-	 */
-	//public String getWorkspace();
 
 	/**
 	 * Deletes own files in the file system and removes parent directory

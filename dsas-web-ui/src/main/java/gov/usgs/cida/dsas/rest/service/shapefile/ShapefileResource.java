@@ -60,7 +60,7 @@ public class ShapefileResource {
 		Gson gson = new Gson();
 		FeatureTypeFile featureTypeFile = null;
 
-		featureTypeFile = TokenFeatureTypeFileExchanger.getFeatureTypeFile(fileToken); // this should return a FeatureTypeFile
+		featureTypeFile = TokenFeatureTypeFileExchanger.getFeatureTypeFile(fileToken); 
 		if ( featureTypeFile == null || !featureTypeFile.exists() ) {
 			LOGGER.error("Unable to get shape file for token: " + fileToken);
 			

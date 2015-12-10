@@ -8,8 +8,6 @@ import gov.usgs.cida.dsas.featureTypeFile.exception.LidarFileFormatException;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.service.util.LidarFileUtils;
 import gov.usgs.cida.dsas.utilities.features.Constants;
-import gov.usgs.cida.dsas.utilities.properties.Property;
-import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -51,8 +46,9 @@ public class ShorelineLidarFile extends ShorelineFile {
 
 	/**
 	 * 
+	 * @param featureTypeFileLocation
 	 * @param gsHandler
-	 * @param dao
+	 * @param dao ShorelineFileDAO
 	 */
 	public ShorelineLidarFile(File featureTypeFileLocation, GeoserverDAO gsHandler, ShorelineFileDAO dao) {
 		this(featureTypeFileLocation,gsHandler, dao, null);
@@ -60,16 +56,6 @@ public class ShorelineLidarFile extends ShorelineFile {
 	
 	public ShorelineLidarFile(File featureTypeFileLocation, GeoserverDAO gsHandler, ShorelineFileDAO dao, DSASProcess process) {
 		init(featureTypeFileLocation, gsHandler, dao,  process);
-//		this.process = process;
-//		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, System.getProperty("java.io.tmpdir")));
-//		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-//		this.workDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_WORK));
-//		this.geoserverHandler = gsHandler;
-//		this.dao = dao;
-//		this.fileMap = new HashMap<>(fileParts.length);
-//		if (this.process != null) {
-//			dao.setDSASProcess(process);
-//		}
 	}
 	
 	//set up the work structures
@@ -95,15 +81,6 @@ public class ShorelineLidarFile extends ShorelineFile {
 	 * @throws IOException
 	 */
 	public static void validate(File lidarZipFile) throws LidarFileFormatException, IOException {
-	//	File temporaryDirectory = new File(FileHelper.getTempDirectory(), UUID.randomUUID().toString() + "-deleteme");
-	//	temporaryDirectory.deleteOnExit();
-		
-	//	try {
-	//		if (!temporaryDirectory.mkdirs()) {
-	//			throw new IOException("Could not create temporary directory (" + temporaryDirectory.getCanonicalPath() + ") for processing");
-	//		}
-
-	//		FileHelper.unzipFile(temporaryDirectory.getAbsolutePath(), lidarZipFile);
 
 			File[] csvfiles = FileHelper.listFiles(lidarZipFile, (new String[]{CSV}), false).toArray(new File[0]);
 			if (csvfiles.length == 0 || csvfiles.length > 1) {
@@ -119,9 +96,6 @@ public class ShorelineLidarFile extends ShorelineFile {
 			}
 
 			LOGGER.debug("File {} validated as Lidar file", lidarZipFile.getAbsolutePath());
-	//	} finally {
-	//		FileHelper.forceDelete(temporaryDirectory);
-	//	}
 	}	
 	
 	@Override
@@ -138,13 +112,6 @@ public class ShorelineLidarFile extends ShorelineFile {
 		}
 		return epsg;
 	}
-	
-//	@Override
-//	public String setDirectory(File directory) throws IOException {
-//		String fileToken = super.setDirectory(directory);
-//		updateFileMapWithDirFile(directory, fileParts);
-//		return fileToken;
-//	}
 
 	@Override
 	public String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {

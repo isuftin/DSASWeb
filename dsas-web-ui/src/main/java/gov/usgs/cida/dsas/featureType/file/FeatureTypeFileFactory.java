@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 public class FeatureTypeFileFactory {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShapefileResource.class);
-//	FeatureTypeFile ftf = null;
 
 	private static final Integer DEFAULT_MAX_FILE_SIZE = Integer.MAX_VALUE;
 	private static final File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
@@ -135,7 +134,7 @@ public class FeatureTypeFileFactory {
 			case SHORELINE:
 				result = determineShorelineType(zipFile);  //determines the specific file type and validates -refactor this in Feb
 				break;
-			case OTHER: //this should get hit if any of the other processes set the type to OTHER ie comes in as pdb type but is not valid, result would remain as OTHER and the default case would occur.
+			case OTHER: 
 			default:
 				FileUtils.deleteQuietly(zipFile);
 				throw new FeatureTypeFileException("Zip file is not valid a valid Feature Type.");
@@ -216,7 +215,7 @@ public class FeatureTypeFileFactory {
 
 		switch (type){
 			case SHORELINE_SHAPE:
-				result = new ShorelineShapefile(explodedZipDir, geoserverHandler, new ShorelineShapefileDAO());  //add the result = after the refactor of the Shoreline to descend from FeatureTypeFile
+				result = new ShorelineShapefile(explodedZipDir, geoserverHandler, new ShorelineShapefileDAO()); 
 				break;
 			case SHORELINE_LIDAR:
 				result = new ShorelineLidarFile(explodedZipDir, geoserverHandler, new ShorelineLidarFileDAO());

@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -22,20 +21,16 @@ import org.opengis.referencing.operation.TransformException;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author isuftin
+ * @author smlarson
  */
-public abstract class FeatureTypeFile {// implements AutoCloseable {
+public abstract class FeatureTypeFile {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(FeatureTypeFile.class);
 	protected File featureTypeExplodedZipFileLocation;
-//	protected File baseDirectory;
-//	protected File uploadDirectory;
-//	protected File workDirectory;
-	protected Map<String, File> fileMap;  // TODO shape files can use a util to get back the filemap, Lidar requires its own impl
+	protected Map<String, File> fileMap;  
 	protected GeoserverDAO geoserverHandler = null;
 	protected FeatureTypeFileDAO dao = null;
 	protected DSASProcess process = null;
-//	protected String token;
 	protected FeatureType type = null;
 	protected static final String SHP = "shp";
 	protected static final String SHX = "shx";
@@ -51,53 +46,6 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 	protected static final String CPG = "cpg";
 	protected static final String CST = "cst";
 	protected static final String CSV = "csv";
-
-	
-//	public FeatureTypeFile(File featureTypeExplodedZipFileLocation) throws IOException {  //the location to the  exploded zip
-//		this.featureTypeExplodedZipFileLocation = featureTypeExplodedZipFileLocation;
-//		if (this.featureTypeExplodedZipFileLocation.isFile()) {
-//			this.featureTypeExplodedZipFileLocation = this.featureTypeExplodedZipFileLocation.getParentFile();
-//		}
-//		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, System.getProperty("java.io.tmpdir")));
-//		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-//		this.workDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_WORK));
-
-//	}
-
-//	/**
-//	 *
-//	 * @param zipFile The intact zipFile
-//	 * @return the directory location to the exploded zip with its contents all
-//	 * renamed to the dir+shp.shp format
-//	 * @throws IOException
-//	 */
-//	public File saveZipFile(File zipFile) throws IOException {
-//		File workLocation = createWorkLocationForZip(zipFile);
-//		FileHelper.unzipFile(workLocation.getAbsolutePath(), zipFile);
-//		FileHelper.renameDirectoryContents(workLocation);
-//		return workLocation;
-//	}
-//
-//	/**
-//	 * Moves a zip file into the applications work directory and returns the
-//	 * parent directory containing the unzipped collection of files
-//	 *
-//	 * @param zipFile
-//	 * @return
-//	 */
-//	protected File createWorkLocationForZip(File zipFile) throws IOException {
-//		String featureTypeFileName = FilenameUtils.getBaseName(zipFile.getName());
-//		File fileWorkDirectory = new File(this.workDirectory, featureTypeFileName);
-//		if (fileWorkDirectory.exists()) {
-//			try {
-//				FileUtils.cleanDirectory(fileWorkDirectory);
-//			} catch (IOException ex) {
-//				LOGGER.debug("Could not clean work directory at " + fileWorkDirectory.getAbsolutePath(), ex);
-//			}
-//		}
-//		FileUtils.forceMkdir(fileWorkDirectory);
-//		return fileWorkDirectory;
-//	}
 
 	protected void updateFileMapWithDirFile(File directory, String[] parts) {
 		Collection<File> fileList = FileUtils.listFiles(directory, parts, false);
@@ -145,17 +93,13 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 		return true;
 	}
 
-	
 	public abstract List<File> getRequiredFiles();
 
 	public abstract List<File> getOptionalFiles();
 
-	//public abstract boolean validate() throws IOException;
-//	public abstract Map<String, String> setFileMap() throws IOException; // contains the unzipped files, the key is the type ie file ext
 	public abstract String getEPSGCode() throws IOException, FactoryException;
 
-	// public abstract List<String> getColumns() throws IOException; // these are the column names found in the DBF file. Use the Utils in the sub-classes : ShapeFileUtil, LidarFileUtils..
-	public abstract String[] getColumns() throws IOException; // these are the column names found in the DBF file. Use the Utils in the sub-classes : ShapeFileUtil, LidarFileUtils..
+	public abstract String[] getColumns() throws IOException; // these are the column names found in the DBF file. 
 
 	@Override
 	public abstract int hashCode();
@@ -180,6 +124,7 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 	 * Imports the shoreline file into the database
 	 *
 	 * @param columns
+	 * @param workspace
 	 * @return
 	 * @throws ShorelineFileFormatException
 	 * @throws SQLException
@@ -197,6 +142,7 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 	 * Imports the view as a layer in Geoserver
 	 *
 	 * @param viewName
+	 * @param workspace
 	 * @throws IOException
 	 */
 	public abstract void importToGeoserver(String viewName, String workspace) throws IOException;
@@ -220,6 +166,5 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 		this.type = type;
 
 	}
-	
-		
+
 }
