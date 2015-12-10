@@ -30,6 +30,7 @@ public enum Property {
 	JDBC_NAME("jndi.jdbc.name"),
 	DB_SCHEMA_NAME("dsas.schema.name"),
 	WORKSPACE_MAX_AGE_SECONDS("dsas.workspace.max.age"),
+        DEBUG("debug"),
 	DEVELOPMENT("development");
 
 	private final String key;

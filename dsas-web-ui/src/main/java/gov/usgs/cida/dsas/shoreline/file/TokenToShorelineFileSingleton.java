@@ -78,7 +78,7 @@ public class TokenToShorelineFileSingleton {
 	public static void removeToken(String token) {
 		if (StringUtils.isNotBlank(token) && tokenToFileMap.containsKey(token)) {
 			ShorelineFile shorelineFile = (ShorelineFile) tokenToFileMap.remove(token);
-			shorelineFile.deleteDirectory();
+//			shorelineFile.deleteDirectory();
 		}
 	}
 

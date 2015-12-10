@@ -2,20 +2,16 @@ package gov.usgs.cida.dsas.featureType.file;
 
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
-import gov.usgs.cida.dsas.model.DSASProcess; 
+import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
-import gov.usgs.cida.dsas.service.util.TokenFileExchanger;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
-import gov.usgs.cida.dsas.utilities.file.TokenToFileSingleton;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +19,6 @@ import java.util.NoSuchElementException;
 import javax.naming.NamingException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.geotools.data.shapefile.files.ShpFileType;
 import org.geotools.feature.SchemaException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
@@ -33,7 +28,6 @@ import org.slf4j.LoggerFactory;
  * @author isuftin
  */
 public abstract class FeatureTypeFile {// implements AutoCloseable {
-
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(FeatureTypeFile.class);
 	protected File featureTypeExplodedZipFileLocation;
@@ -69,23 +63,24 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 		this.baseDirectory = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, System.getProperty("java.io.tmpdir")));
 		this.uploadDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
 		this.workDirectory = new File(baseDirectory, PropertyUtil.getProperty(Property.DIRECTORIES_WORK));
-		
+
 		//validate();
 	}
 
-		/**
-	 * 
+	/**
+	 *
 	 * @param zipFile The intact zipFile
-	 * @return the directory location to the exploded zip with its contents all renamed to the dir+shp.shp format
-	 * @throws IOException 
-	 */		
+	 * @return the directory location to the exploded zip with its contents all
+	 * renamed to the dir+shp.shp format
+	 * @throws IOException
+	 */
 	public File saveZipFile(File zipFile) throws IOException {
 		File workLocation = createWorkLocationForZip(zipFile);
 		FileHelper.unzipFile(workLocation.getAbsolutePath(), zipFile);
 		FileHelper.renameDirectoryContents(workLocation);
 		return workLocation;
 	}
-	
+
 	/**
 	 * Moves a zip file into the applications work directory and returns the
 	 * parent directory containing the unzipped collection of files
@@ -121,39 +116,6 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 		}
 	}
 
-	
-	public String setDirectory(File directory) throws IOException {
-		if (!directory.exists()) {
-			throw new FileNotFoundException();
-		}
-
-		if (!directory.isDirectory()) {
-			throw new IOException("File at " + directory.getAbsolutePath() + " is not a directory");
-		}
-		// set the token with the file that represents the exploded zip path
-		token = TokenToFileSingleton.addFile(directory);
-		return token;
-	}
-	
-	/*
-	 * Checks if underlying files exist in the file system
-	 *
-	 * @return
-	 */
-	public File getDirectory(String token) {
-		return TokenFileExchanger.getFile(token); // consider returning a FeatureTypeFile
-	}
-	
-		/**
-	 * Deletes the directory associated with this Shoreline File. Typically,
-	 * this would be done when removing the Shoreline file.
-	 *
-	 * @return
-	 */
-	protected boolean deleteDirectory() {
-		return TokenToFileSingleton.removeToken(token, true);
-	}
-	
 	/**
 	 * Deletes own files in the file system and removes parent directory
 	 *
@@ -171,7 +133,7 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 		}
 		return success;
 	}
-	
+
 	/*
 	 * Checks if underlying files exist in the file system
 	 *
@@ -185,26 +147,23 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 		}
 		return true;
 	}
+
 	
 	public abstract List<File> getRequiredFiles();
 
 	public abstract List<File> getOptionalFiles();
 
 	//public abstract boolean validate() throws IOException;
-
-	public abstract Map<String, String> setFileMap() throws IOException; // contains the unzipped files, the key is the type ie file ext
-	
-	public abstract String getEPSGCode() throws IOException, FactoryException; 
+//	public abstract Map<String, String> setFileMap() throws IOException; // contains the unzipped files, the key is the type ie file ext
+	public abstract String getEPSGCode() throws IOException, FactoryException;
 
 	public abstract List<String> getColumns() throws IOException; // these are the column names found in the DBF file. Use the Utils in the sub-classes : ShapeFileUtil, LidarFileUtils..
-
 
 	@Override
 	public abstract int hashCode();
 
 	@Override
 	public abstract boolean equals(Object obj);
-
 
 	public void setDSASProcess(DSASProcess process) {
 		this.process = process;
@@ -243,24 +202,24 @@ public abstract class FeatureTypeFile {// implements AutoCloseable {
 	 * @throws IOException
 	 */
 	public abstract void importToGeoserver(String viewName, String workspace) throws IOException;
-	
+
 	/*
 	 * Returns the type of FeatureType this zip is
 	 *
 	 * @return FeatureType
 	 */
-	public FeatureType getType() {
-		return this.type; 
-		
+	protected FeatureType getType() {
+		return this.type;
+
 	}
-	
+
 	/*
 	 * Returns the type of FeatureType this zip is
 	 *
 	 * @return FeatureType
 	 */
 	protected void setType(FeatureType type) {
-		this.type = type; 
-		
+		this.type = type;
+
 	}
 }

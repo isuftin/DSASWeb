@@ -93,12 +93,12 @@ public class ShorelineShapefile extends ShorelineFile {
 		}
 	}
 
-	@Override
-	public String setDirectory(File directory) throws IOException {
-		String fileToken = super.setDirectory(directory);
-		updateFileMapWithDirFile(directory, fileParts);
-		return fileToken;
-	}
+//	@Override
+//	public String setDirectory(File directory) throws IOException {
+//		String fileToken = super.setDirectory(directory);
+//		updateFileMapWithDirFile(directory, fileParts);
+//		return fileToken;
+//	}
 
 	@Override
 	public String[] getColumns() throws IOException {

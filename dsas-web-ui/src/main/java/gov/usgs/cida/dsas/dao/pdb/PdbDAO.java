@@ -91,7 +91,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 
 			FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(shpFile.toURI().toURL());
 			//Class<?> dateType = fc.getSchema().getDescriptor(dateFieldName).getType().getBinding();
-			List<double[]> xyUncies = new ArrayList<>();
+			//List<double[]> xyUncies = new ArrayList<>();
 
 			if (!fc.isEmpty()) {
 				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);

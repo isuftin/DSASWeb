@@ -7,11 +7,11 @@ import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.utilities.features.Constants;
-import gov.usgs.cida.dsas.utilities.file.TokenToFileSingleton;
+//import gov.usgs.cida.dsas.utilities.file.TokenToFileSingleton;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.ProjectionUtils;
 import java.io.File;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -109,10 +109,10 @@ public abstract class ShorelineFile implements IShorelineFile {
 		}
 	}
 
-	@Override
-	public File getDirectory(String token) {
-		return TokenToFileSingleton.getFile(token);
-	}
+//	@Override
+//	public File getDirectory(String token) {
+//		return TokenToFileSingleton.getFile(token);
+//	}
 
 	/**
 	 * Deletes the directory associated with this Shoreline File. Typically,
@@ -120,22 +120,22 @@ public abstract class ShorelineFile implements IShorelineFile {
 	 *
 	 * @return
 	 */
-	protected boolean deleteDirectory() {
-		return TokenToFileSingleton.removeToken(token, true);
-	}
+//	protected boolean deleteDirectory() {
+//		return TokenToFileSingleton.removeToken(token, true);
+//	}
 
-	@Override
-	public String setDirectory(File directory) throws IOException {
-		if (!directory.exists()) {
-			throw new FileNotFoundException();
-		}
-
-		if (!directory.isDirectory()) {
-			throw new IOException("File at " + directory.getAbsolutePath() + " is not a directory");
-		}
-		token = TokenToFileSingleton.addFile(directory); // path to exploded zip dir
-		return token;
-	}
+//	@Override
+//	public String setDirectory(File directory) throws IOException {
+//		if (!directory.exists()) {
+//			throw new FileNotFoundException();
+//		}
+//
+//		if (!directory.isDirectory()) {
+//			throw new IOException("File at " + directory.getAbsolutePath() + " is not a directory");
+//		}
+//		token = TokenToFileSingleton.addFile(directory); // path to exploded zip dir
+//		return token;
+//	}
 
 	@Override
 	public String getEPSGCode() {
@@ -193,12 +193,6 @@ public abstract class ShorelineFile implements IShorelineFile {
 	public static void validate(File zipFile) throws Exception {  
 		throw new UnsupportedOperationException();
 	}
-	
-//	@Override
-//	public String getWorkspace() {
-//		return this.workspace;
-//	}
-//	
 
 	@Override
 	public File saveZipFile(File zipFile) throws IOException {

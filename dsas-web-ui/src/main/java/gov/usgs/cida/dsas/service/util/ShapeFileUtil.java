@@ -36,6 +36,7 @@ public class ShapeFileUtil {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShapeFileUtil.class);
 	static final String DBF = "dbf";
+	static final String SHP = "shp";
 
 	private static File getDbfFile(File unzippedShapefileLocation) throws FileNotFoundException, IOException {
 
@@ -183,9 +184,11 @@ public class ShapeFileUtil {
 	{
 		boolean result = true;
 
-		String[] DbfType = new String[]{DBF};  // can be any file that is expected to be part of the shape file
+		String[] ShpType = new String[]{SHP};  // can be any file that is expected to be part of the shape file
 		//find the shp file
-		Collection<File> files = FileUtils.listFiles(candidateShapeDir, DbfType, false);
+		Collection<File> files = FileUtils.listFiles(candidateShapeDir, ShpType, false);
+		if (files.isEmpty())
+			throw new ShapefileException("Not a valid shape file. SHP file missing.");
 		File foundDbfFile = files.iterator().next();
 		ShpFiles sFile = null;
 		

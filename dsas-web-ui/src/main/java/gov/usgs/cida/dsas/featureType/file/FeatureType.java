@@ -5,5 +5,5 @@ package gov.usgs.cida.dsas.featureType.file;
  * @author isuftin
  */
 public enum FeatureType {
-	LIDAR, SHAPEFILE, PDB, OTHER
+	SHORELINE, SHORELINE_SHAPE, SHORELINE_LIDAR, PDB, OTHER
 }

@@ -6,35 +6,16 @@ import gov.usgs.cida.dsas.featureType.file.FeatureType;
 import gov.usgs.cida.dsas.featureType.file.FeatureTypeFile;
 import gov.usgs.cida.dsas.featureType.file.FeatureTypeFileFactory;
 import gov.usgs.cida.dsas.featureType.file.TokenFeatureTypeFileExchanger;
-import gov.usgs.cida.dsas.pdb.file.PdbFile;
 import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import gov.usgs.cida.dsas.rest.service.security.TokenBasedSecurityFilter;
-import gov.usgs.cida.dsas.service.util.ImportUtil;
-import gov.usgs.cida.dsas.service.util.ShapeFileUtil;
-import gov.usgs.cida.dsas.utilities.properties.Property;
-import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 //import gov.usgs.cida.dsas.service.util.TokenFileExchanger;
 import gov.usgs.cida.dsas.featureTypeFile.exception.FeatureTypeFileException;
-import gov.usgs.cida.dsas.featureTypeFile.exception.LidarFileFormatException;
-import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
-import gov.usgs.cida.dsas.shoreline.file.ShorelineFile;
-import gov.usgs.cida.dsas.shoreline.file.ShorelineLidarFile;
-import gov.usgs.cida.dsas.shoreline.file.ShorelineShapefile;
-import gov.usgs.cida.owsutils.commons.io.FileHelper;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.sql.Array;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -47,15 +28,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
-import org.geotools.data.DataStore;
-import org.geotools.data.DataStoreFinder;
-import org.geotools.data.shapefile.dbf.DbaseFileReader;
-import org.geotools.data.shapefile.files.ShpFiles;
-import org.geotools.data.shapefile.shp.ShapefileException;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.LoggerFactory;
@@ -122,6 +96,7 @@ public class ShapefileResource {
 	}
 
 	@POST
+	@Path("/pdb")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createToken(
@@ -136,8 +111,8 @@ public class ShapefileResource {
 		String token = null;
 
 		try { 
-			//Since an inputstream is sent, the clean of the name is no longer required
-			featureTypeFile = new FeatureTypeFileFactory().createFeatureTypeFile(fileInputStream);
+			//Note the additional Path attribute of pdb which determines its type.
+			featureTypeFile = new FeatureTypeFileFactory().createFeatureTypeFile(fileInputStream, FeatureType.PDB);
 			
 		} catch (IOException | FeatureTypeFileException ex) {
 			LOGGER.error("Error while attempting upload of shapefile. ", ex);

@@ -3,6 +3,8 @@ package gov.usgs.cida.dsas.featureType.file;
 import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.service.util.ShapeFileUtilTest;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.utilities.properties.Property;
+import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -184,8 +186,8 @@ public class FeatureTypeFileTest {
 		File directory = null;
 		FeatureTypeFile instance = null;
 		String expResult = "";
-		String result = instance.setDirectory(directory);
-		assertEquals(expResult, result);
+	//	String result = instance.setDirectory(directory);
+	//	assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -200,8 +202,8 @@ public class FeatureTypeFileTest {
 		String token = "";
 		FeatureTypeFile instance = null;
 		File expResult = null;
-		File result = instance.getDirectory(token);
-		assertEquals(expResult, result);
+	//	File result = instance.getDirectory(token);
+	//	assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -215,8 +217,8 @@ public class FeatureTypeFileTest {
 		System.out.println("deleteDirectory");
 		FeatureTypeFile instance = null;
 		boolean expResult = false;
-		boolean result = instance.deleteDirectory();
-		assertEquals(expResult, result);
+//		boolean result = instance.deleteDirectory();
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -305,8 +307,8 @@ public class FeatureTypeFileTest {
 		System.out.println("setFileMap");
 		FeatureTypeFile instance = null;
 		Map<String, String> expResult = null;
-		Map<String, String> result = instance.setFileMap();
-		assertEquals(expResult, result);
+	//	Map<String, String> result = instance.setFileMap();
+	//	assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -431,7 +433,28 @@ public class FeatureTypeFileTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
+	
+	/**
+	 * Test getting a simple property string.
+	 */
+	@Test
+	public void testGetSimpleTestProperties() throws Exception {
+		System.out.println("testGetSimpleTestProperties");
+		String value = PropertyUtil.getProperty("debug");
+		System.out.println("Value of property debug is: " + value);
+	}
+	
+		/**
+	 * Add enums in package gov.usgs.cida.dsas.utilities.properties; 
+	 */
+	@Test
+	public void testGetTestProperties() throws Exception {
+		System.out.println("testGetTestProperties");
+		String value = PropertyUtil.getProperty(Property.DEBUG);
+		System.out.println("Value of property debug is: " + value);
+	}
+	
+	
 	public class FeatureTypeFileImpl extends FeatureTypeFile {
 
 		public FeatureTypeFileImpl() throws Exception {

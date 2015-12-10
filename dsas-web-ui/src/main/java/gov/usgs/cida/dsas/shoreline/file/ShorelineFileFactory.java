@@ -126,7 +126,7 @@ public class ShorelineFileFactory {
 			LOGGER.warn("Could not save zip file to work directory");
 			throw ex;
 		}
-		result.setDirectory(savedWorkDirectory);
+//		result.setDirectory(savedWorkDirectory);
 
 		FileUtils.deleteQuietly(this.zipFile);
 

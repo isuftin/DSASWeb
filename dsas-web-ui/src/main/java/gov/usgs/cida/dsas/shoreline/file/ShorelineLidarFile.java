@@ -101,12 +101,12 @@ public class ShorelineLidarFile extends ShorelineFile {
 		}
 	}
 
-	@Override
-	public String setDirectory(File directory) throws IOException {
-		String fileToken = super.setDirectory(directory);
-		updateFileMapWithDirFile(directory, fileParts);
-		return fileToken;
-	}
+//	@Override
+//	public String setDirectory(File directory) throws IOException {
+//		String fileToken = super.setDirectory(directory);
+//		updateFileMapWithDirFile(directory, fileParts);
+//		return fileToken;
+//	}
 
 	@Override
 	public String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {

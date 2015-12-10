@@ -47,7 +47,7 @@ public interface IShorelineFile {
 	 * @return token to directory
 	 * @throws java.io.FileNotFoundException If directory is not found
 	 */
-	public String setDirectory(File directory) throws IOException;
+//	public String setDirectory(File directory) throws IOException;
 
 	/**
 	 * Uses a token to retrieve a the working directory for this ShorelineFile
@@ -55,7 +55,7 @@ public interface IShorelineFile {
 	 * @param token
 	 * @return
 	 */
-	public File getDirectory(String token);
+//	public File getDirectory(String token);
 
 	/**
 	 * Gets the projection EPSG of the shoreline file
