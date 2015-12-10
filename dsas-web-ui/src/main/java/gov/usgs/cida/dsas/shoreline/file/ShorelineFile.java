@@ -34,32 +34,32 @@ import gov.usgs.cida.dsas.featureType.file.FeatureTypeFile;
  *
  * @author isuftin
  */
-public abstract class ShorelineFile implements IShorelineFile {
+public abstract class ShorelineFile extends FeatureTypeFile implements IShorelineFile {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShorelineFile.class);
-	static final String SHP = "shp";
-	static final String SHX = "shx";
-	static final String DBF = "dbf";
-	static final String PRJ = "prj";
-	static final String FBX = "fbx";
-	static final String SBX = "sbx";
-	static final String AIH = "aih";
-	static final String IXS = "ixs";
-	static final String MXS = "mxs";
-	static final String ATX = "atx";
-	static final String SHP_XML = "shp.xml";
-	static final String CPG = "cpg";
-	static final String CST = "cst";
-	static final String CSV = "csv";
+//	static final String SHP = "shp";
+//	static final String SHX = "shx";
+//	static final String DBF = "dbf";
+//	static final String PRJ = "prj";
+//	static final String FBX = "fbx";
+//	static final String SBX = "sbx";
+//	static final String AIH = "aih";
+//	static final String IXS = "ixs";
+//	static final String MXS = "mxs";
+//	static final String ATX = "atx";
+//	static final String SHP_XML = "shp.xml";
+//	static final String CPG = "cpg";
+//	static final String CST = "cst";
+//	static final String CSV = "csv";
 	protected File baseDirectory;
 	protected File uploadDirectory;
 	protected File workDirectory;
-	protected GeoserverDAO geoserverHandler;
-	protected ShorelineFileDAO dao;
+//	protected GeoserverDAO geoserverHandler;
+//	protected ShorelineFileDAO dao;
 	protected String token;  // this token retrieves the directory to the exploded zip
-	protected Map<String, File> fileMap;
+//	protected Map<String, File> fileMap;
 	//protected String workspace;
-	protected DSASProcess process = null;
+//	protected DSASProcess process = null;
 	public static final String[] AUXILLARY_ATTRIBUTES = new String[]{
 		Constants.SURVEY_ID_ATTR,
 		Constants.DISTANCE_ATTR,
@@ -81,33 +81,33 @@ public abstract class ShorelineFile implements IShorelineFile {
 	 * @param zipFile
 	 * @return
 	 */
-	File createWorkLocationForZip(File zipFile) throws IOException {
-		String shorelineFileName = FilenameUtils.getBaseName(zipFile.getName());
-		File fileWorkDirectory = new File(this.workDirectory, shorelineFileName);
-		if (fileWorkDirectory.exists()) {
-			try {
-				FileUtils.cleanDirectory(fileWorkDirectory);
-			} catch (IOException ex) {
-				LOGGER.debug("Could not clean work directory at " + fileWorkDirectory.getAbsolutePath(), ex);
-			}
-		}
-		FileUtils.forceMkdir(fileWorkDirectory);
-		return fileWorkDirectory;
-	}
+//	File createWorkLocationForZip(File zipFile) throws IOException {
+//		String shorelineFileName = FilenameUtils.getBaseName(zipFile.getName());
+//		File fileWorkDirectory = new File(this.workDirectory, shorelineFileName);
+//		if (fileWorkDirectory.exists()) {
+//			try {
+//				FileUtils.cleanDirectory(fileWorkDirectory);
+//			} catch (IOException ex) {
+//				LOGGER.debug("Could not clean work directory at " + fileWorkDirectory.getAbsolutePath(), ex);
+//			}
+//		}
+//		FileUtils.forceMkdir(fileWorkDirectory);
+//		return fileWorkDirectory;
+//	}
 
-	void updateFileMapWithDirFile(File directory, String[] parts) {
-		Collection<File> fileList = FileUtils.listFiles(directory, parts, false);
-		Iterator<File> listIter = fileList.iterator();
-		while (listIter.hasNext()) {
-			File file = listIter.next();
-			String filename = file.getName();
-			for (String part : parts) {
-				if (filename.contains(part)) {
-					this.fileMap.put(part, file);
-				}
-			}
-		}
-	}
+//	void updateFileMapWithDirFile(File directory, String[] parts) {
+//		Collection<File> fileList = FileUtils.listFiles(directory, parts, false);
+//		Iterator<File> listIter = fileList.iterator();
+//		while (listIter.hasNext()) {
+//			File file = listIter.next();
+//			String filename = file.getName();
+//			for (String part : parts) {
+//				if (filename.contains(part)) {
+//					this.fileMap.put(part, file);
+//				}
+//			}
+//		}
+//	}
 
 //	@Override
 //	public File getDirectory(String token) {
@@ -136,20 +136,20 @@ public abstract class ShorelineFile implements IShorelineFile {
 //		token = TokenToFileSingleton.addFile(directory); // path to exploded zip dir
 //		return token;
 //	}
+//
+//	@Override
+//	public String getEPSGCode() {
+//		String epsg = null;
+//		try {
+//			epsg = ProjectionUtils.getDeclaredEPSGFromPrj(this.fileMap.get(PRJ));
+//		} catch (IOException | FactoryException ex) {
+//			LOGGER.warn("Could not find EPSG code from file", ex);
+//		}
+//		return epsg;
+//	}
 
-	@Override
-	public String getEPSGCode() {
-		String epsg = null;
-		try {
-			epsg = ProjectionUtils.getDeclaredEPSGFromPrj(this.fileMap.get(PRJ));
-		} catch (IOException | FactoryException ex) {
-			LOGGER.warn("Could not find EPSG code from file", ex);
-		}
-		return epsg;
-	}
-
-	@Override
-	public abstract String[] getColumns() throws IOException;
+//	@Override
+//	public abstract String[] getColumns() throws IOException;
 
 	@Override
 	public String importToDatabase(HttpServletRequest request, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
@@ -166,7 +166,7 @@ public abstract class ShorelineFile implements IShorelineFile {
 		return result;
 	}
 
-	@Override // TODO: This should probably be broken out of this class
+	@Override 
 	public abstract String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
 
 	@Override
@@ -194,13 +194,13 @@ public abstract class ShorelineFile implements IShorelineFile {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public File saveZipFile(File zipFile) throws IOException {
-		File workLocation = createWorkLocationForZip(zipFile);
-		FileHelper.unzipFile(workLocation.getAbsolutePath(), zipFile);
-		FileHelper.renameDirectoryContents(workLocation);
-		return workLocation;
-	}
+//	@Override
+//	public File saveZipFile(File zipFile) throws IOException {
+//		File workLocation = createWorkLocationForZip(zipFile);
+//		FileHelper.unzipFile(workLocation.getAbsolutePath(), zipFile);
+//		FileHelper.renameDirectoryContents(workLocation);
+//		return workLocation;
+//	}
 
 	@Override
 	public boolean exists() {

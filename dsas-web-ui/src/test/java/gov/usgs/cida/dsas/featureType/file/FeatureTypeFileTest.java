@@ -79,7 +79,7 @@ public class FeatureTypeFileTest {
 	}
 
 	/**
-	 * Test of createWorkLocationForZip method, of class FeatureTypeFile.
+	 * Test of createWorkLocationForZip method, of class FeatureTypeFile. moved to the factory
 	 */
 	@Test
 	@Ignore
@@ -88,8 +88,8 @@ public class FeatureTypeFileTest {
 		File zipFile = null;
 		FeatureTypeFile instance = null;
 		File expResult = null;
-		File result = instance.createWorkLocationForZip(zipFile);
-		assertEquals(expResult, result);
+//		File result = instance.createWorkLocationForZip(zipFile);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -337,7 +337,7 @@ public class FeatureTypeFileTest {
 		System.out.println("getColumns");
 		FeatureTypeFile instance = null;
 		List<String> expResult = null;
-		List<String> result = instance.getColumns();
+		String[] result = instance.getColumns();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -458,7 +458,7 @@ public class FeatureTypeFileTest {
 	public class FeatureTypeFileImpl extends FeatureTypeFile {
 
 		public FeatureTypeFileImpl() throws Exception {
-			super(null);
+			//super(null);
 		}
 
 		public List<File> getRequiredFiles() {
@@ -481,7 +481,7 @@ public class FeatureTypeFileTest {
 			return "";
 		}
 
-		public List<String> getColumns() throws IOException {
+		public String[] getColumns() throws IOException {
 			return null;
 		}
 

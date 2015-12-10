@@ -73,9 +73,7 @@ public class ShapefileResource {
 		}
 		if (response == null) {
 			try {				
-				//List<String> nameList = ShapeFileUtil.getDbfColumnNames(featureTypeZip); < this will fail for Lidars
-				List<String> nameList = featureTypeFile.getColumns();
-				String[] names = nameList.toArray(new String[nameList.size()]);
+				String[] names = featureTypeFile.getColumns();
 
 				responseMap.put("headers", gson.toJson(names, String[].class));
 
@@ -103,7 +101,7 @@ public class ShapefileResource {
 			@Context HttpServletRequest req,
 			@FormDataParam("file") InputStream fileInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDisposition
-	) {  //stages the file - upload the file
+	) {  //stages the file - uploads the file
 		Response response = null;
 		Map<String, String> responseMap = new HashMap<>(1);
 		Gson gson = new Gson();

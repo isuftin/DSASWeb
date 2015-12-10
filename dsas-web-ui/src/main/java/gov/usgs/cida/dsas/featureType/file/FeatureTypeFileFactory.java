@@ -50,26 +50,6 @@ public class FeatureTypeFileFactory {
 
 		performGenericValidation(zipFile);
 
-//		//get zip name. verify name exists. if it doesn't use a default from the props file. 
-//		String zipName = getZipName(zipFile);
-//
-//		//clean the zip name (?dont do if you have used the default as that should comply with rules)
-//		String cleanedZipName = cleanFileName(zipName);
-//
-//		//create an empty zip file with the upload directory path.
-//		File newZip = new File(UPLOAD_DIRECTORY, cleanedZipName);
-//
-//		//check to see if the cleaned zip already exists, attempt delete if it does before next step
-//		if (newZip.exists()) {
-//			FileUtils.deleteQuietly(newZip);
-//		}
-//
-//		//copy the contents of the passed in zip into the new clean zip with our directory path
-//		FileUtils.copyFile(zipFile, newZip);
-//
-//		//rename the zip contents to be the same as the cleaned zip name keeping the .ext intact
-//		File dirToContents = renameZipFileContents(newZip);
-//		
 		//flatten the zip. It's expected that all the contents of the zip are in the same root file.
 		FileHelper.flattenZipFile(zipFile);
 
@@ -122,33 +102,6 @@ public class FeatureTypeFileFactory {
 
 	}
 
-//	// may not need this method - believe it may be done prior to the request coming in as a file stream.
-//	protected String cleanFileName(String input) {
-//		String updated = input;
-//
-//		// Test the first character and if numeric, prepend with underscore
-//		if (input.substring(0, 1).matches("[0-9]")) {
-//			updated = "_" + input;
-//		}
-//
-//		// Test the rest of the characters and replace anything that's not a 
-//		// letter, digit or period with an underscore
-//		char[] inputArr = updated.toCharArray();
-//		for (int cInd = 0; cInd < inputArr.length; cInd++) {
-//			if (!Character.isLetterOrDigit(inputArr[cInd]) && !(inputArr[cInd] == '.')) {
-//				inputArr[cInd] = '_';
-//			}
-//		}
-//		return String.valueOf(inputArr);
-//	}
-//	public String getZipName(File zipFile){
-//		String filenameParam = PropertyUtil.getProperty(Property.FILE_UPLOAD_FILENAME_PARAM);
-//		String fnReqParam = "getNameFromUserRequest"; //request.getParameter(FILENAME_PARAM); // this was the previous way of doing this
-//		if (StringUtils.isNotBlank(fnReqParam)) {
-//			filenameParam = fnReqParam;
-//		}
-//		return filenameParam;
-//	}
 	//takes the zip file cleaned name and replaces the names of the files in it with the cleaned name plus the files extension. Returns the path to the exploded renamed contents.
 	public File renameZipFileContents(File zipFile) throws IOException {
 		File workLocation = createWorkLocationForZip(zipFile);
@@ -171,7 +124,7 @@ public class FeatureTypeFileFactory {
 		return fileWorkDirectory;
 	}
 
-	public FeatureType performTypeValidation(File zipFile, FeatureType type) throws FeatureTypeFileException, IOException {
+	public FeatureType performTypeValidation(File zipFile, FeatureType type) throws FeatureTypeFileException{
 
 		FeatureType result = FeatureType.OTHER;
 		switch (type) {
@@ -185,7 +138,7 @@ public class FeatureTypeFileFactory {
 			case OTHER: //this should get hit if any of the other processes set the type to OTHER ie comes in as pdb type but is not valid, result would remain as OTHER and the default case would occur.
 			default:
 				FileUtils.deleteQuietly(zipFile);
-				throw new IOException("zip file is not valid.");
+				throw new FeatureTypeFileException("Zip file is not valid a valid Feature Type.");
 		}
 		return result;
 	}
@@ -261,20 +214,12 @@ public class FeatureTypeFileFactory {
 	private FeatureTypeFile createTypeFile(File explodedZipDir, FeatureType type, GeoserverDAO geoserverHandler) throws IOException, FeatureTypeFileException {
 		FeatureTypeFile result = null;
 
-//		if (type == FeatureType.SHORELINE_SHAPE) {
-//			new ShorelineShapefile(geoserverHandler, new ShorelineShapefileDAO());
-//		} else if (type == FeatureType.SHORELINE_LIDAR) {
-//			new ShorelineShapefile(geoserverHandler, new ShorelineLidarFileDAO());
-//		} else if (type == FeatureType.PDB) {
-//			result = new PdbFile(explodedZipDir, geoserverHandler, new PdbDAO());
-//			result.setType(type);
-//		}
 		switch (type){
 			case SHORELINE_SHAPE:
-				new ShorelineShapefile(geoserverHandler, new ShorelineShapefileDAO());  //add the result = after the refactor of the Shoreline to descend from FeatureTypeFile
+				result = new ShorelineShapefile(explodedZipDir, geoserverHandler, new ShorelineShapefileDAO());  //add the result = after the refactor of the Shoreline to descend from FeatureTypeFile
 				break;
 			case SHORELINE_LIDAR:
-				new ShorelineShapefile(geoserverHandler, new ShorelineLidarFileDAO());
+				result = new ShorelineLidarFile(explodedZipDir, geoserverHandler, new ShorelineLidarFileDAO());
 				break;
 			case PDB:
 				result = new PdbFile(explodedZipDir, geoserverHandler, new PdbDAO());
@@ -282,7 +227,7 @@ public class FeatureTypeFileFactory {
 			case OTHER:
 			default:
 				LOGGER.error("Failed to create FeatureTypeFile of assumed type: "+ type.name());
-				throw new FeatureTypeFileException("Unable to create instantiate FeatureTypeFile with zip.");
+				throw new FeatureTypeFileException("Unable to create FeatureTypeFile with zip.");
 		}
 		
 		return result;

@@ -189,12 +189,12 @@ public class ShapeFileUtil {
 		Collection<File> files = FileUtils.listFiles(candidateShapeDir, ShpType, false);
 		if (files.isEmpty())
 			throw new ShapefileException("Not a valid shape file. SHP file missing.");
-		File foundDbfFile = files.iterator().next();
+		File foundShpFile = files.iterator().next();
 		ShpFiles sFile = null;
 		
 		try {
 			// create the geotools shape file by passing in the found shp file
-			sFile = new ShpFiles(foundDbfFile);
+			sFile = new ShpFiles(foundShpFile);
 		} catch (MalformedURLException ex) {
 			Logger.getLogger(ShapeFileUtil.class.getName()).log(Level.SEVERE, null, ex);
 			throw new ShapefileException("Validate of shape file requires dir path to unzipped location. Zip sent instead: " + candidateShapeDir.toString());
@@ -204,7 +204,7 @@ public class ShapeFileUtil {
 		boolean booShx = sFile.exists(ShpFileType.SHX);
 		boolean booPrj = sFile.exists(ShpFileType.PRJ);
 		
-		if (!booShp || !booDbf || !booShx )
+		if (!booShp || !booDbf || !booShx || !booPrj )
 		{
 			result = false;
 			throw new ShapefileException("Invalid shape file zip does not have required file. Types required: shp, dbf, shx, prj " + booShp + ", " + booDbf + ", " + booShx + ", " + booPrj);

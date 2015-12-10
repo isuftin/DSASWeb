@@ -38,7 +38,7 @@ public interface IShorelineFile {
 	 * @return directory where file unzipped to
 	 * @throws java.io.IOException
 	 */
-	public File saveZipFile(File file) throws IOException;
+	//public File saveZipFile(File file) throws IOException;
 
 	/**
 	 * Sets the directory that contains the Shoreline File set
@@ -61,6 +61,8 @@ public interface IShorelineFile {
 	 * Gets the projection EPSG of the shoreline file
 	 *
 	 * @return
+	 * @throws java.io.IOException
+	 * @throws org.opengis.referencing.FactoryException
 	 */
 	public String getEPSGCode();
 

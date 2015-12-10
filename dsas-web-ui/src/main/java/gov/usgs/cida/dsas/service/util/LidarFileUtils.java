@@ -128,12 +128,9 @@ public class LidarFileUtils {
 		}
 	}
 	
-	    // this is needed to support the LIdar file as it does not have a shp file 
-    public static String getEPSGCode(File prjFile) throws IOException, FactoryException, LidarFileFormatException {
-        String epsg = null;
-		
-        epsg = ProjectionUtils.getDeclaredEPSGFromPrj(prjFile);
+	    // this is needed to support the Lidar file as it does not have a shp file 
+    public static String getEPSGCode(File prjFile) throws IOException, FactoryException {
 
-        return epsg;
+        return ProjectionUtils.getDeclaredEPSGFromPrj(prjFile);
     }
 }
