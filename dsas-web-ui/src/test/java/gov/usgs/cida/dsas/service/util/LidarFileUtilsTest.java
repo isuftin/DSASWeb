@@ -216,7 +216,7 @@ public class LidarFileUtilsTest {
 		prjFile = prjFiles.iterator().next();
 
 		String result = LidarFileUtils.getEPSGCode(prjFile);
-		System.out.println("EPSG Code  " + result);
+		LOGGER.info("EPSG Code  " + result);
 		assertNotNull(result);
 
 		assertTrue(!StringUtils.isBlank(result) || !StringUtils.isEmpty(result));

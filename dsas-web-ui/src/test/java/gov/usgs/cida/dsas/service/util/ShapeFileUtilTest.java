@@ -157,10 +157,10 @@ public class ShapeFileUtilTest {
 		FileHelper.unzipFile(tempDir.getAbsolutePath(), tempShapeFile);
 
 		List<String> columns = ShapeFileUtil.getDbfColumnNames(tempShapeFile);
-		System.out.println("File passed into ShapefileUtil as dir:" + tempDir);
+		LOGGER.info("File passed into ShapefileUtil as dir:" + tempDir);
 	
 		for (String column : columns) {
-			System.out.println("Column Name:" + column);
+			LOGGER.info("Column Name:" + column);
 		}
 	}
 
@@ -179,10 +179,10 @@ public class ShapeFileUtilTest {
 
 	
 		List<String> columns = ShapeFileUtil.getDbfColumnNames(tempDir);
-		System.out.println("File passed into ShapefileUtil as dir:" + tempDir);
+		LOGGER.info("File passed into ShapefileUtil as dir:" + tempDir);
 	
 		for (String column : columns) {
-			System.out.println("Column Name:" + column);
+			LOGGER.info("Column Name:" + column);
 		}
 	}
 
@@ -203,7 +203,7 @@ public class ShapeFileUtilTest {
 		String epsg = ShapeFileUtil.getEPSGCode(tempShapeFile);
 		assertNotNull(epsg);
 
-		System.out.println(epsg);
+		LOGGER.info(epsg);
 	}
 
 	@Test
@@ -223,7 +223,7 @@ public class ShapeFileUtilTest {
 		String epsg = ShapeFileUtil.getEPSGCode(tempD);
 		assertNotNull(epsg);
 
-		System.out.println(epsg);
+		LOGGER.info(epsg);
 	}
 
 	// mimicking what is in the ShapefileResource: getColumnNames
@@ -250,7 +250,7 @@ public class ShapeFileUtilTest {
 		assertNotNull(names);
 
 		String jsonNames = gson.toJson(names, String[].class);
-		System.out.println("jason Names: " + jsonNames);
+		LOGGER.info("jason Names: " + jsonNames);
 	}
 
 	@Test // ShapefileResource
@@ -274,12 +274,12 @@ public class ShapeFileUtilTest {
 		Collection<File> fileColl = FileUtils.listFiles(tempDirectory, null, false);
 		Iterator it = fileColl.iterator();
 		while (it.hasNext()) {
-			System.out.println("Files in tempDirectory after copy (expect ZIP):" + ((File) it.next()).getName());
+			LOGGER.info("Files in tempDirectory after copy (expect ZIP):" + ((File) it.next()).getName());
 		}
 
 		//output the parts in the copy of the shapefile
-		System.out.println("Copied zip's path :" + shapeZip.getParentFile().getPath()); // use this to pass into the ShapeFileUtil after getting the file from the TokenFileExchanger
-		System.out.println("tempDirectory path:" + tempDirectory.getPath());
+		LOGGER.info("Copied zip's path :" + shapeZip.getParentFile().getPath()); // use this to pass into the ShapeFileUtil after getting the file from the TokenFileExchanger
+		LOGGER.info("tempDirectory path:" + tempDirectory.getPath());
 		Assert.equals(shapeZip.getParentFile().getPath(), tempDirectory.getPath());
 
 		//create another temp dir to unzip the copied files contents
@@ -292,7 +292,7 @@ public class ShapeFileUtilTest {
 		assertNotNull(files);
 		Iterator<String> iter = files.iterator();
 		while (iter.hasNext()) {
-			System.out.println("copied zip file contents:" + iter.next());
+			LOGGER.info("copied zip file contents:" + iter.next());
 		}
 
 		// using any of the ShapeFileUtil methods to test getParentFile()
@@ -303,7 +303,7 @@ public class ShapeFileUtilTest {
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String jsonNames = gson.toJson(names, String[].class);
-		System.out.println("jason Names: " + jsonNames);
+		LOGGER.info("jason Names: " + jsonNames);
 	}
 
 	@Test
@@ -317,13 +317,13 @@ public class ShapeFileUtilTest {
 		String stringUrlToShxFile = map.get(ShpFileType.SHX); //shp index
 
 		assertNotNull(stringUrlToShapeFile);
-		System.out.println("URL to shape file: " + stringUrlToShapeFile);
+		LOGGER.info("URL to shape file: " + stringUrlToShapeFile);
 
 		assertNotNull(stringUrlToDbfFile);
-		System.out.println("URL to dbf file: " + stringUrlToDbfFile);
+		LOGGER.info("URL to dbf file: " + stringUrlToDbfFile);
 
 		assertNotNull(stringUrlToShxFile);
-		System.out.println("URL to shx file: " + stringUrlToShxFile);
+		LOGGER.info("URL to shx file: " + stringUrlToShxFile);
 	}
 
 	@Test
@@ -344,13 +344,13 @@ public class ShapeFileUtilTest {
 		String stringUrlToShxFile = map.get(ShpFileType.SHX); //shp index
 
 		assertNotNull(stringUrlToShapeFile);
-		System.out.println("URL to shape file: " + stringUrlToShapeFile);
+		LOGGER.info("URL to shape file: " + stringUrlToShapeFile);
 
 		assertNotNull(stringUrlToDbfFile);
-		System.out.println("URL to dbf file: " + stringUrlToDbfFile);
+		LOGGER.info("URL to dbf file: " + stringUrlToDbfFile);
 
 		assertNotNull(stringUrlToShxFile);
-		System.out.println("URL to shx file: " + stringUrlToShxFile);
+		LOGGER.info("URL to shx file: " + stringUrlToShxFile);
 	}
 
 	@Test(expected = ShapefileException.class)

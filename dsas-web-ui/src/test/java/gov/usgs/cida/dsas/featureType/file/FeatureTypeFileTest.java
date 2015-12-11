@@ -77,7 +77,7 @@ public class FeatureTypeFileTest {
 	
 		// saveZipFile ....
 		File workLocation = createWorkLocationForZip(zipFile);
-		System.out.println("Work location created for zip: " + workLocation);
+		LOGGER.info("Work location created for zip: " + workLocation);
 		FileHelper.unzipFile(workLocation.getAbsolutePath(), zipFile);
 		FileHelper.renameDirectoryContents(workLocation);
 		// result setDirectory
@@ -107,39 +107,37 @@ public class FeatureTypeFileTest {
 	
 		// saveZipFile ....
 		File workLocation = createWorkLocationForZip(zipFile);
-		System.out.println("Work location created for zip: " + workLocation);
+		LOGGER.info("Work location created for zip: " + workLocation);
 		FileHelper.unzipFile(workLocation.getAbsolutePath(), zipFile);
 		// show the names of the contents pre-rename ...
 		Collection<File> files = FileHelper.getFileCollection(workLocation.getAbsolutePath(), false);
 		
-		System.out.println("---------------------------------------------------------------------------------------------");
+		LOGGER.info("---------------------------------------------------------------------------------------------");
 		for (File file : files)
 		{
-			//System.out.println("Files absolute name: " + file.getName());
-			System.out.println("Files absolute path: " + file.getAbsolutePath());
+			LOGGER.info("Files absolute path: " + file.getAbsolutePath());
 		}
 		// rename the contents with the name of the dir + the ext as name
 		FileHelper.renameDirectoryContents(workLocation);
 		Collection<File> files2 = FileHelper.getFileCollection(workLocation.getAbsolutePath(), false);
 		for (File file : files2)
 		{
-			//System.out.println("POST RENAME: Files absolute name: " + file.getName());
-			System.out.println("POST RENAME: Files absolute path: " + file.getAbsolutePath());
+			LOGGER.info("POST RENAME: Files absolute path: " + file.getAbsolutePath());
 		}
-		System.out.println("---------------------------------------------------------------------------------------------");
-		System.out.println("saveZip sends back the worklocation: ie the exploded zip directory and the contents renamed:" + workLocation.getAbsolutePath());
+		LOGGER.info("---------------------------------------------------------------------------------------------");
+		LOGGER.info("saveZip sends back the worklocation: ie the exploded zip directory and the contents renamed:" + workLocation.getAbsolutePath());
 		
 	}
 
 		protected File createWorkLocationForZip(File zipFile) throws IOException {
 		String featureTypeFileName = FilenameUtils.getBaseName(zipFile.getName());
-		System.out.println("BaseName of Zip file is: " + featureTypeFileName);
+		LOGGER.info("BaseName of Zip file is: " + featureTypeFileName);
 		File fileWorkDirectory = new File(workDir, featureTypeFileName);
 		if (fileWorkDirectory.exists()) {
 			try {
 				FileUtils.cleanDirectory(fileWorkDirectory);
 			} catch (IOException ex) {
-				System.out.println("Could not clean work directory at " + fileWorkDirectory.getAbsolutePath());
+				LOGGER.info("Could not clean work directory at " + fileWorkDirectory.getAbsolutePath());
 			}
 		}
 		FileUtils.forceMkdir(fileWorkDirectory);
@@ -152,9 +150,9 @@ public class FeatureTypeFileTest {
 	@Test
 	@Ignore
 	public void testGetSimpleTestProperties() throws Exception {
-		System.out.println("testGetSimpleTestProperties");
+		LOGGER.info("testGetSimpleTestProperties");
 		String value = PropertyUtil.getProperty("debug");
-		System.out.println("Value of property debug is: " + value);
+		LOGGER.info("Value of property debug is: " + value);
 	}
 	
 		/**
@@ -163,9 +161,9 @@ public class FeatureTypeFileTest {
 	@Test
 	@Ignore
 	public void testGetTestProperties() throws Exception {
-		System.out.println("testGetTestProperties");
+		LOGGER.info("testGetTestProperties");
 		String value = PropertyUtil.getProperty(Property.DEBUG);
-		System.out.println("Value of property debug is: " + value);
+		LOGGER.info("Value of property debug is: " + value);
 	}
 	
 }
