@@ -1,8 +1,8 @@
 package gov.usgs.cida.dsas.dao.postgres;
 
+import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.pdb.Pdb;
 import gov.usgs.cida.dsas.dao.shoreline.Shoreline;
-import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import java.math.BigInteger;
@@ -190,7 +190,7 @@ public class PostgresDAO {
 
 		StringBuilder sql = new StringBuilder("INSERT INTO shoreline_points (shoreline_id, segment_id, geom, uncy) VALUES");
 		for (double[] XYUncy : XYuncyArray) {
-			sql.append("(").append(shorelineId).append(",").append(segmentId).append(",").append("ST_GeomFromText('POINT(").append(XYUncy[0]).append(" ").append(XYUncy[1]).append(")',").append(ShorelineFileDAO.DATABASE_PROJECTION).append("),").append(XYUncy[2]).append("),");
+			sql.append("(").append(shorelineId).append(",").append(segmentId).append(",").append("ST_GeomFromText('POINT(").append(XYUncy[0]).append(" ").append(XYUncy[1]).append(")',").append(FeatureTypeFileDAO.DATABASE_PROJECTION).append("),").append(XYUncy[2]).append("),");
 		}
 		sql.deleteCharAt(sql.length() - 1);
 		try (final Statement st = connection.createStatement()) {
@@ -223,7 +223,7 @@ public class PostgresDAO {
 			.append(" ")
 			.append(pdb.getY())
 			.append(")',")
-			.append(ShorelineFileDAO.DATABASE_PROJECTION)  // should this be PdbDAO?
+			.append(FeatureTypeFileDAO.DATABASE_PROJECTION) 
 			.append("),")
 			.append(pdb.getBias())
 			.append(",")

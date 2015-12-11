@@ -89,6 +89,7 @@ public class ShapefileResource {
 
 	@POST
 	@Path("/pdb")
+	@RolesAllowed({TokenBasedSecurityFilter.DSAS_AUTHORIZED_ROLE})
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createPdbToken(
@@ -195,7 +196,7 @@ public class ShapefileResource {
 			@PathParam("token") String fileToken,
 			@PathParam("workspace") String workspace 
 	) {
-		String columnsString = req.getParameter("columns");  // #TODO# make this pdb specific
+		String columnsString = req.getParameter("columns");  
 		Map<String, String> columns = new HashMap<>();
 				
 		boolean isColumnsStringNotBlank = StringUtils.isNotBlank(columnsString);
