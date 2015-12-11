@@ -88,7 +88,8 @@ public class FeatureTypeFileFactoryTest {
 		// --->   /var/folders/hi/deleteme.test.upload/
 		File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
 		File UPLOAD_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-		System.out.println("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
+
+		LOGGER.debug("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
 
 		// make the upload directory
 		FileUtils.deleteQuietly(UPLOAD_DIRECTORY);
@@ -100,7 +101,7 @@ public class FeatureTypeFileFactoryTest {
 		File copiedZip = Files.createTempFile(UPLOAD_DIRECTORY.toPath(), null, ".zip").toFile();
 		IOUtils.copyLarge(InStream, new FileOutputStream(copiedZip));  //---> this makes the name numeric and is currently in the code base. 
 
-		System.out.println("zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
+		LOGGER.debug("zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
 
 		FileInputStream pdbInputStream = FileUtils.openInputStream(validPdb);
 		FeatureTypeFileFactory instance = new FeatureTypeFileFactory();
@@ -111,40 +112,40 @@ public class FeatureTypeFileFactoryTest {
 		assertNotNull(columns);
 
 		for (String name : columns) {
-			System.out.println("Pdb column name is:" + name);
+			LOGGER.debug("Pdb column name is:" + name);
 		}
 		// -- test epsg
 		String epsg = result.getEPSGCode();
 		assertNotNull(epsg);
-		System.out.println("Pdb EPSG code: " + epsg);
+		LOGGER.debug("Pdb EPSG code: " + epsg);
 
 		// -- test type
-		System.out.println("Feature type for PDB: " + result.getType().toString());
+		LOGGER.debug("Feature type for PDB: " + result.getType().toString());
 
 		//-- test get Required files
 		List<File> reqFiles = result.getRequiredFiles();
 		File[] files = reqFiles.toArray(new File[reqFiles.size()]);
 		for (File aFile : files) {
-			System.out.println("Pdb required file is:" + aFile.getName());
+			LOGGER.debug("Pdb required file is:" + aFile.getName());
 		}
 
 		//-- test get Required files
 		List<File> optFiles = result.getOptionalFiles();
 		File[] optfiles = optFiles.toArray(new File[optFiles.size()]);
 		for (File aFile : optfiles) {
-			System.out.println("Pdb optional file is:" + aFile.getName());
+			LOGGER.debug("Pdb optional file is:" + aFile.getName());
 		}
 
 		// -- test internal map of file parts - its set in the init after constructor executes
 		boolean doesFileMapExist = result.exists();
 		assertTrue(doesFileMapExist);
-		System.out.println("Filemap has contents");
+		LOGGER.debug("Filemap has contents");
 		Collection<File> fileList = result.fileMap.values();
 		Iterator<File> listIter = fileList.iterator();
 		while (listIter.hasNext()) {
 			File file = listIter.next();
 			String filename = file.getName();
-			System.out.println("Filemap filename:" + filename);
+			LOGGER.debug("Filemap filename:" + filename);
 		}
 
 		//-- test DB
@@ -155,9 +156,9 @@ public class FeatureTypeFileFactoryTest {
 		result.updateProcessInformation("DSAS update process test message");
 		// test token file with a FeatureTypeFile 
 		String fileToken = TokenFeatureTypeFileExchanger.getToken(result);
-		System.out.println("Token is: " + fileToken);
+		LOGGER.debug("Token is: " + fileToken);
 		FeatureTypeFile featureTypeFile = TokenFeatureTypeFileExchanger.getFeatureTypeFile(fileToken);
-		System.out.println("File type retrieved is: " + featureTypeFile.getType());
+		LOGGER.debug("File type retrieved is: " + featureTypeFile.getType());
 
 		// clean up
 		FileUtils.listFiles(UPLOAD_DIRECTORY, null, true).stream().forEach((file) -> {
@@ -170,13 +171,13 @@ public class FeatureTypeFileFactoryTest {
 	@Ignore
 	public void testInvalidPdb() throws IOException, FeatureTypeFileException {
 		// check the case statement logic - that the other/default case is executed
-		System.out.println("testInvalidPdb");
+		LOGGER.debug("testInvalidPdb");
 
 		//copy the validLidar zip to the directory found in your application.properties
 		// --->   /var/folders/hi/deleteme.test.upload/
 		File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
 		File UPLOAD_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-		System.out.println("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
+		LOGGER.debug("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
 
 		// make the upload directory
 		FileUtils.deleteQuietly(UPLOAD_DIRECTORY);
@@ -187,7 +188,7 @@ public class FeatureTypeFileFactoryTest {
 		File copiedZip = Files.createTempFile(UPLOAD_DIRECTORY.toPath(), null, ".zip").toFile();
 		IOUtils.copyLarge(InStream, new FileOutputStream(copiedZip));
 
-		System.out.println("zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
+		LOGGER.debug("zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
 
 		try {
 			FileInputStream pdbInputStream = FileUtils.openInputStream(validLidar);
@@ -196,7 +197,7 @@ public class FeatureTypeFileFactoryTest {
 			assertNotNull(result);
 		} catch (FeatureTypeFileException ex) {
 			assertEquals(ex.getMessage(), "File has failed Pdb validation.");
-			System.out.println(ex.getMessage());
+			LOGGER.debug(ex.getMessage());
 		}
 
 		// clean up
@@ -213,12 +214,12 @@ public class FeatureTypeFileFactoryTest {
 	@Test
 	@Ignore
 	public void testCreateFeatureTypeShorelineShapeFile() throws Exception {
-		System.out.println("testCreateFeatureTypeShorelineShapeFile");
+		LOGGER.debug("testCreateFeatureTypeShorelineShapeFile");
 		//copy the validPdb zip to the directory found in your application.properties
 		// --->   /var/folders/hi/deleteme.test.upload/
 		File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
 		File UPLOAD_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-		System.out.println("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
+		LOGGER.debug("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
 
 		// make the upload directory
 		//UPLOAD_DIRECTORY = new File(tempDir, String.valueOf(new Date().getTime())); // tempDir grants java access rites to the dir structure under temp
@@ -231,7 +232,7 @@ public class FeatureTypeFileFactoryTest {
 		File copiedZip = Files.createTempFile(UPLOAD_DIRECTORY.toPath(), null, ".zip").toFile();
 		IOUtils.copyLarge(InStream, new FileOutputStream(copiedZip));  //---> this makes the name numeric and is currently in the code base. Is this what we want??
 
-		System.out.println("Shape zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
+		LOGGER.debug("Shape zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
 
 		FileInputStream pdbInputStream = FileUtils.openInputStream(validShapeZip);
 		FeatureTypeFileFactory instance = new FeatureTypeFileFactory();
@@ -244,40 +245,40 @@ public class FeatureTypeFileFactoryTest {
 
 		//String[] names = columns.toArray(new String[columns.size()]);
 		for (String name : columns) {
-			System.out.println("Shape column name is:" + name);
+			LOGGER.debug("Shape column name is:" + name);
 		}
 		// -- test epsg
 		String epsg = result.getEPSGCode();
 		assertNotNull(epsg);
-		System.out.println("Shape EPSG code: " + epsg);
+		LOGGER.debug("Shape EPSG code: " + epsg);
 
 		// -- test type
-		System.out.println("Feature type for Shape: " + result.getType().toString());
+		LOGGER.debug("Feature type for Shape: " + result.getType().toString());
 
 		//-- test get Required files
 		List<File> reqFiles = result.getRequiredFiles();
 		File[] files = reqFiles.toArray(new File[reqFiles.size()]);
 		for (File aFile : files) {
-			System.out.println("Shape required file is:" + aFile.getName());
+			LOGGER.debug("Shape required file is:" + aFile.getName());
 		}
 
 		//-- test get Required files
 		List<File> optFiles = result.getOptionalFiles();
 		File[] optfiles = optFiles.toArray(new File[optFiles.size()]);
 		for (File aFile : optfiles) {
-			System.out.println("Shape optional file is:" + aFile.getName());
+			LOGGER.debug("Shape optional file is:" + aFile.getName());
 		}
 
 		// -- test internal map of file parts - its set in the init after constructor executes
 		boolean doesFileMapExist = result.exists();
 		assertTrue(doesFileMapExist);
-		System.out.println("Shape Filemap has contents");
+		LOGGER.debug("Shape Filemap has contents");
 		Collection<File> fileList = result.fileMap.values();
 		Iterator<File> listIter = fileList.iterator();
 		while (listIter.hasNext()) {
 			File file = listIter.next();
 			String filename = file.getName();
-			System.out.println("Shape Filemap filename:" + filename);
+			LOGGER.debug("Shape Filemap filename:" + filename);
 		}
 
 		//-- test DB
@@ -286,7 +287,6 @@ public class FeatureTypeFileFactoryTest {
 		///result.importToGeoserver(viewname, workspace);
 		// -- test DSASProcess
 		result.updateProcessInformation("DSAS update process test message");
-//		System.out.println("process ID: " + result.process.getProcessId()); //dont know if this correct
 
 		// clean up
 		FileUtils.listFiles(UPLOAD_DIRECTORY, null, true).stream().forEach((file) -> {
@@ -300,13 +300,13 @@ public class FeatureTypeFileFactoryTest {
 	@Ignore
 	public void testInvalidShorelineShapefile() throws IOException, FeatureTypeFileException {
 		// check the case statement logic - that the other/default case is executed
-		System.out.println("testInvalidShorelineShapefile");
+		LOGGER.debug("testInvalidShorelineShapefile");
 
 		//copy the validLidar zip to the directory found in your application.properties
 		// --->   /var/folders/hi/deleteme.test.upload/
 		File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
 		File UPLOAD_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-		System.out.println("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
+		LOGGER.debug("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
 
 		// make the upload directory
 		FileUtils.deleteQuietly(UPLOAD_DIRECTORY);
@@ -317,7 +317,7 @@ public class FeatureTypeFileFactoryTest {
 		File copiedZip = Files.createTempFile(UPLOAD_DIRECTORY.toPath(), null, ".zip").toFile();
 		IOUtils.copyLarge(InStream, new FileOutputStream(copiedZip));  //---> this makes the name numeric and is currently in the code base. Is this what we want??
 
-		System.out.println("zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
+		LOGGER.debug("zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
 
 		try {
 			FileInputStream pdbInputStream = FileUtils.openInputStream(noPRJShapeZip);
@@ -326,7 +326,7 @@ public class FeatureTypeFileFactoryTest {
 			assertNotNull(result);
 		} catch (FeatureTypeFileException ex) {
 			assertEquals(ex.getMessage(), "Unable to create FeatureTypeFile with zip.");
-			System.out.println(ex.getMessage());
+			LOGGER.debug(ex.getMessage());
 		}
 
 		// clean up
@@ -340,15 +340,13 @@ public class FeatureTypeFileFactoryTest {
 	@Test
 	@Ignore
 	public void testCreateFeatureTypeShorelineLidarFile() throws Exception {
-		System.out.println("testCreateFeatureTypeShorelineLidarFile");
+		LOGGER.debug("testCreateFeatureTypeShorelineLidarFile");
 		//copy the validPdb zip to the directory found in your application.properties
 		// --->   /var/folders/hi/deleteme.test.upload/
 		File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
 		File UPLOAD_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-//		File WORK_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_WORK));
-//		System.out.println("BASE dir:" + BASE_DIRECTORY.toString() );
-		System.out.println("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
-//		System.out.println("WORK_DIRECTORY: " + WORK_DIRECTORY.toString());
+
+		LOGGER.debug("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
 
 		// make the upload directory
 		//UPLOAD_DIRECTORY = new File(tempDir, String.valueOf(new Date().getTime())); // tempDir grants java access rites to the dir structure under temp
@@ -361,7 +359,7 @@ public class FeatureTypeFileFactoryTest {
 		File copiedZip = Files.createTempFile(UPLOAD_DIRECTORY.toPath(), null, ".zip").toFile();
 		IOUtils.copyLarge(InStream, new FileOutputStream(copiedZip));  //---> this makes the name numeric and is currently in the code base. Is this what we want??
 
-		System.out.println("Lidar zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
+		LOGGER.debug("Lidar zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
 
 		FileInputStream pdbInputStream = FileUtils.openInputStream(validLidar);
 		FeatureTypeFileFactory instance = new FeatureTypeFileFactory();
@@ -374,43 +372,43 @@ public class FeatureTypeFileFactoryTest {
 
 		//String[] names = columns.toArray(new String[columns.size()]);
 		for (String name : columns) {
-			System.out.println("Lidar column name is:" + name);
+			LOGGER.debug("Lidar column name is:" + name);
 		}
 		// -- test epsg
 		String epsg = result.getEPSGCode();
 		assertNotNull(epsg);
-		System.out.println("Lidar EPSG code: " + epsg);
+		LOGGER.debug("Lidar EPSG code: " + epsg);
 
 		// -- test type
-		System.out.println("Feature type for Lidar: " + result.getType().toString());
+		LOGGER.debug("Feature type for Lidar: " + result.getType().toString());
 
 		//-- test get Required files
 		List<File> reqFiles = result.getRequiredFiles();
 		File[] files = reqFiles.toArray(new File[reqFiles.size()]);
 		for (File aFile : files) {
-			System.out.println("Lidar required file is:" + aFile.getName());
+			LOGGER.debug("Lidar required file is:" + aFile.getName());
 		}
 
 		//-- test get Required files
 		List<File> optFiles = result.getOptionalFiles();
 		File[] optfiles = optFiles.toArray(new File[optFiles.size()]);
 		for (File aFile : optfiles) {
-			System.out.println("Lidar optional file is:" + aFile.getName());
+			LOGGER.debug("Lidar optional file is:" + aFile.getName());
 		}
 		if (optFiles.isEmpty()) {
-			System.out.println("Lidar does not have any optional files");
+			LOGGER.debug("Lidar does not have any optional files");
 		}
 
 		// -- test internal map of file parts - its set in the init after constructor executes
 		boolean doesFileMapExist = result.exists();
 		assertTrue(doesFileMapExist);
-		System.out.println("Lidar Filemap has contents");
+		LOGGER.debug("Lidar Filemap has contents");
 		Collection<File> fileList = result.fileMap.values();
 		Iterator<File> listIter = fileList.iterator();
 		while (listIter.hasNext()) {
 			File file = listIter.next();
 			String filename = file.getName();
-			System.out.println("Lidar Filemap filename:" + filename);
+			LOGGER.debug("Lidar Filemap filename:" + filename);
 		}
 
 		//-- test DB
@@ -419,7 +417,6 @@ public class FeatureTypeFileFactoryTest {
 		///result.importToGeoserver(viewname, workspace);
 		// -- test DSASProcess
 		result.updateProcessInformation("DSAS update process test message");
-//		System.out.println("process ID: " + result.process.getProcessId()); //dont know if this correct
 
 		// clean up
 		FileUtils.listFiles(UPLOAD_DIRECTORY, null, true).stream().forEach((file) -> {
@@ -433,13 +430,13 @@ public class FeatureTypeFileFactoryTest {
 	@Ignore
 	public void testInvalidShorelineLidarfile() throws IOException, FeatureTypeFileException {
 		// check the case statement logic - that the other/default case is executed
-		System.out.println("testInvalidShorelineLidarfile");
+		LOGGER.debug("testInvalidShorelineLidarfile");
 
 		//copy the validLidar zip to the directory found in your application.properties
 		// --->   /var/folders/hi/deleteme.test.upload/
 		File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
 		File UPLOAD_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-		System.out.println("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
+		LOGGER.debug("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
 
 		// make the upload directory
 		FileUtils.deleteQuietly(UPLOAD_DIRECTORY);
@@ -450,7 +447,7 @@ public class FeatureTypeFileFactoryTest {
 		File copiedZip = Files.createTempFile(UPLOAD_DIRECTORY.toPath(), null, ".zip").toFile();
 		IOUtils.copyLarge(InStream, new FileOutputStream(copiedZip));  //---> this makes the name numeric and is currently in the code base. Is this what we want??
 
-		System.out.println("zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
+		LOGGER.debug("zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
 
 		try {
 			FileInputStream pdbInputStream = FileUtils.openInputStream(noPRJShapeZip);
@@ -459,7 +456,7 @@ public class FeatureTypeFileFactoryTest {
 			assertNotNull(result);
 		} catch (FeatureTypeFileException ex) {
 			assertEquals(ex.getMessage(), "Unable to create FeatureTypeFile with zip.");
-			System.out.println(ex.getMessage());
+			LOGGER.debug(ex.getMessage());
 		}
 
 		// clean up
@@ -479,7 +476,7 @@ public class FeatureTypeFileFactoryTest {
 		// --->   /var/folders/hi/deleteme.test.upload/
 		File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
 		File UPLOAD_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-		System.out.println("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
+		LOGGER.debug("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
 
 		// make the upload directory
 		//UPLOAD_DIRECTORY = new File(tempDir, String.valueOf(new Date().getTime())); // tempDir grants java access rites to the dir structure under temp
@@ -492,8 +489,8 @@ public class FeatureTypeFileFactoryTest {
 		File copiedZip = Files.createTempFile(UPLOAD_DIRECTORY.toPath(), null, ".zip").toFile();
 		IOUtils.copyLarge(InStream, new FileOutputStream(copiedZip));  //---> this makes the name numeric and is currently in the code base. Is this what we want??
 
-		System.out.println("zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
-		System.out.println("zip file name: " + copiedZip.getName());
+		LOGGER.debug("zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
+		LOGGER.debug("zip file name: " + copiedZip.getName());
 
 		FileInputStream pdbInputStream = FileUtils.openInputStream(validPdb);
 		FeatureTypeFileFactory instance = new FeatureTypeFileFactory();
