@@ -66,10 +66,8 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		String biasFieldName = (String) bm.getKey(Constants.BIAS_ATTR);  //refer to the shapefile attr (not the geo), dbf file type adds attributes 
 		String biasUncyFieldName = (String) bm.getKey(Constants.BIAS_UNCY_ATTR);
 		String profileIdFieldName = (String) bm.getKey(Constants.PROFILE_ID);
-		String segmentIdFieldName = (String) bm.getKey(Constants.SEGMENT_ID_ATTR); //segment lookin other class
-		// String dateFieldName = (String) bm.getKey(Constants.DB_DATE_ATTR); //we set the date timestop on the update...in the code UTC date.now  ...check the mapping
+		String segmentIdFieldName = (String) bm.getKey(Constants.SEGMENT_ID_ATTR); 
 		String baseFileName = FilenameUtils.getBaseName(shpFile.getName());
-		//File parentDirectory = shpFile.getParentFile();
 
 		String[][] fieldNames = null;
 		int MAX_POINTS_AT_ONCE = 500;
@@ -90,8 +88,6 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		try (Connection connection = getConnection()) {
 
 			FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(shpFile.toURI().toURL());
-			//Class<?> dateType = fc.getSchema().getDescriptor(dateFieldName).getType().getBinding();
-			//List<double[]> xyUncies = new ArrayList<>();
 
 			if (!fc.isEmpty()) {
 				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
@@ -101,14 +97,14 @@ public class PdbDAO extends FeatureTypeFileDAO {
 					boolean isResultSet = false;
 					//long proxyDatumBiasId = -1; //#TODO#
 					ArrayList<Pdb> pdbList = new ArrayList();
-					// need a description of the sf pieces. PDB requires the .shp, .shx, .dbf           
+					        
 					while (iter.hasNext()) {
 						SimpleFeature sf = iter.next();
 
 						// get the values from the file and set the Pdbs with then
 						Pdb pdb = new Pdb();
 
-						int segmentId = getIntValue(segmentIdFieldName, sf);
+						int segmentId = getIntValue(segmentIdFieldName, sf);  //null check
 						//BigInteger segmentId = getBigIntValue(segmentIdFieldName, sf);
 						pdb.setSegmentId(segmentId);
 
@@ -124,7 +120,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 						pdbList.add(pdb);
 
 						if (pdbList.size() == MAX_POINTS_AT_ONCE) { //review where should this be checked? sl
-							isResultSet = insertPointsIntoPdbTable(connection, pdbList);  // ... pick up here Wednesday
+							isResultSet = insertPointsIntoPdbTable(connection, pdbList);  
 							pdbList.clear();
 						}
 					} // close while
@@ -148,15 +144,6 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		return viewName;
 	}
 
-	private String getSourceFromFC(SimpleFeature sf) {
-		String source = "";
-		for (AttributeDescriptor d : sf.getFeatureType().getAttributeDescriptors()) {
-			if (Constants.SOURCE_ATTR.equalsIgnoreCase(d.getLocalName()) || (Constants.SOURCE_ABBRV_ATTR.equalsIgnoreCase(d.getLocalName()))) {
-				return (String) sf.getAttribute(d.getLocalName());
-			}
-		}
-		return source;
-	}
 
 	public int getIntValue(String attribute, SimpleFeature feature) {
 		Object value = feature.getAttribute(attribute);
@@ -170,7 +157,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 	public BigInteger getBigIntValue(String attribute, SimpleFeature feature) {
 		Object value = feature.getAttribute(attribute);
 		if (value instanceof Number) {
-// or ...   new BigInteger(String.valueOf(((Number)value)));
+		// or ...   new BigInteger(String.valueOf(((Number)value)));
 			return BigInteger.valueOf(((Number) value).intValue());
 		} else {
 			throw new ClassCastException("This attribute is not a Number");
