@@ -186,7 +186,7 @@ public class ShapefileResource {
 	}
 	
 	// import pdb shape to the database file
-	// todo move the import to the pdb and shoreline file
+	// Pdb is isolated due to the security needs
 	@POST
 	@RolesAllowed({TokenBasedSecurityFilter.DSAS_AUTHORIZED_ROLE})
 	@Produces(MediaType.APPLICATION_JSON)
