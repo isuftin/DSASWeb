@@ -19,9 +19,6 @@ public class ShapefileApplication extends ResourceConfig {
 	public ShapefileApplication() {
 		packages(this.getClass().getPackage().getName());
 		register(MultiPartFeature.class);
-		
-		packages(this.getClass().getPackage().getName());
-
 		register(JspMvcFeature.class);
 		register(ForbiddenExceptionMapper.class);
 		register(TokenBasedSecurityFilter.class);

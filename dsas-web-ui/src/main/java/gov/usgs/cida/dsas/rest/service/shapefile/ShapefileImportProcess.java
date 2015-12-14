@@ -40,15 +40,11 @@ public class ShapefileImportProcess implements Runnable {
 	@Override
 	public void run() {
 		this.process.setStatus(DSASProcessStatus.RUNNING);
-		//IShorelineFile shorelineFile = null;
 		FeatureTypeFile featureTypeFile = null;
 		try {
 			if (StringUtils.isNotBlank(this.fileToken)) {
 				this.process.setPercentCompleted(1);
-				//TODO: Change IShorelineFile to a more generic Shapefile interface, 
-				// removing the idea of Shorelines from this prcess and push that down
-				// to implementing classes
-				//shorelineFile = TokenToShorelineFileSingleton.getShorelineFile(this.fileToken); 
+
 				featureTypeFile = TokenFeatureTypeFileExchanger.getFeatureTypeFile(this.fileToken);
 				featureTypeFile.setDSASProcess(process);
 				

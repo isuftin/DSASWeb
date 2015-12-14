@@ -1,7 +1,5 @@
 package gov.usgs.cida.dsas.featureType.file;
 
-import gov.usgs.cida.dsas.service.util.*;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,7 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
@@ -41,14 +38,14 @@ public class TokenFeatureTypeFileExchanger {
 		return SingletonHolder.INSTANCE;
 	}
 
-	private static final Map<String, FeatureTypeFile> tokenToFileMap = Collections.synchronizedMap(new HashMap<String, FeatureTypeFile>());
+	private static final Map<String, FeatureTypeFile> tokenToFileMap = Collections.synchronizedMap(new HashMap<>());
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TokenFeatureTypeFileExchanger.class);
 
 	/**
 	 * Adds the File object to the map. If the file already exists in the map,
 	 * returns the token already associated with the file
 	 *
-	 * @param file
+	 * @param featureTypeFile
 	 * @return token
 	 * @throws java.io.FileNotFoundException
 	 */
@@ -96,11 +93,10 @@ public class TokenFeatureTypeFileExchanger {
 	 *
 	 * @param token
 	 *
-	 * @return true if the file was deleted
 	 */
 	public static void removeToken(String token) {
 		if (StringUtils.isNotBlank(token) && tokenToFileMap.containsKey(token)) {
-			FeatureTypeFile shorelineFile = (FeatureTypeFile) tokenToFileMap.remove(token);
+			FeatureTypeFile shorelineFile = tokenToFileMap.remove(token);
 		}
 	}
 

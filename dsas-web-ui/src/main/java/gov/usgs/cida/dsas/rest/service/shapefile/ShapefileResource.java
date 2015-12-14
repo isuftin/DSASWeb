@@ -52,16 +52,15 @@ public class ShapefileResource {
 		Response response = null;
 		Map<String, String> responseMap = new HashMap<>(1);
 		Gson gson = new Gson();
-		FeatureTypeFile featureTypeFile = null;
 
-		featureTypeFile = TokenFeatureTypeFileExchanger.getFeatureTypeFile(fileToken); 
+		FeatureTypeFile featureTypeFile = TokenFeatureTypeFileExchanger.getFeatureTypeFile(fileToken); 
 		if ( featureTypeFile == null || !featureTypeFile.exists() ) {
 			LOGGER.error("Unable to get shape file for token: " + fileToken);
 			
 			responseMap.put("error", "Unable to retrieve shape file with token: " + fileToken);
 			return Response
 					.serverError()
-					.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.status(Response.Status.NOT_FOUND)
 					.entity(new Gson().toJson(responseMap))
 					.build();
 		}
