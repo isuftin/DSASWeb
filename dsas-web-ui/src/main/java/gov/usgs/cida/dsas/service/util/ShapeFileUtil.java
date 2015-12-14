@@ -36,7 +36,7 @@ public class ShapeFileUtil {
 
 	private static File getDbfFile(File unzippedShapefileLocation) throws FileNotFoundException, IOException {
 
-		String[] DbfType = new String[]{DBF};
+		String[] DbfType = new String[]{ShpFileType.DBF.extension};
 		Collection<File> dbfFiles = FileUtils.listFiles(unzippedShapefileLocation, DbfType, true);
 		if (1 != dbfFiles.size() | dbfFiles.isEmpty()) {
 			throw new FileNotFoundException("Unable to get dbf file. Missing from location:" + unzippedShapefileLocation + " or more than one found. Size: " + dbfFiles.size());
@@ -73,10 +73,11 @@ public class ShapeFileUtil {
 	 * @throws java.io.IOException
 	 */
 	public static List<String> getDbfColumnNames(File validShapeDir) throws IOException {
-		List<String> names = new ArrayList<>();
-
+		
 		DbaseFileReader dbReader = new DbaseFileReader(FileUtils.openInputStream(getDbfFile(validShapeDir)).getChannel(), false, Charset.forName("UTF-8"));
 		int n = dbReader.getHeader().getNumFields();
+		List<String> names = new ArrayList<>(n);
+		
 		for (int i = 0; i < n; i++) {
 			names.add(dbReader.getHeader().getFieldName(i));
 		}
@@ -107,7 +108,7 @@ public class ShapeFileUtil {
 	public static boolean isValidShapefile(File candidateShapeDir) throws ShapefileException {
 		boolean result = true;
 
-		String[] ShpType = new String[]{SHP};  // can be any file that is expected to be part of the shape file
+		String[] ShpType = new String[]{ShpFileType.SHP.extension};  // can be any file that is expected to be part of the shape file
 		//find the shp file
 		Collection<File> files = FileUtils.listFiles(candidateShapeDir, ShpType, false);
 		if (files.isEmpty()) {
@@ -148,13 +149,6 @@ public class ShapeFileUtil {
 
 		// create the geotools shape file by passing in the found shp file
 		ShpFiles sFile = new ShpFiles(foundDbfFile);
-		boolean booShp = sFile.exists(ShpFileType.SHP);
-		boolean booDbf = sFile.exists(ShpFileType.DBF);
-		boolean booShx = sFile.exists(ShpFileType.SHX);
-
-		if (!booShp || !booDbf || !booShx) {
-			throw new FileNotFoundException("Invalid shape file zip does not have required file types: shp, dbf, shx " + booShp + ", " + booDbf + ", " + booShx);
-		}
 
 		return sFile.getFileNames();
 	}

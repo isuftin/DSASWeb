@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LidarFileUtilsTest {
 
-	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShapeFileUtilTest.class);
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(LidarFileUtilsTest.class);
 	private static final String tempDir = System.getProperty("java.io.tmpdir");
 
 	private static File workDir;
@@ -57,7 +57,7 @@ public class LidarFileUtilsTest {
 		String packagePath = "/";
 		FileUtils.copyDirectory(new File(getClass().getResource(packagePath).toURI()), workDir);
 		validLidarZip = new File(workDir, "LIDAR_GA_shorelines.zip");
-		invalidLidarZip = new File(workDir, "invalidLidar.zip");
+		invalidLidarZip = new File(workDir, "valid_shapezip.zip");
 
 	}
 
@@ -116,12 +116,29 @@ public class LidarFileUtilsTest {
 		tempShapeFile.deleteOnExit();
 		FileUtils.copyFile(validLidarZip, tempShapeFile);
 
-		boolean expResult = true;
-		boolean result = LidarFileUtils.validateLidarFileZip(tempShapeFile);
+		LidarFileUtils.validateLidarFileZip(tempShapeFile);
 
-		assertEquals(expResult, result);
 	}
 
+	/**
+	 * Test of validateLidarFileZip method, of class LidarFileUtils.
+	 */
+	@Test(expected = LidarFileFormatException.class)
+	public void testValidateOfInvalidLidarFileZip() throws IOException, LidarFileFormatException{
+		System.out.println("testValidateOfInvalidLidarFileZip");
+		File tempDir1 = null;
+		File tempShapeFile = null;
+
+		tempDir1 = Files.createTempDirectory("temp-shapefile-dir").toFile();
+		tempDir1.deleteOnExit();
+		tempShapeFile = Files.createTempFile("tempshapefile", ".zip").toFile();
+		tempShapeFile.deleteOnExit();
+		FileUtils.copyFile(invalidLidarZip, tempShapeFile);
+
+		LidarFileUtils.validateLidarFileZip(tempShapeFile);
+
+	}
+	
 	/**
 	 * Test of validateHeaderRow method, of class LidarFileUtils. Included below
 	 */

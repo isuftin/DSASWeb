@@ -56,9 +56,10 @@ public class ShapefileResource {
 		FeatureTypeFile featureTypeFile = TokenFeatureTypeFileExchanger.getFeatureTypeFile(fileToken); 
 		if ( featureTypeFile == null || !featureTypeFile.exists() ) {
 			LOGGER.error("Unable to get shape file for token: " + fileToken);
+			TokenFeatureTypeFileExchanger.removeToken(fileToken);
 			
 			responseMap.put("error", "Unable to retrieve shape file with token: " + fileToken);
-			return Response
+			response = Response
 					.serverError()
 					.status(Response.Status.NOT_FOUND)
 					.entity(new Gson().toJson(responseMap))
@@ -67,7 +68,6 @@ public class ShapefileResource {
 		if (response == null) {
 			try {				
 				String[] names = featureTypeFile.getColumns();
-
 				responseMap.put("headers", gson.toJson(names, String[].class));
 
 				response = Response
@@ -151,7 +151,6 @@ public class ShapefileResource {
 		String token = null;
 
 		try { 
-			//Note the additional Path attribute of pdb which determines its type.
 			featureTypeFile = new FeatureTypeFileFactory().createFeatureTypeFile(fileInputStream, FeatureType.SHORELINE);
 			
 		} catch (IOException | FeatureTypeFileException ex) {
@@ -216,7 +215,7 @@ public class ShapefileResource {
 		} else {
 			Map<String, String> map = new HashMap<>();
 			if (!isColumnsStringNotBlank)
-			map.put("error", "Parameter \"columns\" missing");
+				map.put("error", "Parameter \"columns\" missing");
 			else if (!isfileTokenNotBlank)
 				map.put("error", "Parameter \"file token\" missing");
 			else if (!isWorkspaceNotBlank)

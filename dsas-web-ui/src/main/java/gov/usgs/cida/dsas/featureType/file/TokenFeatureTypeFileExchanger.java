@@ -96,8 +96,15 @@ public class TokenFeatureTypeFileExchanger {
 	 */
 	public static void removeToken(String token) {
 		if (StringUtils.isNotBlank(token) && tokenToFileMap.containsKey(token)) {
-			FeatureTypeFile shorelineFile = tokenToFileMap.remove(token);
+			FeatureTypeFile featureTypeFile = tokenToFileMap.remove(token);
 		}
+	}
+	
+		public static void clear() {
+		for (FeatureTypeFile featureTypeFile : tokenToFileMap.values()) {
+			featureTypeFile.clear();
+		}
+		tokenToFileMap.clear();
 	}
 
 }

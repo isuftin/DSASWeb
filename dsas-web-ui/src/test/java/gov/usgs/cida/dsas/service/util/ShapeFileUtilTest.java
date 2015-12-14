@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -32,7 +31,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
@@ -142,28 +140,6 @@ public class ShapeFileUtilTest {
 		}
 	}
 
-	@Ignore 
-	@Test
-	public void testGetDbfColumnNames() throws IOException {
-		System.out.println("testGetDbfColumnNames");
-		File tempDir = null;
-		File tempShapeFile = null;
-
-		tempDir = Files.createTempDirectory("temp-shapefile-dir").toFile();
-		tempDir.deleteOnExit();
-		tempShapeFile = Files.createTempFile("tempshapefile", ".zip").toFile();
-		tempShapeFile.deleteOnExit();
-		FileUtils.copyFile(validShapeZip, tempShapeFile);
-		FileHelper.unzipFile(tempDir.getAbsolutePath(), tempShapeFile);
-
-		List<String> columns = ShapeFileUtil.getDbfColumnNames(tempShapeFile);
-		LOGGER.info("File passed into ShapefileUtil as dir:" + tempDir);
-	
-		for (String column : columns) {
-			LOGGER.info("Column Name:" + column);
-		}
-	}
-
 	@Test
 	public void testGetDbfColumnNamesDir() throws IOException {
 		System.out.println("testGetDbfColumnNamesDir");
@@ -184,26 +160,6 @@ public class ShapeFileUtilTest {
 		for (String column : columns) {
 			LOGGER.info("Column Name:" + column);
 		}
-	}
-
-	@Ignore 
-	@Test
-	public void testGetEPSGCode() throws IOException {
-		System.out.println("testGetEPSGCode");
-		File tempD = null;
-		File tempShapeFile = null;
-
-		tempD = Files.createTempDirectory("temp-shapefile-dir").toFile();
-		tempD.deleteOnExit();
-		tempShapeFile = Files.createTempFile("tempshapefile", ".zip").toFile();
-		tempShapeFile.deleteOnExit();
-		FileUtils.copyFile(validShapeZip, tempShapeFile);
-		FileHelper.unzipFile(tempD.getAbsolutePath(), validShapeZip);
-
-		String epsg = ShapeFileUtil.getEPSGCode(tempShapeFile);
-		assertNotNull(epsg);
-
-		LOGGER.info(epsg);
 	}
 
 	@Test
@@ -253,7 +209,7 @@ public class ShapeFileUtilTest {
 		LOGGER.info("jason Names: " + jsonNames);
 	}
 
-	@Test // ShapefileResource
+	@Test // from ShapefileResource
 	public void testShapeFileCreateFromFileInputStream() throws IOException {
 		System.out.println("testShapeFileCreateFromFileInputStream");
 		File tempDirectory = null;
@@ -304,26 +260,6 @@ public class ShapeFileUtilTest {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String jsonNames = gson.toJson(names, String[].class);
 		LOGGER.info("jason Names: " + jsonNames);
-	}
-
-	@Test
-	@Ignore ()
-	public void testGetFileMapWithValidZip() throws IOException {
-		System.out.println("testGetFileNamesWithValidZip");
-		Map<ShpFileType, String> map = ShapeFileUtil.getFileMap(validShapeZip);
-
-		String stringUrlToShapeFile = map.get(ShpFileType.SHP);
-		String stringUrlToDbfFile = map.get(ShpFileType.DBF);
-		String stringUrlToShxFile = map.get(ShpFileType.SHX); //shp index
-
-		assertNotNull(stringUrlToShapeFile);
-		LOGGER.info("URL to shape file: " + stringUrlToShapeFile);
-
-		assertNotNull(stringUrlToDbfFile);
-		LOGGER.info("URL to dbf file: " + stringUrlToDbfFile);
-
-		assertNotNull(stringUrlToShxFile);
-		LOGGER.info("URL to shx file: " + stringUrlToShxFile);
 	}
 
 	@Test

@@ -33,7 +33,6 @@ public abstract class ShorelineFile extends FeatureTypeFile implements IShorelin
 	protected File baseDirectory;
 	protected File uploadDirectory;
 	protected File workDirectory;
-//	protected String token;  // this token retrieves the directory to the exploded zip
 	public static final String[] AUXILLARY_ATTRIBUTES = new String[]{
 		Constants.SURVEY_ID_ATTR,
 		Constants.DISTANCE_ATTR,
@@ -86,10 +85,6 @@ public abstract class ShorelineFile extends FeatureTypeFile implements IShorelin
 			LOGGER.debug("Geoserver workspace {} could not be updated", workspace);
 		}
 	}
-
-//	public static void validate(File zipFile) throws Exception {  
-//		throw new UnsupportedOperationException();
-//	}
 
 	@Override
 	public boolean exists() {

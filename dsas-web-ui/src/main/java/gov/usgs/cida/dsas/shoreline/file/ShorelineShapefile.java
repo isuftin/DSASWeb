@@ -105,7 +105,6 @@ public class ShorelineShapefile extends ShorelineFile {
 
 	@Override
 	public String[] getColumns() throws IOException {
-//		String[] headers = null;
 		List<String> dbfColumns = ShapeFileUtil.getDbfColumnNames(this.featureTypeExplodedZipFileLocation);
 		String[] names = dbfColumns.toArray(new String[dbfColumns.size()]);
 		return names;

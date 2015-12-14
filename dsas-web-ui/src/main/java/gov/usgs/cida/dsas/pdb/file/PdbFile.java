@@ -67,8 +67,9 @@ public class PdbFile extends FeatureTypeFile {
 		this.dao = dao;
 		this.fileMap = new HashMap<>(FILE_PARTS.length);
 		updateFileMapWithDirFile(featureTypeFileLocation, FILE_PARTS);
-		if (process != null)
-			setDSASProcess(process);
+		if (process != null){
+			setDSASProcess(process); 
+		}
 		this.type = FeatureType.PDB;
 		
 	}
@@ -81,8 +82,8 @@ public class PdbFile extends FeatureTypeFile {
 
 	@Override
 	public List<File> getOptionalFiles() {
-		Collection<File> requiredFiles = FileUtils.listFiles(this.featureTypeExplodedZipFileLocation, OPTIONAL_FILES, false);
-		return new ArrayList<>(requiredFiles);
+		Collection<File> optionalFiles = FileUtils.listFiles(this.featureTypeExplodedZipFileLocation, OPTIONAL_FILES, false);
+		return new ArrayList<>(optionalFiles);
 	}
 
 	public static void validate(File explodedZipFileDir) throws ShapefileException {

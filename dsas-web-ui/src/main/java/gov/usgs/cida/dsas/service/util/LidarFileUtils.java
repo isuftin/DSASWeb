@@ -41,12 +41,10 @@ public class LidarFileUtils {
 	 * gov.usgs.cida.dsas.featureTypeFile.exception.LidarFileFormatException
 	 * @throws IOException
 	 */
-	public static boolean validateLidarFileZip(File lidarZipFile) throws LidarFileFormatException, IOException {
+	public static void validateLidarFileZip(File lidarZipFile) throws LidarFileFormatException, IOException {
 		File temporaryDirectory = new File(FileHelper.getTempDirectory(), UUID.randomUUID().toString() + "-deleteme");
-		boolean result = true;
 		try {
 			if (!temporaryDirectory.mkdirs()) {
-				result = false;
 				throw new IOException("Could not create temporary directory (" + temporaryDirectory.getCanonicalPath() + ") for processing");
 			}
 
@@ -70,7 +68,6 @@ public class LidarFileUtils {
 						// so skip this file. Shapefiles inside with arbitrary directory 
 						// depth should first be preprocessed to be single-depth since 
 						// GS will not accept it otherwise
-						result=false;
 					} finally {
 						IOUtils.closeQuietly(fos);
 					}
@@ -82,23 +79,19 @@ public class LidarFileUtils {
 
 			File[] csvfiles = FileHelper.listFiles(temporaryDirectory, (new String[]{"csv"}), false).toArray(new File[0]);
 			if (csvfiles.length == 0 || csvfiles.length > 1) {
-				result = false;
 				throw new LidarFileFormatException("Lidar archive needs to contain one csv file");
 			}
 			File[] prjfiles = FileHelper.listFiles(temporaryDirectory, (new String[]{"prj"}), false).toArray(new File[0]);
 			if (prjfiles.length == 0 || prjfiles.length > 1) {
-				result = false;
 				throw new LidarFileFormatException("Lidar archive needs to contain one prj file");
 			}
 			File[] shpfiles = FileHelper.listFiles(temporaryDirectory, (new String[]{"shp"}), false).toArray(new File[0]);
 			if (shpfiles.length != 0) {
-				result = false;
 				throw new LidarFileFormatException("Lidar archive cannot contain an shp file");
 			}
 		} finally {
 			FileHelper.forceDelete(temporaryDirectory);
 		}
-		return result;
 	}
 
 	public static void validateHeaderRow(String[] headerRow) throws LidarFileFormatException {

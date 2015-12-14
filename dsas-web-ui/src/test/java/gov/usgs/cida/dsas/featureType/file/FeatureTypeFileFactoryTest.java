@@ -2,7 +2,11 @@ package gov.usgs.cida.dsas.featureType.file;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
+import gov.usgs.cida.dsas.dao.pdb.Pdb;
+import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.featureTypeFile.exception.FeatureTypeFileException;
+import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
@@ -12,15 +16,26 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.UUID;
+import org.apache.commons.collections.BidiMap;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.geotools.data.crs.ReprojectFeatureResults;
+import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
+import org.geotools.feature.SchemaException;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -30,6 +45,8 @@ import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -83,6 +100,7 @@ public class FeatureTypeFileFactoryTest {
 
 	/**
 	 * Test of createFeatureTypeFile method, of class FeatureTypeFileFactory.
+	 * @throws java.lang.Exception
 	 */
 	@Test
 	@Ignore
@@ -153,7 +171,12 @@ public class FeatureTypeFileFactoryTest {
 		}
 
 		//-- test DB
-		/// String viewname = result.importToDatabase(columns, epsg);  //need sample of columns that comes from the request
+		String columnsString = "{\"RouteID\":\"\",\"Date_\":\"date\",\"Uncy\":\"uncy\",\"Source\":\"source\",\"Source_b\":\"UNCYB\",\"Year\":\"\",\"Default_D\":\"\",\"Location\":\"\",\"Shape_Leng\":\"\"}";
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Map<String, String> columnPairs = new HashMap<>();
+	
+		columnPairs = gson.fromJson(columnsString, Map.class);
+		//String viewname = result.importToDatabase(columnPairs, "workspaceTest");  //need sample of columns that comes from the request
 		// -- test Geo
 		///result.importToGeoserver(viewname, workspace);
 		// -- test DSASProcess
@@ -214,6 +237,7 @@ public class FeatureTypeFileFactoryTest {
 	// ----------------------------------------------------------------
 	/**
 	 * Test of createFeatureTypeFile method, of class FeatureTypeFileFactory.
+	 * @throws java.lang.Exception
 	 */
 	@Test
 	@Ignore
@@ -422,7 +446,7 @@ public class FeatureTypeFileFactoryTest {
 	
 		columnPairs = gson.fromJson(columnsString, Map.class);
 	
-		//String viewname = result.importToDatabase(columnPairs, workspace); 
+//		String viewname = result.importToDatabase(columnPairs, workspace); 
 		//LOGGER.info("Viewname is: " + viewname);
 		// -- test Geo
 		///result.importToGeoserver(viewname, workspace);
@@ -477,48 +501,93 @@ public class FeatureTypeFileFactoryTest {
 		FileUtils.deleteQuietly(UPLOAD_DIRECTORY);
 	}
 
-	// -----------------------------------------------------
 	@Test
 	@Ignore
-	public void testAutoNumericNamedZip() throws IOException, FeatureTypeFileException {
+	public void testAutoNumericNamedZip() throws IOException, FeatureTypeFileException, SchemaException, TransformException, NoSuchElementException, FactoryException {
 		System.out.println("testAutoNumericNamedZip");
 		// This test was created to determine if starting the name of the zip with a numeric would cause issues. 
 		// In the previous code, a 'clean' was done on the zip that added an underscore to the zip file name if it began with a number.
 		//copy the validPdb zip to the directory found in your application.properties
 		// --->   /var/folders/hi/deleteme.test.upload/
-		File BASE_DIRECTORY = new File(PropertyUtil.getProperty(Property.DIRECTORIES_BASE, FileUtils.getTempDirectory().getAbsolutePath()));
-		File UPLOAD_DIRECTORY = new File(BASE_DIRECTORY, PropertyUtil.getProperty(Property.DIRECTORIES_UPLOAD));
-		LOGGER.info("UPLOAD_DIRECTORY :" + UPLOAD_DIRECTORY.toPath());
 
-		// make the upload directory
-		//UPLOAD_DIRECTORY = new File(tempDir, String.valueOf(new Date().getTime())); // tempDir grants java access rites to the dir structure under temp
-		FileUtils.deleteQuietly(UPLOAD_DIRECTORY);
-		FileUtils.forceMkdir(UPLOAD_DIRECTORY);
-
-		//FileUtils.copyFileToDirectory(validPdb, UPLOAD_DIRECTORY);  //-->this copies the name of the zip as it was
+		//FileUtils.copyFileToDirectory(validPdb, UPLOAD_DIRECTORY);  //-->Note: this copies the name of the zip as it was
 		//copy the valide pdb zip into the upload location to begin the test
 		FileInputStream InStream = FileUtils.openInputStream(validPdb);
-		File copiedZip = Files.createTempFile(UPLOAD_DIRECTORY.toPath(), null, ".zip").toFile();
+		File copiedZip = Files.createTempFile(workDir.toPath(), null, ".zip").toFile();
 		IOUtils.copyLarge(InStream, new FileOutputStream(copiedZip));  //---> this makes the name numeric and is currently in the code base. Is this what we want??
 
-		LOGGER.info("zip file should be in location: " + UPLOAD_DIRECTORY.getPath());
+		LOGGER.info("zip file should be in location: " + workDir.getPath());
 		LOGGER.info("zip file name: " + copiedZip.getName());
 
 		FileInputStream pdbInputStream = FileUtils.openInputStream(validPdb);
 		FeatureTypeFileFactory instance = new FeatureTypeFileFactory();
 		FeatureTypeFile result = instance.createFeatureTypeFile(pdbInputStream, FeatureType.PDB);
-		//----
-		//ShpFiles shpFile = new ShpFiles(result.fileMap.get("shp"));
+	
 		File shpFile = result.fileMap.get("shp");
 		FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(shpFile.toURI().toURL());
+		assertNotNull(fc);
+		// --- 
+		String columnsString = "{\"RouteID\":\"\",\"Date_\":\"date\",\"Uncy\":\"uncy\",\"Source\":\"source\",\"Source_b\":\"UNCYB\",\"Year\":\"\",\"Default_D\":\"\",\"Location\":\"\",\"Shape_Leng\":\"\"}";
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Map<String, String> columns = new HashMap<>();
+		columns = gson.fromJson(columnsString, Map.class);
+		
+		BidiMap bm = new DualHashBidiMap(columns);
+		String biasFieldName = (String) bm.getKey(Constants.BIAS_ATTR);  //refer to the shapefile attr (not the geo), dbf file type adds attributes 
+		String biasUncyFieldName = (String) bm.getKey(Constants.BIAS_UNCY_ATTR);
+		String profileIdFieldName = (String) bm.getKey(Constants.PROFILE_ID);
+		String segmentIdFieldName = (String) bm.getKey(Constants.SEGMENT_ID_ATTR); // this is not an int??
+		String baseFileName = FilenameUtils.getBaseName(shpFile.getName());
 
-		// clean up
-		FileUtils.listFiles(UPLOAD_DIRECTORY, null, true).stream().forEach((file) -> {
-			FileUtils.deleteQuietly(file);
-		});
-		FileUtils.deleteQuietly(UPLOAD_DIRECTORY);
+		String[][] fieldNames = null;
+		int MAX_POINTS_AT_ONCE = 500;
+				if (!fc.isEmpty()) {
+				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
+				SimpleFeatureIterator iter = rfc.features();
+					//connection.setAutoCommit(false);
+					int lastSegmentId = -1;
+					boolean isResultSet = false;
+					//long proxyDatumBiasId = -1; //#TODO#
+					ArrayList<Pdb> pdbList = new ArrayList();
+					     
+					while (iter.hasNext()) {
+						SimpleFeature sf = iter.next();
+
+						// get the values from the file and set the Pdbs with then
+						Pdb pdb = new Pdb();
+
+						int segmentId = getIntValue(segmentIdFieldName, sf);
+						//BigInteger segmentId = getBigIntValue(segmentIdFieldName, sf);
+						pdb.setSegmentId(segmentId);
+
+						String profileId = (String) sf.getAttribute(profileIdFieldName); //null check ?
+						pdb.setProfileId(profileId);
+
+						String bias = (String) sf.getAttribute(biasFieldName); //null check ?
+						pdb.setBias(profileId);
+
+						String biasUncy = (String) sf.getAttribute(biasUncyFieldName); //null check ?
+						pdb.setUncyb(biasUncy);
+
+						pdbList.add(pdb);
+
+						if (pdbList.size() == MAX_POINTS_AT_ONCE) { //review where should this be checked? sl
+							//isResultSet = insertPointsIntoPdbTable(connection, pdbList);  // ... 
+							LOGGER.info("pdbList size is at MAX.");
+							//pdbList.clear();
+						}
+					} // close while
+				}
 	}
 	
+		public int getIntValue(String attribute, SimpleFeature feature) {
+		Object value = feature.getAttribute(attribute);
+		if (value instanceof Number) {
+			return ((Number) value).intValue();
+		} else {
+			throw new ClassCastException("This attribute is not an Integer" + attribute);
+		}
+		}
 	@Test
 	public void testGetColumnsFromJson(){
 		LOGGER.info("testGetColumnsFromJson");
@@ -531,12 +600,37 @@ public class FeatureTypeFileFactoryTest {
 		assertNotNull(columns);
 		assertTrue(!columns.isEmpty());
 		Collection<String> keys = columns.keySet();
-		String[] values = keys.toArray(new String[keys.size()]);
 		
 		for (String key : keys)
 		{
 			String value = columns.get(key);
 		LOGGER.info("Column key: " + key +" value: " + value);
+		}
+	}
+	@Test
+	@Ignore 
+	public void testCreateWorkspaceForImportDBtest(){
+		LOGGER.info("testCreateWorkspaceForImportDBtest");
+		
+		String token = UUID.randomUUID().toString().replaceAll("-", "");
+		assertNotNull(token);
+		
+				
+		LOGGER.info("Token is: "+ token);
+		String geoserverEndpoint = PropertyUtil.getProperty(Property.GEOSERVER_ENDPOINT);
+		String geoserverUsername = PropertyUtil.getProperty(Property.GEOSERVER_USERNAME);
+		String geoserverPassword = PropertyUtil.getProperty(Property.GEOSERVER_PASSWORD);
+		String geoserverDataDir  = PropertyUtil.getProperty(Property.GEOSERVER_DATA_DIRECTORY);
+
+		GeoserverDAO geoserverHandler =  new GeoserverDAO(geoserverEndpoint, geoserverUsername, geoserverPassword);
+		
+		try {
+			new PostgresDAO().createWorkspace(token);
+			geoserverHandler.prepareWorkspace(geoserverDataDir, token);
+			LOGGER.info("workspace prepared on geo: " + token);
+		} catch (IllegalArgumentException | IOException | URISyntaxException | SQLException ex) {
+			LOGGER.info("Unable to create workspace:", ex);
+			
 		}
 	}	
 			

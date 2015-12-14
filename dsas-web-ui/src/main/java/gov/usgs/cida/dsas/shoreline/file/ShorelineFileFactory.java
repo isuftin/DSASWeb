@@ -35,16 +35,11 @@ public class ShorelineFileFactory {
 	private File baseDirectory;
 	private File uploadDirectory;
 	private File workDirectory;
-//	private String workspace;
 
 	public ShorelineFileFactory(File zipFile, String workspace) throws IOException {
 		if (zipFile == null) {
 			throw new NullPointerException("Zip file may not be null");
 		}
-
-//		if (StringUtils.isBlank(workspace)) {
-//			throw new NullPointerException("Workspace name may not be null or blank");
-//		}
 
 		if (!zipFile.exists()) {
 			throw new FileNotFoundException("Zip file can not be found");
@@ -141,15 +136,6 @@ public class ShorelineFileFactory {
 				FileUtils.deleteQuietly(this.zipFile);
 				throw new IOException("File is neither LiIDAR or Shapefile");
 		}
-
-//		File savedWorkDirectory = null;
-//		try {
-//			savedWorkDirectory = result.saveZipFile(this.zipFile);
-//		} catch (IOException ex) {
-//			LOGGER.warn("Could not save zip file to work directory");
-//			throw ex;
-//		}
-//		result.setDirectory(savedWorkDirectory);
 
 		FileUtils.deleteQuietly(this.zipFile);
 

@@ -65,8 +65,9 @@ public class ShorelineLidarFile extends ShorelineFile {
 		this.dao = dao;
 		this.fileMap = new HashMap<>(FILE_PARTS.length);
 		updateFileMapWithDirFile(featureTypeFileLocation, FILE_PARTS);
-		if (process != null)
+		if (process != null){
 			setDSASProcess(process);
+		}	
 		this.type = FeatureType.SHORELINE_LIDAR;
 	}
 	
@@ -104,10 +105,8 @@ public class ShorelineLidarFile extends ShorelineFile {
 		String errorMsg = "Unable to retrieve epsg code from prj file.";
 		try {
 			epsg = LidarFileUtils.getEPSGCode(fileMap.get(PRJ));
-		} catch (IOException ex) {
+		} catch (IOException | FactoryException ex) {
 			LOGGER.error(errorMsg, ex);
-			throw new RuntimeException(errorMsg, ex);
-		} catch (FactoryException ex) {
 			throw new RuntimeException(errorMsg, ex);
 		}
 		return epsg;
