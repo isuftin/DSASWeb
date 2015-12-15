@@ -112,7 +112,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 						pdb.setProfileId(profileId);
 
 						String bias = (String) sf.getAttribute(biasFieldName); //null check ?
-						pdb.setBias(profileId);
+						pdb.setBias(bias);
 
 						String biasUncy = (String) sf.getAttribute(biasUncyFieldName); //null check ?
 						pdb.setUncyb(biasUncy);
