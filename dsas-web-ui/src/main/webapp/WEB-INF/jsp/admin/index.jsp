@@ -31,7 +31,7 @@
 					},
 					'views/ManagementView' : {
 						'paths' : {
-							'staging' : '<%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT %>'
+							'pdbStaging' : '..<%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT %>/pdb'
 						}
 					}
 				},

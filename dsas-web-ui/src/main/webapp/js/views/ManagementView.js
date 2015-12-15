@@ -32,7 +32,7 @@ define([
 				},
 				allowedFileTypes: [".zip"],
 				fileType: 'pdb',
-				uploadEndpoint: this.model.get('paths').staging
+				uploadEndpoint: this.model.get('paths').pdbStaging
 			}).render();
 			$(this.fileUploadView.el).appendTo(this.$('#pdb-management-upload'));
 			this.fileUploadView.wireFileControls();
