@@ -6,6 +6,7 @@ define([
 	'views/BaseView',
 	'views/FileUploadView',
 	'utils/logger',
+	'utils/PdbUtil',
 	'text!templates/management-view.html',
 	'backbone',
 	'underscore',
@@ -15,6 +16,7 @@ define([
 		BaseView,
 		FileUploadView,
 		log,
+		PdbUtil,
 		template,
 		Backbone,
 		_,
@@ -32,10 +34,10 @@ define([
 				},
 				allowedFileTypes: [".zip"],
 				fileType: 'pdb',
-				uploadEndpoint: this.model.get('paths').staging
+				mandatoryColumns: PdbUtil.MANDATORY_COLUMNS,
+				uploadEndpoint: this.model.get('paths').pdbStaging
 			}).render();
 			$(this.fileUploadView.el).appendTo(this.$('#pdb-management-upload'));
-			this.fileUploadView.wireFileControls();
 
 			return this;
 		},
@@ -50,7 +52,7 @@ define([
 						return p;
 					});
 					var options = {
-						paths : paths
+						paths: paths
 					};
 					Backbone.Model.apply(this, [options]);
 				}
