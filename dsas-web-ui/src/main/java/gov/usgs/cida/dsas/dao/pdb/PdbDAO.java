@@ -157,8 +157,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 	public BigInteger getBigIntValue(String attribute, SimpleFeature feature) {
 		Object value = feature.getAttribute(attribute);
 		if (value instanceof Number) {
-		// or ...   new BigInteger(String.valueOf(((Number)value)));
-			return BigInteger.valueOf(((Number) value).intValue());
+			return BigInteger.valueOf(((Long) value).intValue());
 		} else {
 			throw new ClassCastException("This attribute is not a Number");
 		}
