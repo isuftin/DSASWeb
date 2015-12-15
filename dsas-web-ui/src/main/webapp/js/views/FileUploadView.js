@@ -30,7 +30,7 @@ define([
 		initialize: function (args) {
 			log.debug("DSASweb Proxy Datum Bias management view initializing");
 			args = args || {};
-			
+
 			this.fileType = args.fileType;
 			this.maxFileSize = args.maxFileSize || Number.MAX_VALUE;
 			this.allowedFileTypes = args.allowedFileTypes || [];
@@ -94,28 +94,29 @@ define([
 			}, false);
 
 			this.xhr.onreadystatechange = function (e) {
-				var status = e.currentTarget.status,
-						readyState = e.currentTarget.readyState,
-						responseString = e.currentTarget.response,
-						response,
-						token;
-
-				if (readyState === 4 && responseString) {
+				var status = e.currentTarget.status;
+				var readyState = e.currentTarget.readyState;
+				var location;
+				var token;
+				var targetReadyState = 4; // http://www.w3schools.com/ajax/ajax_xmlhttprequest_onreadystatechange.asp
+				
+				if (readyState === targetReadyState) {
 					switch (status) {
-						case 200:
-							response = JSON.parse(responseString);
-							token = response.token;
-							this.scope.handleFileStaged(token);
+						case 202:
+							location = this.getResponseHeader("location");
+							// TODO: Not yet implemented the functionality after staging PDB
 							break;
 						case 404:
+							log.error("NOT FOUND");
 							break;
 						case 500:
+							log.error("ERROR");
 							break;
 					}
 					this.scope.$('#container-file-info').addClass('hidden');
 				}
 			};
-			
+
 			this.xhr.scope = this.callbackScope || this;
 			this.xhr.open("POST", this.uploadEndpoint, true);
 			this.xhr.send(formData);
