@@ -124,7 +124,11 @@ public class PdbDAO extends FeatureTypeFileDAO {
 							pdbList.clear();
 						}
 					} // close while
-
+					
+					//insert the remainder of the pdb points into the table
+					insertPointsIntoPdbTable(connection, pdbList);
+					pdbList.clear();
+					
 					viewName = createViewAgainstWorkspace(connection, workspace);
 					if (StringUtils.isBlank(viewName)) {
 						throw new SQLException("Could not create view");
