@@ -68,7 +68,7 @@ public class ShapefileResource {
 		if (response == null) {
 			try {				
 				String[] names = featureTypeFile.getColumns();
-				responseMap.put("headers", gson.toJson(names, String[].class));
+				responseMap.put("headers", gson.toJson(names));
 
 				response = Response
 						.accepted()
