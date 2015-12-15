@@ -17,6 +17,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -42,6 +43,16 @@ public class ShapefileResource {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShapefileResource.class);
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("pdb/{token}/columns")
+	public Response getColumnNamesForPdb(
+			@Context HttpServletRequest req,
+			@PathParam("token") String fileToken
+	) {
+		return getColumnNames(req, fileToken);
+	}
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{token}/columns")
@@ -121,7 +132,7 @@ public class ShapefileResource {
 				
 				response = Response
 						.accepted()
-						.header(HttpHeaders.LOCATION, ServiceURI.SHAPEFILE_SERVICE_ENDPOINT + "/" + token)
+						.header(HttpHeaders.LOCATION, ServiceURI.PDB_SHAPEFILE_SERVICE_ENDPOINT + "/" + token)
 						.build();
 			} catch (FileNotFoundException ex) {
 				LOGGER.error("Unable to get token from uploaded zip file: ", ex);
@@ -192,16 +203,16 @@ public class ShapefileResource {
 	public Response importPdbShapefile(
 			@Context HttpServletRequest req,
 			@PathParam("token") String fileToken,
-			@PathParam("workspace") String workspace 
+			@PathParam("workspace") String workspace,
+			@FormParam("columns") String columnsString
 	) {
-		String columnsString = req.getParameter("columns");  
-		Map<String, String> columns = new HashMap<>();
 				
 		boolean isColumnsStringNotBlank = StringUtils.isNotBlank(columnsString);
 		boolean isfileTokenNotBlank = StringUtils.isNotBlank(fileToken);
 		boolean isWorkspaceNotBlank = StringUtils.isNotBlank(workspace);
 		
 		if ((isColumnsStringNotBlank) && (isfileTokenNotBlank) && (isWorkspaceNotBlank)) {
+			Map<String, String> columns = new HashMap<>();
 			columns = new Gson().fromJson(columnsString, Map.class);
 
 			ShapefileImportProcess process = new ShapefileImportProcess(fileToken, columns, workspace);

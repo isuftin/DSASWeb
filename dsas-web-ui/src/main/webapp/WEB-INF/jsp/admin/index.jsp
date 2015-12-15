@@ -1,3 +1,6 @@
+
+<%@page import="org.apache.commons.lang3.StringUtils"%>
+<%@page import="gov.usgs.cida.dsas.dao.pdb.Pdb"%>
 <%@page import="gov.usgs.cida.dsas.rest.service.ServiceURI"%>
 <%@page import="gov.usgs.cida.dsas.utilities.properties.Property"%>
 <%@page import="gov.usgs.cida.dsas.utilities.properties.PropertyUtil"%>
@@ -16,10 +19,11 @@
 <html lang="en">
 
     <head>
-		<title>DSASweb</title>
+		<title>DSASweb Management</title>
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/jquery-ui/<%= PropertyUtil.getProperty("version.jquery.ui") %>/jquery-ui.min.css" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/bootstrap/<%= PropertyUtil.getProperty("version.bootstrap")%>/css/bootstrap<%= development ? "" : ".min"%>.css" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/font-awesome/<%=PropertyUtil.getProperty("version.fontawesome")%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
-		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/css/pdb-management/pdb-management.css" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/css/management/management.css" />
 	</head>
 	<body>
 		<div id="page-content-container" class="container-fluid" role="application"></div>
@@ -33,12 +37,16 @@
 						'paths' : {
 							'pdbStaging' : '..<%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT %>/pdb'
 						}
+					},
+					'utils/PdbUtil' : {
+						'pdbRequiredColumns' : ['<%= StringUtils.join(Pdb.REQUIRED_FIELD_NAMES, "','") %>']
 					}
 				},
 				baseUrl: "<%=baseUrl%>/js/",
 				paths: {
 					"bootstrap": ["<%=baseUrl%>/webjars/bootstrap/<%= PropertyUtil.getProperty("version.bootstrap")%>/js/bootstrap<%= development ? "" : ".min"%>"],
 					"jquery": ["<%=baseUrl%>/webjars/jquery/<%=  PropertyUtil.getProperty("version.jquery")%>/jquery<%= development ? "" : ".min"%>"],
+					"jqueryui": ['<%=baseUrl%>/webjars/jquery-ui/<%= PropertyUtil.getProperty("version.jquery.ui")%>/jquery-ui<%= development ? ".min" : ""%>'],
 					"backbone": ['<%=baseUrl%>/webjars/backbonejs/<%=  PropertyUtil.getProperty("version.backbone")%>/backbone<%= development ? "" : "-min"%>'],
 					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%=  PropertyUtil.getProperty("version.underscore")%>/underscore<%= development ? "" : "-min"%>'],
 					"handlebars": ['<%=baseUrl%>/webjars/handlebars/<%=  PropertyUtil.getProperty("version.handlebars")%>/handlebars<%= development ? "" : ".min"%>'],
