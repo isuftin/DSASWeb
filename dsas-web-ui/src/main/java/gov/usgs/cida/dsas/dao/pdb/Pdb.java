@@ -1,5 +1,6 @@
 package gov.usgs.cida.dsas.dao.pdb;
 
+import gov.usgs.cida.dsas.utilities.features.Constants;
 import java.io.Serializable;
 import java.math.BigInteger;
 
@@ -11,6 +12,7 @@ public class Pdb implements Serializable {
 
     private static final long serialVersionUID = -798301212870571106L;
     
+	public final static String[] REQUIRED_FIELD_NAMES = new String[]{Constants.DB_DATE_ATTR, Constants.UNCY_ATTR, Constants.BIAS_UNCY_ATTR, Constants.BIAS_ATTR, Constants.PROFILE_ID};
     private BigInteger id;
     private String profileId;
     private int segmentId;
