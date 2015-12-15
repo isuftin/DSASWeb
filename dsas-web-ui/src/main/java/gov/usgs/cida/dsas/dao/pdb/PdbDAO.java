@@ -111,7 +111,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 						pdb.setProfileId(profileId);
 
 						String bias = (String) sf.getAttribute(biasFieldName); //null check ?
-						pdb.setBias(profileId);
+						pdb.setBias(bias);
 
 						String biasUncy = (String) sf.getAttribute(biasUncyFieldName); //null check ?
 						pdb.setUncyb(biasUncy);
@@ -123,7 +123,11 @@ public class PdbDAO extends FeatureTypeFileDAO {
 							pdbList.clear();
 						}
 					} // close while
-
+					
+					//insert the remainder of the pdb points into the table
+					insertPointsIntoPdbTable(connection, pdbList);
+					pdbList.clear();
+					
 					viewName = createViewAgainstWorkspace(connection, workspace);
 					if (StringUtils.isBlank(viewName)) {
 						throw new SQLException("Could not create view");
@@ -156,8 +160,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 	public BigInteger getBigIntValue(String attribute, SimpleFeature feature) {
 		Object value = feature.getAttribute(attribute);
 		if (value instanceof Number) {
-		// or ...   new BigInteger(String.valueOf(((Number)value)));
-			return BigInteger.valueOf(((Number) value).intValue());
+			return BigInteger.valueOf(((Long) value).intValue());
 		} else {
 			throw new ClassCastException("This attribute is not a Number");
 		}
