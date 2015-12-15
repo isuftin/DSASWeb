@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+	logicalFilePath="path-independent">
+	
+	<changeSet author="slarson" id="drop_constraint_on_pk_id" logicalFilePath="path-independent">
+                <dropPrimaryKey tableName="proxy_datum_bias"/>
+                <dropView viewName="proxy_datum_bias_view"/>    
+                <dropColumn tableName="proxy_datum_bias" columnName="id"></dropColumn>
+                <modifyDataType tableName="proxy_datum_bias" columnName="profile_id" newDataType="int"></modifyDataType>  
+		<addPrimaryKey tableName="proxy_datum_bias" columnNames="profile_id" />
+
+	</changeSet>
+	<changeSet author="slarson" id="update_pdb_view" logicalFilePath="path-independent">
+                <createView viewName="proxy_datum_bias_view" replaceIfExists="true">
+                    SELECT p.profile_id, p.segment_id, p.xy, p.bias, p.uncyb, p.last_update FROM proxy_datum_bias p 			 
+                </createView>
+		<rollback>
+                    <dropView viewName="proxy_datum_bias_view"/>
+                </rollback>
+	</changeSet>
+</databaseChangeLog>

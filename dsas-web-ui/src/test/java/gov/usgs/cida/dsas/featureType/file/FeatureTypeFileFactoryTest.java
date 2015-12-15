@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.sql.SQLException;
@@ -100,6 +101,7 @@ public class FeatureTypeFileFactoryTest {
 
 	/**
 	 * Test of createFeatureTypeFile method, of class FeatureTypeFileFactory.
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@Test
@@ -174,7 +176,7 @@ public class FeatureTypeFileFactoryTest {
 		String columnsString = "{\"RouteID\":\"\",\"Date_\":\"date\",\"Uncy\":\"uncy\",\"Source\":\"source\",\"Source_b\":\"UNCYB\",\"Year\":\"\",\"Default_D\":\"\",\"Location\":\"\",\"Shape_Leng\":\"\"}";
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Map<String, String> columnPairs = new HashMap<>();
-	
+
 		columnPairs = gson.fromJson(columnsString, Map.class);
 		//String viewname = result.importToDatabase(columnPairs, "workspaceTest");  //need sample of columns that comes from the request
 		// -- test Geo
@@ -224,7 +226,7 @@ public class FeatureTypeFileFactoryTest {
 			assertNotNull(result);
 		} catch (FeatureTypeFileException ex) {
 			assertEquals(ex.getMessage(), "File has failed Pdb validation.");
-			LOGGER.info("Exception expected: " +ex.getMessage());
+			LOGGER.info("Exception expected: " + ex.getMessage());
 		}
 
 		// clean up
@@ -237,6 +239,7 @@ public class FeatureTypeFileFactoryTest {
 	// ----------------------------------------------------------------
 	/**
 	 * Test of createFeatureTypeFile method, of class FeatureTypeFileFactory.
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@Test
@@ -354,7 +357,7 @@ public class FeatureTypeFileFactoryTest {
 			assertNotNull(result);
 		} catch (FeatureTypeFileException ex) {
 			assertEquals(ex.getMessage(), "Unable to create FeatureTypeFile with zip.");
-			LOGGER.info("Exception expected: " +ex.getMessage());
+			LOGGER.info("Exception expected: " + ex.getMessage());
 		}
 
 		// clean up
@@ -443,9 +446,9 @@ public class FeatureTypeFileFactoryTest {
 		String columnsString = "{\"RouteID\":\"\",\"Date_\":\"date\",\"Uncy\":\"uncy\",\"Source\":\"source\",\"Source_b\":\"UNCYB\",\"Year\":\"\",\"Default_D\":\"\",\"Location\":\"\",\"Shape_Leng\":\"\"}";
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Map<String, String> columnPairs = new HashMap<>();
-	
+
 		columnPairs = gson.fromJson(columnsString, Map.class);
-	
+
 //		String viewname = result.importToDatabase(columnPairs, workspace); 
 		//LOGGER.info("Viewname is: " + viewname);
 		// -- test Geo
@@ -491,7 +494,7 @@ public class FeatureTypeFileFactoryTest {
 			assertNotNull(result);
 		} catch (FeatureTypeFileException ex) {
 			assertEquals(ex.getMessage(), "Unable to create FeatureTypeFile with zip.");
-			LOGGER.info("Exception expected: " +ex.getMessage());
+			LOGGER.info("Exception expected: " + ex.getMessage());
 		}
 
 		// clean up
@@ -522,7 +525,7 @@ public class FeatureTypeFileFactoryTest {
 		FileInputStream pdbInputStream = FileUtils.openInputStream(validPdb);
 		FeatureTypeFileFactory instance = new FeatureTypeFileFactory();
 		FeatureTypeFile result = instance.createFeatureTypeFile(pdbInputStream, FeatureType.PDB);
-	
+
 		File shpFile = result.fileMap.get("shp");
 		FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(shpFile.toURI().toURL());
 		assertNotNull(fc);
@@ -531,107 +534,124 @@ public class FeatureTypeFileFactoryTest {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Map<String, String> columns = new HashMap<>();
 		columns = gson.fromJson(columnsString, Map.class);
-		
+
 		BidiMap bm = new DualHashBidiMap(columns);
 		String biasFieldName = (String) bm.getKey(Constants.BIAS_ATTR);  //refer to the shapefile attr (not the geo), dbf file type adds attributes 
 		String biasUncyFieldName = (String) bm.getKey(Constants.BIAS_UNCY_ATTR);
 		String profileIdFieldName = (String) bm.getKey(Constants.PROFILE_ID);
 		String segmentIdFieldName = (String) bm.getKey(Constants.SEGMENT_ID_ATTR); // this is not an int??
-		String baseFileName = FilenameUtils.getBaseName(shpFile.getName());
+		//String baseFileName = FilenameUtils.getBaseName(shpFile.getName());
 
 		String[][] fieldNames = null;
 		int MAX_POINTS_AT_ONCE = 500;
-				if (!fc.isEmpty()) {
-				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
-				SimpleFeatureIterator iter = rfc.features();
-					//connection.setAutoCommit(false);
-					int lastSegmentId = -1;
-					boolean isResultSet = false;
-					//long proxyDatumBiasId = -1; //#TODO#
-					ArrayList<Pdb> pdbList = new ArrayList();
-					     
-					while (iter.hasNext()) {
-						SimpleFeature sf = iter.next();
+		if (!fc.isEmpty()) {
+			ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
+			SimpleFeatureIterator iter = rfc.features();
+			//connection.setAutoCommit(false);
+			//int lastSegmentId = -1;
+			//boolean isResultSet = false;
+			//long proxyDatumBiasId = -1; //#TODO#
+			ArrayList<Pdb> pdbList = new ArrayList();
 
-						// get the values from the file and set the Pdbs with then
-						Pdb pdb = new Pdb();
+			while (iter.hasNext()) {
+				SimpleFeature sf = iter.next();
 
-						int segmentId = getIntValue(segmentIdFieldName, sf);
-						//BigInteger segmentId = getBigIntValue(segmentIdFieldName, sf);
-						pdb.setSegmentId(segmentId);
+				// get the values from the file and set the Pdbs with then
+				Pdb pdb = new Pdb();
 
-						String profileId = (String) sf.getAttribute(profileIdFieldName); //null check ?
-						pdb.setProfileId(profileId);
+				BigInteger segmentId = getBigIntValue(segmentIdFieldName, sf);
+				pdb.setSegmentId(segmentId);
 
-						String bias = (String) sf.getAttribute(biasFieldName); //null check ?
-						pdb.setBias(profileId);
+				int profileId = getIntValue(profileIdFieldName, sf);
+				pdb.setProfileId(profileId);
 
-						String biasUncy = (String) sf.getAttribute(biasUncyFieldName); //null check ?
-						pdb.setUncyb(biasUncy);
+				double bias = getDoubleValue(biasFieldName, sf);
+				pdb.setBias(profileId);
 
-						pdbList.add(pdb);
+				double biasUncy = getDoubleValue(biasUncyFieldName, sf);
+				pdb.setUncyb(biasUncy);
 
-						if (pdbList.size() == MAX_POINTS_AT_ONCE) { //review where should this be checked? sl
-							//isResultSet = insertPointsIntoPdbTable(connection, pdbList);  // ... 
-							LOGGER.info("pdbList size is at MAX.");
-							//pdbList.clear();
-						}
-					} // close while
+				pdbList.add(pdb);
+
+				if (pdbList.size() == MAX_POINTS_AT_ONCE) { //review where should this be checked? sl
+					//isResultSet = insertPointsIntoPdbTable(connection, pdbList);  // ... 
+					LOGGER.info("pdbList size is at MAX.");
+					//pdbList.clear();
 				}
+			} // close while
+		}
 	}
-	
-		public int getIntValue(String attribute, SimpleFeature feature) {
+
+	public int getIntValue(String attribute, SimpleFeature feature) {
 		Object value = feature.getAttribute(attribute);
 		if (value instanceof Number) {
 			return ((Number) value).intValue();
 		} else {
 			throw new ClassCastException("This attribute is not an Integer" + attribute);
 		}
+	}
+
+	public BigInteger getBigIntValue(String attribute, SimpleFeature feature) {
+		Object value = feature.getAttribute(attribute);
+		if (value instanceof Number) {
+			return BigInteger.valueOf(((Long) value).intValue());
+		} else {
+			throw new ClassCastException("This attribute is not a Number");
 		}
+	}
+
+	public double getDoubleValue(String attribute, SimpleFeature feature) {
+		Object value = feature.getAttribute(attribute);
+		if (value instanceof Number) {
+			return ((Number) value).doubleValue();
+		} else {
+			throw new ClassCastException("This attribute is not a floating point value");
+		}
+	}
+
 	@Test
-	public void testGetColumnsFromJson(){
+	public void testGetColumnsFromJson() {
 		LOGGER.info("testGetColumnsFromJson");
 		String columnsString = "{\"RouteID\":\"\",\"Date_\":\"date\",\"Uncy\":\"uncy\",\"Source\":\"source\",\"Source_b\":\"UNCYB\",\"Year\":\"\",\"Default_D\":\"\",\"Location\":\"\",\"Shape_Leng\":\"\"}";
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Map<String, String> columns = new HashMap<>();
-	
+
 		columns = gson.fromJson(columnsString, Map.class);
-	
+
 		assertNotNull(columns);
 		assertTrue(!columns.isEmpty());
 		Collection<String> keys = columns.keySet();
-		
-		for (String key : keys)
-		{
+
+		for (String key : keys) {
 			String value = columns.get(key);
-		LOGGER.info("Column key: " + key +" value: " + value);
+			LOGGER.info("Column key: " + key + " value: " + value);
 		}
 	}
+
 	@Test
-	@Ignore 
-	public void testCreateWorkspaceForImportDBtest(){
+	@Ignore
+	public void testCreateWorkspaceForImportDBtest() {
 		LOGGER.info("testCreateWorkspaceForImportDBtest");
-		
+
 		String token = UUID.randomUUID().toString().replaceAll("-", "");
 		assertNotNull(token);
-		
-				
-		LOGGER.info("Token is: "+ token);
+
+		LOGGER.info("Token is: " + token);
 		String geoserverEndpoint = PropertyUtil.getProperty(Property.GEOSERVER_ENDPOINT);
 		String geoserverUsername = PropertyUtil.getProperty(Property.GEOSERVER_USERNAME);
 		String geoserverPassword = PropertyUtil.getProperty(Property.GEOSERVER_PASSWORD);
-		String geoserverDataDir  = PropertyUtil.getProperty(Property.GEOSERVER_DATA_DIRECTORY);
+		String geoserverDataDir = PropertyUtil.getProperty(Property.GEOSERVER_DATA_DIRECTORY);
 
-		GeoserverDAO geoserverHandler =  new GeoserverDAO(geoserverEndpoint, geoserverUsername, geoserverPassword);
-		
+		GeoserverDAO geoserverHandler = new GeoserverDAO(geoserverEndpoint, geoserverUsername, geoserverPassword);
+
 		try {
 			new PostgresDAO().createWorkspace(token);
 			geoserverHandler.prepareWorkspace(geoserverDataDir, token);
 			LOGGER.info("workspace prepared on geo: " + token);
 		} catch (IllegalArgumentException | IOException | URISyntaxException | SQLException ex) {
 			LOGGER.info("Unable to create workspace:", ex);
-			
+
 		}
-	}	
-			
+	}
+
 }

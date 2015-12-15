@@ -1,7 +1,6 @@
 package gov.usgs.cida.dsas.dao.pdb;
 
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
-import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineShapefileDAO;
 import gov.usgs.cida.dsas.utilities.features.Constants;
@@ -24,7 +23,6 @@ import java.util.logging.Logger;
 import javax.naming.NamingException;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.crs.ReprojectFeatureResults;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
@@ -35,7 +33,6 @@ import org.geotools.feature.SchemaException;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import org.slf4j.LoggerFactory;
@@ -47,10 +44,10 @@ import org.slf4j.LoggerFactory;
 public class PdbDAO extends FeatureTypeFileDAO {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShorelineShapefileDAO.class);
-	public final static int DATABASE_PROJECTION = 4326;
-	public final static String DB_SCHEMA_NAME = PropertyUtil.getProperty(Property.DB_SCHEMA_NAME, "public");
-	public final static String[] PROTECTED_WORKSPACES = new String[]{GeoserverDAO.PUBLISHED_WORKSPACE_NAME};
-	protected String JNDI_NAME;
+//	public final static int DATABASE_PROJECTION = 4326;
+//	public final static String DB_SCHEMA_NAME = PropertyUtil.getProperty(Property.DB_SCHEMA_NAME, "public");
+//	public final static String[] PROTECTED_WORKSPACES = new String[]{GeoserverDAO.PUBLISHED_WORKSPACE_NAME};
+//	protected String JNDI_NAME;
 
 	public PdbDAO() {
 		this.JNDI_NAME = PropertyUtil.getProperty(Property.JDBC_NAME);
@@ -58,6 +55,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 
 	private final PostgresDAO pgDao = new PostgresDAO();
 
+	@Override
 	public String importToDatabase(File shpFile, Map<String, String> columns, String workspace, String EPSGCode) throws SQLException, NamingException, NoSuchElementException, ParseException, IOException {
 		String viewName = null;
 		updateProcessInformation(String.format("Importing pdb into database %s", shpFile.getName()));
@@ -66,7 +64,6 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		String biasUncyFieldName = (String) bm.getKey(Constants.BIAS_UNCY_ATTR);
 		String profileIdFieldName = (String) bm.getKey(Constants.PROFILE_ID);
 		String segmentIdFieldName = (String) bm.getKey(Constants.SEGMENT_ID_ATTR); 
-		String baseFileName = FilenameUtils.getBaseName(shpFile.getName());
 
 		String[][] fieldNames = null;
 		int MAX_POINTS_AT_ONCE = 500;
@@ -92,41 +89,37 @@ public class PdbDAO extends FeatureTypeFileDAO {
 				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
 				try (SimpleFeatureIterator iter = rfc.features()) {
 					connection.setAutoCommit(false);
-					int lastSegmentId = -1;
-					boolean isResultSet = false;
-					//long proxyDatumBiasId = -1; //#TODO#
+
 					ArrayList<Pdb> pdbList = new ArrayList();
 					        
 					while (iter.hasNext()) {
 						SimpleFeature sf = iter.next();
 
-						// get the values from the file and set the Pdbs with then
+						// get the values from the file and set the Pdbs 
 						Pdb pdb = new Pdb();
 
-						int segmentId = getIntValue(segmentIdFieldName, sf);  //null check
-						//BigInteger segmentId = getBigIntValue(segmentIdFieldName, sf);
+						BigInteger segmentId = getBigIntValue(segmentIdFieldName, sf);  
 						pdb.setSegmentId(segmentId);
 
-						String profileId = (String) sf.getAttribute(profileIdFieldName); //null check ?
+						int profileId =  getIntValue(profileIdFieldName, sf); 
 						pdb.setProfileId(profileId);
 
-						String bias = (String) sf.getAttribute(biasFieldName); //null check ?
+						double bias = getDoubleValue(biasFieldName, sf);
 						pdb.setBias(bias);
 
-						String biasUncy = (String) sf.getAttribute(biasUncyFieldName); //null check ?
+						double biasUncy = getDoubleValue(biasUncyFieldName, sf); 
 						pdb.setUncyb(biasUncy);
 
 						pdbList.add(pdb);
 
-						if (pdbList.size() == MAX_POINTS_AT_ONCE) { //review where should this be checked? sl
-							isResultSet = insertPointsIntoPdbTable(connection, pdbList);  
+						if (pdbList.size() == MAX_POINTS_AT_ONCE) { 
+							insertPointsIntoPdbTable(connection, pdbList);  
 							pdbList.clear();
 						}
 					} // close while
 					
 					//insert the remainder of the pdb points into the table
 					insertPointsIntoPdbTable(connection, pdbList);
-					pdbList.clear();
 					
 					viewName = createViewAgainstWorkspace(connection, workspace);
 					if (StringUtils.isBlank(viewName)) {
@@ -166,6 +159,14 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		}
 	}
 
+	public double getDoubleValue(String attribute, SimpleFeature feature) {
+		Object value = feature.getAttribute(attribute);
+		if (value instanceof Number) {
+			return ((Number) value).doubleValue();
+		} else {
+			throw new ClassCastException("This attribute is not a floating point value");
+		}
+	}
 	/**
 	 * Inserts a row into the proxy datum bias table
 	 *

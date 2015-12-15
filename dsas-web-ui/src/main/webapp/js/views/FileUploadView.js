@@ -199,10 +199,10 @@ define([
 												context: this
 											})
 											.done(function () {
-												debugger;
+											//	debugger;
 											})
 											.fail(function () {
-												debugger;
+											//	debugger;
 											});
 								});
 
@@ -214,10 +214,10 @@ define([
 											context: this
 										})
 										.done(function () {
-											debugger;
+										//	debugger;
 										})
 										.fail(function () {
-											debugger;
+										//	debugger;
 										});
 							}
 						}
