@@ -239,7 +239,7 @@ public class PostgresDAO {
 					.append(values)
 				.append("), upsert AS (UPDATE proxy_datum_bias p")
 					.append("profile_id = nv.profile_id, ")
-					.append("segment_id = nv.profile_id, ")
+					.append("segment_id = nv.segment_id, ")
 					.append("xy = nv.xy, ")
 					.append("bias = nv.bias, ")
 					.append("uncyb = nv.uncyb, ")
