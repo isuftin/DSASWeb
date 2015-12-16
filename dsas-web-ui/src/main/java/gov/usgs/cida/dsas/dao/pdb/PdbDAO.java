@@ -2,7 +2,6 @@ package gov.usgs.cida.dsas.dao.pdb;
 
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
-import gov.usgs.cida.dsas.dao.shoreline.ShorelineShapefileDAO;
 import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
@@ -17,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
@@ -40,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PdbDAO extends FeatureTypeFileDAO {
 
-	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShorelineShapefileDAO.class);
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PdbDAO.class);
 	public final static String PDB_VIEW_NAME = "proxy_datum_bias_view";
 
 	public PdbDAO() {
@@ -50,7 +47,8 @@ public class PdbDAO extends FeatureTypeFileDAO {
 //	private final PostgresDAO pgDao = new PostgresDAO();
 
 	@Override
-	public String importToDatabase(File shpFile, Map<String, String> columns, String workspace, String EPSGCode) throws SQLException, NamingException, NoSuchElementException, ParseException, IOException {
+	public String importToDatabase(File shpFile, Map<String, String> columns, String workspace, String EPSGCode) throws SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
+		LOGGER.info("Attempting to begin Import of PDB to database.");
 		String viewName = null;
 		updateProcessInformation(String.format("Importing pdb into database %s", shpFile.getName()));
 		BidiMap bm = new DualHashBidiMap(columns);
@@ -64,7 +62,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		updateProcessInformation("Importing pdb into database: Reading PDB column names from Dbase file.");
 			
 		try (Connection connection = getConnection()) {
-
+		LOGGER.info("Import Pdb into DB: Obtained connection" );
 			FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(shpFile.toURI().toURL());
 
 			if (!fc.isEmpty()) {
@@ -80,31 +78,36 @@ public class PdbDAO extends FeatureTypeFileDAO {
 						// get the values from the file and set the Pdbs 
 						Pdb pdb = new Pdb();
 
-						BigInteger segmentId = getBigIntValue(segmentIdFieldName, sf);  
-						pdb.setSegmentId(segmentId);
-
 						int profileId =  getIntValue(profileIdFieldName, sf); 
 						pdb.setProfileId(profileId);
-
+						
 						double bias = getDoubleValue(biasFieldName, sf);
 						pdb.setBias(bias);
-
+						
 						double biasUncy = getDoubleValue(biasUncyFieldName, sf); 
 						pdb.setUncyb(biasUncy);
 
+						BigInteger segmentId = getBigIntValue(segmentIdFieldName, sf);  
+						pdb.setSegmentId(segmentId);
+						
 						pdbList.add(pdb);
 
 						if (pdbList.size() == MAX_POINTS_AT_ONCE) { 
+							LOGGER.info("Max point size reached. Inserting PDB into DB. ");
 							insertPointsIntoPdbTable(connection, pdbList);  
 							pdbList.clear();
 						}
 					} // close while
 					
 					//insert the remainder of the pdb points into the table
-					insertPointsIntoPdbTable(connection, pdbList);
+					if (pdbList.size() > 0){
+						LOGGER.info("Inserting points into PDB table. ");
+						insertPointsIntoPdbTable(connection, pdbList);
+					}
 					
 					viewName = createViewAgainstWorkspace(connection, workspace);
 					if (StringUtils.isBlank(viewName)) {
+						LOGGER.error("Unable to create pdb view against workspace.");
 						throw new SQLException("Could not create view");
 					}
 
@@ -112,12 +115,14 @@ public class PdbDAO extends FeatureTypeFileDAO {
 
 					connection.commit();
 				} catch (NoSuchElementException | SQLException ex) {
+					LOGGER.error("Error while attempting insert into PDB table. ", ex);
 					connection.rollback();
 					throw ex;
 				}
 			}
 		} catch (SchemaException | TransformException | FactoryException ex) {
-			Logger.getLogger(ShorelineShapefileDAO.class.getName()).log(Level.SEVERE, null, ex);
+			LOGGER.error("Error while inserting into PDB table. ", ex);
+			throw ex;
 		}
 		return viewName;
 	}
@@ -128,6 +133,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		if (value instanceof Number) {
 			return ((Number) value).intValue();
 		} else {
+			LOGGER.error("Int value is not a number.");
 			throw new ClassCastException("This attribute is not an Integer");
 		}
 	}
@@ -135,8 +141,9 @@ public class PdbDAO extends FeatureTypeFileDAO {
 	public BigInteger getBigIntValue(String attribute, SimpleFeature feature) {
 		Object value = feature.getAttribute(attribute);
 		if (value instanceof Number) {
-			return BigInteger.valueOf(((Long) value).intValue());
+			return BigInteger.valueOf(((Number) value).longValue());
 		} else {
+			LOGGER.error("BigInt value is not a number.");
 			throw new ClassCastException("This attribute is not a Number");
 		}
 	}
@@ -146,6 +153,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		if (value instanceof Number) {
 			return ((Number) value).doubleValue();
 		} else {
+			LOGGER.error("Double value is not a number.");
 			throw new ClassCastException("This attribute is not a floating point value");
 		}
 	}

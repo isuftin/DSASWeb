@@ -224,6 +224,7 @@ public class ShapefileResource {
 					.header(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + process.getProcessId())
 					.build();
 		} else {
+			LOGGER.error("Unable to import Pdb file. Missing expected parms: columns, token file, or workspace.");
 			Map<String, String> map = new HashMap<>();
 			if (!isColumnsStringNotBlank)
 				map.put("error", "Parameter \"columns\" missing");
@@ -267,6 +268,7 @@ public class ShapefileResource {
 					.header(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + process.getProcessId())
 					.build();
 		} else {
+			LOGGER.error("Unable to import Shoreline file. Missing expected parms: columns, token file, or workspace.");
 			Map<String, String> map = new HashMap<>();
 			if (!isColumnsStringNotBlank)
 			map.put("error", "Parameter \"columns\" missing");
