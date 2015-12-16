@@ -1,3 +1,5 @@
+
+<%@page import="gov.usgs.cida.dsas.dao.pdb.PdbDAO"%>
 <%@page import="gov.usgs.cida.dsas.utilities.features.Constants"%>
 <%@page import="gov.usgs.cida.dsas.utilities.properties.Property"%>
 <%@page import="gov.usgs.cida.dsas.utilities.properties.PropertyUtil"%>
@@ -24,7 +26,7 @@
 	CONFIG.namespace.output = 'gov.usgs.cida.ch.output';
 	CONFIG.name = {};
 	CONFIG.name.published = 'published';
-	CONFIG.name.proxydatumbias = 'proxydatumbias';
+	CONFIG.name.proxydatumbias = '<%= PdbDAO.PDB_VIEW_NAME %>';
 	CONFIG.strings = {
 		epsg4326: 'EPSG:4326',
 		epsg900913: 'EPSG:900913',
