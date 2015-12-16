@@ -1,7 +1,10 @@
 package gov.usgs.cida.dsas.dao.pdb;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
+import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
 import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
@@ -56,6 +59,8 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		String biasUncyFieldName = (String) bm.getKey(Constants.BIAS_UNCY_ATTR);
 		String profileIdFieldName = (String) bm.getKey(Constants.PROFILE_ID_ATTR);
 		String segmentIdFieldName = (String) bm.getKey(Constants.SEGMENT_ID_ATTR); 
+		
+		
 
 		int MAX_POINTS_AT_ONCE = 500;
 
@@ -89,6 +94,18 @@ public class PdbDAO extends FeatureTypeFileDAO {
 
 						BigInteger segmentId = getBigIntValue(segmentIdFieldName, sf);  
 						pdb.setSegmentId(segmentId);
+						
+						Geometry geom = (Geometry)sf.getDefaultGeometry();
+						
+						if (geom instanceof Point){
+							Point point = (Point)geom;
+							pdb.setX(point.getX());
+							pdb.setY(point.getY());
+						}
+						else
+						{
+							throw new UnsupportedFeatureTypeException("Only Points supported for PDB inserts.");
+						}
 						
 						pdbList.add(pdb);
 
