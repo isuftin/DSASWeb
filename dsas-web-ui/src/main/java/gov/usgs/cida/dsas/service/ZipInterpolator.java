@@ -40,7 +40,7 @@ public class ZipInterpolator {
 		File tmpDir = Files.createTempDirectory("xplode").toFile();
 		File shpFile = unpack(tmpDir, uploadDestinationFile);
 
-		Map<String, String> config = new HashMap<>(3);
+		Map<String, Object> config = new HashMap<>(3);
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "xplode");
 		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, shpFile.getAbsolutePath());
 		File outputFile = null;
