@@ -4,7 +4,7 @@
 var ProxyDatumBias = {
 	overrideWorkspace: "published",
 	overrideStore: "pdb",
-	overrideLayer: 'published_proxy_datum_bias',
+	overrideLayer: 'proxy_datum_bias_view',
 	overrideOverwriteExistingLayer: 'false',
 	stage: 'bias',
 	suffixes: ['_bias'],
