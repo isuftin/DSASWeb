@@ -6,6 +6,7 @@ var ProxyDatumBias = {
 	overrideStore: "pdb",
 	overrideLayer: 'proxy_datum_bias_view',
 	overrideOverwriteExistingLayer: 'false',
+	usePdbInProcessing: false,
 	stage: 'bias',
 	suffixes: ['_bias'],
 	mandatoryColumns: ['the_geom', 'segment_id', 'bias', 'avg_slope', 'uncyb'],
@@ -89,6 +90,21 @@ var ProxyDatumBias = {
 									displayTime: 3000
 								});
 							}
+							CONFIG.ows.getFeatureCount({
+								layerPrefix: ProxyDatumBias.overrideWorkspace,
+								layerName: ProxyDatumBias.overrideLayer
+							}).done($.proxy(function (doc) {
+								var fcElements = doc.getElementsByTagName('FeatureCollection');
+								var pdbFeatureCount = 0;
+								if (fcElements.length > 0) {
+									pdbFeatureCount = parseInt(fcElements[0].getAttribute('numberOfFeatures'));
+								}
+								
+								if (pdbFeatureCount > 0) {
+									ProxyDatumBias.usePdbInProcessing = true;
+								}
+								
+							}, this));
 							addToMap(data, textStatus, jqXHR);
 						}
 					],

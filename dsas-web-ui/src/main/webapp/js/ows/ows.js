@@ -284,6 +284,11 @@ var OWS = function (endpoint) {
 				}
 			});
 		},
+		getFeatureCount: function (args) {
+			var layerPrefix = args.layerPrefix;
+			var layerName = args.layerName;
+			return $.get(me.geoserverProxyEndpoint + layerPrefix + '/wfs?service=wfs&version=1.1.0&outputFormat=GML2&request=GetFeature&resultType=hits&typeName=' + layerPrefix + ':' + layerName);
+		},
 		getFilteredFeature: function (args) {
 			LOG.info('OWS.js::getFilteredFeature');
 			LOG.debug('OWS.js::getFilteredFeature: Building request for WFS GetFeature (filtered)');
