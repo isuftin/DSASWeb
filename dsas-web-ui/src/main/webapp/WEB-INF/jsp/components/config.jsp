@@ -20,7 +20,7 @@
 	CONFIG.n52Endpoint = '<%=n52Endpoint%>';
 	CONFIG.popupHoverDelay = 1500;
 	CONFIG.namespace = Object.extended();
-	CONFIG.namespace.proxydatumbias = 'gov.usgs.cida.ch.bias';
+	CONFIG.namespace.proxydatumbias = 'gov.usgs.cida.ch.published';
 	CONFIG.namespace.published = 'gov.usgs.cida.ch.published';
 	CONFIG.namespace.input = 'gov.usgs.cida.ch.input';
 	CONFIG.namespace.output = 'gov.usgs.cida.ch.output';

@@ -2,7 +2,6 @@ package gov.usgs.cida.dsas.wps;
 
 import gov.usgs.cida.dsas.util.GeoserverUtils;
 import gov.usgs.cida.dsas.util.LayerImportUtil;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
