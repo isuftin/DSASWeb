@@ -7,7 +7,6 @@ import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.FeatureCollectionFromShp;
-import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -25,8 +24,6 @@ import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.crs.ReprojectFeatureResults;
-import org.geotools.data.shapefile.dbf.DbaseFileHeader;
-import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.SchemaException;
@@ -49,7 +46,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		this.JNDI_NAME = PropertyUtil.getProperty(Property.JDBC_NAME);
 	}
 
-	private final PostgresDAO pgDao = new PostgresDAO();
+//	private final PostgresDAO pgDao = new PostgresDAO();
 
 	@Override
 	public String importToDatabase(File shpFile, Map<String, String> columns, String workspace, String EPSGCode) throws SQLException, NamingException, NoSuchElementException, ParseException, IOException {
@@ -58,25 +55,13 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		BidiMap bm = new DualHashBidiMap(columns);
 		String biasFieldName = (String) bm.getKey(Constants.BIAS_ATTR);  //refer to the shapefile attr (not the geo), dbf file type adds attributes 
 		String biasUncyFieldName = (String) bm.getKey(Constants.BIAS_UNCY_ATTR);
-		String profileIdFieldName = (String) bm.getKey(Constants.PROFILE_ID);
+		String profileIdFieldName = (String) bm.getKey(Constants.PROFILE_ID_ATTR);
 		String segmentIdFieldName = (String) bm.getKey(Constants.SEGMENT_ID_ATTR); 
 
-		String[][] fieldNames = null;
 		int MAX_POINTS_AT_ONCE = 500;
 
 		updateProcessInformation("Importing pdb into database: Reading PDB column names from Dbase file.");
-		try (IterableShapefileReader isfr = new IterableShapefileReader(new ShpFiles(shpFile))) {
-			DbaseFileHeader dbfHeader = isfr.getDbfHeader();
-			fieldNames = new String[dbfHeader.getNumFields()][2];
-			for (int fIdx = 0; fIdx < fieldNames.length; fIdx++) {
-				fieldNames[fIdx][0] = dbfHeader.getFieldName(fIdx);
-				fieldNames[fIdx][1] = String.valueOf(dbfHeader.getFieldType(fIdx));
-			}
-		} catch (Exception ex) {
-			LOGGER.debug("Could not open shapefile for reading. Auxillary attributes will not be persisted to the database", ex);
-		}
-		
-		
+			
 		try (Connection connection = getConnection()) {
 
 			FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(shpFile.toURI().toURL());

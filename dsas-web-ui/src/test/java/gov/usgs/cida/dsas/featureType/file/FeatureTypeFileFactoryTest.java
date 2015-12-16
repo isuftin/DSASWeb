@@ -30,7 +30,6 @@ import java.util.UUID;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.geotools.data.crs.ReprojectFeatureResults;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -538,7 +537,7 @@ public class FeatureTypeFileFactoryTest {
 		BidiMap bm = new DualHashBidiMap(columns);
 		String biasFieldName = (String) bm.getKey(Constants.BIAS_ATTR);  //refer to the shapefile attr (not the geo), dbf file type adds attributes 
 		String biasUncyFieldName = (String) bm.getKey(Constants.BIAS_UNCY_ATTR);
-		String profileIdFieldName = (String) bm.getKey(Constants.PROFILE_ID);
+		String profileIdFieldName = (String) bm.getKey(Constants.PROFILE_ID_ATTR);
 		String segmentIdFieldName = (String) bm.getKey(Constants.SEGMENT_ID_ATTR); // this is not an int??
 		//String baseFileName = FilenameUtils.getBaseName(shpFile.getName());
 

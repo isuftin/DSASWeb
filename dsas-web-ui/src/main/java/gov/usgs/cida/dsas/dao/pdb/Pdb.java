@@ -12,7 +12,7 @@ public class Pdb implements Serializable {
 
     private static final long serialVersionUID = -798301212870571106L;
     
-	public final static String[] REQUIRED_FIELD_NAMES = new String[]{Constants.DB_DATE_ATTR, Constants.UNCY_ATTR, Constants.BIAS_UNCY_ATTR, Constants.BIAS_ATTR, Constants.PROFILE_ID};
+	public final static String[] REQUIRED_FIELD_NAMES = new String[]{Constants.SEGMENT_ID_ATTR, Constants.BIAS_ATTR, Constants.BIAS_UNCY_ATTR, Constants.PROFILE_ID_ATTR};
     private int profileId;
     private BigInteger segmentId;
    // private String xyGeom; // or coord xy doubles each
