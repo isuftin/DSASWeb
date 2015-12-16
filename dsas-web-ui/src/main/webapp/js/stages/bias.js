@@ -1,5 +1,6 @@
 /* global LOG */
 /* global CONFIG */
+/* global ProxyDatumBias */
 var ProxyDatumBias = {
 	overrideWorkspace: "published",
 	overrideStore: "pdb",
@@ -10,7 +11,7 @@ var ProxyDatumBias = {
 	mandatoryColumns: ['the_geom', 'segment_id', 'bias', 'avg_slope', 'uncyb'],
 	columnMatchingTemplate: undefined,
 	$removeButton: $('#bias-remove-btn'),
-	$biasSelectList : $('#bias-list'),
+	$biasSelectList: $('#bias-list'),
 	description: {
 		'stage': '<p>Need description of PDB step here.',
 		'view-tab': 'Select a published collection of bias lines/points to add to the workspace.',
@@ -19,35 +20,18 @@ var ProxyDatumBias = {
 	},
 	appInit: function () {
 		ProxyDatumBias.initializeUploader();
-		
+
 		ProxyDatumBias.$removeButton.on('click', ProxyDatumBias.removeResource);
 
 		$.get('templates/column-matching-modal.mustache').done(function (data) {
 			ProxyDatumBias.columnMatchingTemplate = Handlebars.compile(data);
 		});
 
-		CONFIG.ows.getWMSCapabilities({
-			namespace: ProxyDatumBias.overrideWorkspace,
-			callbacks: {
-				success: [
-					function () {
-						LOG.trace('OnReady.js:: WMS Capabilities retrieved for ' 
-							+ ProxyDatumBias.overrideWorkspace 
-							+ ' workspace');
-					}
-				],
-				error: [
-					function () {
-						CONFIG.ui.createModalWindow({
-							headerHtml: 'Unable to interrogate OWS server',
-							bodyHtml: 'The application could not interrogate the OWS server to get ' 
-								+ ProxyDatumBias.overrideWorkspace 
-								+ ' layers.'
-						});
-					}
-				]
-			}
-		});
+		ProxyDatumBias.addProxyDatumBias([{
+				title: "proxy_datum_bias_view",
+				prefix: "published",
+				name: "proxy_datum_bias_view"
+			}]);
 	},
 	enterStage: function () {
 		LOG.debug('bias.js::enterStage');
@@ -64,6 +48,8 @@ var ProxyDatumBias = {
 	 * Calls DescribeFeatureType against OWS service and tries to add the layer(s) to the map 
 	 */
 	addProxyDatumBias: function (layers) {
+		// Legacy code that uses an array of layers to add to the map. Going forward,
+		// we will only have one layer to add
 		LOG.info('bias.js::addProxyDatumBias');
 
 		LOG.debug('bias.js::addProxyDatumBias: Adding ' + layers.length + ' bias layers to map');
@@ -80,50 +66,10 @@ var ProxyDatumBias = {
 					callbacks: [
 						function (describeFeaturetypeRespone) {
 							LOG.trace('bias.js::addProxyDatumBias: Parsing layer attributes to check that they contain the attributes needed.');
-							var attributes = describeFeaturetypeRespone.featureTypes[0].properties;
-							if (attributes.length < ProxyDatumBias.mandatoryColumns.length) {
-								LOG.warn('bias.js::addProxyDatumBias: There are not enough attributes in the selected shapefile to constitute a valid bias layer. Will be deleted. Needed: ' + ProxyDatumBias.mandatoryColumns.length + ', Found in upload: ' + attributes.length);
-								ProxyDatumBias.removeResource();
-								CONFIG.ui.showAlert({
-									message: 'Not enough attributes in upload - Check Logs',
-									caller: ProxyDatumBias,
-									displayTime: 0,
-									style: {
-										classes: ['alert-error']
-									}
-								});
-							}
-
-							var layerColumns = Util.createLayerUnionAttributeMap({
-								caller: ProxyDatumBias,
-								attributes: attributes
+							ProxyDatumBias.addLayerToMap({
+								layer: layer,
+								describeFeaturetypeRespone: describeFeaturetypeRespone
 							});
-							var foundAll = true;
-							ProxyDatumBias.mandatoryColumns.each(function (mc) {
-								if (layerColumns.values().indexOf(mc) === -1) {
-									foundAll = false;
-								}
-							});
-
-							if (layerPrefix !== CONFIG.name.published && !foundAll) {
-								CONFIG.ui.buildColumnMatchingModalWindow({
-									layerName: layerName,
-									columns: layerColumns,
-									caller: ProxyDatumBias,
-									template: ProxyDatumBias.columnMatchingTemplate,
-									continueCallback: function () {
-										ProxyDatumBias.addLayerToMap({
-											layer: layer,
-											describeFeaturetypeRespone: describeFeaturetypeRespone
-										});
-									}
-								});
-							} else {
-								ProxyDatumBias.addLayerToMap({
-									layer: layer,
-									describeFeaturetypeRespone: describeFeaturetypeRespone
-								});
-							}
 						}
 					]
 				});
@@ -179,35 +125,33 @@ var ProxyDatumBias = {
 						LOG.info('bias.js::addLayerToMap: WFS GetFileterdFeature returned successfully');
 						if (CONFIG.map.getMap().getLayersByName(layer.title).length === 0) {
 							LOG.info('bias.js::addLayerToMap: Layer does not yet exist on the map. Loading layer: ' + layer.title);
-
-							var stage = CONFIG.tempSession.getStage(ProxyDatumBias.stage);
-
+							
 							var wmsLayer = new OpenLayers.Layer.WMS(
-								layer.title,
-								'geoserver/' + layer.prefix + '/wms',
-								{
-									layers: [layer.name],
-									transparent: true,
-									sld_body: ProxyDatumBias.createSLDBody({
-										layerName: layer.prefix + ':' + layer.name
-									}),
-									format: "image/png"
-								},
-							{
-								prefix: layer.prefix,
-								zoomToWhenAdded: true, // Include this layer when performing an aggregated zoom
-								isBaseLayer: false,
-								unsupportedBrowsers: [],
-								describedFeatures: features,
-								tileOptions: {
-									// http://www.faqs.org/rfcs/rfc2616.html
-									// This will cause any request larger than this many characters to be a POST
-									maxGetUrlLength: 2048
-								},
-								singleTile: true,
-								ratio: 1,
-								displayInLayerSwitcher: false
-							});
+									layer.title,
+									'geoserver/' + layer.prefix + '/wms',
+									{
+										layers: [layer.name],
+										transparent: true,
+										sld_body: ProxyDatumBias.createSLDBody({
+											layerName: layer.prefix + ':' + layer.name
+										}),
+										format: "image/png"
+									},
+									{
+										prefix: layer.prefix,
+										zoomToWhenAdded: true, // Include this layer when performing an aggregated zoom
+										isBaseLayer: false,
+										unsupportedBrowsers: [],
+										describedFeatures: features,
+										tileOptions: {
+											// http://www.faqs.org/rfcs/rfc2616.html
+											// This will cause any request larger than this many characters to be a POST
+											maxGetUrlLength: 2048
+										},
+										singleTile: true,
+										ratio: 1,
+										displayInLayerSwitcher: false
+									});
 
 							CONFIG.map.getMap().addLayer(wmsLayer);
 							wmsLayer.redraw(true);
@@ -338,45 +282,45 @@ var ProxyDatumBias = {
 		var fillColor = '#2E2EFE';
 
 		sldBody += '<?xml version="1.0" encoding="ISO-8859-1"?>' +
-			'<StyledLayerDescriptor version="1.0.0" xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
-			'<NamedLayer>' +
-			'<Name>' + args.layerName + '</Name>' +
-			'<UserStyle>' +
-			'<FeatureTypeStyle>' +
-			'<Rule>' +
-			'<PointSymbolizer>' +
-			'<Graphic>' +
-			'<Mark>' +
-			'<WellKnownName>triangle</WellKnownName>' +
-			'<Fill>' +
-			'<CssParameter name="fill">' + fillColor + '</CssParameter>' +
-			'</Fill>' +
-			'<Stroke>' +
-			'<CssParameter name="stroke">#000000</CssParameter>' +
-			'<CssParameter name="stroke-width">2</CssParameter>' +
-			'</Stroke>' +
-			'</Mark>' +
-			'<Size>8</Size>' +
-			'</Graphic>' +
-			'</PointSymbolizer>' +
-			'</Rule>' +
-			'</FeatureTypeStyle>' +
-			'</UserStyle>' +
-			'</NamedLayer>' +
-			'</StyledLayerDescriptor>';
+				'<StyledLayerDescriptor version="1.0.0" xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
+				'<NamedLayer>' +
+				'<Name>' + args.layerName + '</Name>' +
+				'<UserStyle>' +
+				'<FeatureTypeStyle>' +
+				'<Rule>' +
+				'<PointSymbolizer>' +
+				'<Graphic>' +
+				'<Mark>' +
+				'<WellKnownName>triangle</WellKnownName>' +
+				'<Fill>' +
+				'<CssParameter name="fill">' + fillColor + '</CssParameter>' +
+				'</Fill>' +
+				'<Stroke>' +
+				'<CssParameter name="stroke">#000000</CssParameter>' +
+				'<CssParameter name="stroke-width">2</CssParameter>' +
+				'</Stroke>' +
+				'</Mark>' +
+				'<Size>8</Size>' +
+				'</Graphic>' +
+				'</PointSymbolizer>' +
+				'</Rule>' +
+				'</FeatureTypeStyle>' +
+				'</UserStyle>' +
+				'</NamedLayer>' +
+				'</StyledLayerDescriptor>';
 		return sldBody;
 	},
-	getBiasRef : function () {
+	getBiasRef: function () {
 		var biasRef = '',
-			selectedBias = ProxyDatumBias.$biasSelectList.find(':selected')[0],
-			defaultBias = ProxyDatumBias.$biasSelectList.find('option.session-layer')[0];
-		
+				selectedBias = ProxyDatumBias.$biasSelectList.find(':selected')[0],
+				defaultBias = ProxyDatumBias.$biasSelectList.find('option.session-layer')[0];
+
 		if (selectedBias) {
 			biasRef = selectedBias.value;
 		} else if (defaultBias) {
 			biasRef = defaultBias.value;
 		}
-		
+
 		return biasRef;
 	},
 	getActive: function () {

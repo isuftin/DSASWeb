@@ -101,17 +101,14 @@ public class SessionResource {
 	@Path("{token}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteWorkspace(@PathParam("token") String token) {
-		Response response;
-		Map<String, String> map = null;
+		Response response = null;
+		Map<String, String> map;
 		// Make sure the workspace being deleted is not required by the application
 		if (token.toLowerCase().trim().equals("published")) {
 			response = Response.status(Status.FORBIDDEN).build();
-		} else if (!geoserverHandler.workspaceExists(token)) {
-			// If the workspace doesn't exist, send no content. This will be the same 
-			// response if the workspace got deleted.
-			response = Response.noContent().build();
-		} else if (geoserverHandler.deleteWorkspace(token)) {
+		} else {
 			// Try deleting the workspace.
+			geoserverHandler.deleteWorkspace(token);
 			try {
 				new PostgresDAO().removeWorkspace(token);
 				response = Response.noContent().build();
@@ -122,10 +119,6 @@ public class SessionResource {
 				response = Response.serverError().entity(new Gson().toJson(map)).build();
 			}
 
-		} else {
-			map = new HashMap<>(1);
-			map.put("error", String.format("Workspace %s could not be deleted", token));
-			response = Response.serverError().entity(new Gson().toJson(map)).build();
 		}
 
 		return response;
