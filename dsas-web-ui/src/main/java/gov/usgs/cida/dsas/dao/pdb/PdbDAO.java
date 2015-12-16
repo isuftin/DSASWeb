@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 public class PdbDAO extends FeatureTypeFileDAO {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShorelineShapefileDAO.class);
+	public final static String PDB_VIEW_NAME = "proxy_datum_bias_view";
 
 	public PdbDAO() {
 		this.JNDI_NAME = PropertyUtil.getProperty(Property.JDBC_NAME);

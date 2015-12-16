@@ -40,9 +40,9 @@ import org.slf4j.LoggerFactory;
  * @author isuftin
  */
 @Category(XploderIntegrationTest.class)
-public class H2DBOutputXploderIntegrationTest implements XploderIntegrationTest {
+public class H2DJDBCBOutputXploderIntegrationTest implements XploderIntegrationTest {
 
-	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(H2DBOutputXploderIntegrationTest.class);
+	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(H2DJDBCBOutputXploderIntegrationTest.class);
 	private static final String tempDir = System.getProperty("java.io.tmpdir");
 	private static File workDir;
 	private static final String capeCodName = "OuterCapeCod_shorelines_ghost";
@@ -106,14 +106,14 @@ public class H2DBOutputXploderIntegrationTest implements XploderIntegrationTest 
 	public void testCreateXploder() throws IOException, SQLException {
 		LOG.info("testCreateXploder()");
 
-		Map<String, String> config = new HashMap<>();
+		Map<String, Object> config = new HashMap<>();
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "ACCURACY");
 		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, workDir + "/" + testShorelinesName);
-		config.put(H2DBOutputXploder.HOST_PARAM, "localhost");
-		config.put(H2DBOutputXploder.PORT_PARAM, System.getProperty("db.h2.integration-test.port"));
-		config.put(H2DBOutputXploder.DATABASE_PARAM, "mem:" + System.getProperty("db.h2.integration-test.dbname"));
-		config.put(H2DBOutputXploder.USERNAME_PARAM, System.getProperty("db.h2.integration-test.username"));
-		config.put(H2DBOutputXploder.PASSWORD_PARAM, System.getProperty("db.h2.integration-test.password"));
+		config.put(H2JDBCOutputXploder.HOST_PARAM, "localhost");
+		config.put(H2JDBCOutputXploder.PORT_PARAM, System.getProperty("db.h2.integration-test.port"));
+		config.put(H2JDBCOutputXploder.DATABASE_PARAM, "mem:" + System.getProperty("db.h2.integration-test.dbname"));
+		config.put(H2JDBCOutputXploder.USERNAME_PARAM, System.getProperty("db.h2.integration-test.username"));
+		config.put(H2JDBCOutputXploder.PASSWORD_PARAM, System.getProperty("db.h2.integration-test.password"));
 
 		SimpleFeatureTypeBuilder ftb = new SimpleFeatureTypeBuilder();
 		ftb.setName("POINTS");
@@ -123,7 +123,7 @@ public class H2DBOutputXploderIntegrationTest implements XploderIntegrationTest 
 		ftb.add("SEGMENT_ID", BigInteger.class);
 		ftb.add("UNCY", Double.class);
 
-		H2DBOutputXploder exploder = new H2DBOutputXploder(config);
+		H2JDBCOutputXploder exploder = new H2JDBCOutputXploder(config);
 		exploder.setOutputFeatureType(ftb.buildFeatureType());
 		exploder.explode();
 	}

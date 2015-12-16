@@ -62,7 +62,7 @@ public class ShapefileOutputXploderTest {
 		LOG.info("testExplodeUsingTestShorelines()");
 		File tempFile = Files.createTempFile(new File(tempDir).toPath(), "tempFile", ".shp", new FileAttribute<?>[0]).toFile();
 		tempFile.deleteOnExit();
-		Map<String, String> config = new HashMap<>(3);
+		Map<String, Object> config = new HashMap<>(3);
 		config.put(Xploder.UNCERTAINTY_COLUMN_PARAM, "ACCURACY");
 		config.put(Xploder.INPUT_FILENAME_PARAM, testShorelinesShapefile.getAbsolutePath());
 		config.put(ShapefileOutputXploder.OUTPUT_FILENAME_PARAM, tempFile.getAbsolutePath());
@@ -81,7 +81,7 @@ public class ShapefileOutputXploderTest {
 		
 		File tempFile = Files.createTempFile(new File(tempDir).toPath(), "tempFile", ".shp", new FileAttribute<?>[0]).toFile();
 		tempFile.deleteOnExit();
-		Map<String, String> config = new HashMap<>(3);
+		Map<String, Object> config = new HashMap<>(3);
 		config.put(ShapefileOutputXploder.UNCERTAINTY_COLUMN_PARAM, "laser_u");
 		config.put(ShapefileOutputXploder.INPUT_FILENAME_PARAM, capeCodShapefile.getAbsolutePath());
 		config.put(ShapefileOutputXploder.OUTPUT_FILENAME_PARAM, tempFile.getAbsolutePath());

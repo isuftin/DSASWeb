@@ -1,6 +1,7 @@
 package gov.usgs.cida.dsas.dao.geoserver;
 
 import com.vividsolutions.jts.geom.Envelope;
+import gov.usgs.cida.dsas.dao.pdb.PdbDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.utilities.properties.Property;
@@ -954,12 +955,22 @@ public class GeoserverDAO {
 			throw new IOException("Could not create workspace");
 		}
 
+		// Create shoreline datastore and layer
 		if (!createPGDatastoreInGeoserver(PUBLISHED_WORKSPACE_NAME, "shoreline", null, ShorelineFileDAO.DB_SCHEMA_NAME)) {
 			throw new IOException("Could not create data store");
 		}
 
 		if (!createLayerInGeoserver(PUBLISHED_WORKSPACE_NAME, "shoreline", PUBLISHED_WORKSPACE_NAME + "_shorelines")) {
 			throw new IOException("Could not create shoreline layer");
+		}
+		
+		// Create PDB datastore and layer
+		if (!createPGDatastoreInGeoserver(PUBLISHED_WORKSPACE_NAME, "pdb", null, ShorelineFileDAO.DB_SCHEMA_NAME)) {
+			throw new IOException("Could not create data store");
+		}
+		
+		if (!createLayerInGeoserver(PUBLISHED_WORKSPACE_NAME, "pdb", PdbDAO.PDB_VIEW_NAME)) {
+			LOGGER.warn("PDB layer could not be created. This means that there's an issue at the database level (view not available) or the layer already exists");
 		}
 
 		if (touchWorkspace(PUBLISHED_WORKSPACE_NAME)) {
