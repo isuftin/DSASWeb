@@ -3,6 +3,7 @@ package gov.usgs.cida.dsas.uncy;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
 import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.IterableShapefileReader;
 import gov.usgs.cida.owsutils.commons.shapefile.utils.PointIterator;
@@ -343,7 +344,7 @@ public abstract class DatabaseOutputXploder extends Xploder {
 				for (ShapeAndAttributes saa : rdr) {
 					long startLoopTime = new java.util.Date().getTime();
 					java.util.Date date = getDateFromRowObject(saa.row.read(dateFieldIdx), dbfHeader.getFieldClass(dateFieldIdx));
-					boolean mhw = mhwIdx == -1 ? false : (boolean) saa.row.read(mhwIdx);
+					boolean mhw = mhwIdx == -1 ? false : AttributeGetter.extractBooleanValue(saa.row.read(mhwIdx), false);
 					String source = sourceIdx == -1 ? shapeFiles.getTypeName() : (String) saa.row.read(sourceIdx);
 					String name = nameIdx == -1 ? shapeFiles.getTypeName() : (String) saa.row.read(nameIdx);
 					String orientation = orientationIdx == -1 ? null : (String) saa.row.read(orientationIdx);
