@@ -110,7 +110,6 @@ public class PdbDAO extends FeatureTypeFileDAO {
 						pdbList.add(pdb);
 
 						if (pdbList.size() == MAX_POINTS_AT_ONCE) { 
-							LOGGER.info("Max point size reached. Inserting PDB into DB. ");
 							insertPointsIntoPdbTable(connection, pdbList);  
 							pdbList.clear();
 						}
@@ -118,7 +117,6 @@ public class PdbDAO extends FeatureTypeFileDAO {
 					
 					//insert the remainder of the pdb points into the table
 					if (pdbList.size() > 0){
-						LOGGER.info("Inserting points into PDB table. ");
 						insertPointsIntoPdbTable(connection, pdbList);
 					}
 					
