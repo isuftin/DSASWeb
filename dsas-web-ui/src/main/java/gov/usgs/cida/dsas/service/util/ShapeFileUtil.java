@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
 public class ShapeFileUtil {
 
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShapeFileUtil.class);
-	static final String DBF = "dbf";
-	static final String SHP = "shp";
+	//static final String DBF = "dbf";
+	//static final String SHP = "shp";
 
 	private static File getDbfFile(File unzippedShapefileLocation) throws FileNotFoundException, IOException {
 
@@ -73,16 +73,22 @@ public class ShapeFileUtil {
 	 * @throws java.io.IOException
 	 */
 	public static List<String> getDbfColumnNames(File validShapeDir) throws IOException {
-		
-		DbaseFileReader dbReader = new DbaseFileReader(FileUtils.openInputStream(getDbfFile(validShapeDir)).getChannel(), false, Charset.forName("UTF-8"));
-		int n = dbReader.getHeader().getNumFields();
-		List<String> names = new ArrayList<>(n);
-		
-		for (int i = 0; i < n; i++) {
-			names.add(dbReader.getHeader().getFieldName(i));
-		}
-		closeReader(dbReader);
+		List<String> names = null;
+		DbaseFileReader dbReader = null;
+		try {
+			dbReader = new DbaseFileReader(FileUtils.openInputStream(getDbfFile(validShapeDir)).getChannel(), false, Charset.forName("UTF-8"));
+			int n = dbReader.getHeader().getNumFields();
+			names = new ArrayList<>(n);
 
+			for (int i = 0; i < n; i++) {
+				names.add(dbReader.getHeader().getFieldName(i));
+			}
+		
+		} finally {
+			if (dbReader != null){
+				dbReader.close();
+			}
+		}
 		return names;
 	}
 
@@ -96,11 +102,18 @@ public class ShapeFileUtil {
 	public static String getEPSGCode(File validShapeDir) throws IOException {
 
 		String eCode = null;
+		DataStore ds = null;
 		SimpleFeatureSource featureSource = null;
-		DataStore ds = getDatastore(validShapeDir);
+		try{
+		ds = getDatastore(validShapeDir);
 		featureSource = ds.getFeatureSource(ds.getTypeNames()[0]);
 		eCode = featureSource.getBounds().getCoordinateReferenceSystem().getName().toString();
-		closeDataStore(ds);
+		
+		} finally {
+			if (ds != null){
+				ds.dispose();
+			}
+		}
 
 		return eCode;
 	}
@@ -139,7 +152,7 @@ public class ShapeFileUtil {
 
 	public static Map<ShpFileType, String> getFileMap(File validShapeDir) throws IOException { // exploded dir
 
-		String[] DbfType = new String[]{DBF};  // can be any file that is expected to be part of the shape file
+		String[] DbfType = new String[]{ShpFileType.DBF.extension};  // can be any file that is expected to be part of the shape file
 		File foundDbfFile = null;
 		//find the shp file
 		Collection<File> files = FileUtils.listFiles(validShapeDir, DbfType, false);
@@ -153,16 +166,16 @@ public class ShapeFileUtil {
 		return sFile.getFileNames();
 	}
 
-	public static void closeReader(DbaseFileReader dbfReader) throws IOException {
-		if (dbfReader != null) {
-			dbfReader.close();
-		}
-	}
-
-	public static void closeDataStore(DataStore ds) {
-		if (ds != null) {
-			ds.dispose();
-		}
-	}
+//	public static void closeReader(DbaseFileReader dbfReader) throws IOException {
+//		if (dbfReader != null) {
+//			dbfReader.close();
+//		}
+//	}
+//
+//	public static void closeDataStore(DataStore ds) {
+//		if (ds != null) {
+//			ds.dispose();
+//		}
+//	}
 
 }
