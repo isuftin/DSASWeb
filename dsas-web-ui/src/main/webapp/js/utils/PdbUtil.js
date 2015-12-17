@@ -1,11 +1,9 @@
 /*global define*/
 define([
-	'handlebars',
 	'underscore',
 	'module',
 	'jquery'
-], function (Handlebars,
-		_,
+], function (_,
 		module,
 		$) {
 	"use strict";

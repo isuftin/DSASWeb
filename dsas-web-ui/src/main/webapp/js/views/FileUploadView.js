@@ -6,6 +6,7 @@ define([
 	'views/BaseView',
 	'utils/logger',
 	'utils/PdbUtil',
+	'utils/UploadUtil',
 	'views/ModalWindowView',
 	'views/ColumnMatchingView',
 	'models/ColumnMatchingModel',
@@ -18,6 +19,7 @@ define([
 		BaseView,
 		log,
 		PdbUtil,
+		UploadUtil,
 		ModalWindowView,
 		ColumnMatchingView,
 		ColumnMatchingModel,
@@ -88,11 +90,6 @@ define([
 				$infoContainer.removeClass('hidden');
 			}
 			return chosenFile;
-		},
-		renderColumnMatchingView: function (args) {
-			args = args || {};
-			var tokenLocation = args.tokenLocation;
-
 		},
 		handleUploadButtonClick: function () {
 			var file = this.$('#input-file')[0].files[0];
@@ -198,11 +195,28 @@ define([
 												layerColumns: columnMatchingModel.get('layerColumns'),
 												context: this
 											})
-											.done(function () {
-											//	debugger;
-											})
-											.fail(function () {
-											//	debugger;
+											.done($.proxy(function (jqXHR, status, response) {
+												if (response.readyState === 4) {
+													switch (response.status) {
+														case 202:
+															var location = response.getResponseHeader('location');
+															UploadUtil.pollProcess({
+																location: '..' + location
+															})
+																	.progress(function (response) {
+																		log.debug(response);
+																	})
+																	.done(function (response) {
+																		log.info(response);
+																	})
+																	.fail(function (response) {
+																		log.error(response);
+																	});
+													}
+												}
+											}, this))
+											.fail(function (response) {
+												log.error(response);
 											});
 								});
 
@@ -210,14 +224,33 @@ define([
 								PdbUtil
 										.importFromToken({
 											token: token,
+											workspace: 'published',
+											location: location,
 											layerColumns: columnMatchingModel.get('layerColumns'),
 											context: this
 										})
-										.done(function () {
-										//	debugger;
-										})
-										.fail(function () {
-										//	debugger;
+										.done($.proxy(function (jqXHR, status, response) {
+											if (response.readyState === 4) {
+												switch (response.status) {
+													case 202:
+														var location = response.getResponseHeader('location');
+														UploadUtil.pollProcess({
+															location: '..' + location
+														})
+																.progress(function (response) {
+																	log.debug(response);
+																})
+																.done(function (response) {
+																	log.info(response);
+																})
+																.fail(function (response) {
+																	log.error(response);
+																});
+												}
+											}
+										}, this))
+										.fail(function (response) {
+											log.error(response);
 										});
 							}
 						}
