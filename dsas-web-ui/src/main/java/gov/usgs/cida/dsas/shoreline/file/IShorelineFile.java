@@ -1,5 +1,6 @@
 package gov.usgs.cida.dsas.shoreline.file;
 
+import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
 import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import java.io.File;
@@ -61,7 +62,7 @@ public interface IShorelineFile {
 	 * @throws org.opengis.referencing.operation.TransformException
 	 * @throws org.opengis.referencing.FactoryException
 	 */
-	public String importToDatabase(HttpServletRequest request, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
+	public String importToDatabase(HttpServletRequest request, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException, AttributeNotANumberException;
 
 	/**
 	 * Imports the shoreline file into the database
@@ -78,7 +79,7 @@ public interface IShorelineFile {
 	 * @throws TransformException
 	 * @throws FactoryException
 	 */
-	public String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
+	public String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException, AttributeNotANumberException;
 
 	/**
 	 * Imports the view as a layer in Geoserver

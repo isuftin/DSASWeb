@@ -101,7 +101,13 @@ public class FeatureTypeFileFactory {
 
 	}
 
-	//takes the zip file cleaned name and replaces the names of the files in it with the cleaned name plus the files extension. Returns the path to the exploded renamed contents.
+
+	/**
+	 * Takes the zip file cleaned name and replaces the names of the files in it with the cleaned name plus the files extension.
+	 * @param zipFile
+	 * @return File The path to the exploded renamed zip contents.
+	 * @throws IOException 
+	 */
 	public File renameZipFileContents(File zipFile) throws IOException {
 		File workLocation = createWorkLocationForZip(zipFile);
 		FileHelper.unzipFile(workLocation.getAbsolutePath(), zipFile);

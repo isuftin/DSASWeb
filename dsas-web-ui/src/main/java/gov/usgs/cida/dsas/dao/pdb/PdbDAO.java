@@ -4,7 +4,9 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
+import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
+import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
 import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
@@ -47,10 +49,8 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		this.JNDI_NAME = PropertyUtil.getProperty(Property.JDBC_NAME);
 	}
 
-//	private final PostgresDAO pgDao = new PostgresDAO();
-
 	@Override
-	public String importToDatabase(File shpFile, Map<String, String> columns, String workspace, String EPSGCode) throws SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
+	public String importToDatabase(File shpFile, Map<String, String> columns, String workspace, String EPSGCode) throws SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException, AttributeNotANumberException {
 		LOGGER.info("Attempting to begin Import of PDB to database.");
 		String viewName = null;
 		updateProcessInformation(String.format("Importing pdb into database %s", shpFile.getName()));
@@ -69,10 +69,11 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		try (Connection connection = getConnection()) {
 		LOGGER.info("Import Pdb into DB: Obtained connection" );
 			FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(shpFile.toURI().toURL());
-
+			
 			if (!fc.isEmpty()) {
 				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
-				try (SimpleFeatureIterator iter = rfc.features()) {
+				SimpleFeatureIterator iter = rfc.features();
+				try {
 					connection.setAutoCommit(false);
 
 					ArrayList<Pdb> pdbList = new ArrayList();
@@ -82,17 +83,18 @@ public class PdbDAO extends FeatureTypeFileDAO {
 
 						// get the values from the file and set the Pdbs 
 						Pdb pdb = new Pdb();
-
-						int profileId =  getIntValue(profileIdFieldName, sf); 
-						pdb.setProfileId(profileId);
+						AttributeGetter attGetter = new AttributeGetter(sf.getFeatureType());
 						
-						double bias = getDoubleValue(biasFieldName, sf);
-						pdb.setBias(bias);
+						int intVal = attGetter.getIntValue(Constants.PROFILE_ID_ATTR, sf);
+						pdb.setProfileId(intVal);
 						
-						double biasUncy = getDoubleValue(biasUncyFieldName, sf); 
-						pdb.setUncyb(biasUncy);
+						double dubVal = attGetter.getDoubleValue(Constants.BIAS_ATTR, sf);
+						pdb.setBias(dubVal);
 
-						BigInteger segmentId = getBigIntValue(segmentIdFieldName, sf);  
+						double uncyDubVal = attGetter.getDoubleValue(Constants.BIAS_UNCY_ATTR, sf);
+						pdb.setUncyb(uncyDubVal);
+
+						BigInteger segmentId = getBigIntValue(Constants.SEGMENT_ID_ATTR, sf);  
 						pdb.setSegmentId(segmentId);
 						
 						Geometry geom = (Geometry)sf.getDefaultGeometry();
@@ -133,6 +135,8 @@ public class PdbDAO extends FeatureTypeFileDAO {
 					LOGGER.error("Error while attempting insert into PDB table. ", ex);
 					connection.rollback();
 					throw ex;
+				} finally {
+					iter.close();
 				}
 			}
 		} catch (SchemaException | TransformException | FactoryException ex) {
@@ -143,15 +147,15 @@ public class PdbDAO extends FeatureTypeFileDAO {
 	}
 
 
-	public int getIntValue(String attribute, SimpleFeature feature) {
-		Object value = feature.getAttribute(attribute);
-		if (value instanceof Number) {
-			return ((Number) value).intValue();
-		} else {
-			LOGGER.error("Int value is not a number.");
-			throw new ClassCastException("This attribute is not an Integer");
-		}
-	}
+//	public int getIntValue(String attribute, SimpleFeature feature) {
+//		Object value = feature.getAttribute(attribute);
+//		if (value instanceof Number) {
+//			return ((Number) value).intValue();
+//		} else {
+//			LOGGER.error("Int value is not a number.");
+//			throw new ClassCastException("This attribute is not an Integer");
+//		}
+//	}
 
 	public BigInteger getBigIntValue(String attribute, SimpleFeature feature) {
 		Object value = feature.getAttribute(attribute);
@@ -163,15 +167,15 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		}
 	}
 
-	public double getDoubleValue(String attribute, SimpleFeature feature) {
-		Object value = feature.getAttribute(attribute);
-		if (value instanceof Number) {
-			return ((Number) value).doubleValue();
-		} else {
-			LOGGER.error("Double value is not a number.");
-			throw new ClassCastException("This attribute is not a floating point value");
-		}
-	}
+//	public double getDoubleValue(String attribute, SimpleFeature feature) {
+//		Object value = feature.getAttribute(attribute);
+//		if (value instanceof Number) {
+//			return ((Number) value).doubleValue();
+//		} else {
+//			LOGGER.error("Double value is not a number.");
+//			throw new ClassCastException("This attribute is not a floating point value");
+//		}
+//	}
 	/**
 	 * Inserts a row into the proxy datum bias table
 	 *

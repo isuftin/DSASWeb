@@ -3,6 +3,7 @@ package gov.usgs.cida.dsas.shoreline.file;
 import com.google.gson.Gson;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
+import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
 import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.utilities.features.Constants;
@@ -48,7 +49,7 @@ public abstract class ShorelineFile extends FeatureTypeFile implements IShorelin
 	};
 
 	@Override
-	public String importToDatabase(HttpServletRequest request, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
+	public String importToDatabase(HttpServletRequest request, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException, AttributeNotANumberException {
 		String columnsString = request.getParameter("columns");
 		Map<String, String> columns = new HashMap<>();
 		if (StringUtils.isNotBlank(columnsString)) {
@@ -63,7 +64,7 @@ public abstract class ShorelineFile extends FeatureTypeFile implements IShorelin
 	}
 
 	@Override 
-	public abstract String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
+	public abstract String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException, AttributeNotANumberException;
 
 	@Override
 	public void importToGeoserver(String viewname, String workspace) throws IOException {
