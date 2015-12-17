@@ -60,8 +60,6 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		String profileIdFieldName = (String) bm.getKey(Constants.PROFILE_ID_ATTR);
 		String segmentIdFieldName = (String) bm.getKey(Constants.SEGMENT_ID_ATTR); 
 		
-		
-
 		int MAX_POINTS_AT_ONCE = 500;
 
 		updateProcessInformation("Importing pdb into database: Reading PDB column names from Dbase file.");
@@ -146,17 +144,6 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		return viewName;
 	}
 
-
-//	public int getIntValue(String attribute, SimpleFeature feature) {
-//		Object value = feature.getAttribute(attribute);
-//		if (value instanceof Number) {
-//			return ((Number) value).intValue();
-//		} else {
-//			LOGGER.error("Int value is not a number.");
-//			throw new ClassCastException("This attribute is not an Integer");
-//		}
-//	}
-
 	public BigInteger getBigIntValue(String attribute, SimpleFeature feature) {
 		Object value = feature.getAttribute(attribute);
 		if (value instanceof Number) {
@@ -167,15 +154,6 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		}
 	}
 
-//	public double getDoubleValue(String attribute, SimpleFeature feature) {
-//		Object value = feature.getAttribute(attribute);
-//		if (value instanceof Number) {
-//			return ((Number) value).doubleValue();
-//		} else {
-//			LOGGER.error("Double value is not a number.");
-//			throw new ClassCastException("This attribute is not a floating point value");
-//		}
-//	}
 	/**
 	 * Inserts a row into the proxy datum bias table
 	 *
