@@ -1,4 +1,5 @@
 
+<%@page import="java.util.Arrays"%>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="gov.usgs.cida.dsas.dao.pdb.Pdb"%>
 <%@page import="gov.usgs.cida.dsas.rest.service.ServiceURI"%>
@@ -14,6 +15,14 @@
 
 <%
 	String baseUrl = PropertyUtil.getProperty("dsas.base.url", request.getContextPath());
+	int contextSpacing = StringUtils.countMatches(baseUrl, "/");
+	String[] backTicksArray = new String[contextSpacing];
+	String backticks = "";
+	if (backTicksArray.length > 0) {
+		Arrays.fill(backTicksArray, "../");
+		backTicksArray[backTicksArray.length - 1] = backTicksArray[backTicksArray.length - 1].substring(0, 2);
+		backticks = String.join("", backTicksArray);
+	}
 %>
 
 <html lang="en">
@@ -33,9 +42,9 @@
 					'init': {
 						'contextPath': "<%=baseUrl%>"
 					},
-					'views/ManagementView' : {
-						'paths' : {
-							'pdbStaging' : '..<%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT %>/pdb'
+					'views/ManagementView': {
+						'paths': {
+							'staging': '<%= backticks %><%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT%>'
 						}
 					},
 					'utils/PdbUtil' : {
@@ -46,7 +55,6 @@
 				paths: {
 					"bootstrap": ["<%=baseUrl%>/webjars/bootstrap/<%= PropertyUtil.getProperty("version.bootstrap")%>/js/bootstrap<%= development ? "" : ".min"%>"],
 					"jquery": ["<%=baseUrl%>/webjars/jquery/<%=  PropertyUtil.getProperty("version.jquery")%>/jquery<%= development ? "" : ".min"%>"],
-					"jqueryui": ['<%=baseUrl%>/webjars/jquery-ui/<%= PropertyUtil.getProperty("version.jquery.ui")%>/jquery-ui<%= development ? ".min" : ""%>'],
 					"backbone": ['<%=baseUrl%>/webjars/backbonejs/<%=  PropertyUtil.getProperty("version.backbone")%>/backbone<%= development ? "" : "-min"%>'],
 					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%=  PropertyUtil.getProperty("version.underscore")%>/underscore<%= development ? "" : "-min"%>'],
 					"handlebars": ['<%=baseUrl%>/webjars/handlebars/<%=  PropertyUtil.getProperty("version.handlebars")%>/handlebars<%= development ? "" : ".min"%>'],
