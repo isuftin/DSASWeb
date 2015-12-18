@@ -33,9 +33,9 @@
 					'init': {
 						'contextPath': "<%=baseUrl%>"
 					},
-					'views/ManagementView' : {
-						'paths' : {
-							'pdbStaging' : '..<%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT %>/pdb'
+					'views/ManagementView': {
+						'paths': {
+							'pdbStaging': '..<%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT%>/pdb'
 						}
 					},
 					'utils/PdbUtil' : {
