@@ -44,7 +44,7 @@
 					},
 					'views/ManagementView': {
 						'paths': {
-							'staging': '<%= backticks %><%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT%>'
+							'pdbStaging': '<%= backticks %><%= ServiceURI.SHAPEFILE_SERVICE_ENDPOINT%>/pdb'
 						}
 					},
 					'utils/PdbUtil' : {
