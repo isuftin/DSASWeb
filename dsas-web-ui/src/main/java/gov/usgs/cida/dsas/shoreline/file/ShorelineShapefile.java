@@ -2,7 +2,6 @@ package gov.usgs.cida.dsas.shoreline.file;
 
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
-import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
 import gov.usgs.cida.dsas.featureType.file.FeatureType;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShapefileException;
 import gov.usgs.cida.dsas.model.DSASProcess;
@@ -112,7 +111,7 @@ public class ShorelineShapefile extends ShorelineFile {
 	}
 
 	@Override
-	public String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException, AttributeNotANumberException {
+	public String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException{
 		updateProcessInformation("Getting EPSG Code");
 		String projection = getEPSGCode();
 		File shpFile = fileMap.get(SHP);

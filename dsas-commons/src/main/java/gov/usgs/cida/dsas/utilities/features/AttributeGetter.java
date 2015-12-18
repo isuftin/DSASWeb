@@ -100,6 +100,9 @@ public class AttributeGetter {
 				else if (isOther(desc, Constants.COMBINED_UNCY_ATTR)) {
 					attrMap.put(Constants.COMBINED_UNCY_ATTR, desc.getName());
 				}
+                                else if (isOther(desc, Constants.PROFILE_ID_ATTR)) {
+					attrMap.put(Constants.PROFILE_ID_ATTR, desc.getName());
+				}
 			}
 		}
 	}

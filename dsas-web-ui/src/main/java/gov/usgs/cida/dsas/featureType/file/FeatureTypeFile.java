@@ -2,7 +2,6 @@ package gov.usgs.cida.dsas.featureType.file;
 
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
-import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
 import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import java.io.File;
@@ -138,7 +137,7 @@ public abstract class FeatureTypeFile {
 	 * @throws TransformException
 	 * @throws FactoryException
 	 */
-	public abstract String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException, AttributeNotANumberException;
+	public abstract String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
 
 	/**
 	 * Imports the view as a layer in Geoserver

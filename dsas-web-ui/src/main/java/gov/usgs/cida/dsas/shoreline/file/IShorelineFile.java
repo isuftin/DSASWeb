@@ -62,7 +62,7 @@ public interface IShorelineFile {
 	 * @throws org.opengis.referencing.operation.TransformException
 	 * @throws org.opengis.referencing.FactoryException
 	 */
-	public String importToDatabase(HttpServletRequest request, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException, AttributeNotANumberException;
+	public String importToDatabase(HttpServletRequest request, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
 
 	/**
 	 * Imports the shoreline file into the database

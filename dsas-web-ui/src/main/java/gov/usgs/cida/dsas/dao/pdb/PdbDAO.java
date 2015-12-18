@@ -4,9 +4,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
-import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
-import gov.usgs.cida.dsas.utilities.features.AttributeGetter;
 import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
@@ -22,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import javax.naming.NamingException;
+import org.apache.commons.collections.BidiMap;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import org.apache.commons.lang.StringUtils;
 import org.geotools.data.crs.ReprojectFeatureResults;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -48,19 +48,23 @@ public class PdbDAO extends FeatureTypeFileDAO {
 	}
 
 	@Override
-	public String importToDatabase(File shpFile, Map<String, String> columns, String workspace, String EPSGCode) throws SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException, AttributeNotANumberException {
+	public String importToDatabase(File shpFile, Map<String, String> columns, String workspace, String EPSGCode) throws SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
 		LOGGER.info("Attempting to begin Import of PDB to database.");
 		String viewName = null;
 		updateProcessInformation(String.format("Importing pdb into database %s", shpFile.getName()));
-		
 		int MAX_POINTS_AT_ONCE = 500;
+		BidiMap bm = new DualHashBidiMap(columns);
+		String biasFieldName = (String) bm.getKey(Constants.BIAS_ATTR);  //refer to the shapefile attr (not the geo), dbf file type adds attributes 
+		String biasUncyFieldName = (String) bm.getKey(Constants.BIAS_UNCY_ATTR);
+		String profileIdFieldName = (String) bm.getKey(Constants.PROFILE_ID_ATTR);
+		String segmentIdFieldName = (String) bm.getKey(Constants.SEGMENT_ID_ATTR);
 
 		updateProcessInformation("Importing pdb into database: Reading PDB column names from Dbase file.");
-			
+
 		try (Connection connection = getConnection()) {
-		LOGGER.info("Import Pdb into DB: Obtained connection" );
+			LOGGER.info("Import Pdb into DB: Obtained connection");
 			FeatureCollection<SimpleFeatureType, SimpleFeature> fc = FeatureCollectionFromShp.getFeatureCollectionFromShp(shpFile.toURI().toURL());
-			
+
 			if (!fc.isEmpty()) {
 				ReprojectFeatureResults rfc = new ReprojectFeatureResults(fc, DefaultGeographicCRS.WGS84);
 				SimpleFeatureIterator iter = rfc.features();
@@ -68,51 +72,48 @@ public class PdbDAO extends FeatureTypeFileDAO {
 					connection.setAutoCommit(false);
 
 					ArrayList<Pdb> pdbList = new ArrayList();
-					        
+
 					while (iter.hasNext()) {
 						SimpleFeature sf = iter.next();
 
 						// get the values from the file and set the Pdbs 
 						Pdb pdb = new Pdb();
-						AttributeGetter attGetter = new AttributeGetter(sf.getFeatureType());
-						
-						int intVal = attGetter.getIntValue(Constants.PROFILE_ID_ATTR, sf);
-						pdb.setProfileId(intVal);
-						
-						double dubVal = attGetter.getDoubleValue(Constants.BIAS_ATTR, sf);
-						pdb.setBias(dubVal);
 
-						double uncyDubVal = attGetter.getDoubleValue(Constants.BIAS_UNCY_ATTR, sf);
-						pdb.setUncyb(uncyDubVal);
+						int profileId = getIntValue(profileIdFieldName, sf);
+						pdb.setProfileId(profileId);
 
-						BigInteger segmentId = getBigIntValue(Constants.SEGMENT_ID_ATTR, sf);  
+						double bias = getDoubleValue(biasFieldName, sf);
+						pdb.setBias(bias);
+
+						double biasUncy = getDoubleValue(biasUncyFieldName, sf);
+						pdb.setUncyb(biasUncy);
+
+						BigInteger segmentId = getBigIntValue(segmentIdFieldName, sf);
 						pdb.setSegmentId(segmentId);
-						
-						Geometry geom = (Geometry)sf.getDefaultGeometry();
-						
-						if (geom instanceof Point){
-							Point point = (Point)geom;
+
+						Geometry geom = (Geometry) sf.getDefaultGeometry();
+
+						if (geom instanceof Point) {
+							Point point = (Point) geom;
 							pdb.setX(point.getX());
 							pdb.setY(point.getY());
-						}
-						else
-						{
+						} else {
 							throw new UnsupportedFeatureTypeException("Only Points supported for PDB inserts.");
 						}
-						
+
 						pdbList.add(pdb);
 
-						if (pdbList.size() == MAX_POINTS_AT_ONCE) { 
-							insertPointsIntoPdbTable(connection, pdbList);  
+						if (pdbList.size() == MAX_POINTS_AT_ONCE) {
+							insertPointsIntoPdbTable(connection, pdbList);
 							pdbList.clear();
 						}
 					} // close while
-					
+
 					//insert the remainder of the pdb points into the table
-					if (pdbList.size() > 0){
+					if (pdbList.size() > 0) {
 						insertPointsIntoPdbTable(connection, pdbList);
 					}
-					
+
 					viewName = createViewAgainstWorkspace(connection, workspace);
 					if (StringUtils.isBlank(viewName)) {
 						LOGGER.error("Unable to create pdb view against workspace.");
@@ -127,6 +128,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 					connection.rollback();
 					throw ex;
 				} finally {
+					LOGGER.info("Pdb import: closing iterator.");
 					iter.close();
 				}
 			}
@@ -137,6 +139,16 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		return viewName;
 	}
 
+	public int getIntValue(String attribute, SimpleFeature feature) {
+		Object value = feature.getAttribute(attribute);
+		if (value instanceof Number) {
+			return ((Number) value).intValue();
+		} else {
+			LOGGER.error("Int value is not a number.");
+			throw new ClassCastException("This attribute is not an Integer");
+		}
+	}
+
 	public BigInteger getBigIntValue(String attribute, SimpleFeature feature) {
 		Object value = feature.getAttribute(attribute);
 		if (value instanceof Number) {
@@ -144,6 +156,16 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		} else {
 			LOGGER.error("BigInt value is not a number.");
 			throw new ClassCastException("This attribute is not a Number");
+		}
+	}
+
+	public double getDoubleValue(String attribute, SimpleFeature feature) {
+		Object value = feature.getAttribute(attribute);
+		if (value instanceof Number) {
+			return ((Number) value).doubleValue();
+		} else {
+			LOGGER.error("Double value is not a number.");
+			throw new ClassCastException("This attribute is not a floating point value");
 		}
 	}
 
