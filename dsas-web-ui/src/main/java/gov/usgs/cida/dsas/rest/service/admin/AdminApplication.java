@@ -26,7 +26,7 @@ public class AdminApplication extends ResourceConfig {
 
 	public AdminApplication() {
 
-		packages(true, this.getClass().getPackage().getName());
+		packages(this.getClass().getPackage().getName());
 
 		register(JspMvcFeature.class);
 		register(ForbiddenExceptionMapper.class);

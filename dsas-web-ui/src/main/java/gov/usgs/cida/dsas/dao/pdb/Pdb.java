@@ -1,5 +1,6 @@
 package gov.usgs.cida.dsas.dao.pdb;
 
+import gov.usgs.cida.dsas.utilities.features.Constants;
 import java.io.Serializable;
 import java.math.BigInteger;
 
@@ -11,32 +12,29 @@ public class Pdb implements Serializable {
 
     private static final long serialVersionUID = -798301212870571106L;
     
-    private BigInteger id;
-    private String profileId;
-    private int segmentId;
+	public final static String[] REQUIRED_FIELD_NAMES = new String[]{Constants.SEGMENT_ID_ATTR, Constants.BIAS_ATTR, Constants.BIAS_UNCY_ATTR, Constants.PROFILE_ID_ATTR};
+    private int profileId;
+    private BigInteger segmentId;
    // private String xyGeom; // or coord xy doubles each
     private double x;
     private double y;
-    private String bias;
-    private String uncyb;
+    private double bias;
+    private double uncyb;
     private String last_update;
     
     public Pdb (){
         
-        this.id = BigInteger.ZERO;
-        this.profileId = "";
-        this.segmentId = 0;
+        this.profileId = 0;
+        this.segmentId = BigInteger.ZERO;
         this.x = 0;
         this.y = 0;
-        this.bias = "";
-        this.uncyb = "";
+        this.bias = 0;
+        this.uncyb = 0;
         this.last_update= "";
     }
             
     
-    public Pdb(BigInteger id, String profileId, int segmentId, double x, double y, String bias, String uncyb, String date) {
-	// check the type for the Geom and the date
-        this.id = id;
+    public Pdb(int profileId, BigInteger segmentId, double x, double y, double bias, double uncyb, String date) {
         this.profileId = profileId;
         this.segmentId = segmentId;
         this.x = x;
@@ -47,27 +45,19 @@ public class Pdb implements Serializable {
 		
     }
 
-    public BigInteger getId() {
-        return id;
-    }
-
-    public void setId(BigInteger id) {
-        this.id = id;
-    }
-
-    public String getProfileId() {
+    public int getProfileId() {
         return profileId;
     }
 
-    public void setProfileId(String profileId) {
+    public void setProfileId(int profileId) {
         this.profileId = profileId;
     }
 
-    public int getSegmentId() {
+    public BigInteger getSegmentId() {
         return segmentId;
     }
 
-    public void setSegmentId(int segmentId) {
+    public void setSegmentId(BigInteger segmentId) {
         this.segmentId = segmentId;
     }
 
@@ -87,19 +77,19 @@ public class Pdb implements Serializable {
         this.y = y;
     }
 
-    public String getBias() {
+    public double getBias() {
         return bias;
     }
 
-    public void setBias(String bias) {
+    public void setBias(double bias) {
         this.bias = bias;
     }
 
-    public String getUncyb() {
+    public double getUncyb() {
         return uncyb;
     }
 
-    public void setUncyb(String uncyb) {
+    public void setUncyb(double uncyb) {
         this.uncyb = uncyb;
     }
 

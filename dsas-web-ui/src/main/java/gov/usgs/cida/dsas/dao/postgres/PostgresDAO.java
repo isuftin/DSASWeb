@@ -1,8 +1,8 @@
 package gov.usgs.cida.dsas.dao.postgres;
 
+import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.pdb.Pdb;
 import gov.usgs.cida.dsas.dao.shoreline.Shoreline;
-import gov.usgs.cida.dsas.dao.shoreline.ShorelineFileDAO;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
 import java.math.BigInteger;
@@ -190,7 +190,7 @@ public class PostgresDAO {
 
 		StringBuilder sql = new StringBuilder("INSERT INTO shoreline_points (shoreline_id, segment_id, geom, uncy) VALUES");
 		for (double[] XYUncy : XYuncyArray) {
-			sql.append("(").append(shorelineId).append(",").append(segmentId).append(",").append("ST_GeomFromText('POINT(").append(XYUncy[0]).append(" ").append(XYUncy[1]).append(")',").append(ShorelineFileDAO.DATABASE_PROJECTION).append("),").append(XYUncy[2]).append("),");
+			sql.append("(").append(shorelineId).append(",").append(segmentId).append(",").append("ST_GeomFromText('POINT(").append(XYUncy[0]).append(" ").append(XYUncy[1]).append(")',").append(FeatureTypeFileDAO.DATABASE_PROJECTION).append("),").append(XYUncy[2]).append("),");
 		}
 		sql.deleteCharAt(sql.length() - 1);
 		try (final Statement st = connection.createStatement()) {
@@ -213,41 +213,43 @@ public class PostgresDAO {
 		Timestamp now = getUTCNowAsSQLTimestamp();
 		
 		for (Pdb pdb : pdbs) {
-			values.append("(")
-			.append(pdb.getProfileId())
-			.append(",")
-			.append(pdb.getSegmentId())
-			.append(",")
-			.append("ST_GeomFromText('POINT(")
-			.append(pdb.getX()) //  ... ST_GeomFromText('POINT(x y)',4326)
-			.append(" ")
-			.append(pdb.getY())
-			.append(")',")
-			.append(ShorelineFileDAO.DATABASE_PROJECTION)
-			.append("),")
-			.append(pdb.getBias())
-			.append(",")
-			.append(pdb.getUncyb())
-			.append(",")
-			.append(now)
-			.append(");");
+			values.append("( ")
+					.append(pdb.getProfileId())  //int
+					.append(",")
+					.append(pdb.getSegmentId())  //BigInt
+					.append(",")
+					.append("ST_GeomFromText('POINT(")
+					.append(pdb.getX()) //  ... ST_GeomFromText('POINT(x y)',4326)
+					.append(" ")
+					.append(pdb.getY())
+					.append(")',")
+					.append(FeatureTypeFileDAO.DATABASE_PROJECTION)
+					.append("),")
+					.append(pdb.getBias())  //double
+					.append(",")
+					.append(pdb.getUncyb())  //double
+					.append(",")
+					.append("to_timestamp('")
+					.append(now)
+					.append("', 'YYYY-MM-DD HH24:MI:SS.MS')")
+					.append("),");
 		}
-		values.deleteCharAt(sql.length() - 1);
+		values.deleteCharAt(values.length() - 1);
 		
 		sql.append("WITH new_vals (profile_id, segment_id, xy, bias, uncyb, last_update) AS (")
 				.append("values ")
-					.append(values)
-				.append("), upsert AS (UPDATE proxy_datum_bias p")
-					.append("profile_id = nv.profile_id, ")
-					.append("segment_id = nv.profile_id, ")
-					.append("xy = nv.xy, ")
-					.append("bias = nv.bias, ")
-					.append("uncyb = nv.uncyb, ")
-					.append("last_update = nv.last_update ")
-				.append("FROM new_vals WHERE nv.profile_id = p.profile_id RETURNING p.*) ")
+				.append(values)
+				.append("), upsert AS (UPDATE proxy_datum_bias p set ")
+				.append("profile_id = nv.profile_id, ")
+				.append("segment_id = nv.segment_id, ")
+				.append("xy = nv.xy, ")
+				.append("bias = nv.bias, ")
+				.append("uncyb = nv.uncyb, ")
+				.append("last_update = nv.last_update ")
+				.append("FROM new_vals as nv WHERE nv.profile_id = p.profile_id RETURNING p.*) ")
 				.append("INSERT INTO proxy_datum_bias (profile_id, segment_id, xy, bias, uncyb, last_update) ")
 				.append("SELECT profile_id, segment_id, xy, bias, uncyb, last_update ")
-				.append("FROM new_vals WHERE NOT EXISTS (SELECT 1 FROM upsert WHERE upsert.id = new_vals.id)");
+				.append("FROM new_vals WHERE NOT EXISTS (SELECT 1 FROM upsert WHERE upsert.profile_id = new_vals.profile_id)");
 		
 		LOGGER.debug("Insert points into Proxy_Datum_Bias : " + sql.toString());
 		try (final Statement st = connection.createStatement()) {

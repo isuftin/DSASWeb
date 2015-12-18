@@ -1,26 +1,14 @@
 package gov.usgs.cida.dsas.service.util;
 
-import gov.usgs.cida.owsutils.commons.io.FileHelper;
-import gov.usgs.cida.owsutils.commons.io.exception.ShapefileFormatException;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.ZipOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.*;
 
 import org.apache.commons.io.FileUtils;
-//import org.apache.commons.compress.compressors.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -68,12 +56,16 @@ public class TokenFileExchangerTest {
 
         assertNotNull(fileshp);
         assertNotEquals(fileshp, "");
-        LOGGER.info("files absolute path: " + fileshp.getAbsolutePath());
-
+        LOGGER.info("files absolute path:  " + fileshp.getAbsolutePath());
+		LOGGER.info("Files path:           " + fileshp.getPath());
+		LOGGER.info("Files canonical path: " + fileshp.getCanonicalPath());
+		LOGGER.info("Files Parent -        " + fileshp.getParent());
+		
         String token = TokenFileExchanger.getToken(fileshp);
         assertNotNull(token);
 
         LOGGER.info("Token string is: " + token);
+
     }
 
     @Test

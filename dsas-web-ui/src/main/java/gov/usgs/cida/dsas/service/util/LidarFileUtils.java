@@ -1,7 +1,8 @@
 package gov.usgs.cida.dsas.service.util;
 
-import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.LidarFileFormatException;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
+import gov.usgs.cida.owsutils.commons.shapefile.utils.ProjectionUtils;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +12,7 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.io.IOUtils;
+import org.opengis.referencing.FactoryException;
 
 public class LidarFileUtils {
 
@@ -36,7 +38,7 @@ public class LidarFileUtils {
 	 *
 	 * @param lidarZipFile
 	 * @throws
-	 * gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException
+	 * gov.usgs.cida.dsas.featureTypeFile.exception.LidarFileFormatException
 	 * @throws IOException
 	 */
 	public static void validateLidarFileZip(File lidarZipFile) throws LidarFileFormatException, IOException {
@@ -73,6 +75,7 @@ public class LidarFileUtils {
 				System.gc();
 			}
 			IOUtils.closeQuietly(zipInputStream);
+
 
 			File[] csvfiles = FileHelper.listFiles(temporaryDirectory, (new String[]{"csv"}), false).toArray(new File[0]);
 			if (csvfiles.length == 0 || csvfiles.length > 1) {
@@ -117,4 +120,10 @@ public class LidarFileUtils {
 			throw new LidarFileFormatException("Lidar csv file has wrong number of columns in one of the rows");
 		}
 	}
+	
+	    // this is needed to support the Lidar file as it does not have a shp file 
+    public static String getEPSGCode(File prjFile) throws IOException, FactoryException {
+
+        return ProjectionUtils.getDeclaredEPSGFromPrj(prjFile);
+    }
 }

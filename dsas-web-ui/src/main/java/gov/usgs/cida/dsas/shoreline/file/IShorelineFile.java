@@ -1,7 +1,8 @@
 package gov.usgs.cida.dsas.shoreline.file;
 
+import gov.usgs.cida.dsas.exceptions.AttributeNotANumberException;
 import gov.usgs.cida.dsas.model.DSASProcess;
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -29,38 +30,11 @@ public interface IShorelineFile {
 	public void setDSASProcess(DSASProcess process);
 
 	/**
-	 * Saves a zip file, unpacks it to application work directory of the same
-	 * name.
-	 *
-	 * Unzips the file and returns the directory where file unzipped to
-	 *
-	 * @param file
-	 * @return directory where file unzipped to
-	 * @throws java.io.IOException
-	 */
-	public File saveZipFile(File file) throws IOException;
-
-	/**
-	 * Sets the directory that contains the Shoreline File set
-	 *
-	 * @param directory
-	 * @return token to directory
-	 * @throws java.io.FileNotFoundException If directory is not found
-	 */
-	public String setDirectory(File directory) throws IOException;
-
-	/**
-	 * Uses a token to retrieve a the working directory for this ShorelineFile
-	 *
-	 * @param token
-	 * @return
-	 */
-	public File getDirectory(String token);
-
-	/**
 	 * Gets the projection EPSG of the shoreline file
 	 *
 	 * @return
+	 * @throws java.io.IOException
+	 * @throws org.opengis.referencing.FactoryException
 	 */
 	public String getEPSGCode();
 
@@ -79,7 +53,7 @@ public interface IShorelineFile {
 	 * @param request
 	 * @return
 	 * @throws
-	 * gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException
+	 * gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException
 	 * @throws java.sql.SQLException
 	 * @throws javax.naming.NamingException
 	 * @throws java.text.ParseException
@@ -88,7 +62,7 @@ public interface IShorelineFile {
 	 * @throws org.opengis.referencing.operation.TransformException
 	 * @throws org.opengis.referencing.FactoryException
 	 */
-	public String importToDatabase(HttpServletRequest request) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
+	public String importToDatabase(HttpServletRequest request, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
 
 	/**
 	 * Imports the shoreline file into the database
@@ -105,7 +79,7 @@ public interface IShorelineFile {
 	 * @throws TransformException
 	 * @throws FactoryException
 	 */
-	public String importToDatabase(Map<String, String> columns) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException;
+	public String importToDatabase(Map<String, String> columns, String workspace) throws ShorelineFileFormatException, SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException, AttributeNotANumberException;
 
 	/**
 	 * Imports the view as a layer in Geoserver
@@ -113,7 +87,7 @@ public interface IShorelineFile {
 	 * @param viewName
 	 * @throws IOException
 	 */
-	public void importToGeoserver(String viewName) throws IOException;
+	public void importToGeoserver(String viewName, String workspace) throws IOException;
 
 	/**
 	 * Checks if underlying files exist in the file system
@@ -121,13 +95,6 @@ public interface IShorelineFile {
 	 * @return
 	 */
 	public boolean exists();
-
-	/**
-	 * Returns the name of the workspace this shoreline file operates under
-	 *
-	 * @return
-	 */
-	public String getWorkspace();
 
 	/**
 	 * Deletes own files in the file system and removes parent directory

@@ -6,6 +6,7 @@ define([
 	'backbone',
 	'module',
 	'bootstrap', // Load up bootstrap to get it worked into jquery
+	'jqueryui',
 	'jquery'
 ], function (
 		Router,

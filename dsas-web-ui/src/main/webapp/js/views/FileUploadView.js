@@ -5,13 +5,27 @@ define([
 	'handlebars',
 	'views/BaseView',
 	'utils/logger',
-	'text!templates/file-upload-view.html'
+	'utils/PdbUtil',
+	'utils/UploadUtil',
+	'views/ModalWindowView',
+	'views/ColumnMatchingView',
+	'models/ColumnMatchingModel',
+	'models/ModalModel',
+	'text!templates/file-upload-view.html',
+	'utils/AppEvents'
 ], function (
 		_,
 		Handlebars,
 		BaseView,
 		log,
-		template
+		PdbUtil,
+		UploadUtil,
+		ModalWindowView,
+		ColumnMatchingView,
+		ColumnMatchingModel,
+		ModalModel,
+		template,
+		AppEvents
 		) {
 	"use strict";
 
@@ -30,7 +44,7 @@ define([
 		initialize: function (args) {
 			log.debug("DSASweb Proxy Datum Bias management view initializing");
 			args = args || {};
-			
+
 			this.fileType = args.fileType;
 			this.maxFileSize = args.maxFileSize || Number.MAX_VALUE;
 			this.allowedFileTypes = args.allowedFileTypes || [];
@@ -39,9 +53,6 @@ define([
 			this.callbackScope = args.callbackScope || this;
 
 			BaseView.prototype.initialize.apply(this, arguments);
-		},
-		wireFileControls: function () {
-
 		},
 		handleFileSelectClick: function () {
 			this.$('#input-file').prop('value', '');
@@ -94,32 +105,160 @@ define([
 			}, false);
 
 			this.xhr.onreadystatechange = function (e) {
-				var status = e.currentTarget.status,
-						readyState = e.currentTarget.readyState,
-						responseString = e.currentTarget.response,
-						response,
-						token;
+				var status = e.currentTarget.status;
+				var readyState = e.currentTarget.readyState;
+				var targetReadyState = 4; // http://www.w3schools.com/ajax/ajax_xmlhttprequest_onreadystatechange.asp
 
-				if (readyState === 4 && responseString) {
+				if (readyState === targetReadyState) {
 					switch (status) {
-						case 200:
-							response = JSON.parse(responseString);
-							token = response.token;
-							this.scope.handleFileStaged(token);
+						case 202:
+							this.scope.handleFileStaged({
+								location: this.getResponseHeader("location")
+							});
 							break;
 						case 404:
+							log.error("NOT FOUND");
 							break;
 						case 500:
+							log.error("ERROR");
 							break;
 					}
 					this.scope.$('#container-file-info').addClass('hidden');
 				}
 			};
-			
+
 			this.xhr.scope = this.callbackScope || this;
 			this.xhr.open("POST", this.uploadEndpoint, true);
 			this.xhr.send(formData);
 			return this.xhr;
+		},
+		handleFileStaged: function (args) {
+			args = args || {};
+			var location = args.location;
+			var token = location.substr(location.lastIndexOf('/') + 1);
+			$.get('..' + location + '/columns')
+					.done($.proxy(function (response) {
+						var headers = JSON.parse(arguments[0].headers);
+						var foundAllRequiredColumns = false;
+						var layerColumns = _.object(headers, Array.apply(null, Array(headers.length))
+								.map(function () {
+									return '';
+								}));
+						if (headers.length < PdbUtil.MANDATORY_COLUMNS.length) {
+							log.warn('There are not enough attributes in the selected ' +
+									'shapefile to constitute a valid shoreline. ' +
+									'Will be deleted. Needed: ' +
+									PdbUtil.MANDATORY_COLUMNS.length +
+									', Found in upload: ' + headers.length);
+
+						} else {
+							layerColumns = PdbUtil.createLayerUnionAttributeMap({
+								layerColumns: layerColumns
+							});
+
+							_.each(PdbUtil.MANDATORY_COLUMNS, function (mc) {
+								if (_.values(layerColumns).indexOf(mc) === -1) {
+									foundAllRequiredColumns = false;
+								}
+							}, this);
+
+							if (!foundAllRequiredColumns) {
+								// User needs to match columns 
+								var columnMatchingModel = new ColumnMatchingModel({
+									layerColumns: layerColumns,
+									layerName: "pdb",
+									columnKeys: _.keys(layerColumns),
+									mandatoryColumns: PdbUtil.MANDATORY_COLUMNS
+								});
+								var columnMatchingView = new ColumnMatchingView({
+									model: columnMatchingModel
+								});
+								var modalView = new ModalWindowView({
+									model: new ModalModel({
+										title: 'Column Information Required',
+										view: columnMatchingView,
+										autoShow: true
+									})
+								}).render();
+
+								$(modalView.el).on('shown.bs.modal', $.proxy(function () {
+									this.moveKnownColumns();
+								}, columnMatchingView));
+
+								this.listenToOnce(AppEvents, AppEvents.staging.columnsMatched, function () {
+									modalView.remove();
+									PdbUtil
+											.importFromToken({
+												token: token,
+												workspace: 'published',
+												location: location,
+												layerColumns: columnMatchingModel.get('layerColumns'),
+												context: this
+											})
+											.done($.proxy(function (jqXHR, status, response) {
+												if (response.readyState === 4) {
+													switch (response.status) {
+														case 202:
+															var location = response.getResponseHeader('location');
+															UploadUtil.pollProcess({
+																location: '..' + location
+															})
+																	.progress(function (response) {
+																		log.debug(response);
+																	})
+																	.done(function (response) {
+																		log.info(response);
+																	})
+																	.fail(function (response) {
+																		log.error(response);
+																	});
+													}
+												}
+											}, this))
+											.fail(function (response) {
+												log.error(response);
+											});
+								});
+
+							} else {
+								PdbUtil
+										.importFromToken({
+											token: token,
+											workspace: 'published',
+											location: location,
+											layerColumns: columnMatchingModel.get('layerColumns'),
+											context: this
+										})
+										.done($.proxy(function (jqXHR, status, response) {
+											if (response.readyState === 4) {
+												switch (response.status) {
+													case 202:
+														var location = response.getResponseHeader('location');
+														UploadUtil.pollProcess({
+															location: '..' + location
+														})
+																.progress(function (response) {
+																	log.debug(response);
+																})
+																.done(function (response) {
+																	log.info(response);
+																})
+																.fail(function (response) {
+																	log.error(response);
+																});
+												}
+											}
+										}, this))
+										.fail(function (response) {
+											log.error(response);
+										});
+							}
+						}
+
+					}, this))
+					.fail(function (response) {
+						log.error(response)
+					});
 		}
 	});
 

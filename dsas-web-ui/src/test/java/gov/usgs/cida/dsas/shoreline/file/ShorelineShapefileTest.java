@@ -1,9 +1,13 @@
 package gov.usgs.cida.dsas.shoreline.file;
 
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
+import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
+import gov.usgs.cida.dsas.dao.shoreline.ShorelineShapefileDAO;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
+import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -11,6 +15,7 @@ import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -60,11 +65,30 @@ public class ShorelineShapefileTest {
 	public void testValidate() throws Exception {
 		System.out.println("testValidate");
 		File zipFile = validShapeZip;
-		ShorelineShapefile.validate(zipFile);
+		File tempD = null;
+		File tempShapeFile = null;
+
+		tempD = Files.createTempDirectory("temp-shapefile-dir").toFile();
+		tempD.deleteOnExit();
+		tempShapeFile = Files.createTempFile("tempshapefile", ".zip").toFile();
+		tempShapeFile.deleteOnExit();
+		FileUtils.copyFile(validShapeZip, tempShapeFile);
+		FileHelper.unzipFile(tempD.getAbsolutePath(), validShapeZip);
+		
+		ShorelineShapefile.validate(tempD);
 		assertTrue("Validated without exception", true);
 		
-		zipFile = gaMHWFalseShorelines;
-		ShorelineShapefile.validate(zipFile);
+		File tempDir = null;
+		File tempShapeFile2 = null;
+
+		tempDir = Files.createTempDirectory("temp-shapefile-dir").toFile();
+		tempD.deleteOnExit();
+		tempShapeFile2 = Files.createTempFile("tempshapefile", ".zip").toFile();
+		tempShapeFile2.deleteOnExit();
+		FileUtils.copyFile(gaMHWFalseShorelines, tempShapeFile2);
+		FileHelper.unzipFile(tempDir.getAbsolutePath(), gaMHWFalseShorelines);
+		
+		ShorelineShapefile.validate(tempDir);
 		assertTrue("Validated without exception", true);
 		
 	}
@@ -72,9 +96,18 @@ public class ShorelineShapefileTest {
 	@Test(expected = ShorelineFileFormatException.class)
 	public void testValidateWithInvalidFile() throws Exception {
 		System.out.println("testValidateWithInvalidFile");
-		File zipFile = noPRJShapeZip;
-		ShorelineShapefile.validate(zipFile);
-		assertTrue("Validated without exception", true);
+	
+		File tempDirect = null;
+		File tempShapeFile = null;
+
+		tempDirect = Files.createTempDirectory("temp-shapefile-dir").toFile();
+		tempDirect.deleteOnExit();
+		tempShapeFile = Files.createTempFile("tempshapefile", ".zip").toFile();
+		tempShapeFile.deleteOnExit();
+		FileUtils.copyFile(noPRJShapeZip, tempShapeFile);
+		FileHelper.unzipFile(tempDirect.getAbsolutePath(), noPRJShapeZip);
+		
+		ShorelineShapefile.validate(tempDirect);
 	}
 
 }

@@ -66,7 +66,7 @@ public class TokenFileExchanger {
 				token = UUID.randomUUID().toString();
 			}
 
-			tokenToFileMap.put(token, file);
+			tokenToFileMap.put(token, file);  // puts the UUID, full/path/to/file/filename.ext ie: /var/folders/5t/600v2yfs7tg2clxswctbl_vm002d30/T/1449009485618/testFile.shp
 			return token;
 		} else {
 			throw new FileNotFoundException("File could not be found - was not added to Token-To-File Map");

@@ -1,13 +1,13 @@
 package gov.usgs.cida.dsas.service;
 
 import com.google.gson.Gson;
+import gov.usgs.cida.dsas.featureType.file.FeatureTypeFile;
+import gov.usgs.cida.dsas.featureType.file.TokenFeatureTypeFileExchanger;
 import gov.usgs.cida.dsas.rest.service.ServiceURI;
 import gov.usgs.cida.dsas.rest.service.shapefile.ShapefileImportProcess;
-import gov.usgs.cida.dsas.shoreline.exception.ShorelineFileFormatException;
-import gov.usgs.cida.dsas.shoreline.file.IShorelineFile;
+import gov.usgs.cida.dsas.featureTypeFile.exception.ShorelineFileFormatException;
 import gov.usgs.cida.dsas.shoreline.file.ShorelineFile;
 import gov.usgs.cida.dsas.shoreline.file.ShorelineFileFactory;
-import gov.usgs.cida.dsas.shoreline.file.TokenToShorelineFileSingleton;
 import gov.usgs.cida.dsas.utilities.service.ServiceHelper;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse.ResponseType;
@@ -45,6 +45,7 @@ public class ShorelineStagingService extends HttpServlet {
 	private final static String IMPORT_ACTION_STRING = "import";
 	private final static String READDBF_ACTION_STRING = "read-dbf";
 	private final static String DELETE_TOKEN_ACTION_STRING = "delete-token";
+	private static final String WORKSPACE_PARAM = "workspace";
 
 	/**
 	 * Handles the HTTP <code>POST</code> method.
@@ -69,7 +70,7 @@ public class ShorelineStagingService extends HttpServlet {
 			try {
 				ShorelineFileFactory shorelineFactory = new ShorelineFileFactory(request);
 				shorelineFile = shorelineFactory.buildShorelineFile();
-				String token = TokenToShorelineFileSingleton.addShorelineFile(shorelineFile);
+				String token = TokenFeatureTypeFileExchanger.getToken(shorelineFile);
 				responseMap.put(TOKEN_STRING, token);
 				success = true;
 			} catch (FileUploadException | IOException | ShorelineFileFormatException ex) {
@@ -87,19 +88,24 @@ public class ShorelineStagingService extends HttpServlet {
 				Map<String, String> columns = new HashMap<>();
 				if (StringUtils.isNotBlank(columnsString)) {
 					columns = new Gson().fromJson(columnsString, Map.class);
-					
-					ShapefileImportProcess process = new ShapefileImportProcess(token, columns);
-					Thread thread = new Thread(process);
-					thread.start();
-					
-					response.addHeader(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + process.getProcessId());
-					response.setStatus(Response.Status.ACCEPTED.getStatusCode());
-					IOUtils.copy(new ByteArrayInputStream(new byte[0]), response.getWriter());
-					response.flushBuffer();
+
+					String requestWorkspace = request.getParameter(WORKSPACE_PARAM);
+					if (StringUtils.isNotBlank(requestWorkspace)) {
+
+						ShapefileImportProcess process = new ShapefileImportProcess(token, columns, requestWorkspace);
+						Thread thread = new Thread(process);
+						thread.start();
+
+						response.addHeader(HttpHeaders.LOCATION, ServiceURI.PROCESS_SERVICE_ENDPOINT + "/" + process.getProcessId());
+						response.setStatus(Response.Status.ACCEPTED.getStatusCode());
+						IOUtils.copy(new ByteArrayInputStream(new byte[0]), response.getWriter());
+						response.flushBuffer();
+					} else {
+						ServiceHelper.sendNotEnoughParametersError(response, new String[]{WORKSPACE_PARAM}, responseType);
+					}
 				} else {
 					ServiceHelper.sendNotEnoughParametersError(response, new String[]{"columns"}, responseType);
 				}
-				
 			} else {
 				ServiceHelper.sendNotEnoughParametersError(response, new String[]{TOKEN_STRING}, responseType);
 			}
@@ -125,7 +131,7 @@ public class ShorelineStagingService extends HttpServlet {
 			if (StringUtils.isBlank(token)) {
 				ServiceHelper.sendNotEnoughParametersError(response, new String[]{TOKEN_STRING}, responseType);
 			} else {
-				IShorelineFile shorelineFile = TokenToShorelineFileSingleton.getShorelineFile(token);
+				FeatureTypeFile shorelineFile = TokenFeatureTypeFileExchanger.getFeatureTypeFile(token);
 
 				if (null != shorelineFile && shorelineFile.exists()) {
 					shorelineFile.clear();
@@ -150,9 +156,9 @@ public class ShorelineStagingService extends HttpServlet {
 				ServiceHelper.sendNotEnoughParametersError(response, new String[]{TOKEN_STRING}, responseType);
 			} else {
 				// Future
-				IShorelineFile shorelineFile = null;
+				FeatureTypeFile shorelineFile = null;
 				try {
-					shorelineFile = TokenToShorelineFileSingleton.getShorelineFile(token);
+					shorelineFile = TokenFeatureTypeFileExchanger.getFeatureTypeFile(token);
 
 					if (null == shorelineFile || !shorelineFile.exists()) {
 						throw new FileNotFoundException();
@@ -204,7 +210,7 @@ public class ShorelineStagingService extends HttpServlet {
 	 */
 	@Override
 	public void destroy() {
-		TokenToShorelineFileSingleton.clear();
+		TokenFeatureTypeFileExchanger.clear();
 	}
 
 }

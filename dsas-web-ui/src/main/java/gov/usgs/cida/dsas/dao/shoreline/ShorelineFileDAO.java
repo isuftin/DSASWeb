@@ -3,7 +3,6 @@ package gov.usgs.cida.dsas.dao.shoreline;
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
 import gov.usgs.cida.dsas.dao.geoserver.GeoserverDAO;
 import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
-import gov.usgs.cida.dsas.model.DSASProcess;
 import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.utilities.properties.Property;
 import gov.usgs.cida.dsas.utilities.properties.PropertyUtil;
@@ -34,7 +33,6 @@ public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 	public final static String[] PROTECTED_WORKSPACES = new String[]{GeoserverDAO.PUBLISHED_WORKSPACE_NAME};
 	protected String JNDI_NAME;
 	private final PostgresDAO pgDao = new PostgresDAO();
-	protected DSASProcess process = null;
 
 	/**
 	 * Retrieves a connection from the database
@@ -176,16 +174,6 @@ public abstract class ShorelineFileDAO extends FeatureTypeFileDAO {
 	public int getShorelineCountInShorelineView(String workspace) throws SQLException {
 		return pgDao.getShorelineCountInShorelineView(workspace);
 	}
+}	
 
 
-	public void setDSASProcess(DSASProcess process) {
-		this.process = process;
-	}
-
-	protected void updateProcessInformation(String string) {
-		if (this.process != null) {
-			this.process.addProcessInformation(string);
-		}
-	}
-
-}

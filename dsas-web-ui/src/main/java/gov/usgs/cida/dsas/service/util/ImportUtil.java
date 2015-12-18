@@ -1,6 +1,6 @@
 package gov.usgs.cida.dsas.service.util;
 
-import gov.usgs.cida.dsas.shoreline.exception.LidarFileFormatException;
+import gov.usgs.cida.dsas.featureTypeFile.exception.LidarFileFormatException;
 import gov.usgs.cida.owsutils.commons.communication.RequestResponse;
 import gov.usgs.cida.owsutils.commons.io.FileHelper;
 import gov.usgs.cida.owsutils.commons.io.exception.ShapefileFormatException;

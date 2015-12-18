@@ -1,0 +1,68 @@
+<div id="column-matching-container" class="container-fluid">
+	<div id="explanation-row" class="row-fluid ">
+		<div id="explanation-well" class="well">
+			There is a possible attribute mismatch between the resource you are 
+			trying to view and what is considered a valid resource.
+			<br /><br />
+			Optional Attributes:
+			<ul>
+				{{#each defaultColumns}}
+				<li>{{attr}}{{printDefaultValue}}</li>
+				{{/each}}
+			</ul>
+			<br /><br />
+			Optional attributes and their defaults. 
+			These can be left unmapped to accept the default values.
+			<br/>
+			Please drag attributes from the left to the right to properly 
+			map to the correct attributes. Attributes wrapped in blue are required, 
+			those wrapped in green are optional. The resource will be updated server-side once complete.
+		</div>
+	</div>
+	<div id="{{layerName}}-drag-drop-row" class="row-fluid drag-drop-row">
+		{{!-- Left-side FROM column --}}
+		<div id="{{layerName}}-drag-container" class="well col-sm-5 col-md-5 col-lg-5">
+			<ul id="{{layerName}}-drag-list" class="ui-helper-reset matching-dd-list">
+				{{#each columnKeys}}
+				<li>
+					<div class="{{../layerName}}-drop-holder left-drop-holder drop-holder">
+						<div id="{{this}}-drag-item" class="{{../layerName}}-drag-item ui-state-default ui-corner-all">
+							{{this}}<span style="float:left;" class="ui-icon ui-icon-link">&nbsp;</span>
+						</div>
+					</div>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+
+		{{!-- Right-side TO column --}}
+		<div id="{{layerName}}-drop-container" class="well col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-sm-5 col-md-5 col-lg-5">
+			<ul id="{{layerName}}-drop-list" class="ui-helper-reset matching-dd-list">
+				{{!-- Mandatory Columns --}}
+				{{#each mandatoryColumns}}
+				<li>
+					<div id="{{this}}-drop-item" class="{{../layerName}}-drop-holder right-drop-holder drop-holder">
+						{{this}}
+					</div>
+				</li>
+				{{/each}}
+
+				{{!-- Optional Columns --}}
+				{{#if defaultColumns}}
+				{{#each defaultColumns}}
+				<li>
+					<div id="{{this.attr}}-drop-item" class="{{../layerName}}-drop-holder right-drop-holder-optional drop-holder">
+						{{this.attr}}
+					</div>
+				</li>
+				{{/each}}
+				{{/if }}
+			</ul>
+		</div>
+	</div>
+	<div class="row-fluid ">
+		<p class="text-right">
+			<button class="btn btn-success" id="button-update-columns" disabled>Update</button>
+		</p>
+	</div>
+</div>
