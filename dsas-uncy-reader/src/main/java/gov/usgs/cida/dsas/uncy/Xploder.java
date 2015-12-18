@@ -3,7 +3,7 @@ package gov.usgs.cida.dsas.uncy;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import gov.usgs.cida.dsas.model.DSASProcess;
-import gov.usgs.cida.dsas.model.IShapeFile;
+import gov.usgs.cida.dsas.model.ShorelineShapeEnum;
 import static gov.usgs.cida.dsas.uncy.ShapefileOutputXploder.PTS_SUFFIX;
 import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.utilities.properties.Property;
@@ -117,9 +117,9 @@ public abstract class Xploder implements AutoCloseable {
 			FileHelper.copyDirectory(inputFile, inputFileTempWorkdir);
 		}
 
-		Collection<File> shapeFileColl = FileHelper.listFiles(inputFileTempWorkdir, IShapeFile.REQUIRED_FILES, false);
+		Collection<File> shapeFileColl = FileHelper.listFiles(inputFileTempWorkdir, ShorelineShapeEnum.getNames(ShorelineShapeEnum.class), false);
 		if (shapeFileColl.isEmpty()) {
-			throw new IOException(String.format("Shapefile is missing one or more required file types %s", String.join(",", IShapeFile.REQUIRED_FILES)));
+			throw new IOException(String.format("Shapefile is missing one or more required file types %s", String.join(",", ShorelineShapeEnum.getNames(ShorelineShapeEnum.class))));
 		}
 		shapeFiles = new ShpFiles(shapeFileColl.iterator().next());
 

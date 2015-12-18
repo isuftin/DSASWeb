@@ -317,7 +317,7 @@ public class ShapeFileUtilTest {
 		boolean result = ShapeFileUtil.isValidShapefile(tempDir);
 		assertTrue(result);
 	}
-
+	
 	@AfterClass
 	public static void tearDownClass() {
 		FileUtils.deleteQuietly(workDir);
