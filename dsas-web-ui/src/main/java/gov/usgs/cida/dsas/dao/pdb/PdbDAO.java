@@ -3,7 +3,6 @@ package gov.usgs.cida.dsas.dao.pdb;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import gov.usgs.cida.dsas.dao.FeatureTypeFileDAO;
-import gov.usgs.cida.dsas.dao.postgres.PostgresDAO;
 import gov.usgs.cida.dsas.exceptions.UnsupportedFeatureTypeException;
 import gov.usgs.cida.dsas.utilities.features.Constants;
 import gov.usgs.cida.dsas.utilities.properties.Property;
@@ -22,7 +21,6 @@ import java.util.NoSuchElementException;
 import javax.naming.NamingException;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
-import org.apache.commons.lang.StringUtils;
 import org.geotools.data.crs.ReprojectFeatureResults;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.feature.FeatureCollection;
@@ -114,14 +112,6 @@ public class PdbDAO extends FeatureTypeFileDAO {
 						insertPointsIntoPdbTable(connection, pdbList);
 					}
 
-//					viewName = createViewAgainstWorkspace(connection, workspace); //
-//					if (StringUtils.isBlank(viewName)) {
-//						LOGGER.error("Unable to create pdb view against workspace.");
-//						throw new SQLException("Could not create view");
-//					}
-
-					//new PostgresDAO().addViewToMetadataTable(connection, PDB_VIEW_NAME);
-
 					connection.commit();
 				} catch (NoSuchElementException | SQLException ex) {
 					LOGGER.error("Error while attempting insert into PDB table. ", ex);
@@ -183,17 +173,4 @@ public class PdbDAO extends FeatureTypeFileDAO {
 		return pgDao.insertPointsIntoPDBTable(connection, pdbs);
 	}
 
-	/**
-	 * Sets up a view against a given workspace in the shorelines table
-	 *
-	 * @param connection
-	 * @param workspace
-	 * @return
-	 * @throws SQLException
-	 */
-//	protected String createViewAgainstWorkspace(Connection connection, String workspace) throws SQLException {
-//		updateProcessInformation(String.format("Creating Pdb view against workspace: %s", workspace));
-//		//return pgDao.createViewAgainstWorkspace(connection, workspace);
-//		return pgDao.createViewAgainstPdbWorkspace(connection, workspace);
-//	}
 }

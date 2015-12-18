@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+	logicalFilePath="path-independent">
+	
+	<changeSet author="slarson" id="create_pdb_view_function" logicalFilePath="path-independent">
+            <insert tableName="gt_pk_metadata_table">
+                <column name="table_schema" value="public"></column>
+                <column name="table_name" value="proxy_datum_bias_view"></column>
+                <column name="pk_column" value="profile_id"></column>
+                <column name="pk_column_idx" value="1"></column>
+                <column name="pk_policy" value="assigned"></column>
+                <column name="pk_sequence" ></column>
+            </insert>
+	</changeSet>        
+</databaseChangeLog>
