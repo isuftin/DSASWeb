@@ -114,13 +114,13 @@ public class PdbDAO extends FeatureTypeFileDAO {
 						insertPointsIntoPdbTable(connection, pdbList);
 					}
 
-					viewName = createViewAgainstWorkspace(connection, workspace);
-					if (StringUtils.isBlank(viewName)) {
-						LOGGER.error("Unable to create pdb view against workspace.");
-						throw new SQLException("Could not create view");
-					}
+//					viewName = createViewAgainstWorkspace(connection, workspace); //
+//					if (StringUtils.isBlank(viewName)) {
+//						LOGGER.error("Unable to create pdb view against workspace.");
+//						throw new SQLException("Could not create view");
+//					}
 
-					new PostgresDAO().addViewToMetadataTable(connection, viewName);
+					//new PostgresDAO().addViewToMetadataTable(connection, PDB_VIEW_NAME);
 
 					connection.commit();
 				} catch (NoSuchElementException | SQLException ex) {
@@ -136,7 +136,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 			LOGGER.error("Error while inserting into PDB table. ", ex);
 			throw ex;
 		}
-		return viewName;
+		return PDB_VIEW_NAME;
 	}
 
 	public int getIntValue(String attribute, SimpleFeature feature) {
@@ -191,8 +191,9 @@ public class PdbDAO extends FeatureTypeFileDAO {
 	 * @return
 	 * @throws SQLException
 	 */
-	protected String createViewAgainstWorkspace(Connection connection, String workspace) throws SQLException {
-		updateProcessInformation(String.format("Creating view against workspace: %s", workspace));
-		return pgDao.createViewAgainstWorkspace(connection, workspace);
-	}
+//	protected String createViewAgainstWorkspace(Connection connection, String workspace) throws SQLException {
+//		updateProcessInformation(String.format("Creating Pdb view against workspace: %s", workspace));
+//		//return pgDao.createViewAgainstWorkspace(connection, workspace);
+//		return pgDao.createViewAgainstPdbWorkspace(connection, workspace);
+//	}
 }

@@ -166,16 +166,5 @@ public class ShapeFileUtil {
 		return sFile.getFileNames();
 	}
 
-//	public static void closeReader(DbaseFileReader dbfReader) throws IOException {
-//		if (dbfReader != null) {
-//			dbfReader.close();
-//		}
-//	}
-//
-//	public static void closeDataStore(DataStore ds) {
-//		if (ds != null) {
-//			ds.dispose();
-//		}
-//	}
 
 }

@@ -16,6 +16,7 @@
 	<include file="70addShorelineNameToWorkspaceView.xml" relativeToChangelogFile="true"/>
 	<include file="80addPDBTables.xml" relativeToChangelogFile="true"/>
         <include file="81updatePDBPKtoProfileID.xml" relativeToChangelogFile="true"/>
+        <include file="82addPdbViewToMetadataTable.xml" relativeToChangelogFile="true"/>
 	<include file="90createWorkspaceTable.xml" relativeToChangelogFile="true"/>
 	<include file="100createForeignKeyFromShorelineTableToWorkspaceTable.xml" relativeToChangelogFile="true"/>
 	
