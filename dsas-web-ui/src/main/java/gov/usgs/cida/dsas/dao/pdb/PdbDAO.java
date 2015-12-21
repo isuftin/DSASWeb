@@ -48,7 +48,6 @@ public class PdbDAO extends FeatureTypeFileDAO {
 	@Override
 	public String importToDatabase(File shpFile, Map<String, String> columns, String workspace, String EPSGCode) throws SQLException, NamingException, NoSuchElementException, ParseException, IOException, SchemaException, TransformException, FactoryException {
 		LOGGER.info("Attempting to begin Import of PDB to database.");
-		String viewName = null;
 		updateProcessInformation(String.format("Importing pdb into database %s", shpFile.getName()));
 		int MAX_POINTS_AT_ONCE = 500;
 		BidiMap bm = new DualHashBidiMap(columns);
@@ -69,7 +68,7 @@ public class PdbDAO extends FeatureTypeFileDAO {
 				try {
 					connection.setAutoCommit(false);
 
-					ArrayList<Pdb> pdbList = new ArrayList();
+					ArrayList<Pdb> pdbList = new ArrayList<>();
 
 					while (iter.hasNext()) {
 						SimpleFeature sf = iter.next();
