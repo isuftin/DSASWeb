@@ -108,7 +108,13 @@ public class PdbFile extends FeatureTypeFile {
 		String projection = getEPSGCode();
 		File shpFile = fileMap.get(SHP);
 		updateProcessInformation("Importing to database");
-		return dao.importToDatabase(shpFile, columns, workspace, projection);
+		String result =  dao.importToDatabase(shpFile, columns, workspace, projection);
+		if (geoserverHandler.touchWorkspace(workspace)) {
+			updateProcessInformation(String.format("%s updated.", workspace));
+		} else {
+			updateProcessInformation(String.format("%s could not be updated.", workspace));
+		}
+		return result;
 	}
 
 	@Override
