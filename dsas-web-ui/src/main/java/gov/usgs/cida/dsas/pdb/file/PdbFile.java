@@ -112,7 +112,7 @@ public class PdbFile extends FeatureTypeFile {
 		if (geoserverHandler.touchWorkspace(workspace)) {
 			updateProcessInformation(String.format("%s updated.", workspace));
 		} else {
-			LOGGER.debug(String.format("%s could not be updated. Requested data may not be up to date", workspace));
+			updateProcessInformation(String.format("%s could not be updated.", workspace));
 		}
 		return result;
 	}
