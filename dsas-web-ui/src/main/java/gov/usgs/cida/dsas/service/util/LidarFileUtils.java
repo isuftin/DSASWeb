@@ -15,6 +15,13 @@ import org.apache.commons.io.IOUtils;
 import org.opengis.referencing.FactoryException;
 
 public class LidarFileUtils {
+	
+	// These are explicitly required for lidar csv files
+	private static final String SEGMENT_ID_HEADER = "segmentID";
+	private static final String X_HEADER = "x";
+	private static final String Y_HEADER = "y";
+	private static final String UNCY_HEADER ="uncy";
+	private static final String DATE_HEADER = "date";
 
 	/**
 	 * A lidar file is a csv with 5 columns
@@ -98,20 +105,20 @@ public class LidarFileUtils {
 		if (headerRow.length != 5) {
 			throw new LidarFileFormatException("Lidar csv file has wrong number of header columns");
 		}
-		if (!headerRow[0].equalsIgnoreCase("segment_id")) {
-			throw new LidarFileFormatException("Lidar csv does not have segment_id as first column");
+		if (!headerRow[0].equalsIgnoreCase(SEGMENT_ID_HEADER)) {
+			throw new LidarFileFormatException(String.format("Lidar csv does not have %s as first column", SEGMENT_ID_HEADER));
 		}
-		if (!headerRow[1].equalsIgnoreCase("x")) {
-			throw new LidarFileFormatException("Lidar csv does not have x as second column");
+		if (!headerRow[1].equalsIgnoreCase(X_HEADER)) {
+			throw new LidarFileFormatException(String.format("Lidar csv does not have %s as second column", X_HEADER));
 		}
-		if (!headerRow[2].equalsIgnoreCase("y")) {
-			throw new LidarFileFormatException("Lidar csv does not have y as third column");
+		if (!headerRow[2].equalsIgnoreCase(Y_HEADER)) {
+			throw new LidarFileFormatException(String.format("Lidar csv does not have %s as third column", Y_HEADER));
 		}
-		if (!headerRow[3].equalsIgnoreCase("uncy_")) {
-			throw new LidarFileFormatException("Lidar csv does not have uncy_ as fourth column");
+		if (!headerRow[3].equalsIgnoreCase(UNCY_HEADER)) {
+			throw new LidarFileFormatException(String.format("Lidar csv does not have %s as fourth column", UNCY_HEADER));
 		}
-		if (!headerRow[4].equalsIgnoreCase("Date_")) {
-			throw new LidarFileFormatException("Lidar csv does not have Date_ as fifth column");
+		if (!headerRow[4].equalsIgnoreCase(DATE_HEADER)) {
+			throw new LidarFileFormatException(String.format("Lidar csv does not have %s as fifth column", DATE_HEADER));
 		}
 	}
 
