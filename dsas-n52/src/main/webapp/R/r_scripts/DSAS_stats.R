@@ -108,8 +108,8 @@ calcNSM <- function(dates,dist,uncy){
   if (length(dates)>= mnN){
     firstDateIdx <- which.min(dates)
     lastDateIdx  <- which.max(dates)
-    timeRangeInYears <- as(dates[lastDateIdx]-dates[firstDateIdx],"numeric")*rateConv
-    NSM_dist <- dist[firstDateIdx]-dist[lastDateIdx]
+    timeRangeInYears <- as(dates[lastDateIdx]-dates[firstDateIdx],"numeric")/rateConv
+    NSM_dist <- dist[lastDateIdx]-dist[firstDateIdx]
     EPR_rates <- NSM_dist / timeRangeInYears
     # Endpoint Rate Confidence Interval
     ECI <- sqrt(uncy[firstDateIdx]^2 + uncy[lastDateIdx]^2) / timeRangeInYears
