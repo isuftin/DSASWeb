@@ -11,6 +11,8 @@ COPY rerun_liquibase.sh /rerun_liquibase.sh
 RUN chmod 755 /run_liquibase.sh
 RUN chmod 755 /rerun_liquibase.sh
 
+RUN echo 'host all all 0.0.0.0/0 md5' >> /etc/postgresql/9.4/main/pg_hba.conf
+
 # Adds commands to create the dsas database
 RUN sed -i '80rinit-database.txt' /start-postgis.sh
 

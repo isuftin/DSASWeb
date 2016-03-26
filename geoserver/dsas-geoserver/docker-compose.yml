@@ -1,5 +1,8 @@
-dsas_geoserver:
-  build: ./src/main/resources/docker
-  hostname: dsas_geoserver
-  ports:
-    - "8081:8080"
+version: '2'
+
+services:
+  dsas_geoserver:
+    build: ./src/main/resources/docker
+    hostname: dsas_geoserver
+    ports:
+      - "8081:8080"

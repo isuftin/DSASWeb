@@ -1,16 +1,19 @@
-dsas_rserve:
-  build: ./src/main/resources/docker/rserve
-  hostname: dsas_rserve
-  environment:
-      - PASSWORD=rserve
-      
-dsas_n52:
-  build: ./src/main/resources/docker/n52-wps
-  hostname: dsas_n52
-  ports:
-      - "8082:8080"
-  # links:
-  #     - dsasrserve
-  #
-  # This is linked at the top-level compose template.
-  # docker-compose will not extend services with links
+version: '2'
+
+services:
+  dsas_rserve:
+    build: ./src/main/resources/docker/rserve
+    hostname: dsas_rserve
+    environment:
+        - PASSWORD=rserve
+        
+  dsas_n52:
+    build: ./src/main/resources/docker/n52-wps
+    hostname: dsas_n52
+    ports:
+        - "8082:8080"
+    # links:
+    #     - dsasrserve
+    #
+    # This is linked at the top-level compose template.
+    # docker-compose will not extend services with links

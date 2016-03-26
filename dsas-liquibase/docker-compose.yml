@@ -1,11 +1,14 @@
-# Creates the PostGIS container for DSAS. Set the environment SKIP_LIQUIBASE to
-# a non-empty value to skip running liquibase when container starts. 
+version: '2'
 
-db:
-    build: ./src/main/resources/docker
-    ports:
-        - "5432:5432"
-    environment:
-        - POSTGRES_USER=dsas
-        - POSTGRES_PASS=dsas
-#		- SKIP_LIQUIBASE=true
+services:
+  # Creates the PostGIS container for DSAS. Set the environment SKIP_LIQUIBASE to
+  # a non-empty value to skip running liquibase when container starts. 
+
+  db:
+      build: ./src/main/resources/docker
+      ports:
+          - "5432:5432"
+      environment:
+          - POSTGRES_USER=dsas
+          - POSTGRES_PASS=dsas
+  #		- SKIP_LIQUIBASE=true
