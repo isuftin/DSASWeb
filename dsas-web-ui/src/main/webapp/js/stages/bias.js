@@ -67,10 +67,16 @@ var ProxyDatumBias = {
 					callbacks: [
 						function (describeFeaturetypeRespone) {
 							LOG.trace('bias.js::addProxyDatumBias: Parsing layer attributes to check that they contain the attributes needed.');
-							ProxyDatumBias.addLayerToMap({
-								layer: layer,
-								describeFeaturetypeRespone: describeFeaturetypeRespone
-							});
+							if (!describeFeaturetypeRespone.hasOwnProperty('error')) {
+								ProxyDatumBias.addLayerToMap({
+									layer: layer,
+									describeFeaturetypeRespone: describeFeaturetypeRespone
+								});
+							} else {
+								// There was an error in getting the PDB layer (one may not exist). 
+								// I want to skip adding it to the map and silently move on.
+								LOG.trace('bias.js::addProxyDatumBias: An error occurred getting PDB layer info.');
+							}
 						}
 					]
 				});

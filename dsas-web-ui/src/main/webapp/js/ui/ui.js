@@ -915,52 +915,52 @@ var UI = function () {
 				switch (args.idx) {
 					case 4 :
 					case 5 :
-						$('#stage-select-tablist >li a[href=#shorelines]').click();
-						$('#action-shorelines-tablist > li a[href=#shorelines-view-tab]').click();
+						$('#stage-select-tablist >li a[href="#shorelines"]').click();
+						$('#action-shorelines-tablist > li a[href="#shorelines-view-tab"]').click();
 						break
 					case 6 :
-						$('#stage-select-tablist >li a[href=#shorelines]').click();
-						$('#action-shorelines-tablist > li a[href=#shorelines-manage-tab]').click();
+						$('#stage-select-tablist >li a[href="#shorelines"]').click();
+						$('#action-shorelines-tablist > li a[href="#shorelines-manage-tab"]').click();
 						break
 					case 7 :
-						$('#stage-select-tablist >li a[href=#shorelines]').click();
-						$('#action-shorelines-tablist > li a[href=#shorelines-view-tab]').click();
+						$('#stage-select-tablist >li a[href="#shorelines"]').click();
+						$('#action-shorelines-tablist > li a[href="#shorelines-view-tab"]').click();
 						break
 					case 8 :
 					case 9 :
-						$('#stage-select-tablist >li a[href=#baseline]').click();
-						$('#action-baseline-tablist > li a[href=#baseline-view-tab]').click();
+						$('#stage-select-tablist >li a[href="#baseline"]').click();
+						$('#action-baseline-tablist > li a[href="#baseline-view-tab"]').click();
 						break
 					case 10 :
-						$('#stage-select-tablist >li a[href=#baseline]').click();
-						$('#action-baseline-tablist > li a[href=#baseline-manage-tab]').click();
+						$('#stage-select-tablist >li a[href="#baseline"]').click();
+						$('#action-baseline-tablist > li a[href="#baseline-manage-tab"]').click();
 						break
 					case 11 :
 					case 12 :
-						$('#stage-select-tablist >li a[href=#transects]').click();
-						$('#action-transects-tablist > li a[href=#transects-view-tab]').click();
+						$('#stage-select-tablist >li a[href="#transects"]').click();
+						$('#action-transects-tablist > li a[href="#transects-view-tab"]').click();
 						break
 					case 13 :
-						$('#stage-select-tablist >li a[href=#transects]').click();
-						$('#action-transects-tablist > li a[href=#transects-manage-tab]').click();
+						$('#stage-select-tablist >li a[href="#transects"]').click();
+						$('#action-transects-tablist > li a[href="#transects-manage-tab"]').click();
 						break
 					case 14 :
 					case 15 :
-						$('#stage-select-tablist >li a[href=#calculation]').click();
-						$('#action-calculation-tablist > li a[href=#calculation-view-tab]').click();
+						$('#stage-select-tablist >li a[href="#calculation"]').click();
+						$('#action-calculation-tablist > li a[href="#calculation-view-tab"]').click();
 						break
 					case 16 :
-						$('#stage-select-tablist >li a[href=#calculation]').click();
-						$('#action-calculation-tablist > li a[href=#calculation-manage-tab]').click();
+						$('#stage-select-tablist >li a[href="#calculation"]').click();
+						$('#action-calculation-tablist > li a[href="#calculation-manage-tab"]').click();
 						break
 					case 17 :
 					case 18 :
-						$('#stage-select-tablist >li a[href=#results]').click();
-						$('#action-results-tablist > li a[href=#results-view-tab]').click();
+						$('#stage-select-tablist >li a[href="#results"]').click();
+						$('#action-results-tablist > li a[href="#results-view-tab"]').click();
 						break
 					case 19 :
-						$('#stage-select-tablist >li a[href=#results]').click();
-						$('#action-results-tablist > li a[href=#results-manage-tab]').click();
+						$('#stage-select-tablist >li a[href="#results"]').click();
+						$('#action-results-tablist > li a[href="#results-manage-tab"]').click();
 						break
 				}
 			};
@@ -980,40 +980,40 @@ var UI = function () {
 				bootstro.start(undefined, {
 					finishButton: '<button class="btn btn-mini btn-success bootstro-finish-btn"><i class="icon-ok" ></i> Finish</button>'
 				});
-				$('#stage-select-tablist >li a[href=#shorelines]').click();
-				$('#action-shorelines-tablist > li a[href=#shorelines-view-tab]').click();
+				$('#stage-select-tablist >li a[href="#shorelines"]').click();
+				$('#action-shorelines-tablist > li a[href="#shorelines-view-tab"]').click();
 				bootstro.go_to(4);
 			});
 			$('#nav-menu-baseline').on('click', function () {
 				bootstro.start(undefined, {
 					finishButton: '<button class="btn btn-mini btn-success bootstro-finish-btn"><i class="icon-ok" ></i> Finish</button>'
 				});
-				$('#stage-select-tablist >li a[href=#baseline]').click();
-				$('#action-baseline-tablist > li a[href=#baseline-view-tab]').click();
+				$('#stage-select-tablist >li a[href="#baseline"]').click();
+				$('#action-baseline-tablist > li a[href="#baseline-view-tab"]').click();
 				bootstro.go_to(8);
 			});
 			$('#nav-menu-transects').on('click', function () {
 				bootstro.start(undefined, {
 					finishButton: '<button class="btn btn-mini btn-success bootstro-finish-btn"><i class="icon-ok" ></i> Finish</button>'
 				});
-				$('#stage-select-tablist >li a[href=#transects]').click();
-				$('#action-transects-tablist > li a[href=#transects-view-tab]').click();
+				$('#stage-select-tablist >li a[href="#transects"]').click();
+				$('#action-transects-tablist > li a[href="#transects-view-tab"]').click();
 				bootstro.go_to(11);
 			});
 			$('#nav-menu-calculation').on('click', function () {
 				bootstro.start(undefined, {
 					finishButton: '<button class="btn btn-mini btn-success bootstro-finish-btn"><i class="icon-ok" ></i> Finish</button>'
 				});
-				$('#stage-select-tablist >li a[href=#calculation]').click();
-				$('#action-calculation-tablist > li a[href=#calculation-view-tab]').click();
+				$('#stage-select-tablist >li a[href="#calculation"]').click();
+				$('#action-calculation-tablist > li a[href="#calculation-view-tab"]').click();
 				bootstro.go_to(14);
 			});
 			$('#nav-menu-results').on('click', function () {
 				bootstro.start(undefined, {
 					finishButton: '<button class="btn btn-mini btn-success bootstro-finish-btn"><i class="icon-ok" ></i> Finish</button>'
 				});
-				$('#stage-select-tablist >li a[href=#results]').click();
-				$('#action-results-tablist > li a[href=#results-view-tab]').click();
+				$('#stage-select-tablist >li a[href="#results"]').click();
+				$('#action-results-tablist > li a[href="#results-view-tab"]').click();
 				bootstro.go_to(17);
 			});
 		},
@@ -1061,7 +1061,7 @@ var UI = function () {
 				'data-bootstro-step': 3
 			});
 
-			$('#stage-select-tablist >li a[href=#shorelines]').addClass('bootstro').attr({
+			$('#stage-select-tablist >li a[href="#shorelines"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Shorelines',
 				'data-bootstro-content': 'Shorelines are geospatial polylines which represent the location of the shoreline at different times.<br />DSASweb uses the difference between these shorelines to calculate metrics of shoreline change.',
 				'data-bootstro-placement': 'right',
@@ -1069,7 +1069,7 @@ var UI = function () {
 				'data-bootstro-step': 4
 			});
 
-			$('#action-shorelines-tablist > li a[href=#shorelines-view-tab]').addClass('bootstro').attr({
+			$('#action-shorelines-tablist > li a[href="#shorelines-view-tab"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Shorelines View',
 				'data-bootstro-content': 'A existing set of shorelines selected from the view menu will be added to the active workspace.' +
 					'Use the visibility toggles, or click on shorelines in the map to disable shorelines.',
@@ -1078,7 +1078,7 @@ var UI = function () {
 				'data-bootstro-step': 5
 			});
 
-			$('#action-shorelines-tablist > li a[href=#shorelines-manage-tab]').addClass('bootstro').attr({
+			$('#action-shorelines-tablist > li a[href="#shorelines-manage-tab"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Shorelines Manage',
 				'data-bootstro-content': 'A set of shorelines can be added or removed from the view menu using the manage menu.',
 				'data-bootstro-placement': 'top',
@@ -1094,7 +1094,7 @@ var UI = function () {
 				'data-bootstro-step': 7
 			});
 
-			$('#stage-select-tablist >li a[href=#baseline]').addClass('bootstro').attr({
+			$('#stage-select-tablist >li a[href="#baseline"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Baseline',
 				'data-bootstro-content': 'The baseline provides a local frame of reference for calculating metrics of shoreline change.',
 				'data-bootstro-placement': 'right',
@@ -1102,7 +1102,7 @@ var UI = function () {
 				'data-bootstro-step': 8
 			});
 
-			$('#action-baseline-tablist > li a[href=#baseline-view-tab]').addClass('bootstro').attr({
+			$('#action-baseline-tablist > li a[href="#baseline-view-tab"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Baseline View',
 				'data-bootstro-content': 'A baseline selected from the view menu will be added to the active workspace.',
 				'data-bootstro-placement': 'right',
@@ -1110,7 +1110,7 @@ var UI = function () {
 				'data-bootstro-step': 9
 			});
 
-			$('#action-baseline-tablist > li a[href=#baseline-manage-tab]').addClass('bootstro').attr({
+			$('#action-baseline-tablist > li a[href="#baseline-manage-tab"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Baseline Manage',
 				'data-bootstro-content': '<div><div style="float:left;">A baseline can be added or removed<br />from the view menu using the manage menu.<br /><br />The manage tab also provides tools to draw <br />new baselines or clone and edit existing baselines.</div><img src="images/introduction_images/BaselineDraw.gif" /></div>',
 				'data-bootstro-placement': 'bottom',
@@ -1118,7 +1118,7 @@ var UI = function () {
 				'data-bootstro-step': 10
 			});
 
-			$('#stage-select-tablist >li a[href=#transects]').addClass('bootstro').attr({
+			$('#stage-select-tablist >li a[href="#transects"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Transects',
 				'data-bootstro-content': 'Transects are cast perpendicular to the workspace baseline, and their intersections with shorelines are used to calculate metrics of shoreline change.',
 				'data-bootstro-placement': 'right',
@@ -1126,7 +1126,7 @@ var UI = function () {
 				'data-bootstro-step': 11
 			});
 
-			$('#action-transects-tablist > li a[href=#transects-view-tab]').addClass('bootstro').attr({
+			$('#action-transects-tablist > li a[href="#transects-view-tab"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Transects View',
 				'data-bootstro-content': 'An existing set of transects selected from the view menu will be added to the active workspace.',
 				'data-bootstro-placement': 'right',
@@ -1134,7 +1134,7 @@ var UI = function () {
 				'data-bootstro-step': 12
 			});
 
-			$('#action-transects-tablist > li a[href=#transects-manage-tab]').addClass('bootstro').attr({
+			$('#action-transects-tablist > li a[href="#transects-manage-tab"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Transects Manage',
 				'data-bootstro-content': '<div><div style="float:left">A set of transects can be added<br />or removed from the view menu using the manage menu.<br /><br />The manage tab also provides tools to cast new transects<br />at user defined intervals or to edit existing transects.</div><img src="images/introduction_images/EditTransects.gif" /></div>',
 				'data-bootstro-placement': 'bottom',
@@ -1142,7 +1142,7 @@ var UI = function () {
 				'data-bootstro-step': 13
 			});
 
-			$('#stage-select-tablist >li a[href=#calculation]').addClass('bootstro').attr({
+			$('#stage-select-tablist >li a[href="#calculation"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Review/Calculation',
 				'data-bootstro-content': ' Review the workspace elements and specify parameters for the calculations. Calculate metrics of shoreline change.',
 				'data-bootstro-placement': 'right',
@@ -1150,7 +1150,7 @@ var UI = function () {
 				'data-bootstro-step': 14
 			});
 
-			$('#action-intersections-tablist > li a[href=#intersections-view-tab]').addClass('bootstro').attr({
+			$('#action-intersections-tablist > li a[href="#intersections-view-tab"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Review/Calculation View',
 				'data-bootstro-content': ' An existing set of intersections can be selected from the view menu will be added to the active workspace.',
 				'data-bootstro-placement': 'right',
@@ -1158,7 +1158,7 @@ var UI = function () {
 				'data-bootstro-step': 15
 			});
 
-			$('#action-intersections-tablist > li a[href=#intersections-manage-tab]').addClass('bootstro').attr({
+			$('#action-intersections-tablist > li a[href="#intersections-manage-tab"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Review/Calculation  Manage',
 				'data-bootstro-content': 'Specify parameters for calculations, and begin DSASweb calculation algorithms. ',
 				'data-bootstro-placement': 'right',
@@ -1166,7 +1166,7 @@ var UI = function () {
 				'data-bootstro-step': 16
 			});
 
-			$('#stage-select-tablist >li a[href=#results]').addClass('bootstro').attr({
+			$('#stage-select-tablist >li a[href="#results"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Results',
 				'data-bootstro-content': 'Visualize and/or download metrics of shoreline change resulting from processing of DSASweb workspace elements as defined by the user.',
 				'data-bootstro-placement': 'right',
@@ -1174,7 +1174,7 @@ var UI = function () {
 				'data-bootstro-step': 17
 			});
 
-			$('#action-result-tablist > li a[href=#results-view-tab]').addClass('bootstro').attr({
+			$('#action-result-tablist > li a[href="#results-view-tab"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Results View',
 				'data-bootstro-content': 'An existing set of rates can be selected from the view menu will be added to the active workspace.<br />View the interactive plot for metrics of shoreline change.',
 				'data-bootstro-placement': 'right',
@@ -1182,7 +1182,7 @@ var UI = function () {
 				'data-bootstro-step': 18
 			});
 
-			$('#action-result-tablist > li a[href=#results-manage-tab]').addClass('bootstro').attr({
+			$('#action-result-tablist > li a[href="#results-manage-tab"]').addClass('bootstro').attr({
 				'data-bootstro-title': 'Results Manage',
 				'data-bootstro-content': 'Download images, csv files, or shapefiles for the DSASweb calculation results.',
 				'data-bootstro-placement': 'right',

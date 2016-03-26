@@ -270,14 +270,21 @@ var OWS = function (endpoint) {
 					LOG.info('OWS.js::getDescribeFeatureType: WFS featureType response received.');
 					var gmlReader = new OpenLayers.Format.WFSDescribeFeatureType();
 					var describeFeaturetypeRespone = gmlReader.read(data);
-					var prefix = args.layerNS;//describeFeaturetypeRespone.featureTypes[0].targetPrefix;
-					var namespace = describeFeaturetypeRespone.targetNamespace;
-					if (!me.featureTypeDescription[prefix]) {
-						me.featureTypeDescription[prefix] = Object.extended();
+					
+					// Make sure that I don't have an error. If there's an error,
+					// I want to skip doing anything more here and pass that response
+					// immediately back to any callbacks waiting on this and not 
+					// try to further parse this response.
+					if (!describeFeaturetypeRespone.hasOwnProperty('error')) {
+						var prefix = args.layerNS;//describeFeaturetypeRespone.featureTypes[0].targetPrefix;
+						var namespace = describeFeaturetypeRespone.targetNamespace;
+						if (!me.featureTypeDescription[prefix]) {
+							me.featureTypeDescription[prefix] = Object.extended();
+						}
+						me.featureTypeDescription[prefix][describeFeaturetypeRespone.featureTypes[0].typeName] = describeFeaturetypeRespone;
+						CONFIG.tempSession.namespace[prefix] = namespace;
 					}
-					me.featureTypeDescription[prefix][describeFeaturetypeRespone.featureTypes[0].typeName] = describeFeaturetypeRespone;
-					CONFIG.tempSession.namespace[prefix] = namespace;
-
+					
 					$(args.callbacks || []).each(function (index, callback) {
 						callback(describeFeaturetypeRespone, this);
 					});
