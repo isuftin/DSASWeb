@@ -22,6 +22,7 @@ services:
     volumes_from: 
       - dsas_db_vol_container
     container_name: DSAS_Database
+    command: sh -c "echo \"host all all 0.0.0.0/0 md5\" >> /etc/postgresql/9.4/main/pg_hba.conf && /start-postgis.sh"
     networks:
     - dsas-network
     environment:
