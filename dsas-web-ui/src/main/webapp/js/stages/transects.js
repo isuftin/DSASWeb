@@ -14,6 +14,7 @@ var Transects = {
 	reservedColor: '#D95F02',
 	createTransectsAndIntersectionsWPSTemplate: undefined,
 	DEFAULT_SPACING: 50,
+	DEFAULT_SMOOTHING: 2500.0,
 	NAME_CONTROL_SNAP: 'snap-control',
 	NAME_CONTROL_EDIT: 'transects-edit-control',
 	NAME_CONTROL_HIGHLIGHT: 'transects-highlight-control',
@@ -926,7 +927,7 @@ var Transects = {
 		Transects.clearSubsequentStages();
 		var shorelines = CONFIG.tempSession.getStage(Shorelines.stage).layers,
 			selectedBounds = Shorelines.aoiBoundsSelected,
-			baseline = $('#baseline-list :selected')[0].value,
+			baseline = Baseline.getActive(),
 			biasRef = ProxyDatumBias.usePdbInProcessing ? ProxyDatumBias.overrideWorkspace + ":" + ProxyDatumBias.overrideLayer : null,
 			spacing = $('#create-transects-input-spacing').val() || 0,
 			length = $('#create-transects-input-length').val(),
@@ -950,7 +951,7 @@ var Transects = {
 		}
 
 		if (isNaN(smoothing)) {
-			smoothing = 2500.0;
+			smoothing = Transects.DEFAULT_SMOOTHING;
 		} else {
 			smoothing = smoothing <= 0.0 ? 0.0 : smoothing;
 		}

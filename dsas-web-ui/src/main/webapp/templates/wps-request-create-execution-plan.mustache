@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wps:Execute 
+	version="1.0.0" 
+	service="WPS" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns="http://www.opengis.net/wps/1.0.0" 
+	xmlns:wfs="http://www.opengis.net/wfs" 
+	xmlns:wps="http://www.opengis.net/wps/1.0.0" 
+	xmlns:ows="http://www.opengis.net/ows/1.1" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:ogc="http://www.opengis.net/ogc" 
+	xmlns:wcs="http://www.opengis.net/wcs/1.1.1" 
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
+	<ows:Identifier>{{processName}}</ows:Identifier>
+	<wps:DataInputs>
+		{{#each shorelineInfo}}
+		<wps:Input>
+			<ows:Identifier>shorelines</ows:Identifier>
+			<wps:Reference mimeType="text/xml; subtype=wfs-collection/1.0" method="POST" xlink:href="http://geoserver/wfs" >
+				<wps:Body>
+					<wfs:GetFeature service="WFS" version="1.1.0" outputFormat="GML2" xmlns:{{workspace}}="gov.usgs.cida.ch.{{workspace}}">
+									<wfs:Query typeName="{{name}}" srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+							<ogc:Filter>
+								<ogc:And>
+									<ogc:BBOX>
+										<ogc:PropertyName>geom</ogc:PropertyName>
+										<gml:Envelope srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+											<gml:lowerCorner>{{../bounds.[0]}} {{../bounds.[1]}}</gml:lowerCorner>
+											<gml:upperCorner>{{../bounds.[2]}} {{../bounds.[3]}}</gml:upperCorner>
+										</gml:Envelope>
+									</ogc:BBOX>
+									{{#each excludedShorelines}}
+									<ogc:Not>
+										<ogc:PropertyIsEqualTo>
+											<ogc:PropertyName>shoreline_id</ogc:PropertyName>
+											<ogc:Literal>{{.}}</ogc:Literal>
+										</ogc:PropertyIsEqualTo>
+									</ogc:Not>
+									{{/each}}
+								</ogc:And>
+							</ogc:Filter>
+						</wfs:Query>
+					</wfs:GetFeature>
+				</wps:Body>
+			</wps:Reference>
+		</wps:Input>
+		{{/each}}
+		
+		<wps:Input>
+			<ows:Identifier>baseline</ows:Identifier>
+			<wps:Reference mimeType="text/xml; subtype=wfs-collection/1.0" xlink:href="http://geoserver/wfs" method="POST">
+				<wps:Body>
+					<wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2" xmlns:{{{baselineNS}}}>
+									<wfs:Query typeName="{{baseline}}" srsName="http://www.opengis.net/gml/srs/epsg.xml#4326" />
+					</wfs:GetFeature>
+				</wps:Body>
+			</wps:Reference>
+		</wps:Input>
+		
+		<wps:Input>
+			<ows:Identifier>calculationProjection</ows:Identifier>
+			<wps:Data>
+				<wps:LiteralData>{{calculationProjection}}</wps:LiteralData>
+			</wps:Data>
+		</wps:Input>
+		
+		<wps:Input>
+			<ows:Identifier>spacing</ows:Identifier>
+			<wps:Data>
+				<wps:LiteralData>{{spacing}}</wps:LiteralData>
+			</wps:Data>
+		</wps:Input>
+		
+		{{#if smoothing}}
+		<wps:Input>
+			<ows:Identifier>smoothing</ows:Identifier>
+			<wps:Data>
+				<wps:LiteralData>{{smoothing}}</wps:LiteralData>
+			</wps:Data>
+		</wps:Input>
+		{{/if}}
+		
+		<wps:Input>
+			<ows:Identifier>maxLength</ows:Identifier>
+			<wps:Data>
+				<wps:LiteralData>{{length}}</wps:LiteralData>
+			</wps:Data>
+		</wps:Input>
+		
+		<wps:Input>
+			<ows:Identifier>workspace</ows:Identifier>
+			<wps:Data>
+				<wps:LiteralData>{{workspace}}</wps:LiteralData>
+			</wps:Data>
+		</wps:Input>
+		
+		<wps:Input>
+			<ows:Identifier>store</ows:Identifier>
+			<wps:Data>
+				<wps:LiteralData>{{store}}</wps:LiteralData>
+			</wps:Data>
+		</wps:Input>
+		
+		<wps:Input>
+			<ows:Identifier>planLayer</ows:Identifier>
+			<wps:Data>
+				<wps:LiteralData>{{planLayer}}</wps:LiteralData>
+			</wps:Data>
+		</wps:Input>
+		
+	</wps:DataInputs>
+	<wps:ResponseForm>
+		<wps:RawDataOutput>
+			<ows:Identifier>executionPlan</ows:Identifier>
+		</wps:RawDataOutput>
+	</wps:ResponseForm>
+</wps:Execute>

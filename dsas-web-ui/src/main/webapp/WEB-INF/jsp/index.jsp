@@ -86,6 +86,7 @@
                         <li><a href="#bias" data-toggle="tab"><img id="bias_img" src="images/workflow_figures/bias_future.png" title="Display Proxy-Datum Bias"/></a></li>
                         <li class="active"><a href="#shorelines" data-toggle="tab"><img id="shorelines_img" src="images/workflow_figures/shorelines.png" title="Display Shorelines"/></a></li>
                         <li><a href="#baseline" data-toggle="tab"><img id="baseline_img" src="images/workflow_figures/baseline_future.png" title="Display Baseline"/></a></li>
+                        <li><a href="#transect_verification" data-toggle="tab"><img id="transect_verification_img" src="images/workflow_figures/transects_future.png" title="Verify Transects"/></a></li>
                         <li><a href="#transects" data-toggle="tab"><img id="transects_img" src="images/workflow_figures/transects_future.png" title="Calculate Transects"/></a></li>
                         <li><a href="#calculation" data-toggle="tab"><img id="calculation_img" src="images/workflow_figures/calculation_future.png" title="Show Calculation"/></a></li>
                         <li><a href="#results" data-toggle="tab"><img id="results_img" src="images/workflow_figures/results_future.png" title="Display Results"/></a></li>
@@ -98,6 +99,7 @@
                     <div id="toolbox-well" class="well well-small tab-content">
 						<jsp:include page="stages/shorelines.jsp"></jsp:include>
 						<jsp:include page="stages/baseline.jsp"></jsp:include>
+						<jsp:include page="stages/transect_verification.jsp"></jsp:include>
 						<jsp:include page="stages/transects.jsp"></jsp:include>
 						<jsp:include page="stages/pdb.jsp"></jsp:include>
 						<jsp:include page="stages/intersects.jsp"></jsp:include>
@@ -183,6 +185,8 @@
 		<script type="text/javascript" src="js/stages/transects.js"></script>
 		<script type="text/javascript">splashUpdate("Loading Proxy Datum Bias module...");</script>
 		<script type="text/javascript" src="js/stages/bias.js"></script>
+		<script type="text/javascript">splashUpdate("Loading Transect Verification module...");</script>
+		<script type="text/javascript" src="js/stages/transect_verification.js"></script>
 		<script type="text/javascript">splashUpdate("Loading Calculation module...");</script>
 		<script type="text/javascript" src="js/stages/calculation.js"></script>
 		<script type="text/javascript">splashUpdate("Loading Results module...");</script>

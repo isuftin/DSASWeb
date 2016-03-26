@@ -20,6 +20,10 @@ CCH.Session = function (name, isPerm) {
 			layers: [],
 			viewing: ''
 		}),
+		transect_verification: Object.extended({
+			layers: [],
+			viewing: ''
+		}),
 		transects: Object.extended({
 			layers: [],
 			viewing: ''
@@ -251,7 +255,7 @@ CCH.Session = function (name, isPerm) {
 				stage = args.stage,
 				suffixes = stage.suffixes,
 				sessionStage = CONFIG.tempSession.getStage(stage.stage);
-
+		
 			wmsCapabilities.keys().each(function (layerNS) {
 				var cap = wmsCapabilities[layerNS];
 				var layers = cap.capability.layers;

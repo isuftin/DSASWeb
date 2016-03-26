@@ -6,6 +6,7 @@
 /* global Baseline */
 /* global Transects */
 /* global Calculation */
+/* global TransectVerification */
 /* global Results */
 /* global qq */
 /* global OpenLayers */
@@ -18,8 +19,8 @@ var UI = function () {
 
 	var me = (this === window) ? {} : this;
 
-	me.work_stages = ['bias', 'shorelines', 'baseline', 'transects', 'calculation', 'results'];
-	me.work_stages_objects = [ProxyDatumBias, Shorelines, Baseline, Transects, Calculation, Results];
+	me.work_stages = ['bias', 'shorelines', 'baseline', 'transect_verification', 'transects', 'calculation', 'results'];
+	me.work_stages_objects = [ProxyDatumBias, Shorelines, Baseline, TransectVerification, Transects, Calculation, Results];
 	me.base_name = undefined;//init to undefined. Update in baselines
 	me.precachedImages = [
 		'images/introduction_images/BaselineDraw.gif',
@@ -174,7 +175,7 @@ var UI = function () {
 		},
 		switchStage: function (stage) {
 			LOG.info('UI.js::switchImage: Changing application context to ' + me.work_stages[stage]);
-
+			
 			var caller = me.work_stages_objects[stage];
 			me.work_stages_objects.filter(function (stage) {
 				return stage !== caller;

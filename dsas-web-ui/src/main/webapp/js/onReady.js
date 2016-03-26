@@ -74,8 +74,9 @@ $(document).ready(function () {
 
 	var finishLoadingApplication = function (data, textStatus, jqXHR) {
 		CONFIG.ui.work_stages_objects.each(function (stage) {
+				
 			stage.appInit();
-
+			
 			if (typeof stage.populateFeaturesList === 'function') {
 				stage.populateFeaturesList(data, textStatus, jqXHR);
 			}
@@ -86,7 +87,7 @@ $(document).ready(function () {
 		});
 
 		CONFIG.ui.precacheImages();
-
+		
 		// Update the last accessed time stamp on each session on the back end.
 		// This prevents the sessions from being wiped
 		$.each(CONFIG.permSession.session.sessions, function (i, session) {
