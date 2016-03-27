@@ -17,6 +17,7 @@ var TransectVerification = {
 	DEFAULT_SPACING: 50,
 	WPS_REQUEST_TEMPLATE: null,
 	WPS_REQUEST: null,
+	UTM_LAYER: null,
 	controlIdentifiers: {
 		'utmSelector': "#ctrl-transect-verification-utm",
 		'submitButton': "#ctrl-transect-verification-submit"
@@ -46,10 +47,28 @@ var TransectVerification = {
 		$.get('templates/wps-request-create-execution-plan.mustache').done(function (data) {
 			TransectVerification.WPS_REQUEST_TEMPLATE = Handlebars.compile(data);
 		});
+
 		$(this.controlIdentifiers.submitButton).on('click', $.proxy(this.processCalculation, this));
+
+		this.UTM_LAYER = new OpenLayers.Layer.ArcGIS93Rest("UTM Zones",
+				"http://www.usda.gov/giseas1/rest/services/NRCS/Designated_UTM_Zone/MapServer/export",
+				{
+					layers: "show:0",
+					transparent: true,
+					srs: 'EPSG:4326',
+					format: 'png32'
+				},
+				{
+					buffer: 2,
+					visibility: true,
+					projection: 'EPSG:3857',
+					isBaseLayer: false,
+					transitionEffect: 'resize'
+				});
+
 	},
 	enterStage: function () {
-		// TODO- Display a layer showing UTM zones
+		CONFIG.map.getMap().addLayer(this.UTM_LAYER);
 
 		var wpsRequestObject = this.createWPSRequestObject();
 
@@ -63,9 +82,8 @@ var TransectVerification = {
 		}
 	},
 	leaveStage: function () {
-		// TODO- Remove layer showing UTM zones
 		// TODO- Remove execution plan layer
-
+		CONFIG.map.getMap().removeLayer(this.UTM_LAYER);
 	},
 	createWPSRequestObject: function () {
 		var wpsRequestObject = $.extend(true, {}, TransectVerification.WPS_REQUEST_OBJECT);
@@ -150,7 +168,7 @@ var TransectVerification = {
 			context: this
 		})).done(function (data, textStatus, jqXHR) {
 			// TODO- What do we do here?
-		}).fail(function ( jqXHR, textStatus, errorThrown) {
+		}).fail(function (jqXHR, textStatus, errorThrown) {
 			// TODO- What do we do here?
 		});
 
